@@ -68,6 +68,7 @@
     <Reference Include="System.ServiceModel">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -82,6 +83,8 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ICloseableAndAbortable.cs" />
+    <Compile Include="NHibernate\WebServiceHost.cs" />
+    <Compile Include="NHibernate\WebServiceHostFactory.cs" />
     <Compile Include="ServiceLocatorInstanceProvider.cs" />
     <Compile Include="NHibernate\InstanceCreationInitializer.cs" />
     <Compile Include="NHibernate\DispatchMessageInspector.cs" />
