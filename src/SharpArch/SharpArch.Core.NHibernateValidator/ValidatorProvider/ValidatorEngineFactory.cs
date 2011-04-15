@@ -1,5 +1,6 @@
 using NHibernate.Validator.Engine;
 using NHibernate.Validator.Event;
+using SharpArch.Data.NHibernate;
 
 namespace SharpArch.Core.NHibernateValidator.ValidatorProvider
 {
@@ -11,7 +12,7 @@ namespace SharpArch.Core.NHibernateValidator.ValidatorProvider
             {
                 if (NHibernate.Validator.Cfg.Environment.SharedEngineProvider == null)
                 {
-                    NHibernate.Validator.Cfg.Environment.SharedEngineProvider = new NHibernateSharedEngineProvider();
+                    NHibernate.Validator.Cfg.Environment.SharedEngineProvider = new SharedEngineProvider();
                 }
 
                 return NHibernate.Validator.Cfg.Environment.SharedEngineProvider.GetEngine();

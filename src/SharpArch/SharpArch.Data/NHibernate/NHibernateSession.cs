@@ -422,6 +422,9 @@ namespace SharpArch.Data.NHibernate
         {
             ValidatorEngine engine;
 
+            if (global::NHibernate.Validator.Cfg.Environment.SharedEngineProvider == null)
+                global::NHibernate.Validator.Cfg.Environment.SharedEngineProvider = new SharedEngineProvider();
+
             if (validatorInitializer != null)
                 engine = validatorInitializer(validatorCfgFile);
             else
