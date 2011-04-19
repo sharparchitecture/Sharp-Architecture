@@ -56,8 +56,12 @@
         public Configuration LoadConfiguration(string configKey, string configPath, string[] mappingAssemblies) {
             string cachePath = CachedConfigPath(configKey);
             AppendToDependentFilePaths(mappingAssemblies);
-            AppendToDependentFilePaths(configPath);
-            if (IsCachedConfigCurrent(cachePath, configPath)) {
+
+            if (configPath != null) {
+                AppendToDependentFilePaths(configPath);
+            }
+
+            if (IsCachedConfigCurrent(cachePath)) {
                 return FileCache.RetrieveFromCache<Configuration>(cachePath);
             }
 
@@ -83,15 +87,12 @@
         /// Tests if an existing cached configuration file is out of date or not.
         /// </summary>
         /// <param name="cachePath">Location of the cached</param>
-        /// <param name="configPath"></param>
         /// <returns>False if the cached config file is out of date, otherwise true.</returns>
         /// <exception cref="ArgumentNullException">Thrown if the cachePath or configPath 
         /// parameters are null.</exception>
-        protected virtual bool IsCachedConfigCurrent(string cachePath, string configPath) {
+        protected virtual bool IsCachedConfigCurrent(string cachePath) {
             if (string.IsNullOrEmpty(cachePath))
                 throw new ArgumentNullException("cachePath");
-            if (string.IsNullOrEmpty(configPath))
-                throw new ArgumentNullException("configPath");
 
             return (File.Exists(cachePath) && (File.GetLastWriteTime(cachePath) >= GetMaxDependencyTime()));
         }
