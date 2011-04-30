@@ -92,6 +92,7 @@
     <Compile Include="NHibernate\Repository.cs" />
     <Compile Include="NHibernate\SessionFactoryAttribute.cs" />
     <Compile Include="NHibernate\SessionFactoryKeyHelper.cs" />
+    <Compile Include="NHibernate\SharedEngineProvider.cs" />
     <Compile Include="NHibernate\SimpleSessionStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

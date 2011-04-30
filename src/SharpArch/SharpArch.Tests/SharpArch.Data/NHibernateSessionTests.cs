@@ -35,7 +35,7 @@ namespace Tests.SharpArch.Data
 
             var configuration = NHibernateSession.Init(
                 new SimpleSessionStorage(),
-                mappingAssemblies, null, configFile, null, null, persistenceConfigurer);
+                mappingAssemblies, null, configFile, null, null, persistenceConfigurer, null);
 
             Assert.That(configuration, Is.Not.Null);
         }
@@ -50,7 +50,7 @@ namespace Tests.SharpArch.Data
 
             var configuration = NHibernateSession.Init(
                 new SimpleSessionStorage(),
-                mappingAssemblies, null, null, null, null, persistenceConfigurer);
+                mappingAssemblies, null, null, null, null, persistenceConfigurer, null);
 
             Assert.That(configuration, Is.Not.Null);
 
@@ -83,7 +83,7 @@ namespace Tests.SharpArch.Data
                 new string[] { },
                 null,
                 configFile,
-                null, null, null);
+                null, null, null, null);
 
             Assert.That(configuration1, Is.Not.Null);
             Assert.That(configuration2, Is.Not.Null);

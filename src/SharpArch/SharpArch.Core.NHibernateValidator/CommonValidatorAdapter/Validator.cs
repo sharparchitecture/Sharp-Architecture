@@ -5,6 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using SharpArch.Core.CommonValidator;
 using SharpArch.Data.NHibernate;
+using SharpArch.Core.NHibernateValidator.ValidatorProvider;
 
 namespace SharpArch.Core.NHibernateValidator.CommonValidatorAdapter
 {
@@ -14,10 +15,6 @@ namespace SharpArch.Core.NHibernateValidator.CommonValidatorAdapter
     /// </summary>
     public class Validator : SharpArch.Core.CommonValidator.IValidator
     {
-        static Validator() {
-            validator = NHibernateSession.ValidatorEngine ?? new ValidatorEngine();
-        }
-
         public bool IsValid(object value) {
             Check.Require(value != null, "value to IsValid may not be null");
 
@@ -44,10 +41,8 @@ namespace SharpArch.Core.NHibernateValidator.CommonValidatorAdapter
 
         private ValidatorEngine ValidatorEngine {
             get {
-                return validator;
+                return ValidatorEngineFactory.ValidatorEngine;
             }
         }
-
-        private static readonly ValidatorEngine validator;
     }
 }
