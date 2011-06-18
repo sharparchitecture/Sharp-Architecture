@@ -2,8 +2,6 @@
 {
     using global::NUnit.Framework;
 
-    using Tests.SharpArch.NHibernate;
-
     /// <summary>
     ///     Provides a behavior driven approach to unit testsing data persisted to a database.  
     ///     This base class creates the database from scratch using the specified connection details 

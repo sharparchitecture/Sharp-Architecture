@@ -67,6 +67,7 @@
       <HintPath>..\..\ReferencedAssemblies\NUnit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -80,9 +81,11 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BehaviorSpecificationTestsBase.cs" />
+    <Compile Include="Helpers\EntityIdSetter.cs" />
     <Compile Include="NHibernate\DatabaseRepositoryTestsBase.cs" />
     <Compile Include="NHibernate\RepositoryBehaviorSpecificationTestsBase.cs" />
     <Compile Include="NHibernate\RepositoryTestsBase.cs" />
+    <Compile Include="NHibernate\RepositoryTestsHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SyntaxHelpers.cs" />
   </ItemGroup>
@@ -104,13 +107,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SharpArch.Domain\SharpArch.Domain.csproj">
+      <Project>{E12E99BB-8732-441F-B3A6-861F0CE23D3D}</Project>
+      <Name>SharpArch.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharpArch.NHibernate\SharpArch.NHibernate.csproj">
       <Project>{0BD77F13-8DF6-4C16-9508-33AA4CF0677A}</Project>
       <Name>SharpArch.NHibernate</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpArch.Tests\SharpArch.Tests.csproj">
-      <Project>{C201296D-09B7-4BAE-96F0-AB59F624DB36}</Project>
-      <Name>SharpArch.Tests</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

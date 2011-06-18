@@ -95,9 +95,9 @@
       <Project>{0BD77F13-8DF6-4C16-9508-33AA4CF0677A}</Project>
       <Name>SharpArch.NHibernate</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SharpArch.Tests\SharpArch.Tests.csproj">
-      <Project>{C201296D-09B7-4BAE-96F0-AB59F624DB36}</Project>
-      <Name>SharpArch.Tests</Name>
+    <ProjectReference Include="..\SharpArch.Testing.NUnit\SharpArch.Testing.NUnit.csproj">
+      <Project>{D6DDE603-4678-44B9-A2D1-101BF5D12AD7}</Project>
+      <Name>SharpArch.Testing.NUnit</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

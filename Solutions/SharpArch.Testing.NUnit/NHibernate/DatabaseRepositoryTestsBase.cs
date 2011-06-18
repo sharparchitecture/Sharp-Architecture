@@ -4,8 +4,6 @@
 
     using SharpArch.NHibernate;
 
-    using Tests.SharpArch.NHibernate;
-
     /// <summary>
     ///     Initiates a transaction before each test is run and rolls back the transaction after
     ///     the test completes.  Consequently, tests make no permanent changes to the DB.

@@ -1,9 +1,9 @@
-﻿namespace Tests.SharpArch.Domain
+﻿namespace SharpArch.Testing.NUnit.Helpers
 {
     using System.Reflection;
 
-    using global::SharpArch.Domain;
-    using global::SharpArch.Domain.DomainModel;
+    using SharpArch.Domain;
+    using SharpArch.Domain.DomainModel;
 
     /// <summary>
     ///     For better data integrity, it is imperitive that the <see cref = "Entity.Id" />

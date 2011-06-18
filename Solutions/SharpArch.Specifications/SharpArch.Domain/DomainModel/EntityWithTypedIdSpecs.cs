@@ -15,10 +15,10 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
     using System.Reflection;
 
     using global::SharpArch.Domain.DomainModel;
+    using global::SharpArch.Testing.NUnit.Helpers;
 
     using Machine.Specifications;
 
-    using Tests.SharpArch.Domain;
 
     public class entity_with_type_id_specs
     {

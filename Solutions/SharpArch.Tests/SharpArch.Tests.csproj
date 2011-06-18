@@ -147,7 +147,6 @@
     <Compile Include="SharpArch.Domain\DomainModel\BaseObjectEqualityComparerTests.cs" />
     <Compile Include="SharpArch.Domain\DomainModel\EntityTests.cs" />
     <Compile Include="SharpArch.Domain\DomainModel\ValueObjectTests.cs" />
-    <Compile Include="SharpArch.Domain\EntityIdSetter.cs" />
     <Compile Include="SharpArch.NHibernate\NHibernateSessionTests.cs" />
     <Compile Include="SharpArch.NHibernate\RepositoryTestsHelper.cs" />
     <Compile Include="SharpArch.NHibernate\SafeServiceLocatorTests.cs" />
@@ -179,6 +178,10 @@
     <ProjectReference Include="..\SharpArch.NHibernate\SharpArch.NHibernate.csproj">
       <Project>{0BD77F13-8DF6-4C16-9508-33AA4CF0677A}</Project>
       <Name>SharpArch.NHibernate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpArch.Testing.NUnit\SharpArch.Testing.NUnit.csproj">
+      <Project>{D6DDE603-4678-44B9-A2D1-101BF5D12AD7}</Project>
+      <Name>SharpArch.Testing.NUnit</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpArch.Web.Mvc\SharpArch.Web.Mvc.csproj">
       <Project>{BF4E3D18-2EFB-49E3-9D8D-0F9F9BE1094A}</Project>

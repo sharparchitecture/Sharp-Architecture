@@ -8,6 +8,9 @@ namespace Tests.SharpArch.Domain.DomainModel
 
     using NUnit.Framework;
 
+    using global::SharpArch.Testing.NUnit;
+    using global::SharpArch.Testing.NUnit.Helpers;
+
     [TestFixture]
     public class BaseObjectEqualityComparerTests
     {
