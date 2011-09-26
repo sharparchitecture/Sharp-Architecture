@@ -8,7 +8,7 @@
     <licenseUrl>https://github.com/sharparchitecture/Sharp-Architecture/blob/master/License.txt</licenseUrl>
     <projectUrl>http://www.sharparchitecture.net/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Architectural foundation for building maintainable applications with Domain Driven Design patterns and practices. It is opinionated towards ASP.NET MVC, NHibernate, Castle.Windsor, and FluentNhibernate.</description>
+    <description>Provides base classes to help with testing applications written with Sharp Architecture and extension methods that improve the syntax of NUnit assertions.</description>
     <summary>Architectural foundation for building maintainable applications with Domain Driven Design patterns and practices</summary>
     <language>en-US</language>
     <dependencies>      
