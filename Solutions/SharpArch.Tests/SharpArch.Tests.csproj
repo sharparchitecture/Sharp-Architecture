@@ -134,10 +134,12 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharpArch.Domain\Commands\CommandProcessorTests.cs" />
+    <Compile Include="SharpArch.Domain\Commands\CommandResult.cs" />
     <Compile Include="SharpArch.Domain\Commands\CommandTests.cs" />
     <Compile Include="SharpArch.Domain\Commands\InvalidCommand.cs" />
     <Compile Include="SharpArch.Domain\Commands\TestCommand.cs" />
     <Compile Include="SharpArch.Domain\Commands\TestCommandHandler.cs" />
+    <Compile Include="SharpArch.Domain\Commands\TestCommandHandlerWithResult.cs" />
     <Compile Include="SharpArch.Domain\Commands\ValidCommand.cs" />
     <Compile Include="SharpArch.Domain\DataAnnotationsValidator\HasUniqueEntitySignatureValidatorTests.cs" />
     <Compile Include="SharpArch.Domain\DesignByContractTests.cs" />

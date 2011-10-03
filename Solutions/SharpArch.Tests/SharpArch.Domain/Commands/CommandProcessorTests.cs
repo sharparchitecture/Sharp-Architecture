@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace Tests.SharpArch.Domain.Commands
 {
     using System.Collections.Generic;
@@ -81,6 +83,38 @@ namespace Tests.SharpArch.Domain.Commands
         }
 
         [Test]
+        public void CanHandleCommandWithResult()
+        {
+            container.Register(
+              Component.For<ICommandHandler<TestCommand, CommandResult<TestCommand>>>()
+                .UsingFactoryMethod(CreateCommandHandlerWithResult<TestCommand>)
+                .LifeStyle.Transient);
+
+            var testCommand = new TestCommand();
+            var results = commandProcessor.Process<TestCommand, CommandResult<TestCommand>>(testCommand).ToList();
+
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(testCommand, results[0].Command);
+        }
+
+        [Test]
+        public void CanHandleCommandWithResultDelegate()
+        {
+            container.Register(
+              Component.For<ICommandHandler<TestCommand, CommandResult<TestCommand>>>()
+                .UsingFactoryMethod(CreateCommandHandlerWithResult<TestCommand>)
+                .LifeStyle.Transient);
+
+            var testCommand = new TestCommand();
+            var results = new List<TestCommand>();
+            commandProcessor.Process<TestCommand, CommandResult<TestCommand>>(testCommand, c => results.Add(c.Command));
+
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(testCommand, results[0]);
+        }
+
+
+        [Test]
         public void CanHandleMultipleCommands()
         {
             container.Register(
@@ -107,6 +141,12 @@ namespace Tests.SharpArch.Domain.Commands
         {
             return new TestCommandHandler<TCommand>(OnHandle);
         }
+
+        private TestCommandHandlerWithResult<TCommand> CreateCommandHandlerWithResult<TCommand>() where TCommand : ICommand
+        {
+            return new TestCommandHandlerWithResult<TCommand>();
+        }
+
 
         private void OnHandle<TCommand>(ICommandHandler<TCommand> handler, TCommand command) where TCommand : ICommand
         {
