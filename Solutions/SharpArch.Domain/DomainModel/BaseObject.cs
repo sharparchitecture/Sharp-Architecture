@@ -16,7 +16,6 @@
     ///     an in depth and conclusive resolution.
     /// </summary>
     [Serializable]
-    [JsonObject(MemberSerialization.OptIn)]
     public abstract class BaseObject
     {
         /// <summary>

@@ -36,7 +36,6 @@ namespace SharpArch.Domain.DomainModel
         ///     See the FAQ within the documentation if you'd like to have the Id XML serialized.
         /// </summary>
         [XmlIgnore]
-        [JsonProperty]
         public virtual TId Id { get; protected set; }
 
         public override bool Equals(object obj)

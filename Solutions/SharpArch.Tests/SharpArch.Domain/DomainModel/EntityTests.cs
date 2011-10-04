@@ -1,3 +1,7 @@
+using System.IO;
+
+using Newtonsoft.Json;
+
 namespace Tests.SharpArch.Domain.DomainModel
 {
     using global::SharpArch.Domain.DomainModel;
@@ -324,6 +328,34 @@ namespace Tests.SharpArch.Domain.DomainModel
 
             object1.Age = 14;
             Assert.AreEqual(initialHash, object1.GetHashCode());
+        }
+
+        [Test]
+        public void EntitySerializesAsJsonProperly()
+        {
+            var object1 = new ObjectWithOneDomainSignatureProperty();
+            object1.SetIdTo(999);
+            object1.Age = 13;
+            object1.Name = "Foo";
+
+            var jsonSerializer = new JsonSerializer();
+
+            string jsonString;
+            using (var stringWriter = new StringWriter())
+            {
+                jsonSerializer.Serialize(stringWriter, object1);
+                jsonString = stringWriter.ToString();
+            }
+
+            using (var stringReader = new StringReader(jsonString))
+            using (var jsonReader = new JsonTextReader(stringReader))
+            {
+                var deserialized = jsonSerializer.Deserialize<ObjectWithOneDomainSignatureProperty>(jsonReader);
+                Assert.IsNotNull(deserialized);
+                Assert.AreEqual(999, deserialized.Id);
+                Assert.AreEqual(13, deserialized.Age);
+                Assert.AreEqual("Foo", deserialized.Name);
+            }
         }
 
         [SetUp]

@@ -24,7 +24,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
-	<DebugType>pdbonly</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
@@ -43,10 +43,10 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Contracts\Repositories\IRavenDbRepository.cs" />
-    <Compile Include="Contracts\Repositories\IRavenDbRepositoryWithTypeId.cs" />
+    <Compile Include="Contracts\Repositories\IRavenDbRepositoryWithTypedId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RavenDbRepository.cs" />
-    <Compile Include="RavenDbRepositoryWithTypeId.cs" />
+    <Compile Include="RavenDbRepositoryWithTypedId.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpArch.Domain\SharpArch.Domain.csproj">

@@ -8,7 +8,7 @@ namespace SharpArch.RavenDb
     using SharpArch.Domain.PersistenceSupport;
     using SharpArch.RavenDb.Contracts.Repositories;
 
-    public class RavenDbRepository<T> : RavenDbRepositoryWithTypeId<T, int>, IRavenDbRepository<T> where T : Entity
+    public class RavenDbRepository<T> : RavenDbRepositoryWithTypedId<T, string>, IRavenDbRepository<T> where T : EntityWithTypedId<string>
     {
         public RavenDbRepository(IDocumentSession context) : base(context)
         {
