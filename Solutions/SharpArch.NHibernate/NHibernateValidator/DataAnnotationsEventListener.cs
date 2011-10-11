@@ -24,7 +24,7 @@
         {
             if (@event.Entity is ValidatableObject)
             {
-                var entity = (Entity)@event.Entity;
+                var entity = @event.Entity;
                 Validator.ValidateObject(entity, new ValidationContext(entity, null, null), true);
             }
             return false;
