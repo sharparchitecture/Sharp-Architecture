@@ -10,7 +10,6 @@
     {
         public void OnAssemblyStart()
         {
-            log4net.Config.XmlConfigurator.Configure();
             RepositoryTestsHelper.InitializeNHibernateSession();
         }
 

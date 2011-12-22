@@ -2,6 +2,13 @@
 <Project DefaultTargets="PackageArtefacts" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
+    <VersionMajor>2</VersionMajor>
+	<VersionMinor>0</VersionMinor>
+	<VersionPatch>0</VersionPatch>
+	<VersionPreRelease>RC2</VersionPreRelease>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <RunMSpecTests>True</RunMSpecTests>
 	<MSpecRunner>mspec-clr4.exe</MSpecRunner>
     <MSpecSpecificationAssemblies>"$(MSBuildProjectDirectory)\..\Solutions\SharpArch.Specifications\Bin\Release\SharpArch.Specifications.dll"</MSpecSpecificationAssemblies>
@@ -20,7 +27,7 @@
                                   $(SolutionsPath)\**\*.cache;
                                   $(SolutionsPath)\**\_ReSharper*\**;
                                   $(SolutionsPath)\**\*ReSharper*">
-      <PackageName>$(DropsPath)\$(GlobalBuildVersionNumber)\$(PackageName).Source.v$(GlobalBuildVersionNumber).zip</PackageName>
+      <PackageName>$(DropsPath)\$(SemanticVersion)\$(PackageName).Source.v$(SemanticVersion).zip</PackageName>
       <WorkingDirectory>$(SolutionsPath)</WorkingDirectory>
       <Flatten>False</Flatten>
     </PackageFiles>
@@ -32,7 +39,7 @@
                          $(SolutionsPath)\SharpArch.Web.Mvc\bin\Release\SharpArch.Web.Mvc.dll;
                          $(SolutionsPath)\SharpArch.Testing\bin\Release\SharpArch.Testing.dll;
                          $(SolutionsPath)\SharpArch.Testing.NUnit\bin\Release\SharpArch.Testing.NUnit.dll;">
-      <PackageName>$(DropsPath)\$(GlobalBuildVersionNumber)\$(PackageName).dlls.v$(GlobalBuildVersionNumber).zip</PackageName>
+      <PackageName>$(DropsPath)\$(SemanticVersion)\$(PackageName).dlls.v$(SemanticVersion).zip</PackageName>
       <WorkingDirectory>$(SolutionsPath)</WorkingDirectory>
       <Flatten>True</Flatten>
     </PackageFiles>

@@ -12,8 +12,8 @@
     <summary>Architectural foundation for building maintainable applications with Domain Driven Design patterns and practices</summary>
     <language>en-US</language>
     <dependencies>      
-      <dependency id="Castle.Core" version="2.5.2" />
-      <dependency id="Castle.Windsor" version="2.5.2" />
+      <dependency id="Castle.Core" version="[3.0,4.0)" />
+      <dependency id="Castle.Windsor" version="[3.0,4.0)" />
     </dependencies>
 	<frameworkAssemblies>
       <frameworkAssembly assemblyName="System.ServiceModel" targetFramework="net40" />

@@ -13,7 +13,7 @@
     <language>en-US</language>
     <dependencies>      
       <dependency id="CommonServiceLocator" version="1.0" />      
-      <dependency id="SharpArch.Domain" version="2.0" />
+      <dependency id="SharpArch.Domain" version="[2.0,3.0)" />
     </dependencies>
 	<frameworkAssemblies>
       <frameworkAssembly assemblyName="System.ServiceModel" targetFramework="net40" />
