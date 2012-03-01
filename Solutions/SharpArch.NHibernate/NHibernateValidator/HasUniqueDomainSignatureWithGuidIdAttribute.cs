@@ -7,6 +7,7 @@ namespace SharpArch.NHibernate.NHibernateValidator
     using SharpArch.Domain.DomainModel;
     using SharpArch.Domain.PersistenceSupport;
 
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class HasUniqueDomainSignatureWithGuidIdAttribute : ValidationAttribute
     {
         public HasUniqueDomainSignatureWithGuidIdAttribute()

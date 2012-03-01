@@ -1,11 +1,13 @@
 namespace SharpArch.NHibernate.NHibernateValidator
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
 
     using SharpArch.Domain;
     using SharpArch.Domain.DomainModel;
     using SharpArch.Domain.PersistenceSupport;
 
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class HasUniqueDomainSignatureWithStringIdAttribute : ValidationAttribute
     {
         public HasUniqueDomainSignatureWithStringIdAttribute()
