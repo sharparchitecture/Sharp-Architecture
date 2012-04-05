@@ -33,7 +33,7 @@ namespace SharpArch.Domain.Commands
             var handlers = ServiceLocator.Current.GetAllInstances<ICommandHandler<TCommand, TResult>>();
             if (handlers == null || !handlers.Any())
             {
-                throw new CommandHandlerNotFoundException(typeof(TCommand));
+                throw new CommandHandlerNotFoundException(typeof(TCommand), typeof(TResult));
             }
 
             foreach (var handler in handlers)
