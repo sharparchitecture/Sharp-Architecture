@@ -33,5 +33,10 @@ namespace SharpArch.Domain.PersistenceSupport
         /// I'll let you guess what this does.
         /// </summary>
         void Delete(T entity);
+
+        /// <summary>
+        /// Deletes the entity that matches the provided Id.
+        /// </summary>
+        void Delete(TId id);
     }
 }
