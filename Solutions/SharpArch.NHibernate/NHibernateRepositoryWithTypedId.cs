@@ -168,6 +168,16 @@ namespace SharpArch.NHibernate
             this.Session.Delete(entity);
         }
 
+        public virtual void Delete(TId id)
+        {
+            T entity = this.Get(id);
+
+            if (entity != null)
+            {
+                this.Delete(entity);
+            }
+        }
+
         public virtual T Get(TId id)
         {
             return this.Session.Get<T>(id);

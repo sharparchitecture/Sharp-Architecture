@@ -4,6 +4,7 @@ namespace SharpArch.RavenDb
     using System.Collections.Generic;
     using System.Linq;
 
+    using Raven.Abstractions.Commands;
     using Raven.Client;
 
     using SharpArch.Domain.DomainModel;
@@ -78,6 +79,11 @@ namespace SharpArch.RavenDb
         {
             this.context.Delete(entity);
             this.context.SaveChanges();
+        }
+
+        public void Delete(TIdT id)
+        {
+            this.context.Advanced.Defer(new DeleteCommandData { Key = id.ToString() });
         }
 
         public T Get(TIdT id)

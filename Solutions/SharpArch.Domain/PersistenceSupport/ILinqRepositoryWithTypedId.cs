@@ -18,6 +18,13 @@ namespace SharpArch.Domain.PersistenceSupport
         void Delete(T target);
 
         /// <summary>
+        /// Delete the object that matches the supplied id from the repository
+        /// </summary>
+        /// <typeparam name="TId">Type of Id of the entity to be deleted</typeparam>
+        /// <param name="id">Id of the entity to delete</param>
+        void Delete(TId id);
+
+        /// <summary>
         /// Save the specified object to the repository
         /// </summary>
         /// <typeparam name="T">Type of entity to save</typeparam>
