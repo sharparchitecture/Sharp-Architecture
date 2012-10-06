@@ -1,8 +1,9 @@
 namespace SharpArch.NHibernate.Web.Mvc
 {
     using System;
+    using System.Data;
     using System.Web.Mvc;
-
+    
     public class TransactionAttribute : ActionFilterAttribute
     {
         /// <summary>
@@ -15,17 +16,21 @@ namespace SharpArch.NHibernate.Web.Mvc
         /// </summary>
         public TransactionAttribute()
         {
+            IsolationLevel = IsolationLevel.Unspecified;
         }
 
         /// <summary>
         ///     Overrides the default <see cref = "factoryKey" /> with a specific factory key
         /// </summary>
         public TransactionAttribute(string factoryKey)
+            : this()
         {
             this.factoryKey = factoryKey;
         }
 
         public bool RollbackOnModelStateError { get; set; }
+
+        public IsolationLevel IsolationLevel { get; set; }
 
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
@@ -45,7 +50,16 @@ namespace SharpArch.NHibernate.Web.Mvc
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            NHibernateSession.CurrentFor(this.GetEffectiveFactoryKey()).BeginTransaction();
+            var session = NHibernateSession.CurrentFor(this.GetEffectiveFactoryKey());
+
+            if (this.IsolationLevel != IsolationLevel.Unspecified)
+            {
+                session.BeginTransaction(this.IsolationLevel);
+            }
+            else
+            {
+                session.BeginTransaction();
+            }
         }
 
         public override void OnResultExecuted(ResultExecutedContext filterContext)
