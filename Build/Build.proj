@@ -2,7 +2,7 @@
 <Project DefaultTargets="PackageArtefacts" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <VersionMajor>2</VersionMajor>
+    <VersionMajor>3</VersionMajor>
 	<VersionMinor>2</VersionMinor>
 	<VersionPatch>0</VersionPatch>
 	<VersionPreRelease>Alpha</VersionPreRelease>
