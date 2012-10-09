@@ -1,8 +1,7 @@
 namespace SharpArch.Web.Mvc.ModelBinder
 {
     using System;
-
-    using Microsoft.Practices.ServiceLocation;
+    using System.Web.Mvc;
 
     using SharpArch.Domain.PersistenceSupport;
 
@@ -17,19 +16,12 @@ namespace SharpArch.Web.Mvc.ModelBinder
 
             try
             {
-                repository = ServiceLocator.Current.GetService(concreteRepositoryType);
+                repository = DependencyResolver.Current.GetService(concreteRepositoryType);
             }
             catch (NullReferenceException)
             {
                 throw new NullReferenceException(
                     "ServiceLocator has not been initialized; " + "I was trying to retrieve " + concreteRepositoryType);
-            }
-            catch (ActivationException)
-            {
-                throw new ActivationException(
-                    "The needed dependency of type " + concreteRepositoryType.Name +
-                    " could not be located with the ServiceLocator. You'll need to register it with " +
-                    "the Common Service Locator (CSL) via your IoC's CSL adapter.");
             }
 
             return repository;
