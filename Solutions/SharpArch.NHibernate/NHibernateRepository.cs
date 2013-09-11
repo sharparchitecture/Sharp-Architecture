@@ -1,5 +1,6 @@
 ﻿namespace SharpArch.NHibernate
 {
+    using SharpArch.Domain.PersistenceSupport;
     using SharpArch.NHibernate.Contracts.Repositories;
 
     /// <summary>
@@ -8,7 +9,11 @@
     ///     an entity with a type other than int, such as string, then use 
     ///     <see cref = "NHibernateRepositoryWithTypedId{T, IdT}" />.
     /// </summary>
-    public class NHibernateRepository<T> : NHibernateRepositoryWithTypedId<T, int>, INHibernateRepository<T>
+    public class NHibernateRepository<T> : NHibernateRepositoryWithTypedId<T, int>, IRepository<T>
     {
+        public new System.Collections.IEnumerator GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace SharpArch.Web.Mvc.ModelBinder
             var entityRepository = GenericRepositoryFactory.CreateEntityRepositoryFor(collectionEntityType, idType);
 
             return entityRepository.GetType().InvokeMember(
-                "Get", BindingFlags.InvokeMethod, null, entityRepository, new[] { typedId });
+                "get_Item", BindingFlags.InvokeMethod, null, entityRepository, new[] { typedId });
         }
     }
 }

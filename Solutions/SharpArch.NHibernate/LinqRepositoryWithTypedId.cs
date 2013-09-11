@@ -9,7 +9,7 @@ namespace SharpArch.NHibernate
 
     public class LinqRepositoryWithTypedId<T, TId> : NHibernateRepositoryWithTypedId<T, TId>, ILinqRepositoryWithTypedId<T, TId>
     {
-        public override void Delete(T target)
+        public void Delete(T target)
         {
             this.Session.Delete(target);
         }
@@ -57,6 +57,16 @@ namespace SharpArch.NHibernate
         {
             this.Save(entity);
             this.Session.Evict(entity);
+        }
+
+        public void Delete(TId id)
+        {
+            T entity = this[id];
+
+            if (entity != null)
+            {
+                this.Delete(entity);
+            }
         }
     }
 }

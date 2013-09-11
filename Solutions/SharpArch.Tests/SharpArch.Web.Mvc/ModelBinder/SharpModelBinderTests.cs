@@ -249,7 +249,7 @@ namespace Tests.SharpArch.Web.Mvc.ModelBinder
             var mockRepository = new Mock<IRepositoryWithTypedId<Employee, int>>();
             var windsorContainer = new WindsorContainer();
 
-            mockRepository.Setup(r => r.Get(It.IsAny<int>())).Returns((int newId) => new Employee(newId));
+            mockRepository.Setup(r => r[It.IsAny<int>()]).Returns((int newId) => new Employee(newId));
 
             windsorContainer.Register(
                 Component
