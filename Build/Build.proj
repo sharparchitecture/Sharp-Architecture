@@ -1,142 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="PackageArtefacts" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <PropertyGroup>
-    <VersionMajor>3</VersionMajor>
-	<VersionMinor>2</VersionMinor>
-	<VersionPatch>0</VersionPatch>
-	<VersionPreRelease>Alpha</VersionPreRelease>
-  </PropertyGroup>
+    <PropertyGroup>
+        <VersionMajor>3</VersionMajor>
+        <VersionMinor>2</VersionMinor>
+        <VersionPatch>0</VersionPatch>
+        <VersionPreRelease>Alpha</VersionPreRelease>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <RunMSpecTests>True</RunMSpecTests>
-	<MSpecRunner>mspec-clr4.exe</MSpecRunner>
-    <MSpecSpecificationAssemblies>"$(MSBuildProjectDirectory)\..\Solutions\SharpArch.Specifications\Bin\Release\SharpArch.Specifications.dll"</MSpecSpecificationAssemblies>
-  </PropertyGroup>
+    <PropertyGroup>
+        <RunMSpecTests>True</RunMSpecTests>
+        <MSpecRunner>mspec-clr4.exe</MSpecRunner>
+        <MSpecSpecificationAssemblies>"$(MSBuildProjectDirectory)\..\Solutions\SharpArch.Specifications\Bin\Release\SharpArch.Specifications.dll"</MSpecSpecificationAssemblies>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <AssembliesToTestWithNUnit Include="$(SolutionsPath)\SharpArch.Tests\bin\Release\SharpArch.Tests.dll;" />
-  </ItemGroup>
+    <ItemGroup>
+        <AssembliesToTestWithNUnit Include="$(SolutionsPath)\SharpArch.Tests\bin\Release\SharpArch.Tests.dll;" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageFiles Include="$(SolutionsPath)\**\*.*"
-                       Exclude="$(SolutionsPath)\**\bin\**;
+    <ItemGroup>
+        <PackageFiles Include="$(SolutionsPath)\**\*.*"
+                           Exclude="$(SolutionsPath)\**\bin\**;
                                   $(SolutionsPath)\**\Logs\**;
                                   $(SolutionsPath)\**\obj\**;
                                   $(SolutionsPath)\**\*.suo;
                                   $(SolutionsPath)\**\*.cache;
                                   $(SolutionsPath)\**\_ReSharper*\**;
                                   $(SolutionsPath)\**\*ReSharper*">
-      <PackageName>$(DropsPath)\$(SemanticVersion)\$(PackageName).Source.v$(SemanticVersion).zip</PackageName>
-      <WorkingDirectory>$(SolutionsPath)</WorkingDirectory>
-      <Flatten>False</Flatten>
-    </PackageFiles>
+            <PackageName>$(DropsPath)\$(SemanticVersion)\$(PackageName).Source.v$(SemanticVersion).zip</PackageName>
+            <WorkingDirectory>$(SolutionsPath)</WorkingDirectory>
+            <Flatten>False</Flatten>
+        </PackageFiles>
 
-    <PackageFiles Include="$(SolutionsPath)\SharpArch.Domain\bin\Release\SharpArch.Domain.dll;
+        <PackageFiles Include="$(SolutionsPath)\SharpArch.Domain\bin\Release\SharpArch.Domain.dll;
                          $(SolutionsPath)\SharpArch.WcfClient.Castle\bin\Release\SharpArch.WcfClient.Castle.dll;
                          $(SolutionsPath)\SharpArch.NHibernate\bin\Release\SharpArch.NHibernate.dll;
-                         $(SolutionsPath)\SharpArch.RavenDb\bin\Release\SharpArch.RavenDb.dll;
                          $(SolutionsPath)\SharpArch.Wcf\bin\Release\SharpArch.Wcf.dll;
                          $(SolutionsPath)\SharpArch.Web.Mvc\bin\Release\SharpArch.Web.Mvc.dll;
                          $(SolutionsPath)\SharpArch.Testing.NUnit\bin\Release\SharpArch.Testing.NUnit.dll;">
-      <PackageName>$(DropsPath)\$(SemanticVersion)\$(PackageName).dlls.v$(SemanticVersion).zip</PackageName>
-      <WorkingDirectory>$(SolutionsPath)</WorkingDirectory>
-      <Flatten>True</Flatten>
-    </PackageFiles>
-  </ItemGroup>
-  
-  
-  <ItemGroup>
-    <NugetPackage Include="$(SolutionsPath)\SharpArch.Domain\bin\Release\SharpArch.Domain.dll;
+            <PackageName>$(DropsPath)\$(SemanticVersion)\$(PackageName).dlls.v$(SemanticVersion).zip</PackageName>
+            <WorkingDirectory>$(SolutionsPath)</WorkingDirectory>
+            <Flatten>True</Flatten>
+        </PackageFiles>
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <NugetPackage Include="$(SolutionsPath)\SharpArch.Domain\bin\Release\SharpArch.Domain.dll;
 						   $(SolutionsPath)\SharpArch.Domain\bin\Release\SharpArch.Domain.pdb;">
-      <PackageName>SharpArch.Domain</PackageName>
-	  <NuspecFile>SharpArch.Domain.nuspec</NuspecFile>
-    </NugetPackage>
-	
-	<NugetPackage Include="$(SolutionsPath)\SharpArch.NHibernate\bin\Release\SharpArch.NHibernate.dll;
+            <PackageName>SharpArch.Domain</PackageName>
+            <NuspecFile>SharpArch.Domain.nuspec</NuspecFile>
+        </NugetPackage>
+
+        <NugetPackage Include="$(SolutionsPath)\SharpArch.NHibernate\bin\Release\SharpArch.NHibernate.dll;
 						   $(SolutionsPath)\SharpArch.NHibernate\bin\Release\SharpArch.NHibernate.pdb;">
-      <PackageName>SharpArch.NHibernate</PackageName>
-	  <NuspecFile>SharpArch.NHibernate.nuspec</NuspecFile>
-    </NugetPackage>
-	
-	<NugetPackage Include="$(SolutionsPath)\SharpArch.RavenDB\bin\Release\SharpArch.RavenDB.dll;
-						   $(SolutionsPath)\SharpArch.RavenDB\bin\Release\SharpArch.RavenDB.pdb;">
-      <PackageName>SharpArch.RavenDB</PackageName>
-	  <NuspecFile>SharpArch.RavenDB.nuspec</NuspecFile>
-    </NugetPackage>
-	
-	<NugetPackage Include="$(SolutionsPath)\SharpArch.Web.Mvc\bin\Release\SharpArch.Web.Mvc.dll;
+            <PackageName>SharpArch.NHibernate</PackageName>
+            <NuspecFile>SharpArch.NHibernate.nuspec</NuspecFile>
+        </NugetPackage>
+
+        <NugetPackage Include="$(SolutionsPath)\SharpArch.Web.Mvc\bin\Release\SharpArch.Web.Mvc.dll;
 						   $(SolutionsPath)\SharpArch.Web.Mvc\bin\Release\SharpArch.Web.Mvc.pdb;">
-      <PackageName>SharpArch.Web.Mvc.Castle</PackageName>
-	  <NuspecFile>SharpArch.Web.Mvc.Castle.nuspec</NuspecFile>
-    </NugetPackage>
-	
-	<NugetPackage Include="$(SolutionsPath)\SharpArch.Wcf\bin\Release\SharpArch.Wcf.dll;
+            <PackageName>SharpArch.Web.Mvc.Castle</PackageName>
+            <NuspecFile>SharpArch.Web.Mvc.Castle.nuspec</NuspecFile>
+        </NugetPackage>
+
+        <NugetPackage Include="$(SolutionsPath)\SharpArch.Wcf\bin\Release\SharpArch.Wcf.dll;
 						   $(SolutionsPath)\SharpArch.Wcf\bin\Release\SharpArch.Wcf.pdb;">
-      <PackageName>SharpArch.Wcf</PackageName>
-	  <NuspecFile>SharpArch.Wcf.nuspec</NuspecFile>
-    </NugetPackage>
-	
-	<NugetPackage Include="$(SolutionsPath)\SharpArch.Testing.NUnit\bin\Release\SharpArch.Testing.NUnit.dll;
+            <PackageName>SharpArch.Wcf</PackageName>
+            <NuspecFile>SharpArch.Wcf.nuspec</NuspecFile>
+        </NugetPackage>
+
+        <NugetPackage Include="$(SolutionsPath)\SharpArch.Testing.NUnit\bin\Release\SharpArch.Testing.NUnit.dll;
 						   $(SolutionsPath)\SharpArch.Testing.NUnit\bin\Release\SharpArch.Testing.NUnit.pdb;">
-      <PackageName>SharpArch.Testing.NUnit</PackageName>
-	  <NuspecFile>SharpArch.Testing.NUnit.nuspec</NuspecFile>
-    </NugetPackage>
-	
-	<NugetPackage Include="$(SolutionRoot)\License.txt;">
-      <PackageName>sharp-architecture</PackageName>
-	  <NuspecFile>sharp-architecture.nuspec</NuspecFile>
-    </NugetPackage>
-	
-	<NugetPackage Include="$(SolutionRoot)\License.txt;">
-      <PackageName>SharpArch.Web.RavenDB</PackageName>
-	  <NuspecFile>SharpArch.Web.RavenDB.nuspec</NuspecFile>
-    </NugetPackage>
-	
-	<NugetPackage Include="$(SolutionRoot)\License.txt;">
-      <PackageName>SharpArch.Wcf.NHibernate</PackageName>
-	  <NuspecFile>SharpArch.Wcf.NHibernate.nuspec</NuspecFile>
-    </NugetPackage>
-	
-	<NugetPackage Include="$(SolutionRoot)\License.txt;">
-      <PackageName>SharpArch.Wcf.RavenDB</PackageName>
-	  <NuspecFile>SharpArch.Wcf.RavenDB.nuspec</NuspecFile>
-    </NugetPackage>
-	
-	<NugetPackage Include="$(SolutionsPath)\SharpArch.WcfClient.Castle\bin\Release\SharpArch.WcfClient.Castle.dll;
+            <PackageName>SharpArch.Testing.NUnit</PackageName>
+            <NuspecFile>SharpArch.Testing.NUnit.nuspec</NuspecFile>
+        </NugetPackage>
+
+        <NugetPackage Include="$(SolutionRoot)\License.txt;">
+            <PackageName>sharp-architecture</PackageName>
+            <NuspecFile>sharp-architecture.nuspec</NuspecFile>
+        </NugetPackage>
+
+        <NugetPackage Include="$(SolutionRoot)\License.txt;">
+            <PackageName>SharpArch.Web.RavenDB</PackageName>
+            <NuspecFile>SharpArch.Web.RavenDB.nuspec</NuspecFile>
+        </NugetPackage>
+
+        <NugetPackage Include="$(SolutionRoot)\License.txt;">
+            <PackageName>SharpArch.Wcf.NHibernate</PackageName>
+            <NuspecFile>SharpArch.Wcf.NHibernate.nuspec</NuspecFile>
+        </NugetPackage>
+
+        <NugetPackage Include="$(SolutionRoot)\License.txt;">
+            <PackageName>SharpArch.Wcf.RavenDB</PackageName>
+            <NuspecFile>SharpArch.Wcf.RavenDB.nuspec</NuspecFile>
+        </NugetPackage>
+
+        <NugetPackage Include="$(SolutionsPath)\SharpArch.WcfClient.Castle\bin\Release\SharpArch.WcfClient.Castle.dll;
 						   $(SolutionsPath)\SharpArch.WcfClient.Castle\bin\Release\SharpArch.WcfClient.Castle.pdb;">
-      <PackageName>SharpArch.WcfClient.Castle</PackageName>
-	  <NuspecFile>SharpArch.WcfClient.Castle.nuspec</NuspecFile>
-    </NugetPackage>
-  </ItemGroup>
-  
-  <PropertyGroup>
-    <SolutionName>SharpArch</SolutionName>
-    <SolutionsPath>$(MSBuildProjectDirectory)\..\Solutions</SolutionsPath>
-    <BuildPath>$(MSBuildProjectDirectory)\..\BuildSystem</BuildPath>
-  </PropertyGroup>
+            <PackageName>SharpArch.WcfClient.Castle</PackageName>
+            <NuspecFile>SharpArch.WcfClient.Castle.nuspec</NuspecFile>
+        </NugetPackage>
+    </ItemGroup>
 
-  <Import Project="$(BuildPath)\BuildSystem.proj" />
+    <PropertyGroup>
+        <SolutionName>SharpArch</SolutionName>
+        <SolutionsPath>$(MSBuildProjectDirectory)\..\Solutions</SolutionsPath>
+        <BuildPath>$(MSBuildProjectDirectory)\..\BuildSystem</BuildPath>
+    </PropertyGroup>
 
-  <Target Name="Build"
-        DependsOnTargets="CleanSolution;
+    <Import Project="$(BuildPath)\BuildSystem.proj" />
+
+    <Target Name="Build"
+          DependsOnTargets="CleanSolution;
                             UpdateAssemblyVersion;
                             BuildSolutions;" />
 
-  <Target Name="RunTests"
-          DependsOnTargets="Build;
+    <Target Name="RunTests"
+            DependsOnTargets="Build;
                             RunNUnitTests;" />
-							
-  <Target Name="RunSpecs"
-      DependsOnTargets="RunMSpecSpecifications;" />
 
-  
-  <Target Name="PackageArtefacts"
-          DependsOnTargets="Build;
-						    RunTests;
-	              			RunSpecs;		  
+    <Target Name="RunSpecs"
+        DependsOnTargets="RunMSpecSpecifications;" />
+
+
+    <Target Name="PackageArtefacts"
+            DependsOnTargets="Build;
+                            RunTests;
+                            RunSpecs;
                             Package;
-							PackageNuget;
+                            PackageNuget;
                             BuildSuccess" />
 
 </Project>
