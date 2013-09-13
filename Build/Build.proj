@@ -6,6 +6,7 @@
         <VersionMinor>2</VersionMinor>
         <VersionPatch>0</VersionPatch>
         <VersionPreRelease>Alpha</VersionPreRelease>
+        <BUILD_NUMBER>1</BUILD_NUMBER>
     </PropertyGroup>
 
     <PropertyGroup>
