@@ -6,7 +6,7 @@
     <authors>Sharp Architecture Dev Team</authors>
     <owners>Sharp Architecture Dev Team</owners>
     <licenseUrl>https://github.com/sharparchitecture/Sharp-Architecture/blob/master/License.txt</licenseUrl>
-	<iconUrl>https://github.com/sharparchitecture/Sharp-Architecture/raw/master/Artefacts/Documentation/Logo_100x100.png</iconUrl>
+    <iconUrl>https://github.com/sharparchitecture/Sharp-Architecture/raw/master/Artefacts/Documentation/Logo_100x100.png</iconUrl>
     <projectUrl>http://www.sharparchitecture.net/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Provides the core interfaces and classes needed by a Sharp Architecture application. It is persitance ignorant and would be used with other packages that provide persistance support.</description>
@@ -14,10 +14,10 @@
     <language>en-US</language>
     <dependencies>      
       <dependency id="CommonServiceLocator" version="1.0" />      
-      <dependency id="Newtonsoft.Json" version="[4.0,5.0)" />
+      <dependency id="Newtonsoft.Json" version="5.0.6" />
     </dependencies>
-	<frameworkAssemblies>
+    <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework="net40" />
-	</frameworkAssemblies>  
+    </frameworkAssemblies>  
   </metadata>
 </package>
