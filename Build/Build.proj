@@ -50,7 +50,7 @@
         <NugetPackage Include="$(SolutionsPath)\SharpArch.Domain\bin\Release\SharpArch.Domain.dll;
 						   $(SolutionsPath)\SharpArch.Domain\bin\Release\SharpArch.Domain.pdb;">
             <PackageName>SharpArch.Domain</PackageName>
-            <NuspecFile>SharpArch.Domain.nuspec</NuspecFile>
+            <NuspecFile>MilesiBastos.SharpArch.Domain.nuspec</NuspecFile>
         </NugetPackage>
 
         <NugetPackage Include="$(SolutionsPath)\SharpArch.NHibernate\bin\Release\SharpArch.NHibernate.dll;
