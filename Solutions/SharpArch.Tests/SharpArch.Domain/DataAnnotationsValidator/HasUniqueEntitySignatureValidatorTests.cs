@@ -88,7 +88,7 @@
         }
 
         [HasUniqueDomainSignature]
-        private class Contractor : Entity
+        private class Contractor : EntityWithTypedId<int>
         {
             [DomainSignature]
             public string Name { get; set; }

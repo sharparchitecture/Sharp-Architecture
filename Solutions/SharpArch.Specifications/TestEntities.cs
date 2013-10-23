@@ -13,7 +13,7 @@ namespace SharpArch.Specifications
     using global::SharpArch.NHibernate.NHibernateValidator;
 
     [HasUniqueDomainSignature]
-    class Contractor : Entity
+    class Contractor : EntityWithTypedId<int>
     {
         [DomainSignature]
         public virtual string Name { get; set; }
@@ -96,7 +96,7 @@ namespace SharpArch.Specifications
 
 
     [HasUniqueDomainSignature]
-    public class Song : Entity
+    public class Song : EntityWithTypedId<int>
     {
         [DomainSignature]
         public virtual string SongTitle { get; set; }
@@ -106,7 +106,7 @@ namespace SharpArch.Specifications
     }
 
     [HasUniqueDomainSignature(ErrorMessage = "Band already exists")]
-    public class Band : Entity
+    public class Band : EntityWithTypedId<int>
     {
         [DomainSignature]
         [Required]
@@ -115,7 +115,7 @@ namespace SharpArch.Specifications
     } 
 
     [HasUniqueDomainSignature(ErrorMessage = "Album already exists")]
-    public class Album : Entity
+    public class Album : EntityWithTypedId<int>
     {
         [DomainSignature]
         [Required]
@@ -133,7 +133,7 @@ namespace SharpArch.Specifications
 
 
     [HasUniqueDomainSignature]
-    public class Customer : Entity
+    public class Customer : EntityWithTypedId<int>
     {
         [DomainSignature]
         public virtual string Name { get; set; }

@@ -536,7 +536,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             public string LastName { get; set; }
         }
 
-        public class ObjectWithOneDomainSignatureProperty : Entity
+        public class ObjectWithOneDomainSignatureProperty : EntityWithTypedId<int>
         {
             [DomainSignature]
             public int Age { get; set; }
@@ -544,7 +544,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             public string Name { get; set; }
         }
 
-        private class AddressBeingDomainSignatureComparble : Entity
+        private class AddressBeingDomainSignatureComparble : EntityWithTypedId<int>
         {
             [DomainSignature]
             public string Address1 { get; set; }
@@ -583,11 +583,11 @@ namespace Tests.SharpArch.Domain.DomainModel
             }
         }
 
-        private class Object1 : Entity
+        private class Object1 : EntityWithTypedId<int>
         {
         }
 
-        private class Object2 : Entity
+        private class Object2 : EntityWithTypedId<int>
         {
         }
 
@@ -629,7 +629,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             public string Name { get; set; }
         }
 
-        private class ObjectWithIntId : Entity
+        private class ObjectWithIntId : EntityWithTypedId<int>
         {
             [DomainSignature]
             public string Name { get; set; }
@@ -639,7 +639,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         ///     This is a nonsense object; i.e., it doesn't make sense to have 
         ///     an entity without a domain signature.
         /// </summary>
-        private class ObjectWithNoDomainSignatureProperties : Entity
+        private class ObjectWithNoDomainSignatureProperties : EntityWithTypedId<int>
         {
             public int Age { get; set; }
 

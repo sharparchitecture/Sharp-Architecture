@@ -66,7 +66,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         [Test]
         public void CanCompareEntitiesWithDomainSignatureProperties()
         {
-            var comparer = new BaseObjectEqualityComparer<Entity>();
+            var comparer = new BaseObjectEqualityComparer<EntityWithTypedId<int>>();
 
             var object1 = new ConcreteEntityWithDomainSignatureProperties { Name = "Whatever" };
             var object2 = new ConcreteEntityWithDomainSignatureProperties { Name = "Whatever" };
@@ -137,13 +137,13 @@ namespace Tests.SharpArch.Domain.DomainModel
             }
         }
 
-        private class ConcreteEntityWithDomainSignatureProperties : Entity
+        private class ConcreteEntityWithDomainSignatureProperties : EntityWithTypedId<int>
         {
             [DomainSignature]
             public string Name { get; set; }
         }
 
-        private class ConcreteEntityWithNoDomainSignatureProperties : Entity
+        private class ConcreteEntityWithNoDomainSignatureProperties : EntityWithTypedId<int>
         {
             public string Name { get; set; }
         }

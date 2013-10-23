@@ -260,7 +260,7 @@ namespace Tests.SharpArch.Web.Mvc.ModelBinder
             DependencyResolver.SetResolver((type) => { return ServiceLocator.Current.GetInstance(type); }, (type) => { return ServiceLocator.Current.GetAllInstances(type); });
         }
 
-        public class Employee : Entity
+        public class Employee : EntityWithTypedId<int>
         {
             public Employee()
             {
