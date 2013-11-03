@@ -321,6 +321,31 @@
             }
         }
 
+        public static Configuration Init(
+            SimpleSessionStorage storage, 
+            global::NHibernate.Cfg.MappingSchema.HbmMapping mapping,
+            string cfgFile)
+        {
+            InitStorage(storage);
+
+            try
+            {
+                var configuration = new Configuration();
+                configuration.Configure(cfgFile);
+                configuration.AddDeserializedMapping(mapping, null);
+                var sessionFactory = configuration.BuildSessionFactory();
+
+                return AddConfiguration(DefaultFactoryKey, sessionFactory, configuration, string.Empty);
+            }
+            catch
+            {
+                // If this NHibernate config throws an exception, null the Storage reference so 
+                // the config can be corrected without having to restart the web application.
+                Storage = null;
+                throw;
+            }
+        }
+
         public static void InitStorage(ISessionStorage storage)
         {
             Check.Require(storage != null, "storage mechanism was null but must be provided");
