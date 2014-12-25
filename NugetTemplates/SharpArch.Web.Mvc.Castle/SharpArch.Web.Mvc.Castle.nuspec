@@ -15,12 +15,13 @@
     <dependencies>
       <dependency id="Castle.Core" version="[3.2,4.0)" />
       <dependency id="Castle.Windsor" version="[3.2,4.0)" />
-      <dependency id="CommonServiceLocator.WindsorAdapter" version="1.0" />      
-      <dependency id="MvcContrib.Mvc3-ci" version="3.0.51.0" />
-      <dependency id="MvcContrib.Mvc3.FluentHtml-ci" version="3.0.51.0" />
-	  <dependency id="CommonServiceLocator" version="1.0" />
-	  <dependency id="SharpArch.Domain" version="(1.9.6,3.0.0)" />
-    </dependencies>
+      <dependency id="CommonServiceLocator" version="1.0" />
+	  <dependency id="CommonServiceLocator.WindsorAdapter" version="1.0" />
+      <dependency id="Iesi.Collections" version="[3.3.3.4001,)" />
+      <dependency id="Newtonsoft.Json" version="[5.0.8,)" />
+      <dependency id="SharpArch.Domain" version="[2.1.2,3.0.0)" />
+      <dependency id="Microsoft.AspNet.Mvc" version="[4.0.20710,4.0.30506.0]" />
+	</dependencies>
 	<frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Web" targetFramework="net40" />
 	  <frameworkAssembly assemblyName="System.Web.Mvc" targetFramework="net40" />

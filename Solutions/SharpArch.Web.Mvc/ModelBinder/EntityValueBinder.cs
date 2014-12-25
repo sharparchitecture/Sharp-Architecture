@@ -23,7 +23,7 @@ namespace SharpArch.Web.Mvc.ModelBinder
             var valueProviderResult = bindingContext.ValueProvider.GetValue(bindingContext.ModelName) ??
                         bindingContext.ValueProvider.GetValue(bindingContext.ModelName + ".Id");
 
-            if (valueProviderResult != null)
+            if (valueProviderResult != null && valueProviderResult.RawValue!=null)
             {
                 var entityInterfaceType =
                     modelType.GetInterfaces().First(
@@ -32,7 +32,7 @@ namespace SharpArch.Web.Mvc.ModelBinder
                         interfaceType.GetGenericTypeDefinition() == typeof(IEntityWithTypedId<>));
 
                 var idType = entityInterfaceType.GetGenericArguments().First();
-                var rawId = (valueProviderResult.RawValue as string[]).First();
+                var rawId = valueProviderResult.RawValue.GetType().IsArray ? (valueProviderResult.RawValue as string[]).First() : valueProviderResult.RawValue.ToString();
 
                 if (string.IsNullOrEmpty(rawId))
                 {
