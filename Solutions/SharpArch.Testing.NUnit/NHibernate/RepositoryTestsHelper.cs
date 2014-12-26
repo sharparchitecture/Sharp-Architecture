@@ -30,6 +30,7 @@
             NHibernateSession.Current.Evict(instance);
         }
 
+        [CLSCompliant(false)]
         public static AutoPersistenceModel GetAutoPersistenceModel(string[] assemblies)
         {
             return (from asmName in assemblies

@@ -1,4 +1,3 @@
-
 [submodule "BuildSystem"]
 	path = BuildSystem
-	url = git://github.com/sharparchitecture/Sharp-Architecture-Build.git
+	url = https://github.com/shatl/Sharp-Architecture-Build.git
