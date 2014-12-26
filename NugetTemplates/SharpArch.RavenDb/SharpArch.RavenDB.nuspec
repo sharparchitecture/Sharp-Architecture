@@ -13,9 +13,9 @@
     <summary>Architectural foundation for building maintainable applications with Domain Driven Design patterns and practices</summary>
     <language>en-US</language>
     <dependencies>
-      <dependency id="RavenDB.Client" version="[2.5,3.0)" />
-      <dependency id="SharpArch.Domain" version="(1.9.6,3.0)" />
-      <dependency id="Microsoft.AspNet.Mvc" version="[4.0.20710,4.0.30506.0]" />
+      <dependency id="RavenDB.Client" version="[3.0,4.0)" />
+      <dependency id="SharpArch.Domain" version="[2.4.0,3.0)" />
+      <dependency id="Microsoft.AspNet.Mvc" version="[5.2.2,6.0.0)" />
     </dependencies>
   </metadata>
 </package>
