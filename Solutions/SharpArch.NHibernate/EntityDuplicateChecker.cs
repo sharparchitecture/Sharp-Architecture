@@ -13,7 +13,7 @@
 
     public class EntityDuplicateChecker : IEntityDuplicateChecker
     {
-        private readonly DateTime uninitializedDatetime = default(DateTime);
+        private static readonly DateTime UninitializedDatetime = default(DateTime);
 
         /// <summary>
         ///     Provides a behavior specific repository for checking if a duplicate exists of an existing entity.
@@ -31,40 +31,39 @@
             session.FlushMode = FlushMode.Never;
 
             var criteria =
-                session.CreateCriteria(entity.GetType()).Add(Restrictions.Not(Restrictions.Eq("Id", entity.Id))).
-                    SetMaxResults(1);
+                session.CreateCriteria(entity.GetType()).Add(Restrictions.Not(Restrictions.Eq("Id", entity.Id))).SetMaxResults(1);
 
-            this.AppendSignaturePropertyCriteriaTo(criteria, entity);
+            AppendSignaturePropertyCriteriaTo(criteria, entity);
             var doesDuplicateExist = criteria.List().Count > 0;
             session.FlushMode = previousFlushMode;
             return doesDuplicateExist;
         }
 
         private static void AppendEntityCriteriaTo<TId>(
-            ICriteria criteria, PropertyInfo signatureProperty, object propertyValue)
+            ICriteria criteria, string propertyName, object propertyValue)
         {
             criteria.Add(
                 propertyValue != null
-                    ? Restrictions.Eq(signatureProperty.Name + ".Id", ((IEntityWithTypedId<TId>)propertyValue).Id)
-                    : Restrictions.IsNull(signatureProperty.Name + ".Id"));
+                    ? Restrictions.Eq(propertyName + ".Id", ((IEntityWithTypedId<TId>)propertyValue).Id)
+                    : Restrictions.IsNull(propertyName + ".Id"));
         }
 
         private static void AppendStringPropertyCriteriaTo(
-            ICriteria criteria, PropertyInfo signatureProperty, object propertyValue)
+            ICriteria criteria, string propertyName, object propertyValue)
         {
             criteria.Add(
                 propertyValue != null
-                    ? Restrictions.InsensitiveLike(signatureProperty.Name, propertyValue.ToString(), MatchMode.Exact)
-                    : Restrictions.IsNull(signatureProperty.Name));
+                    ? Restrictions.InsensitiveLike(propertyName, propertyValue.ToString(), MatchMode.Exact)
+                    : Restrictions.IsNull(propertyName));
         }
 
         private static void AppendValuePropertyCriteriaTo(
-            ICriteria criteria, PropertyInfo signatureProperty, object propertyValue)
+            ICriteria criteria, string propertyName, object propertyValue)
         {
             criteria.Add(
                 propertyValue != null
-                    ? Restrictions.Eq(signatureProperty.Name, propertyValue)
-                    : Restrictions.IsNull(signatureProperty.Name));
+                    ? Restrictions.Eq(propertyName, propertyValue)
+                    : Restrictions.IsNull(propertyName));
         }
 
         private static ISession GetSessionFor(object entity)
@@ -73,52 +72,96 @@
             return NHibernateSession.CurrentFor(factoryKey);
         }
 
-        private void AppendDateTimePropertyCriteriaTo(
-            ICriteria criteria, PropertyInfo signatureProperty, object propertyValue)
+        private static string GetPropertyName(string parentPropertyName, PropertyInfo signatureProperty)
         {
-            criteria.Add(
-                (DateTime)propertyValue > this.uninitializedDatetime
-                    ? Restrictions.Eq(signatureProperty.Name, propertyValue)
-                    : Restrictions.IsNull(signatureProperty.Name));
+            if (string.IsNullOrEmpty(parentPropertyName))
+            {
+                return signatureProperty.Name;
+            }
+
+            if (parentPropertyName.EndsWith(".") == false)
+            {
+                parentPropertyName += ".";
+            }
+
+            return string.Format("{0}{1}", parentPropertyName, signatureProperty.Name);
         }
 
-        private void AppendSignaturePropertyCriteriaTo<TId>(ICriteria criteria, IEntityWithTypedId<TId> entity)
+        private static void AppendDateTimePropertyCriteriaTo(ICriteria criteria, string propertyName, object propertyValue)
+        {
+            criteria.Add(
+                (DateTime)propertyValue > UninitializedDatetime
+                    ? Restrictions.Eq(propertyName, propertyValue)
+                    : Restrictions.IsNull(propertyName));
+        }
+
+        private static void AppendSignaturePropertyCriteriaTo<TId>(ICriteria criteria, IEntityWithTypedId<TId> entity)
         {
             foreach (var signatureProperty in entity.GetSignatureProperties())
             {
                 var propertyType = signatureProperty.PropertyType;
                 var propertyValue = signatureProperty.GetValue(entity, null);
-
-                if (propertyType.IsEnum)
+                var propertyName = signatureProperty.Name;
+                
+                if (propertyType.GetInterfaces().Any(
+                       x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEntityWithTypedId<>)))
                 {
-                    criteria.Add(Restrictions.Eq(signatureProperty.Name, (int)propertyValue));
+                    AppendEntityCriteriaTo<TId>(criteria, propertyName, propertyValue);
                 }
-                else if (
-                    propertyType.GetInterfaces().Any(
-                        x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEntityWithTypedId<>)))
+                else if (typeof(ValueObject).IsAssignableFrom(propertyType))
                 {
-                    AppendEntityCriteriaTo<TId>(criteria, signatureProperty, propertyValue);
-                }
-                else if (propertyType == typeof(DateTime))
-                {
-                    this.AppendDateTimePropertyCriteriaTo(criteria, signatureProperty, propertyValue);
-                }
-                else if (propertyType == typeof(string))
-                {
-                    AppendStringPropertyCriteriaTo(criteria, signatureProperty, propertyValue);
-                }
-                else if (propertyType.IsValueType)
-                {
-                    AppendValuePropertyCriteriaTo(criteria, signatureProperty, propertyValue);
+                    AppendValueObjectSignaturePropertyCriteriaTo(criteria, entity.GetType(), propertyName, propertyValue as ValueObject);
                 }
                 else
                 {
-                    throw new ApplicationException(
-                        "Can't determine how to use " + entity.GetType() + "." + signatureProperty.Name +
-                        " when looking for duplicate entries. To remedy this, " +
-                        "you can create a custom validator or report an issue to the S#arp Architecture " +
-                        "project, detailing the type that you'd like to be accommodated.");
+                    AppendSimplePropertyCriteriaTo(criteria, entity.GetType(), propertyValue, propertyType, propertyName);
                 }
+            }
+        }
+
+        private static void AppendValueObjectSignaturePropertyCriteriaTo(ICriteria criteria, Type entityType, string valueObjectPropertyName, ValueObject valueObject)
+        {
+            if (valueObject == null)
+            {
+                return;
+            }
+
+            foreach (PropertyInfo signatureProperty in valueObject.GetSignatureProperties())
+            {
+                Type propertyType = signatureProperty.PropertyType;
+                object propertyValue = signatureProperty.GetValue(valueObject, null);
+                string propertyName = GetPropertyName(valueObjectPropertyName, signatureProperty);
+
+                AppendSimplePropertyCriteriaTo(criteria, entityType, propertyValue, propertyType, propertyName);
+            }
+        }
+
+        private static void AppendSimplePropertyCriteriaTo(
+            ICriteria criteria, Type entityType, object propertyValue, Type propertyType, string propertyName)
+        {
+            if (propertyType.IsEnum)
+            {
+                criteria.Add(Restrictions.Eq(propertyName, (int)propertyValue));
+            }
+            else if (propertyType == typeof(DateTime))
+            {
+                AppendDateTimePropertyCriteriaTo(criteria, propertyName, propertyValue);
+            }
+            else if (propertyType == typeof(string))
+            {
+                AppendStringPropertyCriteriaTo(criteria, propertyName, propertyValue);
+            }
+            else if (propertyType.IsValueType)
+            {
+                AppendValuePropertyCriteriaTo(criteria, propertyName, propertyValue);
+            }
+            else
+            {
+                throw new ApplicationException(
+                    "Can't determine how to use " + entityType + "." + propertyName
+                    + " when looking for duplicate entries. To remedy this, "
+                    + "you can create a custom validator or report an issue to the S#arp Architecture "
+                    + "project, detailing the type that you'd like to be accommodated.");
             }
         }
     }

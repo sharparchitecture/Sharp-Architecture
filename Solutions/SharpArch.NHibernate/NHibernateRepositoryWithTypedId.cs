@@ -50,14 +50,6 @@ namespace SharpArch.NHibernate
             }
         }
 
-        IDbContext INHibernateRepositoryWithTypedId<T, TId>.DbContext
-        {
-            get
-            {
-                return this.DbContext;
-            }
-        }
-
         #endregion
 
         #region Implemented Interfaces
@@ -168,6 +160,16 @@ namespace SharpArch.NHibernate
             this.Session.Delete(entity);
         }
 
+        public virtual void Delete(TId id)
+        {
+            T entity = this.Get(id);
+
+            if (entity != null)
+            {
+                this.Delete(entity);
+            }
+        }
+
         public virtual T Get(TId id)
         {
             return this.Session.Get<T>(id);
@@ -177,11 +179,6 @@ namespace SharpArch.NHibernate
         {
             ICriteria criteria = this.Session.CreateCriteria(typeof(T));
             return criteria.List<T>();
-        }
-
-        public IList<T> PerformQuery(IQuery<T> query)
-        {
-            return query.ExecuteQuery();
         }
 
         /// <summary>

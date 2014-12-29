@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>SharpArch.Wcf.RavenDB</id>
+    <version></version>
+    <authors>Sharp Architecture Dev Team</authors>
+    <owners>Sharp Architecture Dev Team</owners>
+    <licenseUrl>https://github.com/sharparchitecture/Sharp-Architecture/blob/master/License.txt</licenseUrl>
+	<iconUrl>https://github.com/sharparchitecture/Sharp-Architecture/raw/master/Artefacts/Documentation/Logo_100x100.png</iconUrl>
+    <projectUrl>http://www.sharparchitecture.net/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Adds SharpArch.RavenDB persistance support to a WCF project.</description>
+    <summary>Architectural foundation for building maintainable applications with Domain Driven Design patterns and practices</summary>
+    <language>en-US</language>
+    <dependencies>
+	  <dependency id="SharpArch.Domain" version="[2.4.0,3.0.0)" />
+	  <dependency id="SharpArch.RavenDB" version="[2.4.0,3.0.0)" />
+	  <dependency id="SharpArch.Wcf" version="[2.4.0,3.0.0)" />
+    </dependencies>
+  </metadata>
+</package>

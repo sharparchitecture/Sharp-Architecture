@@ -7,8 +7,14 @@ namespace SharpArch.NHibernate.NHibernateValidator
     using SharpArch.Domain.DomainModel;
     using SharpArch.Domain.PersistenceSupport;
 
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class HasUniqueDomainSignatureWithGuidIdAttribute : ValidationAttribute
     {
+        public HasUniqueDomainSignatureWithGuidIdAttribute()
+            : base("Provided values matched an existing, duplicate entity")
+        {
+        }
+
         public override bool IsValid(object value)
         {
             var entityToValidate = value as IEntityWithTypedId<Guid>;
@@ -18,11 +24,6 @@ namespace SharpArch.NHibernate.NHibernateValidator
 
             var duplicateChecker = SafeServiceLocator<IEntityDuplicateChecker>.GetService();
             return !duplicateChecker.DoesDuplicateExistWithTypedIdOf(entityToValidate);
-        }
-
-        public override string FormatErrorMessage(string name)
-        {
-            return "Provided values matched an existing, duplicate entity";
         }
     }
 }

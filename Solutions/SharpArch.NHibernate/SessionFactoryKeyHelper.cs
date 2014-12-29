@@ -12,7 +12,7 @@
 
     public static string GetKeyFrom(object anObject)
     {
-      var provider = SafeServiceLocator<ISessionFactoryKeyProvider>.GetService();
+      var provider = SafeServiceLocator<ISessionFactoryKeyProvider>.GetService() ?? new DefaultSessionFactoryKeyProvider();
       return provider.GetKeyFrom(anObject);
     }
   }

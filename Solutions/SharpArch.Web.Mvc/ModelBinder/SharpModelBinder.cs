@@ -100,7 +100,7 @@ namespace SharpArch.Web.Mvc.ModelBinder
                                                     (propertyType.GetGenericTypeDefinition() == typeof(IList<>) ||
                                                      propertyType.GetGenericTypeDefinition() == typeof(ICollection<>) ||
                                                      propertyType.GetGenericTypeDefinition() ==
-                                                     typeof(Iesi.Collections.Generic.ISet<>) ||
+                                                     typeof(ISet<>) ||
                                                      propertyType.GetGenericTypeDefinition() == typeof(IEnumerable<>));
 
             var isSimpleGenericBindableEntityCollection = isSimpleGenericBindableCollection &&
@@ -149,7 +149,18 @@ namespace SharpArch.Web.Mvc.ModelBinder
             }
             else
             {
-                typedId = Convert.ChangeType(value, idType);
+                //handle nullable type
+                //http://stackoverflow.com/questions/793714/how-can-i-fix-this-up-to-do-generic-conversion-to-nullablet
+                Type underlyingType = Nullable.GetUnderlyingType(idType);
+
+                if (underlyingType == null)
+                {
+                    typedId = Convert.ChangeType(value, idType);
+                }
+                else
+                {
+                    typedId = Convert.ChangeType(value, underlyingType);
+                }
             }
 
             // First, look to see if there's an Id property declared on the entity itself;

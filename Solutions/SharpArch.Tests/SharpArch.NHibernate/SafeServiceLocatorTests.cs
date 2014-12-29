@@ -19,8 +19,7 @@
 //    public class SafeServiceLocatorTests
 //    {
 //        [Test]
-//        public void CanReturnServiceIfInitializedAndRegistered()
-//        {
+//        public void CanReturnServiceIfInitializedAndRegistered() {
 //            IWindsorContainer container = new WindsorContainer();
 //            container.Register(
 //                Component
@@ -35,22 +34,18 @@
 //        }
 
 //        [SetUp]
-//        public void Setup()
-//        {
+//        public void Setup() {
 //            ServiceLocator.SetLocatorProvider(null);
 //        }
 
 //        [Test]
-//        public void WillBeInformedIfServiceLocatorNotInitialized()
-//        {
+//        public void WillBeInformedIfServiceLocatorNotInitialized() {
 //            var exceptionThrown = false;
 
-//            try
-//            {
+//            try {
 //                SafeServiceLocator<IValidator>.GetService();
 //            }
-//            catch (NullReferenceException e)
-//            {
+//            catch (NullReferenceException e) {
 //                exceptionThrown = true;
 //                Assert.That(e.Message.Contains("ServiceLocator has not been initialized"));
 //            }
@@ -59,19 +54,16 @@
 //        }
 
 //        [Test]
-//        public void WillBeInformedIfServiceNotRegistered()
-//        {
+//        public void WillBeInformedIfServiceNotRegistered() {
 //            var exceptionThrown = false;
 
 //            IWindsorContainer container = new WindsorContainer();
 //            ServiceLocator.SetLocatorProvider(() => new WindsorServiceLocator(container));
 
-//            try
-//            {
+//            try {
 //                SafeServiceLocator<IValidator>.GetService();
 //            }
-//            catch (ActivationException e)
-//            {
+//            catch (ActivationException e) {
 //                exceptionThrown = true;
 //                Assert.That(e.Message.Contains("IValidator could not be located"));
 //            }

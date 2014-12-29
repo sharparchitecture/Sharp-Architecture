@@ -1,9 +1,15 @@
+using System.IO;
+
+using Newtonsoft.Json;
+
 namespace Tests.SharpArch.Domain.DomainModel
 {
+    using global::SharpArch.Domain.DomainModel;
+
     using NUnit.Framework;
 
-    using global::SharpArch.Domain.DomainModel;
-    using global::SharpArch.Testing;
+    using global::SharpArch.Testing.NUnit;
+    using global::SharpArch.Testing.NUnit.Helpers;
 
     [TestFixture]
     public class EntityTests
@@ -158,6 +164,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             object2.Address = new AddressBeingDomainSignatureComparble
                 {
                     Address1 = "123 Smith Ln.", 
+
                     // Address2 isn't marked as being part of the domain signature; 
                     // therefore, it WON'T be used in the equality comparison
                     Address2 = "Suite 402", 
@@ -323,6 +330,34 @@ namespace Tests.SharpArch.Domain.DomainModel
             Assert.AreEqual(initialHash, object1.GetHashCode());
         }
 
+        [Test]
+        public void EntitySerializesAsJsonProperly()
+        {
+            var object1 = new ObjectWithOneDomainSignatureProperty();
+            object1.SetIdTo(999);
+            object1.Age = 13;
+            object1.Name = "Foo";
+
+            var jsonSerializer = new JsonSerializer();
+
+            string jsonString;
+            using (var stringWriter = new StringWriter())
+            {
+                jsonSerializer.Serialize(stringWriter, object1);
+                jsonString = stringWriter.ToString();
+            }
+
+            using (var stringReader = new StringReader(jsonString))
+            using (var jsonReader = new JsonTextReader(stringReader))
+            {
+                var deserialized = jsonSerializer.Deserialize<ObjectWithOneDomainSignatureProperty>(jsonReader);
+                Assert.IsNotNull(deserialized);
+                Assert.AreEqual(999, deserialized.Id);
+                Assert.AreEqual(13, deserialized.Age);
+                Assert.AreEqual("Foo", deserialized.Name);
+            }
+        }
+
         [SetUp]
         public void Setup()
         {
@@ -482,6 +517,14 @@ namespace Tests.SharpArch.Domain.DomainModel
             Assert.That(object1, Is.Not.EqualTo(object2));
         }
 
+        [Test]
+        public void CanSerializeEntityToJson()
+        {
+            var object1 = new Contact() { EmailAddress = "serialize@this.net" };
+            string result = JsonConvert.SerializeObject(object1);
+            result.ShouldContain("serialize@this.net");
+        }
+
         public class MockEntityObjectBase<T> : EntityWithTypedId<T>
         {
             public string Email { get; set; }
@@ -624,5 +667,11 @@ namespace Tests.SharpArch.Domain.DomainModel
                 return base.GetHashCode();
             }
         }
+
+        private class Contact : Entity
+        {
+            public virtual string EmailAddress { get; set; }
+        }
+
     }
 }

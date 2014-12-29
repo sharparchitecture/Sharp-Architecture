@@ -17,3 +17,15 @@ _ReSharper.*
 *.dbproj.user
 *.dbmdl
 error-*.xml
+*_mm_cache.bin
+*.dotCover
+StyleCop.Cache
+SpecificationReports
+NugetWorkspace
+Packages
+Common/AssemblyVersion.cs
+*.DotSettings.user
+Artefacts/Documentation/build/
+_NCrunch*/
+*.*ncrunch*
+*.sln.DotSettings

@@ -5,6 +5,12 @@ namespace SharpArch.Domain.PersistenceSupport
     public interface IRepositoryWithTypedId<T, TId>
     {
         /// <summary>
+        /// Provides a handle to application wide DB activities such as committing any pending changes,
+        /// beginning a transaction, rolling back a transaction, etc.
+        /// </summary>
+        IDbContext DbContext { get; }
+
+        /// <summary>
         /// Returns null if a row is not found matching the provided Id.
         /// </summary>
         T Get(TId id);
@@ -29,8 +35,8 @@ namespace SharpArch.Domain.PersistenceSupport
         void Delete(T entity);
 
         /// <summary>
-        /// Takes in an instance of IQuery, calls ExecuteQuery and returns the results.
+        /// Deletes the entity that matches the provided Id.
         /// </summary>
-        IList<T> PerformQuery(IQuery<T> query);
+        void Delete(TId id);
     }
 }

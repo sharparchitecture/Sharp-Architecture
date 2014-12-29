@@ -13,8 +13,10 @@
 
     using global::NHibernate;
     using global::NHibernate.Cfg;
-    using global::NHibernate.Validator.Cfg;
-    using global::NHibernate.Validator.Engine;
+    using global::NHibernate.Event;
+    // using global::NHibernate.Validator.Engine;
+
+    using SharpArch.NHibernate.NHibernateValidator;
 
     public static class NHibernateSession
     {
@@ -86,13 +88,6 @@
         /// </summary>
         public static ISessionStorage Storage { get; set; }
 
-        /// <summary>
-        ///     Provides an access to configured<see cref = "ValidatorEngine" />.
-        /// </summary>
-        /// <value>The validator engine.</value>
-        public static ValidatorEngine ValidatorEngine { get; set; }
-
-        [CLSCompliant(false)]
         public static Configuration AddConfiguration(
             string factoryKey, 
             string[] mappingAssemblies, 
@@ -129,7 +124,6 @@
             return config;
         }
 
-        [CLSCompliant(false)]
         public static Configuration AddConfiguration(
             string factoryKey, 
             string[] mappingAssemblies, 
@@ -144,7 +138,6 @@
             return AddConfiguration(factoryKey, sessionFactory, cfg, validatorCfgFile);
         }
 
-        [CLSCompliant(false)]
         public static Configuration AddConfiguration(
             string factoryKey, ISessionFactory sessionFactory, Configuration cfg, string validatorCfgFile)
         {
@@ -152,7 +145,6 @@
                 !SessionFactories.ContainsKey(factoryKey), 
                 "A session factory has already been configured with the key of " + factoryKey);
 
-            ConfigureNHibernateValidator(cfg, validatorCfgFile);
             SessionFactories.Add(factoryKey, sessionFactory);
 
             return cfg;
@@ -253,14 +245,12 @@
             return Init(storage, mappingAssemblies, null, cfgFile, null, validatorCfgFile, null);
         }
 
-        [CLSCompliant(false)]
         public static Configuration Init(
             ISessionStorage storage, string[] mappingAssemblies, AutoPersistenceModel autoPersistenceModel)
         {
             return Init(storage, mappingAssemblies, autoPersistenceModel, null, null, null, null);
         }
 
-        [CLSCompliant(false)]
         public static Configuration Init(
             ISessionStorage storage, 
             string[] mappingAssemblies, 
@@ -270,7 +260,6 @@
             return Init(storage, mappingAssemblies, autoPersistenceModel, cfgFile, null, null, null);
         }
 
-        [CLSCompliant(false)]
         public static Configuration Init(
             ISessionStorage storage, 
             string[] mappingAssemblies, 
@@ -280,7 +269,6 @@
             return Init(storage, mappingAssemblies, autoPersistenceModel, null, cfgProperties, null, null);
         }
 
-        [CLSCompliant(false)]
         public static Configuration Init(
             ISessionStorage storage, 
             string[] mappingAssemblies, 
@@ -291,7 +279,6 @@
             return Init(storage, mappingAssemblies, autoPersistenceModel, cfgFile, null, validatorCfgFile, null);
         }
 
-        [CLSCompliant(false)]
         public static Configuration Init(
             ISessionStorage storage, 
             string[] mappingAssemblies, 
@@ -304,7 +291,6 @@
                 storage, mappingAssemblies, autoPersistenceModel, cfgFile, cfgProperties, validatorCfgFile, null);
         }
 
-        [CLSCompliant(false)]
         public static Configuration Init(
             ISessionStorage storage, 
             string[] mappingAssemblies, 
@@ -380,7 +366,6 @@
 
             Storage = null;
             registeredInterceptor = null;
-            ValidatorEngine = null;
             ConfigurationCache = null;
         }
 
@@ -404,25 +389,6 @@
             }
 
             return cfg;
-        }
-
-        private static void ConfigureNHibernateValidator(Configuration cfg, string validatorCfgFile)
-        {
-            var engine = new ValidatorEngine();
-
-            if (string.IsNullOrEmpty(validatorCfgFile))
-            {
-                engine.Configure();
-            }
-            else
-            {
-                engine.Configure(validatorCfgFile);
-            }
-
-            // Register validation listeners with the current NHib configuration
-            cfg.Initialize(engine);
-
-            ValidatorEngine = engine;
         }
 
         private static ISessionFactory CreateSessionFactoryFor(
@@ -453,6 +419,19 @@
                         {
                             m.AutoMappings.Add(autoPersistenceModel);
                         }
+                    });
+
+            fluentConfiguration.ExposeConfiguration(
+                e =>
+                    {
+                        e.EventListeners.PreInsertEventListeners = new IPreInsertEventListener[]
+                            {
+                                new DataAnnotationsEventListener()
+                            };
+                        e.EventListeners.PreUpdateEventListeners = new IPreUpdateEventListener[]
+                            {
+                                new DataAnnotationsEventListener()
+                            };
                     });
 
             return fluentConfiguration.BuildSessionFactory();

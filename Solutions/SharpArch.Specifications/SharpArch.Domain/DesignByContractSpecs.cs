@@ -63,7 +63,7 @@ namespace SharpArch.Specifications.SharpArch.Domain
 
             Because of = () => result = Catch.Exception(() => ConvertToPercentage(-0.2m));
 
-            It should_throw_a_precondition_exception = () => result.ShouldBeOfType<PreconditionException>();
+            It should_throw_a_precondition_exception = () => result.ShouldBeOfExactType<PreconditionException>();
         }
 
         [Subject(typeof(Check))]
@@ -75,7 +75,7 @@ namespace SharpArch.Specifications.SharpArch.Domain
 
             Because of = () => result = Catch.Exception(() => ConvertToPercentage(10m));
 
-            It should_throw_a_postcondition_exception = () => result.ShouldBeOfType<PostconditionException>();
+            It should_throw_a_postcondition_exception = () => result.ShouldBeOfExactType<PostconditionException>();
         }
 
         [Subject(typeof(Check))]

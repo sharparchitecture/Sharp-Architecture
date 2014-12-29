@@ -8,7 +8,7 @@
     ///     communicate with the database.  This allows you to declare different repositories to 
     ///     communicate with different databases.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class SessionFactoryAttribute : Attribute
     {
         public readonly string FactoryKey;

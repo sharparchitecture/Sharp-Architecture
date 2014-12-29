@@ -16,7 +16,7 @@
         public virtual ICollection<ValidationResult> ValidationResults()
         {
             var validationResults = new List<ValidationResult>();
-            Validator.TryValidateObject(this, new ValidationContext(this, null, null), validationResults);
+            Validator.TryValidateObject(this, new ValidationContext(this, null, null), validationResults, true);
             return validationResults;
         }
     }

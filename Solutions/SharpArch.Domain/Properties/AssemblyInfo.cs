@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System;
 
-[assembly: AssemblyTitle("SharpArch.Core")]
+[assembly: AssemblyTitle("SharpArch.Domain")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyProduct("SharpArch.Core")]
+[assembly: AssemblyProduct("SharpArch.Domain")]
 [assembly: CLSCompliant(true)]

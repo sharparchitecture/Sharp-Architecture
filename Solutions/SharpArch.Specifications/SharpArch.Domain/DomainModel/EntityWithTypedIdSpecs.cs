@@ -15,61 +15,15 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
     using System.Reflection;
 
     using global::SharpArch.Domain.DomainModel;
-    using global::SharpArch.Testing;
+    using global::SharpArch.Testing.NUnit.Helpers;
 
     using Machine.Specifications;
 
+
     public class entity_with_type_id_specs
     {
-        public class specification_for_entity_with_typed_id
-        {
-            protected class EntityWithNoDomainSignatureProperties : EntityWithTypedId<int>
-            {
-                public string Property1 { get; set; }
-
-                public int Property2 { get; set; }
-            }
-
-            protected class EntityWithAllPropertiesPartOfDomainSignature : EntityWithTypedId<int>
-            {
-                [DomainSignature]
-                public string Property1 { get; set; }
-
-                [DomainSignature]
-                public int Property2 { get; set; }
-
-                [DomainSignature]
-                public bool Property3 { get; set; }
-            }
-
-            protected class EntityWithSomePropertiesPartOfDomainSignature : EntityWithTypedId<int>
-            {
-                [DomainSignature]
-                public string Property1 { get; set; }
-
-                public int Property2 { get; set; }
-
-                [DomainSignature]
-                public bool Property3 { get; set; }
-            }
-
-            protected class EntityWithAnotherEntityAsPartOfDomainSignature : EntityWithTypedId<int>
-            {
-                public EntityWithAnotherEntityAsPartOfDomainSignature()
-                {
-                    this.Property2 = new EntityWithAllPropertiesPartOfDomainSignature();
-                }
-
-                [DomainSignature]
-                public string Property1 { get; set; }
-
-                [DomainSignature]
-                public EntityWithAllPropertiesPartOfDomainSignature Property2 { get; set; }
-            }
-        }
-
         [Subject(typeof(EntityWithTypedId<>))]
-        public class just_testing : specification_for_entity_with_typed_id
+        public class just_testing
         {
             static EntityWithAllPropertiesPartOfDomainSignature entity1;
             static EntityWithAllPropertiesPartOfDomainSignature entity2;
@@ -80,7 +34,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_two_variables_that_reference_the_same_instance_of_an_entity_are_compared : specification_for_entity_with_typed_id
+        public class when_two_variables_that_reference_the_same_instance_of_an_entity_are_compared
         {
             static EntityWithAllPropertiesPartOfDomainSignature entity1;
             static EntityWithAllPropertiesPartOfDomainSignature entity2;
@@ -91,7 +45,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_two_entities_with_all_properties_being_part_of_their_domain_signature_are_compared_and_all_property_values_are_the_same : specification_for_entity_with_typed_id
+        public class when_two_entities_with_all_properties_being_part_of_their_domain_signature_are_compared_and_all_property_values_are_the_same
         {
             static EntityWithAllPropertiesPartOfDomainSignature entity1;
             static EntityWithAllPropertiesPartOfDomainSignature entity2;
@@ -106,7 +60,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_two_entities_with_all_properties_being_part_of_their_domain_signature_are_compared_and_any_property_value_is_different : specification_for_entity_with_typed_id
+        public class when_two_entities_with_all_properties_being_part_of_their_domain_signature_are_compared_and_any_property_value_is_different
         {
             static EntityWithAllPropertiesPartOfDomainSignature entity1;
             static EntityWithAllPropertiesPartOfDomainSignature entity2;
@@ -121,7 +75,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_two_entities_with_some_properties_being_part_of_their_domain_signature_are_compared_and_all_property_values_are_the_same : specification_for_entity_with_typed_id
+        public class when_two_entities_with_some_properties_being_part_of_their_domain_signature_are_compared_and_all_property_values_are_the_same
         {
             static EntityWithSomePropertiesPartOfDomainSignature entity1;
             static EntityWithSomePropertiesPartOfDomainSignature entity2;
@@ -136,7 +90,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_two_entities_with_some_properties_being_part_of_their_domain_signature_are_compared_and_the_value_of_a_property_that_is_part_of_the_domain_signature_is_different : specification_for_entity_with_typed_id
+        public class when_two_entities_with_some_properties_being_part_of_their_domain_signature_are_compared_and_the_value_of_a_property_that_is_part_of_the_domain_signature_is_different
         {
             static EntityWithSomePropertiesPartOfDomainSignature entity1;
             static EntityWithSomePropertiesPartOfDomainSignature entity2;
@@ -151,7 +105,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_two_entities_with_some_properties_being_part_of_their_domain_signature_are_compared_and_the_value_of_a_property_that_is_not_part_of_the_domain_signature_is_different : specification_for_entity_with_typed_id
+        public class when_two_entities_with_some_properties_being_part_of_their_domain_signature_are_compared_and_the_value_of_a_property_that_is_not_part_of_the_domain_signature_is_different
         {
             static EntityWithSomePropertiesPartOfDomainSignature entity1;
             static EntityWithSomePropertiesPartOfDomainSignature entity2;
@@ -166,7 +120,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_two_entities_that_have_the_same_id_but_different_values_for_the_properties_that_are_part_of_their_domain_signature_are_compared : specification_for_entity_with_typed_id
+        public class when_two_entities_that_have_the_same_id_but_different_values_for_the_properties_that_are_part_of_their_domain_signature_are_compared
         {
             static EntityWithAllPropertiesPartOfDomainSignature entity1;
             static EntityWithAllPropertiesPartOfDomainSignature entity2;
@@ -183,7 +137,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_two_entities_that_have_different_ids_but_the_same_values_for_the_properties_that_are_part_of_their_domain_signature_are_compared : specification_for_entity_with_typed_id
+        public class when_two_entities_that_have_different_ids_but_the_same_values_for_the_properties_that_are_part_of_their_domain_signature_are_compared
         {
             static EntityWithAllPropertiesPartOfDomainSignature entity1;
             static EntityWithAllPropertiesPartOfDomainSignature entity2;
@@ -200,7 +154,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_two_entities_that_have_another_entity_as_a_property_belonging_to_the_domain_signature_are_compared_and_the_properties_have_the_same_value : specification_for_entity_with_typed_id
+        public class when_two_entities_that_have_another_entity_as_a_property_belonging_to_the_domain_signature_are_compared_and_the_properties_have_the_same_value
         {
             static EntityWithAnotherEntityAsPartOfDomainSignature entity1;
             static EntityWithAnotherEntityAsPartOfDomainSignature entity2;
@@ -217,7 +171,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_two_entities_that_have_another_entity_as_a_property_belonging_to_the_domain_signature_are_compared_and_the_properties_have_different_values : specification_for_entity_with_typed_id
+        public class when_two_entities_that_have_another_entity_as_a_property_belonging_to_the_domain_signature_are_compared_and_the_properties_have_different_values
         {
             static EntityWithAnotherEntityAsPartOfDomainSignature entity1;
             static EntityWithAnotherEntityAsPartOfDomainSignature entity2;
@@ -234,7 +188,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_an_entity_is_asked_for_the_properties_that_make_up_its_domain_signature : specification_for_entity_with_typed_id
+        public class when_an_entity_is_asked_for_the_properties_that_make_up_its_domain_signature
         {
             static IEnumerable<PropertyInfo> result;
 
@@ -256,7 +210,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_an_entity_is_asked_for_the_properties_that_make_up_its_domain_signature_and_there_are_none : specification_for_entity_with_typed_id
+        public class when_an_entity_is_asked_for_the_properties_that_make_up_its_domain_signature_and_there_are_none
         {
             static IEnumerable<PropertyInfo> result;
 
@@ -266,7 +220,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_two_different_entity_subclasses_with_the_same_id_are_compared : specification_for_entity_with_typed_id
+        public class when_two_different_entity_subclasses_with_the_same_id_are_compared
         {
             static EntityWithAllPropertiesPartOfDomainSignature entity1;
             static EntityWithSomePropertiesPartOfDomainSignature entity2;
@@ -283,7 +237,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_new_instances_of_an_entity_are_created : specification_for_entity_with_typed_id
+        public class when_new_instances_of_an_entity_are_created
         {
             static EntityWithAllPropertiesPartOfDomainSignature entity1;
 
@@ -299,7 +253,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_new_instances_of_an_entity_with_assigned_id_are_created_and_given_the_same_id : specification_for_entity_with_typed_id
+        public class when_new_instances_of_an_entity_with_assigned_id_are_created_and_given_the_same_id
         {
             static EntityWithAllPropertiesPartOfDomainSignature entity1;
 
@@ -317,7 +271,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_a_new_instance_of_an_entity_is_created : specification_for_entity_with_typed_id
+        public class when_a_new_instance_of_an_entity_is_created
         {
             static EntityWithAllPropertiesPartOfDomainSignature entity;
 
@@ -327,7 +281,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_a_new_instance_of_an_entity_that_has_no_domain_signature_properties_is_created_and_then_persisted : specification_for_entity_with_typed_id
+        public class when_a_new_instance_of_an_entity_that_has_no_domain_signature_properties_is_created_and_then_persisted
         {
             static EntityWithNoDomainSignatureProperties entity;
 
@@ -347,7 +301,7 @@ namespace SharpArch.Specifications.SharpArch.Domain.DomainModel
         }
 
         [Subject(typeof(EntityWithTypedId<>))]
-        public class when_a_new_instance_of_an_entity_that_has_domain_signature_properties_is_created_and_then_persisted : specification_for_entity_with_typed_id
+        public class when_a_new_instance_of_an_entity_that_has_domain_signature_properties_is_created_and_then_persisted
         {
             static EntityWithAllPropertiesPartOfDomainSignature entity;
 

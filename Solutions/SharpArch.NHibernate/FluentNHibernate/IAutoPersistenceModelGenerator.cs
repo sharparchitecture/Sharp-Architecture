@@ -4,7 +4,6 @@ namespace SharpArch.NHibernate.FluentNHibernate
 
     using global::FluentNHibernate.Automapping;
 
-    [CLSCompliant(false)]
     public interface IAutoPersistenceModelGenerator
     {
         AutoPersistenceModel Generate();

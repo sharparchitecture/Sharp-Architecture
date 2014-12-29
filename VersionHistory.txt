@@ -1,3 +1,133 @@
+
+========================
+S#arp Architecture 2.1.0
+========================
+
+* #60: Updated dependencies
+
+------
+Castle.Core 3.2.2^
+Castle.Windsor 3.2.1^
+FluentNHibernate 1.4^
+NHibernate 3.3.3.4001^
+RavenDB.Client 2.5.2750^
+Iesi.Collections 3.3.3.4001^
+Newtonsoft.Json 5.0.8^
+Machine.Specifications 0.6.1^
+System.Data.SQLite 1.0.90^
+NUnit 2.6.3^
+Moq 4.2.1312.1622^
+------
+
+==================================================
+S#arp Architecture 2.1.0RC for Visual Studio 2010
+==================================================
+
+* #40: RavenDb support completed
+* #44: Add IRepository.Delete(id)
+
+-------
+
+Assembly Dependencies ("^" notes upgraded dependencies):
++ Castle.Core 3.1.0^
++ Castle.Windsor 3.1.0^
++ FluentNHibernate 1.3.0.733^
++ NHibernate 3.3.2.4000^
++ NewtonSoft.Json 4.5.11^
++ RavenDB.Client 2.0.2230+
++ NUnit 2.6.2^
+-------
+
+
+==================================================
+S#arp Architecture 2.0.3 for Visual Studio 2010
+==================================================
+
+Issues:
+* #42: Show the expected/requested TResult in the exception message (Thanks Joel Purra @joelpurra).
+* #41: Decorated the attribute classes with the AttributeUsageAttribute, to restrict usage of the attributes to their intended targets. (Thanks Sandor Drieënhuizen @sandord)
+
+-------
+
+Assembly Dependencies ("^" notes upgraded dependencies):
++ NHibernate 3.3^
++ FluentNHibernate 1.3.0.727
+
+-------
+
+
+==================================================
+S#arp Architecture 2.0.0 for Visual Studio 2010
+==================================================
+
+Changes:
+* Update solution structure and namespaces changed.
+	(SharpArch.Core => SharpArch.Domain)
+	(SharpArch.Data => SharpArch.Infrastructure)
+	(SharpArch.Web  => SharpArch.Web.Mvc)
+* Improved NuGet packaging.
+* CQRS with ICommandHandler, IHandles and DomainEvents and NHibernateQuery abstract class
+* Add ILinqRepository<> and query Specifications with implementation SharpArch.NHibernate.LinqRepository<>
+* NHibernate runs DataAnnotations validation before persisting.
+* EntityIdSetter and RepositoryTestsHelper moved to SharpArch.Testing.NUnit (Thanks Shatel)
+* Remove ILMerging, seperate SharpArch packages for different features.
+* Changes in the handling of NHibernateSessionFactory keys to allow for multi tenancy.
+
+Issues:
+* #36: HasUniqueDomainSignature overrides specified error message.
+* #35: ModelBinder does not bind child entities
+* #14: EntityDuplicateChecker does not check ValueObject properties with DomainSignature attribute
+* #26: Allow the Id field of a form model to be nullable (Thanks @ZekeLv)
+* #15: Explicit cast to Entity made on PreUpdate NHibernate listener
+* #31: Explicit cast to Entity made on PreInsert NHibernate listener (Thanks @MartinHornagold)
+
+
+-------
+
+Assembly Dependencies ("^" notes upgraded dependencies):
++ CastleWindsor 3.0^
++ NHibernate 3.2^
++ FluentNHibernate 1.3^
++ NewtonSoft.Json 4.0^
+
+-------
+
+==================================================
+S#arp Architecture 1.6.0 for Visual Studio 2008 and Visual Studio 2010
+==================================================
+
+New and exciting in this release:
+* Added Configuration Caching for NHibernate (thanks Dan - SonOfMofo)
+* Fluent NHibernate upgraded to 1.1.0.635. (thanks Seif)
+* Added jquery.Validate.js and MicrosoftMvcJQueryValidation.js to generated web project and added references to them in master page. (thanks Igor)
+* Generated CRUD forms enable client side validation. (thanks Igor)
+* Updated factory assembly qualifier .svc file for Northwind sample Wcf.Web
+* Updated invalid config sections in web.config for 2008 and 2010 templates
+* Added NHibernateValidatorClientProvider and NHibernateValidatorProvider (thanks Igor)
+* Added Parameter to rollback transaction when ModelState is invalid (thanks Inventti)
+* Updated model binder to deal correctly with binding empty string to GUID Id types
+* Updated the WcfSessionStorage class to automatically fall back to either a default (SimpleSessionStorage) or a session storage implementation of choice 
+  whenever OperationContext.Current is null. This enables usage of NHibernate sessions in WCF host applications outside of WCF Operation methods without hassle.
+  whenever OperationContext.Current is null. This enables usage of NHibernate sessions in WCF host applications outside of WCF Operation methods without hassle.
+
+-------
+
+Assembly Dependencies ("^" notes upgraded dependencies)
++ FluentNhibernate.dll v1.1.0.635
+- FluentNHibernate.dll v1.0.0.636
+
+-------
+
+Required Upgrade Steps and Changes:
+
+Upgrading to S#arp Architecture 1.6 from 1.5.2 RTM requires the following steps:
+
+#) SharpArch:  Add the SharpArch.dll to your projects /lib and /tools/lib folders.
+
+#) SharpArch:  Add the FluentNHibernate.dll from the /bin to your /lib and /tools/lib folders.
+
+#) SharpArch:  Update the references in your project as needed
+
 ==================================================
 S#arp Architecture 1.5.2 for Visual Studio 2008 and Visual Studio 2010
 ==================================================

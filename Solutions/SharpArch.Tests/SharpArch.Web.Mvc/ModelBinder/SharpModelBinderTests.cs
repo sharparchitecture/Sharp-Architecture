@@ -2,24 +2,24 @@ namespace Tests.SharpArch.Web.Mvc.ModelBinder
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.Web.Mvc;
-
+    
     using Castle.MicroKernel.Registration;
     using Castle.Windsor;
 
     using CommonServiceLocator.WindsorAdapter;
 
-    using Microsoft.Practices.ServiceLocation;
-
     using Moq;
-
-    using NUnit.Framework;
 
     using global::SharpArch.Domain.DomainModel;
     using global::SharpArch.Domain.PersistenceSupport;
     using global::SharpArch.Web.Mvc.ModelBinder;
+
+    using Microsoft.Practices.ServiceLocation;
+
+
+    using NUnit.Framework;
 
     [TestFixture]
     public class SharpModelBinderTests

@@ -4,10 +4,12 @@ namespace Tests.SharpArch.Domain.DomainModel
     using System.Linq;
     using System.Reflection;
 
+    using global::SharpArch.Domain.DomainModel;
+
     using NUnit.Framework;
 
-    using global::SharpArch.Domain.DomainModel;
-    using global::SharpArch.Testing;
+    using global::SharpArch.Testing.NUnit;
+    using global::SharpArch.Testing.NUnit.Helpers;
 
     [TestFixture]
     public class BaseObjectEqualityComparerTests
