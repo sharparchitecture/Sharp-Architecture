@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpArch.Domain", "SharpArch.Domain\SharpArch.Domain.csproj", "{E12E99BB-8732-441F-B3A6-861F0CE23D3D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpArch.Web.Mvc", "SharpArch.Web.Mvc\SharpArch.Web.Mvc.csproj", "{BF4E3D18-2EFB-49E3-9D8D-0F9F9BE1094A}"
@@ -28,6 +30,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{ED61719A-DB60-4E15-BCBB-BA6A71978E99}"
 	ProjectSection(SolutionItems) = preProject
 		..\Build\Build.cmd = ..\Build\Build.cmd
+		..\Build\Build.proj = ..\Build\Build.proj
 		..\Build\BuildAndPackage.cmd = ..\Build\BuildAndPackage.cmd
 		..\Build\BuildAndTest.cmd = ..\Build\BuildAndTest.cmd
 	EndProjectSection
@@ -38,8 +41,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpArch.RavenDb", "SharpA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpArch.NHibernate", "SharpArch.NHibernate\SharpArch.NHibernate.csproj", "{0BD77F13-8DF6-4C16-9508-33AA4CF0677A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{88737653-8E9D-4624-AE9F-95E987BF40DA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B038D297-99B4-453D-A720-16D3119DF83D}"
 	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
@@ -150,10 +154,10 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E12E99BB-8732-441F-B3A6-861F0CE23D3D} = {C17FF2BE-F51B-49EA-9670-92CD4531B4D1}
-		{F7F5E614-3B4E-43EC-8F8A-CB46B89A3827} = {C3FCEC2B-1A32-4AA3-8989-69559CFF568B}
 		{BF4E3D18-2EFB-49E3-9D8D-0F9F9BE1094A} = {C3FCEC2B-1A32-4AA3-8989-69559CFF568B}
-		{D6DDE603-4678-44B9-A2D1-101BF5D12AD7} = {5029AAB4-E60E-4C71-8D40-9812DDBB4253}
 		{C201296D-09B7-4BAE-96F0-AB59F624DB36} = {5029AAB4-E60E-4C71-8D40-9812DDBB4253}
+		{D6DDE603-4678-44B9-A2D1-101BF5D12AD7} = {5029AAB4-E60E-4C71-8D40-9812DDBB4253}
+		{F7F5E614-3B4E-43EC-8F8A-CB46B89A3827} = {C3FCEC2B-1A32-4AA3-8989-69559CFF568B}
 		{A3B21E07-F25F-46D3-B4DE-EA29A0A4A831} = {8086F206-D8C3-4D8B-968C-A5EF3BA79D12}
 		{CB7976A2-5089-4AC8-83C3-24FAB6F50ED4} = {8C1A5B2F-1EE3-4A27-A650-044905607028}
 		{B556850E-2EE3-4D1E-9A56-1D7C7C1C95EC} = {D5220D0A-6367-41C4-8409-989C4A909113}

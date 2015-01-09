@@ -131,7 +131,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         {
             public string Name { get; set; }
 
-            protected override IEnumerable<PropertyInfo> GetTypeSpecificSignatureProperties()
+            protected override PropertyInfo[] GetTypeSpecificSignatureProperties()
             {
                 return this.GetType().GetProperties();
             }

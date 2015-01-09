@@ -37,7 +37,7 @@ namespace SharpArch.Specifications.SharpArch.Domain
             Because of = () => result = FileCache.RetrieveFromCache<DummyType>("dummy.txt");
 
             It should_return_the_correct_type_of_object = () =>
-                result.ShouldBeOfType(typeof(DummyType));
+                result.ShouldBeOfExactType(typeof(DummyType));
 
             It should_set_the_objects_properties_correctly = () =>
                 ((DummyType)result).FirstProperty.ShouldEqual("First");
@@ -53,7 +53,7 @@ namespace SharpArch.Specifications.SharpArch.Domain
             Because of = () => exception = Catch.Exception(() => FileCache.RetrieveFromCache<string>(string.Empty));
 
             It should_throw_an_argument_exception = () =>
-                exception.ShouldBeOfType(typeof(ArgumentException));
+                exception.ShouldBeAssignableTo<ArgumentException>();
         }
 
         [Subject(typeof(FileCache))]
@@ -64,7 +64,7 @@ namespace SharpArch.Specifications.SharpArch.Domain
             Because of = () => exception = Catch.Exception(() => FileCache.RetrieveFromCache<string>(null));
 
             It should_throw_an_argument_exception = () =>
-                exception.ShouldBeOfType(typeof(ArgumentException));
+                exception.ShouldBeOfExactType<ArgumentNullException>();
         }
 
         [Subject(typeof(FileCache))]
@@ -89,7 +89,7 @@ namespace SharpArch.Specifications.SharpArch.Domain
             Because of = () => exception = Catch.Exception(() => FileCache.StoreInCache<DummyType>(null, "path.txt"));
 
             It should_throw_an_argument_exception = () =>
-                exception.ShouldBeOfType(typeof(ArgumentException));
+                exception.ShouldBeOfExactType(typeof(ArgumentNullException));
         }
 
         [Subject(typeof(FileCache))]
@@ -101,7 +101,7 @@ namespace SharpArch.Specifications.SharpArch.Domain
             Because of = () => exception = Catch.Exception(() => FileCache.StoreInCache<DummyType>(dummy, string.Empty));
 
             It should_throw_an_argument_exception = () =>
-                exception.ShouldBeOfType(typeof(ArgumentException));
+                exception.ShouldBeAssignableTo<ArgumentException>();
         }
 
         [Subject(typeof(FileCache))]

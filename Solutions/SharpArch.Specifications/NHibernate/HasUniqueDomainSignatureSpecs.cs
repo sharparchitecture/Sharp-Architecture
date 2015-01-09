@@ -132,7 +132,7 @@ namespace SharpArch.Specifications.NHibernate
 
             Because of = () => result = Catch.Exception(() => entity.IsValid());
 
-            It should_throw_a_precondition_exception = () => result.ShouldBeOfType(typeof(PreconditionException));
+            It should_throw_a_precondition_exception = () => result.ShouldBeOfExactType(typeof(PreconditionException));
         }
 
         [Subject(typeof(HasUniqueDomainSignatureAttribute))]
