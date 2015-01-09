@@ -50,7 +50,7 @@
         ///     This ensures that the value object has no properties decorated with the 
         ///     [DomainSignature] attribute.
         /// </remarks>
-        protected override IEnumerable<PropertyInfo> GetTypeSpecificSignatureProperties()
+        protected override PropertyInfo[] GetTypeSpecificSignatureProperties()
         {
             var invalidlyDecoratedProperties =
                 this.GetType().GetProperties().Where(
