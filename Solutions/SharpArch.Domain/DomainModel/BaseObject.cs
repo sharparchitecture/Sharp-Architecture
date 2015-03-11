@@ -1,4 +1,6 @@
-﻿namespace SharpArch.Domain.DomainModel
+﻿using System.Collections.Concurrent;
+
+namespace SharpArch.Domain.DomainModel
 {
     using System;
     using System.Collections.Generic;
@@ -34,8 +36,8 @@
         ///     A description of the very slick ThreadStatic attribute may be found at 
         ///     http://www.dotnetjunkies.com/WebLog/chris.taylor/archive/2005/08/18/132026.aspx
         /// </summary>
-        [ThreadStatic]
-        private static Dictionary<Type, IEnumerable<PropertyInfo>> signaturePropertiesDictionary;
+        private static readonly ConcurrentDictionary<Type, PropertyInfo[]> signaturePropertiesDictionary 
+            = new ConcurrentDictionary<Type, PropertyInfo[]>(Environment.ProcessorCount, 64);
 
         public override bool Equals(object obj)
         {
@@ -64,45 +66,48 @@
             {
                 var signatureProperties = this.GetSignatureProperties();
 
+                // If no properties were flagged as being part of the signature of the object,
+                // then simply return the hashcode of the base object as the hashcode.
+                if (signatureProperties.Length == 0) return base.GetHashCode();
+
                 // It's possible for two objects to return the same hash code based on 
                 // identically valued properties, even if they're of two different types, 
                 // so we include the object's type in the hash calculation
                 var hashCode = this.GetType().GetHashCode();
 
-                hashCode = signatureProperties.Select(property => property.GetValue(this, null))
-                                              .Where(value => value != null)
-                                              .Aggregate(hashCode, (current, value) => (current * HashMultiplier) ^ value.GetHashCode());
-
-                if (signatureProperties.Any())
+                for (int i = 0; i < signatureProperties.Length; i++)
                 {
-                    return hashCode;
+                    var property = signatureProperties[i];
+                    var value = property.GetValue(this, null);
+                    if (value != null) 
+                        hashCode = (hashCode*HashMultiplier) ^ value.GetHashCode();
                 }
 
-                // If no properties were flagged as being part of the signature of the object,
-                // then simply return the hashcode of the base object as the hashcode.
-                return base.GetHashCode();
+                return hashCode;
             }
         }
 
         /// <summary>
         /// </summary>
-        public virtual IEnumerable<PropertyInfo> GetSignatureProperties()
+        public virtual PropertyInfo[] GetSignatureProperties()
         {
-            IEnumerable<PropertyInfo> properties;
+            PropertyInfo[] properties;
 
-            // Init the signaturePropertiesDictionary here due to reasons described at 
-            // http://blogs.msdn.com/jfoscoding/archive/2006/07/18/670497.aspx
-            if (signaturePropertiesDictionary == null)
-            {
-                signaturePropertiesDictionary = new Dictionary<Type, IEnumerable<PropertyInfo>>();
-            }
+            var type = this.GetType();
 
-            if (signaturePropertiesDictionary.TryGetValue(this.GetType(), out properties))
+            // load domain signature properties from cache. Since ConcurrencyDictionary get operations are lock free, 
+            // this will be almost as fast as Dictionary get. See http://arbel.net/2013/02/03/best-practices-for-using-concurrentdictionary/
+
+            // Since data won't be in cache on first request only, use .GetOrAdd as second try to prevent allocation of extra lambda object.
+            if (signaturePropertiesDictionary.TryGetValue(type, out properties))
             {
                 return properties;
             }
 
-            return signaturePropertiesDictionary[this.GetType()] = this.GetTypeSpecificSignatureProperties();
+            // properties was not found in cache, second try
+            properties = signaturePropertiesDictionary.GetOrAdd(type, t => this.GetTypeSpecificSignatureProperties());
+
+            return properties;
         }
 
         /// <summary>
@@ -112,20 +117,27 @@
         {
             var signatureProperties = this.GetSignatureProperties();
 
-            if ((from property in signatureProperties
-                 let valueOfThisObject = property.GetValue(this, null)
-                 let valueToCompareTo = property.GetValue(compareTo, null)
-                 where valueOfThisObject != null || valueToCompareTo != null
-                 where (valueOfThisObject == null ^ valueToCompareTo == null) || (!valueOfThisObject.Equals(valueToCompareTo))
-                 select valueOfThisObject).Any())
+            // if there were no signature properties, then simply return the default bahavior of Equals
+            if (signatureProperties.Length == 0)
             {
-                return false;
+                return base.Equals(compareTo);
+            }
+
+            for (int index = 0; index < signatureProperties.Length; index++)
+            {
+                var property = signatureProperties[index];
+                var valueOfThisObject = property.GetValue(this, null);
+                var valueToCompareTo = property.GetValue(compareTo, null);
+                
+                if (valueOfThisObject == null && valueToCompareTo == null) continue;
+
+                if ((valueOfThisObject == null ^ valueToCompareTo == null) ||
+                    (!valueOfThisObject.Equals(valueToCompareTo))) return false;
             }
 
             // If we've gotten this far and signature properties were found, then we can
-            // assume that everything matched; otherwise, if there were no signature 
-            // properties, then simply return the default bahavior of Equals
-            return signatureProperties.Any() || base.Equals(compareTo);
+            // assume that everything matched
+            return true;
         }
 
         /// <summary>
@@ -134,7 +146,7 @@
         ///     that the the BaseObject already takes care of performance caching, so this method 
         ///     shouldn't worry about caching...just return the goods man!
         /// </summary>
-        protected abstract IEnumerable<PropertyInfo> GetTypeSpecificSignatureProperties();
+        protected abstract PropertyInfo[] GetTypeSpecificSignatureProperties();
 
         /// <summary>
         ///     When NHibernate proxies objects, it masks the type of the actual entity object.

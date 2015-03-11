@@ -11,7 +11,7 @@ namespace SharpArch.Domain.DomainModel
     /// </remarks>
     [Serializable]
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class DomainSignatureAttribute : Attribute
+    public sealed class DomainSignatureAttribute : Attribute
     {
     }
 }

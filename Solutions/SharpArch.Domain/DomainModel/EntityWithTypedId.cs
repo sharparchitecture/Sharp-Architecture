@@ -113,11 +113,10 @@ namespace SharpArch.Domain.DomainModel
         ///     This ensures that the entity has at least one property decorated with the 
         ///     [DomainSignature] attribute.
         /// </remarks>
-        protected override IEnumerable<PropertyInfo> GetTypeSpecificSignatureProperties()
+        protected override PropertyInfo[] GetTypeSpecificSignatureProperties()
         {
             return
-                this.GetType().GetProperties().Where(
-                    p => Attribute.IsDefined(p, typeof(DomainSignatureAttribute), true));
+                this.GetType().GetProperties().Where(p => Attribute.IsDefined(p, typeof (DomainSignatureAttribute), true)).ToArray();
         }
 
         /// <summary>

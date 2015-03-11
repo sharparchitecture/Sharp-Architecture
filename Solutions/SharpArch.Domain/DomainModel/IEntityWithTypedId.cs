@@ -11,7 +11,7 @@
     {
         TId Id { get; }
 
-        IEnumerable<PropertyInfo> GetSignatureProperties();
+        PropertyInfo[] GetSignatureProperties();
 
         bool IsTransient();
     }
