@@ -1,17 +1,26 @@
 ﻿namespace Northwind.Infrastructure
 {
     using System.Collections.Generic;
-
+    using NHibernate;
     using NHibernate.Criterion;
     using NHibernate.Transform;
 
     using Northwind.Domain;
     using Northwind.Domain.Contracts;
-
+    using SharpArch.Domain.PersistenceSupport;
     using SharpArch.NHibernate;
 
     public class SupplierRepository : NHibernateRepository<Supplier>, ISupplierRepository
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NHibernateRepository{T}"/> class.
+        /// </summary>
+        /// <param name="transactionManager">The transaction manager.</param>
+        /// <param name="session">The session.</param>
+        public SupplierRepository(ITransactionManager transactionManager, ISession session) : base(transactionManager, session)
+        {
+        }
+
         /// <summary>
         ///   Uses NHibernate's CreateAlias to create a join query from the <see cref = "Supplier" />
         ///   to its collection of <see cref = "Product" /> items to the category in which each

@@ -1,7 +1,7 @@
 ﻿namespace Tests.Northwind.Data
 {
     using global::Northwind.Domain;
-
+    using NHibernate;
     using NUnit.Framework;
 
     using SharpArch.Domain.PersistenceSupport;
@@ -12,7 +12,17 @@
     [Category("DB Tests")]
     public class CategoryRepositoryTests : DatabaseRepositoryTestsBase
     {
-        private readonly IRepository<Category> categoryRepository = new NHibernateRepository<Category>();
+        private readonly IRepository<Category> categoryRepository;
+
+
+        /// <summary>
+        /// Creates new <see cref="ISession"/>.
+        /// </summary>
+        public override void SetUp()
+        {
+            base.SetUp();
+            this.categoryRepository = new NHibernateRepository<Category>(TransactionManager, Session);
+        }
 
         [Test]
         public void CanGetAllCategories()

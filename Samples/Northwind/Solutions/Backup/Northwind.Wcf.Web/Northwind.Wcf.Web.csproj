@@ -60,18 +60,6 @@
     <Reference Include="NHibernate, Version=3.2.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\packages\NHibernate.3.2.0.4000\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="SharpArch.Domain, Version=2.0.0.601, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpArch.Domain.2.0.0.601\lib\NET40\SharpArch.Domain.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpArch.NHibernate, Version=2.0.0.601, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpArch.NHibernate.2.0.0.601\lib\NET40\SharpArch.NHibernate.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpArch.Wcf, Version=2.0.0.601, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpArch.Wcf.2.0.0.601\lib\NET40\SharpArch.Wcf.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpArch.WcfClient.Castle">
-      <HintPath>..\packages\SharpArch.WcfClient.Castle.2.0.0.601\lib\NET40\SharpArch.WcfClient.Castle.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />

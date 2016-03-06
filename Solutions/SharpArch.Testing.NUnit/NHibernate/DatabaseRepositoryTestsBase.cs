@@ -4,6 +4,7 @@
     using global::NHibernate.Cfg;
     using global::NUnit.Framework;
     using JetBrains.Annotations;
+    using SharpArch.NHibernate;
 
     /// <summary>
     ///     Initiates a transaction before each test is run and rolls back the transaction after
@@ -26,8 +27,12 @@
         /// </summary>
         protected ISession Session { get; private set; }
 
-        TestDatabaseInitializer initializer;
+        /// <summary>
+        /// Gets the transaction manager.
+        /// </summary>
+        protected TransactionManager TransactionManager { get; private set; }
 
+        TestDatabaseInitializer initializer;
 
         /// <summary>
         /// Creates NHibernate <see cref="ISessionFactory"/>.
@@ -54,6 +59,7 @@
         public virtual void SetUp()
         {
             Session = initializer.GetSessionFactory().OpenSession();
+            this.TransactionManager = new TransactionManager(Session);
             Session.BeginTransaction();
         }
 

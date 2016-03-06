@@ -1,7 +1,6 @@
 ﻿namespace Northwind.Domain
 {
     using NHibernate.Validator.Constraints;
-
     using SharpArch.Domain.DomainModel;
 
     public class Category : Entity
@@ -11,11 +10,11 @@
         }
 
         /// <summary>
-        ///   Creates valid domain object
+        ///     Creates valid domain object
         /// </summary>
         public Category(string name)
         {
-            this.CategoryName = name;
+            CategoryName = name;
         }
 
         [DomainSignature]

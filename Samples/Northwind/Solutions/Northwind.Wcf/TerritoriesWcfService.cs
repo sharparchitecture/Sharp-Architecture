@@ -42,7 +42,7 @@
         {
             // I'd rather have the transaction begun via an attribute, like with a controller action, 
             // or within a service object, but this works for the current example.
-            this.territoryRepository.DbContext.BeginTransaction();
+            this.territoryRepository.TransactionManager.BeginTransaction();
 
             var territories = this.territoryRepository.GetAll();
             var territoryDtos = new List<TerritoryDto>();
@@ -52,9 +52,9 @@
                 territoryDtos.Add(TerritoryDto.Create(territory));
             }
 
-            // Since we're certainly not going to require lazy loading, commit the transcation
+            // Since we're certainly not going to require lazy loading, commit the transaction
             // before returning the data.
-            this.territoryRepository.DbContext.CommitTransaction();
+            this.territoryRepository.TransactionManager.CommitTransaction();
 
             return territoryDtos;
         }

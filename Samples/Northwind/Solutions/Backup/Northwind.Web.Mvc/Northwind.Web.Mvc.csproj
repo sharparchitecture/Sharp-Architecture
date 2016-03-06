@@ -75,18 +75,6 @@
     <Reference Include="NHibernate">
       <HintPath>..\packages\NHibernate.3.2.0.4000\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="SharpArch.Domain">
-      <HintPath>..\packages\SharpArch.Domain.2.0.0.601\lib\NET40\SharpArch.Domain.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpArch.NHibernate">
-      <HintPath>..\packages\SharpArch.NHibernate.2.0.0.601\lib\NET40\SharpArch.NHibernate.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpArch.Wcf">
-      <HintPath>..\packages\SharpArch.Wcf.2.0.0.601\lib\NET40\SharpArch.Wcf.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpArch.Web.Mvc">
-      <HintPath>..\packages\SharpArch.Web.Mvc.Castle.2.0.0.601\lib\NET40\SharpArch.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />

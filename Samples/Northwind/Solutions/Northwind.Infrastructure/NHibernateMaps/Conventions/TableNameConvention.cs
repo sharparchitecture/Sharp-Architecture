@@ -3,7 +3,6 @@
     using FluentNHibernate.Conventions;
     using FluentNHibernate.Conventions.Instances;
 
-    using inflector_extension;
 
     public class TableNameConvention : IClassConvention
     {

@@ -1,7 +1,7 @@
 ﻿namespace Tests.Northwind.Data
 {
     using global::Northwind.Domain;
-
+    using NHibernate;
     using NUnit.Framework;
 
     using SharpArch.Domain.PersistenceSupport;
@@ -12,10 +12,19 @@
     [Category("DB Tests")]
     public class ProxyEqualityTests : DatabaseRepositoryTestsBase
     {
-        private readonly IRepository<Region> regionRepository = new NHibernateRepository<Region>();
+        private IRepository<Region> regionRepository ;
 
-        private readonly IRepositoryWithTypedId<Territory, string> territoryRepository =
-            new NHibernateRepositoryWithTypedId<Territory, string>();
+        private IRepositoryWithTypedId<Territory, string> territoryRepository ;
+
+        /// <summary>
+        /// Creates new <see cref="ISession"/>.
+        /// </summary>
+        public override void SetUp()
+        {
+            base.SetUp();
+            this.regionRepository = new NHibernateRepository<Region>(TransactionManager, Session);
+            this.territoryRepository = new NHibernateRepositoryWithTypedId<Territory, string>(TransactionManager, Session);
+        }
 
         [Test]
         public void ProxyEqualityTest()
