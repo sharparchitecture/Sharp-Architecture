@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="PackageArtefacts" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <SolutionName>Northwind</SolutionName>
+    <SolutionsPath>$(MSBuildProjectDirectory)\..\Solutions</SolutionsPath>
+    <BuildPath>$(MSBuildProjectDirectory)\..\BuildSystem</BuildPath>
+    <WebAppPath>$(SolutionsPath)\$(SolutionName).Web</WebAppPath>
+    <SolutionRoot>$(BuildPath)\..</SolutionRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <TemplifyTokens Include="Northwind=__NAME__" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TemplifyPath>$(SolutionsPath)</TemplifyPath>
+    <TemplifyPackageName>Sharp Architecture</TemplifyPackageName>
+    <TemplifyPackageAuthor>Sharp Architecture Development Team</TemplifyPackageAuthor>
+    <TemplifyPackageVersion>$(GlobalBuildVersionNumber)</TemplifyPackageVersion>
+    <TemplifyPackageRepositoryPath>$(DropsPath)\$(GlobalBuildVersionNumber)</TemplifyPackageRepositoryPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssembliesToTestWithNUnit Include="$(SolutionsPath)\Northwind.Tests\bin\Release\Northwind.Tests.dll;" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageFiles Include="$(WebAppPath)\**\*.*"
+                  Exclude="$(WebAppPath)\**\*.cs;
+                             $(WebAppPath)\**\*.csproj;
+                             $(WebAppPath)\**\*.user;
+                             $(WebAppPath)\**\*.vspscc;
+                             $(WebAppPath)\**\bin\*.pdb;
+                             $(WebAppPath)\**\*.xml;
+                             $(WebAppPath)\**\Code\**;
+                             $(WebAppPath)\**\Initialisers\**;
+                             $(WebAppPath)\**\obj\**;
+                             $(WebAppPath)\**\Properties\**;
+                             $(WebAppPath)\**\Registrars\**;
+                             $(WebAppPath)\**\ResourceFiles\**;">
+      <PackageName>$(DropsPath)\$(GlobalBuildVersionNumber)\$(PackageName).v$(GlobalBuildVersionNumber).zip</PackageName>
+      <WorkingDirectory>$(WebAppPath)</WorkingDirectory>
+    </PackageFiles>
+
+    <PackageFiles Include="$(WebAppPath)\**\*.*"
+                       Exclude="$(WebAppPath)\**\bin\**;
+                                  $(WebAppPath)\**\Logs\**;
+                                  $(WebAppPath)\**\obj\**;">
+      <PackageName>$(DropsPath)\$(GlobalBuildVersionNumber)\$(PackageName).Source.v$(GlobalBuildVersionNumber).zip</PackageName>
+      <WorkingDirectory>$(WebAppPath)</WorkingDirectory>
+    </PackageFiles>
+
+  </ItemGroup>
+
+  <Import Project="$(BuildPath)\BuildSystem.proj" />
+
+  <Target Name="Build"
+        DependsOnTargets="CleanSolution;
+                            UpdateAssemblyVersion;
+                            BuildSolutions;" />
+
+  <Target Name="RunTests"
+      DependsOnTargets="Build;
+                        RunNUnitTests;" />
+
+  <Target Name="PackageArtefacts"
+          DependsOnTargets="Build;
+                            Package;
+                            Templify;
+                            BuildSuccess" />
+
+</Project>

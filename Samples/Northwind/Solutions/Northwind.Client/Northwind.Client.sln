@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.Client", "Northwind.Client.csproj", "{80B93601-5057-48AD-8C53-4A17CB99D5EA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{80B93601-5057-48AD-8C53-4A17CB99D5EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80B93601-5057-48AD-8C53-4A17CB99D5EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80B93601-5057-48AD-8C53-4A17CB99D5EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80B93601-5057-48AD-8C53-4A17CB99D5EA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

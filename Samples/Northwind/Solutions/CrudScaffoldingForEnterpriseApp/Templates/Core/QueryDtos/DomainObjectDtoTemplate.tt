@@ -1,0 +1,33 @@
+﻿<#@ import namespace="System.Collections" #>
+
+<#+
+public class DomainObjectDtoTemplate : BaseTemplate
+{
+	public DomainObjectDtoTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	public override string TransformText()
+	{
+#>
+using System;
+
+namespace <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain.QueryDtos") #>
+{
+    public class <#= EntityScaffoldingDetails.EntityName #>Dto
+    {
+        public int Id { get; set; }
+		<#+
+		PushIndent("\t\t");
+
+		foreach (EntityProperty property in EntityScaffoldingDetails.EntityProperties) {
+			WriteLine("public " + property.TypeName + " " + property.PropertyName + " { get; set; }");
+		}
+
+		PopIndent();
+		#>
+    }
+}
+<#+ return this.GenerationEnvironment.ToString();
+	}
+}
+#>

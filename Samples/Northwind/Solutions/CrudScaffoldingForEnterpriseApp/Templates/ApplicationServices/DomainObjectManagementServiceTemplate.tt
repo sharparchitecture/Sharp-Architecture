@@ -1,0 +1,140 @@
+﻿<#+
+public class DomainObjectManagementServiceTemplate : BaseTemplate
+{
+	public DomainObjectManagementServiceTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	public override string TransformText()
+	{
+#>
+using System.Collections.Generic;
+using System;
+using SharpArch.Core;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".ApplicationServices.ViewModels") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain.QueryDtos") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain.RepositoryInterfaces") #>;
+<#+ if (EntityScaffoldingDetails.NamespaceHierarchy != null) { 
+#>using <#= SolutionName + ".Domain" #>;<#+ } #> 
+
+namespace <#= AppendNamespaceHierarchyTo(SolutionName + ".ApplicationServices") #>
+{
+    public class <#= EntityScaffoldingDetails.EntityName #>ManagementService : I<#= EntityScaffoldingDetails.EntityName #>ManagementService
+    {
+        public <#= EntityScaffoldingDetails.EntityName #>ManagementService(I<#= EntityScaffoldingDetails.EntityName #>Repository <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository) {
+            Check.Require(<#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository != null, "<#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository may not be null");
+
+            this.<#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository = <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository;
+        }
+
+        public <#= EntityScaffoldingDetails.EntityName #> Get(int id) {
+            return <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.Get(id);
+        }
+
+        public IList<<#= EntityScaffoldingDetails.EntityName #>> GetAll() {
+            return <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.GetAll();
+        }
+
+        public IList<<#= EntityScaffoldingDetails.EntityName #>Dto> Get<#= EntityScaffoldingDetails.EntityName #>Summaries() {
+            return <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.Get<#= EntityScaffoldingDetails.EntityName #>Summaries();
+        }
+
+        public <#= EntityScaffoldingDetails.EntityName #>FormViewModel CreateFormViewModel() {
+            <#= EntityScaffoldingDetails.EntityName #>FormViewModel viewModel = new <#= EntityScaffoldingDetails.EntityName #>FormViewModel();
+            return viewModel;
+        }
+
+        public <#= EntityScaffoldingDetails.EntityName #>FormViewModel CreateFormViewModelFor(int <#= EntityScaffoldingDetails.EntityNameCamelCase #>Id) {
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #> = <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.Get(<#= EntityScaffoldingDetails.EntityNameCamelCase #>Id);
+            return CreateFormViewModelFor(<#= EntityScaffoldingDetails.EntityNameCamelCase #>);
+        }
+
+        public <#= EntityScaffoldingDetails.EntityName #>FormViewModel CreateFormViewModelFor(<#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>) {
+            <#= EntityScaffoldingDetails.EntityName #>FormViewModel viewModel = CreateFormViewModel();
+            viewModel.<#= EntityScaffoldingDetails.EntityName #> = <#= EntityScaffoldingDetails.EntityNameCamelCase #>;
+            return viewModel;
+        }
+
+        public ActionConfirmation SaveOrUpdate(<#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>) {
+            if (<#= EntityScaffoldingDetails.EntityNameCamelCase #>.IsValid()) {
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.SaveOrUpdate(<#= EntityScaffoldingDetails.EntityNameCamelCase #>);
+
+                ActionConfirmation saveOrUpdateConfirmation = ActionConfirmation.CreateSuccessConfirmation(
+                    "The <#= EntityScaffoldingDetails.EntityNameCamelCase #> was successfully saved.");
+                saveOrUpdateConfirmation.Value = <#= EntityScaffoldingDetails.EntityNameCamelCase #>;
+
+                return saveOrUpdateConfirmation;
+            }
+            else {
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.DbContext.RollbackTransaction();
+
+                return ActionConfirmation.CreateFailureConfirmation(
+                    "The <#= EntityScaffoldingDetails.EntityNameCamelCase #> could not be saved due to missing or invalid information.");
+            }
+        }
+
+        public ActionConfirmation UpdateWith(<#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm, int idOf<#= EntityScaffoldingDetails.EntityName #>ToUpdate) {
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>ToUpdate = 
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.Get(idOf<#= EntityScaffoldingDetails.EntityName #>ToUpdate);
+            TransferFormValuesTo(<#= EntityScaffoldingDetails.EntityNameCamelCase #>ToUpdate, <#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm);
+
+            if (<#= EntityScaffoldingDetails.EntityNameCamelCase #>ToUpdate.IsValid()) {
+                ActionConfirmation updateConfirmation = ActionConfirmation.CreateSuccessConfirmation(
+                    "The <#= EntityScaffoldingDetails.EntityNameCamelCase #> was successfully updated.");
+                updateConfirmation.Value = <#= EntityScaffoldingDetails.EntityNameCamelCase #>ToUpdate;
+
+                return updateConfirmation;
+            }
+            else {
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.DbContext.RollbackTransaction();
+
+                return ActionConfirmation.CreateFailureConfirmation(
+                    "The <#= EntityScaffoldingDetails.EntityNameCamelCase #> could not be saved due to missing or invalid information.");
+            }
+        }
+
+        public ActionConfirmation Delete(int id) {
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>ToDelete = <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.Get(id);
+
+            if (<#= EntityScaffoldingDetails.EntityNameCamelCase #>ToDelete != null) {
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.Delete(<#= EntityScaffoldingDetails.EntityNameCamelCase #>ToDelete);
+
+                try {
+                    <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.DbContext.CommitChanges();
+                    
+                    return ActionConfirmation.CreateSuccessConfirmation(
+                        "The <#= EntityScaffoldingDetails.EntityNameCamelCase #> was successfully deleted.");
+                }
+                catch {
+                    <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.DbContext.RollbackTransaction();
+
+                    return ActionConfirmation.CreateFailureConfirmation(
+                        "A problem was encountered preventing the <#= EntityScaffoldingDetails.EntityNameCamelCase #> from being deleted. " +
+                        "Another item likely depends on this <#= EntityScaffoldingDetails.EntityNameCamelCase #>.");
+                }
+            }
+            else {
+                return ActionConfirmation.CreateFailureConfirmation(
+                    "The <#= EntityScaffoldingDetails.EntityNameCamelCase #> could not be found for deletion. It may already have been deleted.");
+            }
+        }
+
+        private void TransferFormValuesTo(<#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>ToUpdate, <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm) {
+		    <#+
+		    PushIndent("\t\t\t");
+
+		    foreach (EntityProperty property in EntityScaffoldingDetails.EntityProperties) {
+			    WriteLine(EntityScaffoldingDetails.EntityNameCamelCase + "ToUpdate." + property.PropertyName + " = " + EntityScaffoldingDetails.EntityNameCamelCase + "FromForm." + property.PropertyName + ";");
+		    }
+
+		    PopIndent();
+		    #>
+        }
+
+        I<#= EntityScaffoldingDetails.EntityName #>Repository <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository;
+    }
+}
+<#+ return this.GenerationEnvironment.ToString();
+	}
+}
+#>

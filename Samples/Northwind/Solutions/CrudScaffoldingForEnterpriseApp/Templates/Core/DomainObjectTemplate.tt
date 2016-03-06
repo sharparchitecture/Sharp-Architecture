@@ -1,0 +1,41 @@
+﻿<#@ import namespace="System.Collections" #>
+
+<#+
+public class DomainObjectTemplate : BaseTemplate
+{
+	public DomainObjectTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	public override string TransformText()
+	{
+#>
+using System;
+using NHibernate.Validator.Constraints;
+using SharpArch.Core.DomainModel;
+
+namespace <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain") #>
+{
+    public class <#= EntityScaffoldingDetails.EntityName #> : Entity
+    {<#+
+		PushIndent("\t\t");
+
+		foreach (EntityProperty property in EntityScaffoldingDetails.EntityProperties) {
+			WriteLine("");
+
+			if (property.IsPartOfDomainSignature)
+				WriteLine("[DomainSignature]");
+
+			if (! string.IsNullOrEmpty(property.PropertyAttributes))
+				WriteLine(property.PropertyAttributes);
+
+			WriteLine("public virtual " + property.TypeName + " " + property.PropertyName + " { get; set; }");
+		}
+
+		PopIndent();
+		#>
+    }
+}
+<#+ return this.GenerationEnvironment.ToString();
+	}
+}
+#>

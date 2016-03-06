@@ -1,0 +1,14 @@
+﻿@using System.Web.Mvc.Html
+@model Northwind.Web.Controllers.Organization.EmployeesController.EmployeeFormViewModel
+
+@section MainContentPlaceHolder {
+
+
+	<h1>Create Employee</h1>
+
+	@{
+	    this.@Html.Partial("EmployeeForm", this.ViewData)}
+
+
+}
+

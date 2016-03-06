@@ -1,0 +1,125 @@
+﻿<#@ import namespace="System.Collections" #>
+
+<#+
+public class ControllerTemplate : BaseTemplate
+{
+	public ControllerTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	public override string TransformText()
+	{
+#>
+using System.Web.Mvc;
+using SharpArch.Core.PersistenceSupport;
+using SharpArch.Core.DomainModel;
+using System.Collections.Generic;
+using SharpArch.Web.NHibernate;
+using NHibernate.Validator.Engine;
+using System.Text;
+using SharpArch.Web.CommonValidator;
+using SharpArch.Core;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".ApplicationServices") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".ApplicationServices.ViewModels") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain.QueryDtos") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain.RepositoryInterfaces") #>;
+<#+ if (EntityScaffoldingDetails.NamespaceHierarchy != null) { 
+#>using <#= SolutionName + ".Domain" #>;<#+ } #> 
+
+namespace <#= AppendNamespaceHierarchyTo(SolutionName + ".Web.Controllers") #>
+{
+    [HandleError]
+    public class <#= EntityScaffoldingDetails.EntityNamePlural #>Controller : Controller
+    {
+        public <#= EntityScaffoldingDetails.EntityNamePlural #>Controller(I<#= EntityScaffoldingDetails.EntityName #>ManagementService <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService) {
+            Check.Require(<#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService != null, "<#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService may not be null");
+
+            this.<#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService = <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService;
+        }
+
+        [Transaction]
+        public ActionResult Index() {
+            IList<<#= EntityScaffoldingDetails.EntityName #>Dto> <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #> = 
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Get<#= EntityScaffoldingDetails.EntityName #>Summaries();
+            return View(<#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>);
+        }
+
+        [Transaction]
+        public ActionResult Show(int id) {
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #> = <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Get(id);
+            return View(<#= EntityScaffoldingDetails.EntityNameCamelCase #>);
+        }
+
+        [Transaction]
+        public ActionResult Create() {
+            <#= EntityScaffoldingDetails.EntityName #>FormViewModel viewModel = 
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.CreateFormViewModel();
+            return View(viewModel);
+        }
+
+        [ValidateAntiForgeryToken]
+        [Transaction]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Create(<#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>) {
+            if (ViewData.ModelState.IsValid) {
+                ActionConfirmation saveOrUpdateConfirmation = 
+                    <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.SaveOrUpdate(<#= EntityScaffoldingDetails.EntityNameCamelCase #>);
+
+                if (saveOrUpdateConfirmation.WasSuccessful) {
+                    TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()] = 
+                        saveOrUpdateConfirmation.Message;
+                    return RedirectToAction("Index");
+                }
+            } else {
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #> = null;
+            }
+
+            <#= EntityScaffoldingDetails.EntityName #>FormViewModel viewModel = 
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.CreateFormViewModelFor(<#= EntityScaffoldingDetails.EntityNameCamelCase #>);
+            return View(viewModel);
+        }
+
+        [Transaction]
+        public ActionResult Edit(int id) {
+            <#= EntityScaffoldingDetails.EntityName #>FormViewModel viewModel = 
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.CreateFormViewModelFor(id);
+            return View(viewModel);
+        }
+
+        [ValidateAntiForgeryToken]
+        [Transaction]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Edit(<#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>) {
+            if (ViewData.ModelState.IsValid) {
+                ActionConfirmation updateConfirmation = 
+                    <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.UpdateWith(<#= EntityScaffoldingDetails.EntityNameCamelCase #>, <#= EntityScaffoldingDetails.EntityNameCamelCase #>.Id);
+
+                if (updateConfirmation.WasSuccessful) {
+                    TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()] = 
+                        updateConfirmation.Message;
+                    return RedirectToAction("Index");
+                }
+            }
+
+            <#= EntityScaffoldingDetails.EntityName #>FormViewModel viewModel = 
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.CreateFormViewModelFor(<#= EntityScaffoldingDetails.EntityNameCamelCase #>);
+            return View(viewModel);
+        }
+
+        [ValidateAntiForgeryToken]
+        [Transaction]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult Delete(int id) {
+            ActionConfirmation deleteConfirmation = <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Delete(id);
+            TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()] = 
+                deleteConfirmation.Message;
+            return RedirectToAction("Index");
+        }
+
+        private readonly I<#= EntityScaffoldingDetails.EntityName #>ManagementService <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService;
+    }
+}
+<#+ return this.GenerationEnvironment.ToString();
+	}
+}
+#>

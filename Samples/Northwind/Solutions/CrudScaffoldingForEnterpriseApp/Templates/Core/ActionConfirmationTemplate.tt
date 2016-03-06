@@ -1,0 +1,38 @@
+﻿<#+
+public class ActionConfirmationTemplate : BaseTemplate
+{
+	public ActionConfirmationTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	public override string TransformText()
+	{
+#>
+namespace <#= SolutionName #>.Domain
+{
+    public class ActionConfirmation
+    {
+        private ActionConfirmation() { }
+
+        public static ActionConfirmation CreateSuccessConfirmation(string message) {
+            ActionConfirmation confirmation = new ActionConfirmation();
+            confirmation.Message = message;
+            confirmation.WasSuccessful = true;
+            return confirmation;
+        }
+
+        public static ActionConfirmation CreateFailureConfirmation(string message) {
+            ActionConfirmation confirmation = new ActionConfirmation();
+            confirmation.Message = message;
+            confirmation.WasSuccessful = false;
+            return confirmation;
+        }
+
+        public bool WasSuccessful { get; private set; }
+        public string Message { get; set; }
+        public object Value { get; set; }
+    }
+}
+<#+ return this.GenerationEnvironment.ToString();
+	}
+}
+#>

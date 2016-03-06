@@ -1,0 +1,43 @@
+<#@ assembly name="$(SolutionDir)lib\Inflector.Net.dll" #>
+
+<#+
+public abstract class BaseTemplate : Template
+{
+	public BaseTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) {
+		this.solutionName = solutionName;
+		this.entityScaffoldingDetails = entityScaffoldingDetails;
+	}
+
+	protected string SolutionName {
+		get { return solutionName; }
+	}
+
+	protected EntityScaffoldingDetails EntityScaffoldingDetails {
+		get { return entityScaffoldingDetails; }
+	}
+
+	protected string AppendNamespaceHierarchyTo(string namespacePath) {
+		if (entityScaffoldingDetails.NamespaceHierarchy == null ||
+			entityScaffoldingDetails.NamespaceHierarchy.Length == 0)
+			return namespacePath;
+
+		foreach (string namespaceToAppend in entityScaffoldingDetails.NamespaceHierarchy) {
+			namespacePath += "." + namespaceToAppend;
+		}
+
+		return namespacePath;
+	}
+
+	protected string EntityBaseUrl {
+		get {
+			return ((entityScaffoldingDetails.NamespaceHierarchy != null && entityScaffoldingDetails.NamespaceHierarchy.Length > 0)
+				? (AppendNamespaceHierarchyTo("").Substring(1).Replace(".", "/") + "/")
+				: "") +
+				entityScaffoldingDetails.EntityNamePlural + "/";
+		}
+	}
+
+	private readonly string solutionName;
+	private readonly EntityScaffoldingDetails entityScaffoldingDetails;
+}
+#>

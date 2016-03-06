@@ -1,0 +1,213 @@
+﻿<#@ import namespace="System.Collections" #>
+
+<#+
+public class ControllerTestsTemplate : BaseTemplate
+{
+	public ControllerTestsTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	public override string TransformText()
+	{
+#>
+using MvcContrib.TestHelper;
+using NUnit.Framework;
+using Rhino.Mocks;
+using SharpArch.Testing.NUnit;
+using System.Collections.Generic;
+using System.Web.Mvc;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Core.QueryDtos") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".ApplicationServices") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".ApplicationServices.ViewModels") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Web.Controllers") #>;
+using <#= AppendNamespaceHierarchyTo("Tests." + SolutionName + ".Domain") #>;
+<#+ if (EntityScaffoldingDetails.NamespaceHierarchy != null) { 
+#>using <#= SolutionName + ".Domain" #>;
+using <#= SolutionName + ".Web.Controllers" #>;<#+ } #> 
+
+namespace <#= AppendNamespaceHierarchyTo("Tests." + SolutionName + ".Web.Controllers") #>
+{
+    [TestFixture]
+    public class <#= EntityScaffoldingDetails.EntityNamePlural #>ControllerTests
+    {
+        [SetUp]
+        public void SetUp() {
+            ServiceLocatorInitializer.Init();
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService =
+                MockRepository.GenerateMock<I<#= EntityScaffoldingDetails.EntityName #>ManagementService>();
+            <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Controller = 
+                new <#= EntityScaffoldingDetails.EntityNamePlural #>Controller(<#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService);
+        }
+
+        [Test]
+        public void CanList<#= EntityScaffoldingDetails.EntityNamePlural #>() {
+            // Establish Context
+            IList<<#= EntityScaffoldingDetails.EntityName #>Dto> <#= EntityScaffoldingDetails.EntityNameCamelCase #>SummariesToExpect = new List<<#= EntityScaffoldingDetails.EntityName #>Dto>();
+
+            <#= EntityScaffoldingDetails.EntityName #>Dto <#= EntityScaffoldingDetails.EntityNameCamelCase #>Dto = new <#= EntityScaffoldingDetails.EntityName #>Dto();
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>SummariesToExpect.Add(<#= EntityScaffoldingDetails.EntityNameCamelCase #>Dto);
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Expect(r => r.Get<#= EntityScaffoldingDetails.EntityName #>Summaries())
+                .Return(<#= EntityScaffoldingDetails.EntityNameCamelCase #>SummariesToExpect);
+
+            // Act
+            ViewResult result = <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Controller.Index().AssertViewRendered();
+
+            // Assert
+            result.ViewData.Model.ShouldNotBeNull();
+            (result.ViewData.Model as IList<<#= EntityScaffoldingDetails.EntityName #>Dto>).ShouldNotBeNull();
+            (result.ViewData.Model as IList<<#= EntityScaffoldingDetails.EntityName #>Dto>).Count.ShouldEqual(1);
+        }
+
+        [Test]
+        public void CanShow<#= EntityScaffoldingDetails.EntityName #>() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #> = 
+                <#= EntityScaffoldingDetails.EntityName #>InstanceFactory.CreateValidTransient<#= EntityScaffoldingDetails.EntityName #>();
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Expect(r => r.Get(1))
+                .Return(<#= EntityScaffoldingDetails.EntityNameCamelCase #>);
+
+            // Act
+            ViewResult result = <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Controller.Show(1).AssertViewRendered();
+
+            // Assert
+            result.ViewData.Model.ShouldNotBeNull();
+            (result.ViewData.Model as <#= EntityScaffoldingDetails.EntityName #>).ShouldNotBeNull();
+            (result.ViewData.Model as <#= EntityScaffoldingDetails.EntityName #>).ShouldEqual(<#= EntityScaffoldingDetails.EntityNameCamelCase #>);
+        }
+
+        [Test]
+        public void CanInitCreate() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityName #>FormViewModel viewModel = new <#= EntityScaffoldingDetails.EntityName #>FormViewModel();
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Expect(r => r.CreateFormViewModel())
+                .Return(viewModel);
+
+            // Act
+            ViewResult result = <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Controller.Create().AssertViewRendered();
+
+            // Assert
+            result.ViewData.Model.ShouldNotBeNull();
+            (result.ViewData.Model as <#= EntityScaffoldingDetails.EntityName #>FormViewModel).ShouldNotBeNull();
+            (result.ViewData.Model as <#= EntityScaffoldingDetails.EntityName #>FormViewModel).<#= EntityScaffoldingDetails.EntityName #>.ShouldBeNull();
+        }
+
+        [Test]
+        public void CanCreateValid<#= EntityScaffoldingDetails.EntityName #>FromForm() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm = new <#= EntityScaffoldingDetails.EntityName #>();
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Expect(r => r.SaveOrUpdate(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm))
+                .Return(ActionConfirmation.CreateSuccessConfirmation("saved"));
+
+            // Act
+            RedirectToRouteResult redirectResult =
+                <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Controller.Create(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm)
+                .AssertActionRedirect().ToAction("Index");
+
+            // Assert
+            <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Controller.TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()].ToString()
+				.ShouldEqual("saved");
+        }
+
+        [Test]
+        public void CannotCreateInvalid<#= EntityScaffoldingDetails.EntityName #>FromForm() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm = new <#= EntityScaffoldingDetails.EntityName #>();
+            <#= EntityScaffoldingDetails.EntityName #>FormViewModel viewModelToExpect = new <#= EntityScaffoldingDetails.EntityName #>FormViewModel();
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Expect(r => r.SaveOrUpdate(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm))
+                .Return(ActionConfirmation.CreateFailureConfirmation("not saved"));
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Expect(r => r.CreateFormViewModelFor(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm))
+                .Return(viewModelToExpect);
+
+            // Act
+            ViewResult result =
+                <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Controller.Create(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm).AssertViewRendered();
+
+            // Assert
+            result.ViewData.Model.ShouldNotBeNull();
+            (result.ViewData.Model as <#= EntityScaffoldingDetails.EntityName #>FormViewModel).ShouldNotBeNull();
+        }
+
+        [Test]
+        public void CanInitEdit() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityName #>FormViewModel viewModel = new <#= EntityScaffoldingDetails.EntityName #>FormViewModel();
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Expect(r => r.CreateFormViewModelFor(1))
+                .Return(viewModel);
+
+            // Act
+            ViewResult result = <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Controller.Edit(1).AssertViewRendered();
+
+            // Assert
+            result.ViewData.Model.ShouldNotBeNull();
+            (result.ViewData.Model as <#= EntityScaffoldingDetails.EntityName #>FormViewModel).ShouldNotBeNull();
+        }
+
+        [Test]
+        public void CanUpdateValid<#= EntityScaffoldingDetails.EntityName #>FromForm() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm = new <#= EntityScaffoldingDetails.EntityName #>();
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Expect(r => r.UpdateWith(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm, 0))
+                .Return(ActionConfirmation.CreateSuccessConfirmation("updated"));
+
+            // Act
+            RedirectToRouteResult redirectResult =
+                <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Controller.Edit(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm)
+                .AssertActionRedirect().ToAction("Index");
+
+            // Assert
+            <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Controller.TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()].ToString()
+                .ShouldEqual("updated");
+        }
+
+        [Test]
+        public void CannotUpdateInvalid<#= EntityScaffoldingDetails.EntityName #>FromForm() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm = new <#= EntityScaffoldingDetails.EntityName #>();
+            <#= EntityScaffoldingDetails.EntityName #>FormViewModel viewModelToExpect = new <#= EntityScaffoldingDetails.EntityName #>FormViewModel();
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Expect(r => r.UpdateWith(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm, 0))
+                .Return(ActionConfirmation.CreateFailureConfirmation("not updated"));
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Expect(r => r.CreateFormViewModelFor(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm))
+                .Return(viewModelToExpect);
+
+            // Act
+            ViewResult result =
+                <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Controller.Edit(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm).AssertViewRendered();
+
+            // Assert
+            result.ViewData.Model.ShouldNotBeNull();
+            (result.ViewData.Model as <#= EntityScaffoldingDetails.EntityName #>FormViewModel).ShouldNotBeNull();
+        }
+
+        [Test]
+        public void CanDelete<#= EntityScaffoldingDetails.EntityName #>() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Expect(r => r.Delete(1))
+                .Return(ActionConfirmation.CreateSuccessConfirmation("deleted"));
+            
+            // Act
+            RedirectToRouteResult redirectResult =
+                <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Controller.Delete(1)
+                .AssertActionRedirect().ToAction("Index");
+
+            // Assert
+            <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Controller.TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()].ToString()
+                .ShouldEqual("deleted");
+        }
+
+        private I<#= EntityScaffoldingDetails.EntityName #>ManagementService <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService;
+        private <#= EntityScaffoldingDetails.EntityNamePlural #>Controller <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Controller;
+    }
+}
+<#+ return this.GenerationEnvironment.ToString();
+	}
+}
+#>

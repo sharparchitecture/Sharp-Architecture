@@ -1,0 +1,1 @@
+Folder containing DB schema information which may be manually maintained, generated from scaffolding or generated from NHibernate's schema export.

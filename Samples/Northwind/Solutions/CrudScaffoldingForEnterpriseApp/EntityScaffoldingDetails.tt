@@ -1,0 +1,236 @@
+<#@ assembly name="$(SolutionDir)lib\SharpArch.dll" #>
+<#@ assembly name="$(SolutionDir)lib\Inflector.Net.dll" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System" #>
+<#@ import namespace="SharpArch.Core" #>
+
+<#+
+public class EntityScaffoldingDetails {
+    /// <summary>
+	/// Accepts a namespaced entity name to initialize the scaffolding details.
+	/// The namespacedEntityName should only include namespace details if the entity
+	/// will be in a namespace other than YourProject.Core.  E.g.,
+	/// * if namespacedEntityName == "Horse" then it'll be created in the YourProject.Core namespace
+	/// * if namespacedEntityName == "Animals.Horse" then it'll be created in the YourProject.Core.Animals namespace
+    /// </summary>
+    /// <param name="namespacedEntityName">
+    /// The entity name iself should be SINGULAR
+    /// </param>
+	public EntityScaffoldingDetails(string namespacedEntityName) {
+		Check.Require(! string.IsNullOrEmpty(namespacedEntityName), "namespacedEntityName may not be null or empty");
+
+		InitializeNamespaceHierarchyAndEntityNameWith(namespacedEntityName);
+	}
+
+    /// <summary>
+	/// Singular name of the entity, set in the constructor
+    /// </summary>
+	public string EntityName {
+		get { return entityName; }
+		protected set { entityName = value; }
+	}
+
+	public string EntityNamePlural {
+		get { return Inflector.Net.Inflector.Pluralize(EntityName); }
+	}
+
+	public string EntityNameCamelCase {
+		get { return EntityName.Substring(0, 1).ToLower() + EntityName.Substring(1); }
+	}
+
+	public string EntityNamePluralCamelCase {
+		get { return EntityNamePlural.Substring(0, 1).ToLower() + EntityNamePlural.Substring(1); }
+	}
+
+    /// <summary>
+	/// An array of namespace qualifiers, set in the constructor
+    /// </summary>
+	public string[] NamespaceHierarchy {
+		get { return namespaceHierarchy; }
+		protected set { namespaceHierarchy = value; }
+	}
+
+    /// <summary>
+	/// Returns the namespace of the entity delimitted.  Note that it adds the delimiter to the end
+	/// before returning.  What follows are entity name => namespace results, assuming you pass in "." as the delimiter.
+	/// Horse => ""
+	/// Farm.Horse => "Farm."
+	/// Industry.Farm.Horse => "Industry.Farm."
+    /// </summary>
+	public string GetNamespaceDelimitedWith(string delimiter) {
+		if (NamespaceHierarchy == null)
+			return "";
+
+		string delimitedNamespace = NamespaceHierarchy[0];
+
+		for (int i=1; i < NamespaceHierarchy.Length; i++) {
+			delimitedNamespace += delimiter + NamespaceHierarchy[i];
+		}
+
+		return delimitedNamespace + delimiter;
+	}
+
+    /// <summary>
+	/// If left as null, all artifacts will generated
+    /// </summary>
+	public ArtifactToGenerate[] ArtifactsToGenerate {
+		get { return artifactsToGenerate; }
+		protected set { artifactsToGenerate = value; }
+	}
+
+    /// <summary>
+	/// Holds all of the properties associated with this entity
+    /// </summary>
+	public IList<EntityProperty> EntityProperties {
+		get { return entityProperties; }
+		protected set { entityProperties = value; }
+	}
+
+	public bool HasAnyDomainSignatureProperties {
+		get {
+			foreach (EntityProperty entityProperty in EntityProperties) {
+				if (entityProperty.IsPartOfDomainSignature)
+					return true;
+			}
+
+			return false;
+		}
+	}
+
+    /// <summary>
+	/// Parses the namespaced entity name into the namespace hierarchy and entity name
+    /// </summary>
+	private void InitializeNamespaceHierarchyAndEntityNameWith(string namespacedEntityName) {
+		if (namespacedEntityName.IndexOf('.') > -1) {
+			string[] namespaceHierarchyAndEntityName = namespacedEntityName.Split('.');
+
+			// Exclude a spot for the domain object name in the namespace hierarchy
+			NamespaceHierarchy = new string[namespaceHierarchyAndEntityName.Length - 1];
+
+			// Populate the namespace hierarchy from the split domain object name
+			for (int i=0; i < NamespaceHierarchy.Length; i++) {
+				NamespaceHierarchy[i] = namespaceHierarchyAndEntityName[i];
+			}
+
+			// The last element in the hierarchy is the domain object name itself
+			EntityName = namespaceHierarchyAndEntityName[namespaceHierarchyAndEntityName.Length - 1];
+		}
+		else {
+			EntityName = namespacedEntityName;
+		}
+	}
+
+	private string entityName;
+	private ArtifactToGenerate[] artifactsToGenerate;
+	private string[] namespaceHierarchy;
+	private IList<EntityProperty> entityProperties = new List<EntityProperty>();
+}
+
+public class EntityProperty {
+	public EntityProperty(string propertyName, string typeName, object defaultValueForTests)
+		: this(propertyName, typeName, defaultValueForTests, null, false) { }
+
+	public EntityProperty(string propertyName, string typeName, object defaultValueForTests, string propertyAttributes)
+		: this(propertyName, typeName, defaultValueForTests, propertyAttributes, false) { }
+
+    /// <summary>
+    /// Constructor for setting up entity properties
+    /// </summary>
+    /// <param name="propertyName">
+    /// Name of the property to add; e.g., "Description", "Name", "SSN"
+    /// </param>
+    /// <param name="typeName">
+    /// Type of the property to add; e.g., "string", "int", "Employee"
+    /// </param>
+    /// <param name="defaultValueForTests">
+    /// Default value that will assigned to the property within unit tests; e.g., "Whatever", 2, null
+    /// </param>
+    /// <param name="propertyAttributes">
+    /// Allows one to provide attribute details which will appear above the property name. E.g., if you want the
+    /// property to be not-null, pass the following as the propertyAttributes value: "[NotNull(Message=\"May not be null\")]"
+    /// Another example would include "[JsonProperty]".  Don't include "[DomainSignature]" in this property as that
+    /// will get taken care of with the isPartOfDomainSignature parameter.
+    /// </param>
+    /// <param name="isPartOfDomainSignature">
+	/// If set to true, then gets the domain signature attribute added to it.  An entity does not
+	/// have to have any domain signature properties; if none exist, only the Id will be used in the
+	/// comparison of one entity to another.
+    /// </param>
+	public EntityProperty(string propertyName, string typeName, object defaultValueForTests, string propertyAttributes, bool isPartOfDomainSignature) {
+		Check.Require(! string.IsNullOrEmpty(propertyName), "propertyName may not be null or empty");
+		Check.Require(! string.IsNullOrEmpty(typeName), "typeName may not be null or empty");
+		Check.Require(propertyName.ToLower() != "id", "An Id property should not be added as it is already included");
+
+		PropertyName = propertyName;
+		TypeName = typeName;
+		PropertyAttributes = propertyAttributes;
+		IsPartOfDomainSignature = isPartOfDomainSignature;
+		this.defaultValueForTests = defaultValueForTests;
+	}
+
+	public string PropertyName {
+		get { return propertyName; }
+		protected set { propertyName = value; }
+	}
+
+	public string TypeName {
+		get { return typeName; }
+		protected set { typeName = value; }
+	}
+
+	public string GetDefaultValueForTests() {
+		string defaultValue = "null";
+
+		if (defaultValueForTests != null) {
+			if (TypeName == "string") {
+				return "\"" + defaultValueForTests.ToString() + "\"";
+			}
+			else if (TypeName == "bool") {
+				return defaultValueForTests.ToString().ToLower();
+			}
+			else if (TypeName == "char") {
+				return "'" + defaultValueForTests.ToString() + "'";
+			}
+			else if (TypeName == "DateTime") {
+				return "DateTime.Parse(\"" + defaultValueForTests.ToString() + "\")";
+			}
+			else if (TypeName == "TimeSpan") {
+				return "new TimeSpan(" + defaultValueForTests.ToString() + ")";
+			}
+			else {
+				return defaultValueForTests.ToString();
+			}
+		}
+
+		return defaultValue;
+	}
+
+	public string PropertyAttributes {
+		get { return propertyAttributes; }
+		set { propertyAttributes = value; }
+	}
+
+	public bool IsPartOfDomainSignature {
+		get { return isPartOfDomainSignature; }
+		set { isPartOfDomainSignature = value; }
+	}
+
+	private string propertyName;
+	private string typeName;
+	private object defaultValueForTests;
+	private string propertyAttributes;
+	private bool isPartOfDomainSignature = false;
+}
+
+public enum ArtifactToGenerate {
+	ApplicationService,
+	Controller,
+	DomainObject,
+	Dto,
+	FormViewModel,
+	NamedQuery,
+	Repository,
+	Sql,
+	Views
+}
+#>

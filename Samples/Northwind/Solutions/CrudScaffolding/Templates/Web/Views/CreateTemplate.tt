@@ -1,0 +1,23 @@
+﻿<#+
+public class CreateTemplate : BaseTemplate
+{
+	public CreateTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	protected override void RenderCore()
+	{
+#>
+<%@ Page Title="Create <#= EntityScaffoldingDetails.EntityName #>" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" AutoEventWireup="true" 
+	Inherits="System.Web.Mvc.ViewPage<<#= AppendNamespaceHierarchyTo(SolutionName + ".Web.Controllers") #>.<#= EntityScaffoldingDetails.EntityNamePlural #>Controller.<#= EntityScaffoldingDetails.EntityName #>FormViewModel>" %>
+
+<asp:Content ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
+
+	<h1>Create <#= EntityScaffoldingDetails.EntityName #></h1>
+
+	<% Html.RenderPartial("<#= EntityScaffoldingDetails.EntityName #>Form", ViewData); %>
+
+</asp:Content>
+<#+
+	}
+}
+#>

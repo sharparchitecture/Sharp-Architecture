@@ -1,0 +1,131 @@
+﻿
+@section head {
+
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+	<script type="text/javascript">
+	    google.load("jquery", "1.4.4");
+	    google.load("jqueryui", "1.8.5");
+    </script>    
+    
+    <script src="@Url.Content("~/Scripts/jquery.tmpl.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/mscorlib.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Northwind.Client.debug.js")" type="text/javascript"></script>
+    
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.all.css")" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+    .child-suggestion:hover { cursor:pointer; background-color: Yellow; }
+    </style>
+
+}
+@section MainContentPlaceHolder {
+
+<div id="loading" style="display:none;">Loading ...</div>    
+    <div id="main">
+    </div>
+    <script id="employees-table-tmpl" type="text/html">
+     <h1>Employees</h1>
+    <table id="employees-table">
+        <thead>
+            <tr>
+                <th style="display:none;"></th>
+			    <th>FirstName</th>
+			    <th>LastName</th>
+			    <th>PhoneExtension</th>
+			    <th colspan="3">Action</th>
+            </tr>
+        </thead>
+        <tbody>		
+        </tbody>
+    </table>
+    <p><button id="create-employee">Create</button></p>
+    </script>
+
+    <script id="employees-table-row-tmpl" type="text/html">
+			<tr>
+				<td>${FirstName}</td>
+				<td>${LastName}</td>
+				<td>${PhoneExtension}</td>
+                <td><button id="details" employeeId="${Id}">Details</button></td>
+				<td><button id="edit" employeeId="${Id}">Edit</button></td>
+				<td><button class="default" id="delete" employeeId="${Id}">Delete</button></td>				
+		    </tr>
+    </script>
+
+    <script id="employee-form-tmpl" type="text/html">
+    <div id="employee-form">
+    <ul>
+        <form id="employee-form-create">
+        <input type="hidden" name="Employee.Id" value="${Id}" />
+		<li>		    
+            <label for="FirstName">FirstName:</label>				    
+			<div id="FirstName">
+            <input name="Employee.FirstName" value="${FirstName}" />
+			</div>			
+		</li>
+		<li>
+        <label for="LastName">LastName:</label>				
+			<div id="LastName">
+			<input name="Employee.LastName" value="${LastName}" />
+			</div>			
+		</li>
+        		<li>        
+			<label for="Employee Territories">Territories:</label>     
+            <div>       
+            <input id="TerritoriesAutoSuggest" name="TerritoriesString" style="width:300px;" value="${TerritoriesString}"/>
+            <div>
+                <div id="suggestions" style="float:left;position:absolute;background:white;z-index:9999;width:300px;"></div>
+            </div>
+            </div>
+		</li>
+        <div style="clear:both;"></div>
+		<li>
+        <label for="PhoneExtension">PhoneExtension:</label>		    
+			<div id="PhoneExtension">
+            <input name="Employee.PhoneExtension" value="${PhoneExtension}" />			    
+			</div>			
+		</li>
+	    <li>
+            <button id="employee-save">Save</button>
+        </li>
+        </form>
+    </ul>
+    </div>
+    </script>
+
+    <script id="employee-detail-tmpl" type="text/html">
+    <div id="employee-detail">
+    <h1>Employee Details</h1>
+    <ul>
+		<li>
+			<label for="Employee_FirstName">FirstName:</label>
+            <span id="Employee_FirstName">${FirstName}</span>
+		</li>
+		<li>
+			<label for="Employee_LastName">LastName:</label>
+            <span id="Employee_LastName">${LastName}</span>
+		</li>
+		<li>
+			<label for="Employee_PhoneExtension">PhoneExtension:</label>
+            <span id="Employee_PhoneExtension">${PhoneExtension}</span>
+		</li>
+		<li>
+			<label for="Employee_Territories">Territories:</label>
+            <span id="Employee_Territories">
+                <ul>
+                {{each Territories}}     
+                    <li>${Id} ${Description}</li>
+                {{/each}}
+                </ul>
+            </span>
+		</li>
+	</ul>
+    </div>
+    </script>
+
+<script type="text/javascript">
+    Northwind.Client.EmployeeRia.main();
+</script>   
+
+
+}

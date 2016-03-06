@@ -1,0 +1,39 @@
+﻿<#+
+public class DomainObjectInstanceFactoryTemplate : BaseTemplate
+{
+	public DomainObjectInstanceFactoryTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	public override string TransformText()
+	{
+#>
+using System;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain") #>;
+
+namespace <#= AppendNamespaceHierarchyTo("Tests." + SolutionName + ".Domain") #>
+{
+    public class <#= EntityScaffoldingDetails.EntityName #>InstanceFactory
+    {
+        public static <#= EntityScaffoldingDetails.EntityName #> CreateValidTransient<#= EntityScaffoldingDetails.EntityName #>() {
+            return new <#= EntityScaffoldingDetails.EntityName #>() {
+			    <#+
+			    PushIndent("\t\t\t\t");
+
+    			for (int i=0; i < EntityScaffoldingDetails.EntityProperties.Count; i++) {
+				    if (i > 0) {
+				        WriteLine(", ");
+				    }
+				    
+				    Write(EntityScaffoldingDetails.EntityProperties[i].PropertyName + " = " + EntityScaffoldingDetails.EntityProperties[i].GetDefaultValueForTests());
+    			}
+
+			    PopIndent();
+			    #> 
+            };
+        }
+    }
+}
+<#+ return this.GenerationEnvironment.ToString();
+	}
+}
+#>
