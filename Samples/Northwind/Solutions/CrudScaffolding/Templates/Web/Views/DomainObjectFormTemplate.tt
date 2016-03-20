@@ -1,0 +1,55 @@
+﻿<#@ import namespace="System.Collections" #>
+
+<#+
+public class DomainObjectFormTemplate : BaseTemplate
+{
+	public DomainObjectFormTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	protected override void RenderCore()
+	{
+#>
+<%@ Control Language="C#" AutoEventWireup="true"
+	Inherits="System.Web.Mvc.ViewUserControl<<#= AppendNamespaceHierarchyTo(SolutionName + ".Web.Controllers") #>.<#= EntityScaffoldingDetails.EntityNamePlural #>Controller.<#= EntityScaffoldingDetails.EntityName #>FormViewModel>" %>
+<%@ Import Namespace="<#= AppendNamespaceHierarchyTo(SolutionName + ".Domain") #>" %>
+<%@ Import Namespace="<#= SolutionName #>.Web.Controllers" %>
+<#+ if (EntityScaffoldingDetails.NamespaceHierarchy != null) { 
+#><%@ Import Namespace="<#= AppendNamespaceHierarchyTo(SolutionName + ".Web.Controllers") #>" %><#+ 
+	} #> 
+
+<% if (ViewContext.TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()] != null) { %>
+    <p id="pageMessage"><%= ViewContext.TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()]%></p>
+<% } %>
+
+<%= Html.ValidationSummary() %>
+
+<% using (Html.BeginForm()) { %>
+    <%= Html.AntiForgeryToken() %>
+    <%= Html.Hidden("<#= EntityScaffoldingDetails.EntityName #>.Id", (ViewData.Model.<#= EntityScaffoldingDetails.EntityName #> != null) ? ViewData.Model.<#= EntityScaffoldingDetails.EntityName #>.Id : 0)%>
+
+    <ul>
+	<#+
+	foreach (EntityProperty property in EntityScaffoldingDetails.EntityProperties) {
+	#>
+	<li>
+			<label for="<#= EntityScaffoldingDetails.EntityName #>_<#= property.PropertyName #>"><#= property.PropertyName #>:</label>
+			<div>
+				<%= Html.TextBox("<#= EntityScaffoldingDetails.EntityName #>.<#= property.PropertyName #>", 
+					(ViewData.Model.<#= EntityScaffoldingDetails.EntityName #> != null) ? ViewData.Model.<#= EntityScaffoldingDetails.EntityName #>.<#= property.PropertyName #>.ToString() : "")%>
+			</div>
+			<%= Html.ValidationMessage("<#= EntityScaffoldingDetails.EntityName #>.<#= property.PropertyName #>")%>
+		</li>
+	<#+
+	}
+	#>
+    <li>
+            <%= Html.SubmitButton("btnSave", "Save <#= EntityScaffoldingDetails.EntityName #>") %>
+	        <%= Html.Button("btnCancel", "Cancel", HtmlButtonType.Button, 
+				    "window.location.href = '" + Html.BuildUrlFromExpression<<#= EntityScaffoldingDetails.EntityNamePlural #>Controller>(c => c.Index()) + "';") %>
+        </li>
+    </ul>
+<% } %>
+<#+
+	}
+}
+#>

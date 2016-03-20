@@ -1,0 +1,75 @@
+﻿<#+
+public class DomainObjectTestsTemplate : BaseTemplate
+{
+	public DomainObjectTestsTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	protected override void RenderCore()
+	{
+#>
+using NUnit.Framework;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain") #>;
+using SharpArch.Testing;
+using SharpArch.Testing.NUnit;
+
+namespace <#= AppendNamespaceHierarchyTo("Tests." + SolutionName + ".Domain") #>
+{
+	<#+
+	if (! EntityScaffoldingDetails.HasAnyDomainSignatureProperties) { #>
+    /// <summary>
+    /// A <#= EntityScaffoldingDetails.EntityNameCamelCase #>'s ID property is the only property which is compared to
+    /// another <#= EntityScaffoldingDetails.EntityNameCamelCase #>.  I.e., it does not have any domain signature 
+    /// properties other than the Id itself.
+    /// </summary>
+	<#+
+	}
+	#>
+[TestFixture]
+    public class <#= EntityScaffoldingDetails.EntityName #>Tests
+    {
+        [Test]
+        public void CanCompare<#= EntityScaffoldingDetails.EntityNamePlural #>() {
+            <#= EntityScaffoldingDetails.EntityName #> instance = new <#= EntityScaffoldingDetails.EntityName #>();
+			<#+
+			PushIndent("\t\t\t");
+
+			if (EntityScaffoldingDetails.HasAnyDomainSignatureProperties) {
+				foreach (EntityProperty property in EntityScaffoldingDetails.EntityProperties) {
+					if (property.IsPartOfDomainSignature) {
+						WriteLine("instance." + property.PropertyName + " = " + property.GetDefaultValueForTests() + ";");
+					}
+				}
+			}
+			else {
+				WriteLine("EntityIdSetter.SetIdOf<int>(instance, 1);");
+			}
+
+			PopIndent();
+			#>
+
+            <#= EntityScaffoldingDetails.EntityName #> instanceToCompareTo = new <#= EntityScaffoldingDetails.EntityName #>();
+			<#+
+			PushIndent("\t\t\t");
+
+			if (EntityScaffoldingDetails.HasAnyDomainSignatureProperties) {
+				foreach (EntityProperty property in EntityScaffoldingDetails.EntityProperties) {
+					if (property.IsPartOfDomainSignature) {
+						WriteLine("instanceToCompareTo." + property.PropertyName + " = " + property.GetDefaultValueForTests() + ";");
+					}
+				}
+			}
+			else {
+				WriteLine("EntityIdSetter.SetIdOf<int>(instanceToCompareTo, 1);");
+			}
+
+			PopIndent();
+			#>
+
+			instance.ShouldEqual(instanceToCompareTo);
+        }
+    }
+}
+<#+
+	}
+}
+#>

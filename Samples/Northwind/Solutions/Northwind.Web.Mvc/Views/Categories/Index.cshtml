@@ -1,0 +1,20 @@
+﻿@using Microsoft.Web.Mvc
+@using Northwind.Web.Mvc.Controllers
+@model IList<Northwind.Domain.Category>
+
+
+@section MainContentPlaceHolder {
+
+    <h2>Categories</h2>
+<div>
+<ul>
+@foreach(var category in Model)
+{
+    <li>@(Html.ActionLink<CategoriesController>(c => c.Show(category.Id), category.CategoryName))</li>
+}
+</ul>
+</div>
+    
+
+}
+

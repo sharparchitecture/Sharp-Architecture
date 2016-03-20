@@ -1,0 +1,37 @@
+﻿<#@ import namespace="System.Collections" #>
+
+<#+
+public class DomainObjectRepositoryTemplate : BaseTemplate
+{
+	public DomainObjectRepositoryTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	public override string TransformText()
+	{
+#>
+using SharpArch.Data.NHibernate;
+using System.Collections.Generic;
+using NHibernate;
+using NHibernate.Transform;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain.QueryDtos") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain.RepositoryInterfaces") #>;
+
+namespace <#= AppendNamespaceHierarchyTo(SolutionName + ".Data.Repositories") #>
+{
+    public class <#= EntityScaffoldingDetails.EntityName #>Repository : Repository<<#= EntityScaffoldingDetails.EntityName #>>, I<#= EntityScaffoldingDetails.EntityName #>Repository
+    {
+        public IList<<#= EntityScaffoldingDetails.EntityName #>Dto> Get<#= EntityScaffoldingDetails.EntityName #>Summaries() {
+            ISession session = SharpArch.Data.NHibernate.NHibernateSession.Current;
+
+            IQuery query = session.GetNamedQuery("Get<#= EntityScaffoldingDetails.EntityName #>Summaries")
+                .SetResultTransformer(Transformers.AliasToBean<<#= EntityScaffoldingDetails.EntityName #>Dto>());
+
+            return query.List<<#= EntityScaffoldingDetails.EntityName #>Dto>();
+        }
+    }
+}
+<#+ return this.GenerationEnvironment.ToString();
+	}
+}
+#>

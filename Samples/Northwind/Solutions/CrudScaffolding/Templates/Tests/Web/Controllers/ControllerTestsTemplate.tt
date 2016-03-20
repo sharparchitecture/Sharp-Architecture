@@ -1,0 +1,174 @@
+﻿<#@ import namespace="System.Collections" #>
+
+<#+
+public class ControllerTestsTemplate : BaseTemplate
+{
+	public ControllerTestsTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	protected override void RenderCore()
+	{
+#>
+using System;
+using MvcContrib.TestHelper;
+using NUnit.Framework;
+using Rhino.Mocks;
+using SharpArch.Core.PersistenceSupport;
+using SharpArch.Testing;
+using SharpArch.Testing.NUnit;
+using System.Collections.Generic;
+using System.Web.Mvc;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain") #>;
+using <#= SolutionName #>.Web.Controllers;
+<#+ if (EntityScaffoldingDetails.NamespaceHierarchy != null) { 
+#>using <#= AppendNamespaceHierarchyTo(SolutionName + ".Web.Controllers") #>;<#+ 
+	} #> 
+
+namespace <#= AppendNamespaceHierarchyTo("Tests." + SolutionName + ".Web.Controllers") #>
+{
+    [TestFixture]
+    public class <#= EntityScaffoldingDetails.EntityNamePlural #>ControllerTests
+    {
+        [SetUp]
+        public void SetUp() {
+            ServiceLocatorInitializer.Init();
+            controller = new <#= EntityScaffoldingDetails.EntityNamePlural #>Controller(CreateMock<#= EntityScaffoldingDetails.EntityName #>Repository());
+        }
+
+        /// <summary>
+        /// Add a couple of objects to the list within Create<#= EntityScaffoldingDetails.EntityNamePlural #> and change the 
+        /// "ShouldEqual(0)" within this test to the respective number.
+        /// </summary>
+        [Test]
+        public void CanList<#= EntityScaffoldingDetails.EntityNamePlural #>() {
+            ViewResult result = controller.Index().AssertViewRendered();
+
+            result.ViewData.Model.ShouldNotBeNull();
+            (result.ViewData.Model as List<<#= EntityScaffoldingDetails.EntityName #>>).Count.ShouldEqual(0);
+        }
+
+        [Test]
+        public void CanShow<#= EntityScaffoldingDetails.EntityName #>() {
+            ViewResult result = controller.Show(1).AssertViewRendered();
+
+			result.ViewData.ShouldNotBeNull();
+			
+            (result.ViewData.Model as <#= EntityScaffoldingDetails.EntityName #>).Id.ShouldEqual(1);
+        }
+
+        [Test]
+        public void CanInit<#= EntityScaffoldingDetails.EntityName #>Creation() {
+            ViewResult result = controller.Create().AssertViewRendered();
+            
+            result.ViewData.Model.ShouldNotBeNull();
+            result.ViewData.Model.ShouldBeOfType(typeof(<#= EntityScaffoldingDetails.EntityNamePlural #>Controller.<#= EntityScaffoldingDetails.EntityName #>FormViewModel));
+            (result.ViewData.Model as <#= EntityScaffoldingDetails.EntityNamePlural #>Controller.<#= EntityScaffoldingDetails.EntityName #>FormViewModel).<#= EntityScaffoldingDetails.EntityName #>.ShouldBeNull();
+        }
+
+        [Test]
+        public void CanEnsure<#= EntityScaffoldingDetails.EntityName #>CreationIsValid() {
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm = new <#= EntityScaffoldingDetails.EntityName #>();
+            ViewResult result = controller.Create(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm).AssertViewRendered();
+
+            result.ViewData.Model.ShouldNotBeNull();
+            result.ViewData.Model.ShouldBeOfType(typeof(<#= EntityScaffoldingDetails.EntityNamePlural #>Controller.<#= EntityScaffoldingDetails.EntityName #>FormViewModel));
+        }
+
+        [Test]
+        public void CanCreate<#= EntityScaffoldingDetails.EntityName #>() {
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm = CreateTransient<#= EntityScaffoldingDetails.EntityName #>();
+            RedirectToRouteResult redirectResult = controller.Create(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm)
+                .AssertActionRedirect().ToAction("Index");
+            controller.TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()].ToString()
+				.ShouldContain("was successfully created");
+        }
+
+        [Test]
+        public void CanUpdate<#= EntityScaffoldingDetails.EntityName #>() {
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm = CreateTransient<#= EntityScaffoldingDetails.EntityName #>();
+            EntityIdSetter.SetIdOf<int>(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm, 1);
+            RedirectToRouteResult redirectResult = controller.Edit(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm)
+                .AssertActionRedirect().ToAction("Index");
+            controller.TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()].ToString()
+				.ShouldContain("was successfully updated");
+        }
+
+        [Test]
+        public void CanInit<#= EntityScaffoldingDetails.EntityName #>Edit() {
+            ViewResult result = controller.Edit(1).AssertViewRendered();
+
+			result.ViewData.Model.ShouldNotBeNull();
+            result.ViewData.Model.ShouldBeOfType(typeof(<#= EntityScaffoldingDetails.EntityNamePlural #>Controller.<#= EntityScaffoldingDetails.EntityName #>FormViewModel));
+            (result.ViewData.Model as <#= EntityScaffoldingDetails.EntityNamePlural #>Controller.<#= EntityScaffoldingDetails.EntityName #>FormViewModel).<#= EntityScaffoldingDetails.EntityName #>.Id.ShouldEqual(1);
+        }
+
+        [Test]
+        public void CanDelete<#= EntityScaffoldingDetails.EntityName #>() {
+            RedirectToRouteResult redirectResult = controller.Delete(1)
+                .AssertActionRedirect().ToAction("Index");
+            
+            controller.TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()].ToString()
+				.ShouldContain("was successfully deleted");
+        }
+
+		#region Create Mock <#= EntityScaffoldingDetails.EntityName #> Repository
+
+        private IRepository<<#= EntityScaffoldingDetails.EntityName #>> CreateMock<#= EntityScaffoldingDetails.EntityName #>Repository() {
+
+            IRepository<<#= EntityScaffoldingDetails.EntityName #>> mockedRepository = MockRepository.GenerateMock<IRepository<<#= EntityScaffoldingDetails.EntityName #>>>();
+            mockedRepository.Expect(mr => mr.GetAll()).Return(Create<#= EntityScaffoldingDetails.EntityNamePlural #>());
+            mockedRepository.Expect(mr => mr.Get(1)).IgnoreArguments().Return(Create<#= EntityScaffoldingDetails.EntityName #>());
+            mockedRepository.Expect(mr => mr.SaveOrUpdate(null)).IgnoreArguments().Return(Create<#= EntityScaffoldingDetails.EntityName #>());
+            mockedRepository.Expect(mr => mr.Delete(null)).IgnoreArguments();
+
+			IDbContext mockedDbContext = MockRepository.GenerateStub<IDbContext>();
+			mockedDbContext.Stub(c => c.CommitChanges());
+			mockedRepository.Stub(mr => mr.DbContext).Return(mockedDbContext);
+            
+            return mockedRepository;
+        }
+
+        private <#= EntityScaffoldingDetails.EntityName #> Create<#= EntityScaffoldingDetails.EntityName #>() {
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #> = CreateTransient<#= EntityScaffoldingDetails.EntityName #>();
+            EntityIdSetter.SetIdOf<int>(<#= EntityScaffoldingDetails.EntityNameCamelCase #>, 1);
+            return <#= EntityScaffoldingDetails.EntityNameCamelCase #>;
+        }
+
+        private List<<#= EntityScaffoldingDetails.EntityName #>> Create<#= EntityScaffoldingDetails.EntityNamePlural #>() {
+            List<<#= EntityScaffoldingDetails.EntityName #>> <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #> = new List<<#= EntityScaffoldingDetails.EntityName #>>();
+
+            // Create a number of domain object instances here and add them to the list
+
+            return <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>;
+        }
+        
+        #endregion
+
+        /// <summary>
+        /// Creates a valid, transient <#= EntityScaffoldingDetails.EntityName #>; typical of something retrieved back from a form submission
+        /// </summary>
+        private <#= EntityScaffoldingDetails.EntityName #> CreateTransient<#= EntityScaffoldingDetails.EntityName #>() {
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #> = new <#= EntityScaffoldingDetails.EntityName #>() {
+				<#+
+				PushIndent("\t\t\t\t");
+
+				for (int i=0; i < EntityScaffoldingDetails.EntityProperties.Count; i++) {
+					WriteLine(EntityScaffoldingDetails.EntityProperties[i].PropertyName + " = " + 
+						EntityScaffoldingDetails.EntityProperties[i].GetDefaultValueForTests() + 
+						((i < EntityScaffoldingDetails.EntityProperties.Count - 1) ? "," : ""));
+				}
+
+				PopIndent();
+				#>
+            };
+            
+            return <#= EntityScaffoldingDetails.EntityNameCamelCase #>;
+        }
+
+        private <#= EntityScaffoldingDetails.EntityNamePlural #>Controller controller;
+    }
+}
+<#+
+	}
+}
+#>

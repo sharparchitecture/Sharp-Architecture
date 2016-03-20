@@ -1,0 +1,66 @@
+﻿@using Microsoft.Web.Mvc
+@using Northwind.Web.Mvc.Controllers
+@using Northwind.Web.Mvc.Controllers.Organization
+@model Northwind.Web.Mvc.Controllers.Organization.EmployeesController.EmployeeFormViewModel
+
+
+@if (ViewContext.TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()] != null)
+    {
+    <p id="pageMessage">@ViewContext.TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()]</p>
+
+    }
+
+@{
+    Html.EnableClientValidation();
+}
+
+@Html.ValidationSummary()
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @(
+            Html.Hidden(
+                "Employee.Id", (ViewData.Model.Employee != null) ? ViewData.Model.Employee.Id : 0))
+
+        <!--
+        Be sure to use CSS driven forms instead of layout via tables;
+        see http://wufoo.com/gallery/ for a ton of examples and templates.
+        You can also Google "tableless forms" or "CSS forms."
+        -->
+        <ul>
+            <li>
+                @Html.LabelFor(x => x.Employee.FirstName)
+                <div>
+                    @Html.EditorFor(x => x.Employee.FirstName)
+                </div>
+                @Html.ValidationMessageFor(x => x.Employee.FirstName)
+            </li>
+            <li>
+                @Html.LabelFor(x => x.Employee.LastName)
+                <div>
+                    @Html.TextBoxFor(x => x.Employee.LastName)
+                </div>
+                @Html.ValidationMessageFor(x => x.Employee.LastName)
+            </li>
+            <li>
+                @Html.LabelFor(x => x.Employee.PhoneExtension)
+                <div>
+                    @Html.EditorFor(x => x.Employee.PhoneExtension)
+                </div>
+                @Html.ValidationMessageFor(x => x.Employee.PhoneExtension)
+            </li>
+            <li>
+                @Html.SubmitButton("btnSave", "Save Employee")
+                @(
+            Html.Button(
+                "btnCancel",
+                "Cancel",
+                HtmlButtonType.Button,
+                "window.location.href = '" + Html.BuildUrlFromExpression<EmployeesController>(c => c.Index()) +
+                "';"))
+            </li>
+        </ul>
+
+    }
+

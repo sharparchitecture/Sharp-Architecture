@@ -31,3 +31,5 @@ _NCrunch*/
 *.*ncrunch*
 *.user
 .vs
+
+Samples/Northwind/logs/Northwind.Web.log

@@ -1,0 +1,41 @@
+﻿<#@ import namespace="System.Collections" #>
+
+<#+
+public class ShowTemplate : BaseTemplate
+{
+	public ShowTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { } 
+
+	public override string TransformText()
+	{
+#>
+<%@ Page Title="<#= EntityScaffoldingDetails.EntityName #> Details" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" AutoEventWireup="true" 
+	Inherits="System.Web.Mvc.ViewPage<<#= AppendNamespaceHierarchyTo(SolutionName + ".Domain") #>.<#= EntityScaffoldingDetails.EntityName #>>" %>
+<%@ Import Namespace="<#= AppendNamespaceHierarchyTo(SolutionName + ".Web.Controllers") #>" %>
+
+<asp:Content ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
+
+    <h1><#= EntityScaffoldingDetails.EntityName #> Details</h1>
+
+    <ul>
+	<#+
+	foreach (EntityProperty property in EntityScaffoldingDetails.EntityProperties) {
+	#>
+	<li>
+			<label for="<#= EntityScaffoldingDetails.EntityName #>_<#= property.PropertyName #>"><#= property.PropertyName #>:</label>
+            <span id="<#= EntityScaffoldingDetails.EntityName #>_<#= property.PropertyName #>"><%= Server.HtmlEncode(ViewData.Model.<#= property.PropertyName #>.ToString()) %></span>
+		</li>
+	<#+
+	}
+	#>
+    <li class="buttons">
+            <%= Html.Button("btnBack", "Back", HtmlButtonType.Button, 
+                "window.location.href = '" + Html.BuildUrlFromExpressionForAreas<<#= EntityScaffoldingDetails.EntityNamePlural #>Controller>(c => c.Index()) + "';") %>
+        </li>
+	</ul>
+
+</asp:Content>
+<#+ return this.GenerationEnvironment.ToString();
+	}
+}
+#>

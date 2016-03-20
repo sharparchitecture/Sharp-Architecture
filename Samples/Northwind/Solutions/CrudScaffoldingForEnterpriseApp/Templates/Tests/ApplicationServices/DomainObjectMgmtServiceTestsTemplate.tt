@@ -1,0 +1,259 @@
+﻿<#+
+public class DomainObjectManagementServiceTestsTemplate : BaseTemplate
+{
+	public DomainObjectManagementServiceTestsTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	public override string TransformText()
+	{
+#>
+using NUnit.Framework;
+using Rhino.Mocks;
+using SharpArch.Testing.NUnit;
+using System.Collections.Generic;
+using SharpArch.Core.PersistenceSupport;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".ApplicationServices") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".ApplicationServices.ViewModels") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain.QueryDtos") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain.RepositoryInterfaces") #>;
+using <#= AppendNamespaceHierarchyTo("Tests." + SolutionName + ".Domain") #>;
+<#+ if (EntityScaffoldingDetails.NamespaceHierarchy != null) { 
+#>using <#= SolutionName + ".Domain" #>;<#+ } #> 
+
+namespace Tests.<#= AppendNamespaceHierarchyTo(SolutionName + ".ApplicationServices") #>
+{
+    [TestFixture]
+    public class <#= EntityScaffoldingDetails.EntityName #>ManagementServiceTests
+    {
+        [SetUp]
+        public void SetUp() {
+            ServiceLocatorInitializer.Init();
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository = 
+                MockRepository.GenerateMock<I<#= EntityScaffoldingDetails.EntityName #>Repository>();
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.Stub(r => r.DbContext)
+                .Return(MockRepository.GenerateMock<IDbContext>());
+            
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService =
+                new <#= EntityScaffoldingDetails.EntityName #>ManagementService(<#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository);
+        }
+
+        [Test]
+        public void CanGet<#= EntityScaffoldingDetails.EntityName #>() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>ToExpect = 
+                <#= EntityScaffoldingDetails.EntityName #>InstanceFactory.CreateValidTransient<#= EntityScaffoldingDetails.EntityName #>();
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.Expect(r => r.Get(1))
+                .Return(<#= EntityScaffoldingDetails.EntityNameCamelCase #>ToExpect);
+
+            // Act
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>Retrieved = 
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Get(1);
+
+            // Assert
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>Retrieved.ShouldNotBeNull();
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>Retrieved.ShouldEqual(<#= EntityScaffoldingDetails.EntityNameCamelCase #>ToExpect);
+        }
+
+        [Test]
+        public void CanGetAll<#= EntityScaffoldingDetails.EntityNamePlural #>() {
+            // Establish Context
+            IList<<#= EntityScaffoldingDetails.EntityName #>> <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>ToExpect = new List<<#= EntityScaffoldingDetails.EntityName #>>();
+
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #> = 
+                <#= EntityScaffoldingDetails.EntityName #>InstanceFactory.CreateValidTransient<#= EntityScaffoldingDetails.EntityName #>();
+
+            <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>ToExpect.Add(<#= EntityScaffoldingDetails.EntityNameCamelCase #>);
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.Expect(r => r.GetAll())
+                .Return(<#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>ToExpect);
+
+            // Act
+            IList<<#= EntityScaffoldingDetails.EntityName #>> <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Retrieved =
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.GetAll();
+
+            // Assert
+            <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Retrieved.ShouldNotBeNull();
+            <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Retrieved.Count.ShouldEqual(1);
+            <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Retrieved[0].ShouldNotBeNull();
+            <#= EntityScaffoldingDetails.EntityNamePluralCamelCase #>Retrieved[0].ShouldEqual(<#= EntityScaffoldingDetails.EntityNameCamelCase #>);
+        }
+
+        [Test]
+        public void CanGet<#= EntityScaffoldingDetails.EntityName #>Summaries() {
+            // Establish Context
+            IList<<#= EntityScaffoldingDetails.EntityName #>Dto> <#= EntityScaffoldingDetails.EntityNameCamelCase #>SummariesToExpect = new List<<#= EntityScaffoldingDetails.EntityName #>Dto>();
+
+            <#= EntityScaffoldingDetails.EntityName #>Dto <#= EntityScaffoldingDetails.EntityNameCamelCase #>Dto = new <#= EntityScaffoldingDetails.EntityName #>Dto();
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>SummariesToExpect.Add(<#= EntityScaffoldingDetails.EntityNameCamelCase #>Dto);
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.Expect(r => r.Get<#= EntityScaffoldingDetails.EntityName #>Summaries())
+                .Return(<#= EntityScaffoldingDetails.EntityNameCamelCase #>SummariesToExpect);
+
+            // Act
+            IList<<#= EntityScaffoldingDetails.EntityName #>Dto> <#= EntityScaffoldingDetails.EntityNameCamelCase #>SummariesRetrieved =
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Get<#= EntityScaffoldingDetails.EntityName #>Summaries();
+
+            // Assert
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>SummariesRetrieved.ShouldNotBeNull();
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>SummariesRetrieved.Count.ShouldEqual(1);
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>SummariesRetrieved[0].ShouldNotBeNull();
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>SummariesRetrieved[0].ShouldEqual(<#= EntityScaffoldingDetails.EntityNameCamelCase #>Dto);
+        }
+
+        [Test]
+        public void CanCreateFormViewModel() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityName #>FormViewModel viewModelToExpect = new <#= EntityScaffoldingDetails.EntityName #>FormViewModel();
+
+            // Act
+            <#= EntityScaffoldingDetails.EntityName #>FormViewModel viewModelRetrieved =
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.CreateFormViewModel();
+
+            // Assert
+            viewModelRetrieved.ShouldNotBeNull();
+            viewModelRetrieved.<#= EntityScaffoldingDetails.EntityName #>.ShouldBeNull();
+        }
+
+        [Test]
+        public void CanCreateFormViewModelFor<#= EntityScaffoldingDetails.EntityName #>() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityName #>FormViewModel viewModelToExpect = new <#= EntityScaffoldingDetails.EntityName #>FormViewModel();
+
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #> = 
+                <#= EntityScaffoldingDetails.EntityName #>InstanceFactory.CreateValidTransient<#= EntityScaffoldingDetails.EntityName #>();
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.Expect(r => r.Get(1))
+                .Return(<#= EntityScaffoldingDetails.EntityNameCamelCase #>);
+
+            // Act
+            <#= EntityScaffoldingDetails.EntityName #>FormViewModel viewModelRetrieved =
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.CreateFormViewModelFor(1);
+
+            // Assert
+            viewModelRetrieved.ShouldNotBeNull();
+            viewModelRetrieved.<#= EntityScaffoldingDetails.EntityName #>.ShouldNotBeNull();
+            viewModelRetrieved.<#= EntityScaffoldingDetails.EntityName #>.ShouldEqual(<#= EntityScaffoldingDetails.EntityNameCamelCase #>);
+        }
+
+        [Test]
+        public void CanSaveOrUpdateValid<#= EntityScaffoldingDetails.EntityName #>() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityName #> valid<#= EntityScaffoldingDetails.EntityName #> = 
+                <#= EntityScaffoldingDetails.EntityName #>InstanceFactory.CreateValidTransient<#= EntityScaffoldingDetails.EntityName #>();
+
+            // Act
+            ActionConfirmation confirmation =
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.SaveOrUpdate(valid<#= EntityScaffoldingDetails.EntityName #>);
+
+            // Assert
+            confirmation.ShouldNotBeNull();
+            confirmation.WasSuccessful.ShouldBeTrue();
+            confirmation.Value.ShouldNotBeNull();
+            confirmation.Value.ShouldEqual(valid<#= EntityScaffoldingDetails.EntityName #>);
+        }
+
+        [Test]
+        public void CannotSaveOrUpdateInvalid<#= EntityScaffoldingDetails.EntityName #>() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityName #> invalid<#= EntityScaffoldingDetails.EntityName #> = new <#= EntityScaffoldingDetails.EntityName #>();
+
+            // Act
+            ActionConfirmation confirmation =
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.SaveOrUpdate(invalid<#= EntityScaffoldingDetails.EntityName #>);
+
+            // Assert
+            confirmation.ShouldNotBeNull();
+            confirmation.WasSuccessful.ShouldBeFalse();
+            confirmation.Value.ShouldBeNull();
+        }
+
+        [Test]
+        public void CanUpdateWithValid<#= EntityScaffoldingDetails.EntityName #>FromForm() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityName #> valid<#= EntityScaffoldingDetails.EntityName #>FromForm = 
+                <#= EntityScaffoldingDetails.EntityName #>InstanceFactory.CreateValidTransient<#= EntityScaffoldingDetails.EntityName #>();
+            
+            // Intentionally empty to ensure successful transfer of values
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>FromDb = new <#= EntityScaffoldingDetails.EntityName #>();
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.Expect(r => r.Get(1))
+                .Return(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromDb);
+
+            // Act
+            ActionConfirmation confirmation =
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.UpdateWith(valid<#= EntityScaffoldingDetails.EntityName #>FromForm, 1);
+
+            // Assert
+            confirmation.ShouldNotBeNull();
+            confirmation.WasSuccessful.ShouldBeTrue();
+            confirmation.Value.ShouldNotBeNull();
+            confirmation.Value.ShouldEqual(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromDb);
+            confirmation.Value.ShouldEqual(valid<#= EntityScaffoldingDetails.EntityName #>FromForm);
+        }
+
+        [Test]
+        public void CannotUpdateWithInvalid<#= EntityScaffoldingDetails.EntityName #>FromForm() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityName #> invalid<#= EntityScaffoldingDetails.EntityName #>FromForm = new <#= EntityScaffoldingDetails.EntityName #>();
+
+            // Intentionally empty to ensure successful transfer of values
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>FromDb = new <#= EntityScaffoldingDetails.EntityName #>();
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.Expect(r => r.Get(1))
+                .Return(<#= EntityScaffoldingDetails.EntityNameCamelCase #>FromDb);
+
+            // Act
+            ActionConfirmation confirmation =
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.UpdateWith(invalid<#= EntityScaffoldingDetails.EntityName #>FromForm, 1);
+
+            // Assert
+            confirmation.ShouldNotBeNull();
+            confirmation.WasSuccessful.ShouldBeFalse();
+            confirmation.Value.ShouldBeNull();
+        }
+
+        [Test]
+        public void CanDelete<#= EntityScaffoldingDetails.EntityName #>() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>ToDelete = new <#= EntityScaffoldingDetails.EntityName #>();
+
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.Expect(r => r.Get(1))
+                .Return(<#= EntityScaffoldingDetails.EntityNameCamelCase #>ToDelete);
+
+            // Act
+            ActionConfirmation confirmation =
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Delete(1);
+
+            // Assert
+            confirmation.ShouldNotBeNull();
+            confirmation.WasSuccessful.ShouldBeTrue();
+            confirmation.Value.ShouldBeNull();
+        }
+
+        [Test]
+        public void CannotDeleteNonexistent<#= EntityScaffoldingDetails.EntityName #>() {
+            // Establish Context
+            <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository.Expect(r => r.Get(1))
+                .Return(null);
+
+            // Act
+            ActionConfirmation confirmation =
+                <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService.Delete(1);
+
+            // Assert
+            confirmation.ShouldNotBeNull();
+            confirmation.WasSuccessful.ShouldBeFalse();
+            confirmation.Value.ShouldBeNull();
+        }
+
+        private I<#= EntityScaffoldingDetails.EntityName #>Repository <#= EntityScaffoldingDetails.EntityNameCamelCase #>Repository;
+        private I<#= EntityScaffoldingDetails.EntityName #>ManagementService <#= EntityScaffoldingDetails.EntityNameCamelCase #>ManagementService;
+    }
+}
+<#+ return this.GenerationEnvironment.ToString();
+	}
+}
+#>

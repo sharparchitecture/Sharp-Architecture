@@ -1,0 +1,23 @@
+﻿<#+
+public class EditTemplate : BaseTemplate
+{
+	public EditTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	public override string TransformText()
+	{
+#>
+<%@ Page Title="Edit <#= EntityScaffoldingDetails.EntityName #>" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" AutoEventWireup="true" 
+	Inherits="System.Web.Mvc.ViewPage<<#= AppendNamespaceHierarchyTo(SolutionName + ".ApplicationServices.ViewModels") + "." + EntityScaffoldingDetails.EntityName + "FormViewModel" #>>" %>
+
+<asp:Content ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
+
+	<h1>Edit <#= EntityScaffoldingDetails.EntityName #></h1>
+
+	<% Html.RenderPartial("<#= EntityScaffoldingDetails.EntityName #>Form", ViewData); %>
+
+</asp:Content>
+<#+ return this.GenerationEnvironment.ToString();
+	}
+}
+#>

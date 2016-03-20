@@ -1,0 +1,41 @@
+<#@ import namespace="System.Collections" #>
+
+<#+
+public class AreaRegistrationTemplate : BaseTemplate
+{
+
+public AreaRegistrationTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+    : base(solutionName, entityScaffoldingDetails) { }
+
+public override string TransformText()
+{
+
+#>
+
+namespace <#= AppendNamespaceHierarchyTo(SolutionName + ".Web.Controllers") #>
+{
+
+public class <#= AppendNamespaceHierarchyTo("").Replace(".", "/").Trim('/') #>AreaRegistration : System.Web.Mvc.AreaRegistration
+{
+    public override string AreaName {
+        get {
+            return "<#= AppendNamespaceHierarchyTo("").Replace(".", "/").Trim('/') #>";
+        }
+    }
+
+    public override void RegisterArea(System.Web.Mvc.AreaRegistrationContext context) {
+        context.MapRoute(
+                "<#= AppendNamespaceHierarchyTo("").Replace(".", "") #>_default",
+                "<#= AppendNamespaceHierarchyTo("").Replace(".", "/").Trim('/') #>/{controller}/{action}/{id}",
+                new { action = "Index", id = "" }
+            );
+    }
+}
+
+} <#+
+return this.GenerationEnvironment.ToString();
+}
+
+}
+#>
+

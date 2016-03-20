@@ -1,0 +1,54 @@
+﻿@using Microsoft.Web.Mvc
+@using Northwind.Web.Mvc.Controllers
+@using Northwind.Web.Mvc.Controllers.Organization
+@model IEnumerable<Northwind.Domain.Organization.Employee>
+
+
+
+@section MainContentPlaceHolder {
+
+    <h1>Employees</h1>
+
+    @if (ViewContext.TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()] != null)
+        {
+        <p id="pageMessage">@ViewContext.TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()]</p>
+    
+        }
+
+    <table>
+        <thead>
+            <tr>
+			    <th>FirstName</th>
+			    <th>LastName</th>
+			    <th>PhoneExtension</th>
+			    <th colspan="3">Action</th>
+            </tr>
+        </thead>
+
+		@{
+        foreach (var employee in ViewData.Model)
+        {
+			<tr>
+				<td>@employee.FirstName</td>
+				<td>@employee.LastName</td>
+				<td>@employee.PhoneExtension</td>
+				<td>@(Html.ActionLink<EmployeesController>(c => c.Show(employee.Id), "Details "))</td>
+				<td>@(Html.ActionLink<EmployeesController>(c => c.CreateOrUpdate(employee.Id), "Edit"))</td>
+				<td>
+    				@using (Html.BeginForm<EmployeesController>(c => c.Delete(employee.Id)))
+            {
+                        @Html.AntiForgeryToken()
+    				    <input type="submit" value="Delete" onclick="return confirm('Are you sure?');" />
+                    
+            }
+				</td>
+			</tr>
+		
+        }}
+    </table>
+
+    <p>@(
+                Html.ActionLink<EmployeesController>(c => c.CreateOrUpdate(0), "Create New Employee"))</p>
+
+}
+

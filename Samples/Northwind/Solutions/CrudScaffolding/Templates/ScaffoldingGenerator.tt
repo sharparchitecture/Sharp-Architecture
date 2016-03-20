@@ -1,0 +1,301 @@
+<#@ include file="./Templates/BaseTemplate.tt" #>
+<#@ include file="./Templates/Web/Controllers/ControllerTemplate.tt" #>
+<#@ include file="./Templates/Core/DomainObjectTemplate.tt" #>
+<#@ include file="./Templates/Tests/Web/Controllers/ControllerTestsTemplate.tt" #>
+<#@ include file="./Templates/Tests/Core/DomainObjectTestsTemplate.tt" #>
+<#@ include file="./Templates/Web/Views/DomainObjectFormTemplate.tt" #>
+<#@ include file="./Templates/Web/Views/CreateTemplate.tt" #>
+<#@ include file="./Templates/Web/Views/EditTemplate.tt" #>
+<#@ include file="./Templates/Web/Views/IndexTemplate.tt" #>
+<#@ include file="./Templates/Web/Views/ShowTemplate.tt" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="EnvDTE" #>
+
+<#+
+public class ScaffoldingGenerator : Generator
+{
+	public ScaffoldingGenerator(string solutionRootPath, string solutionName, EntityScaffoldingDetails entityScaffoldingDetails)
+		: this(solutionRootPath, solutionName, entityScaffoldingDetails, null) { }
+
+	public ScaffoldingGenerator(string solutionRootPath, string solutionName, EntityScaffoldingDetails entityScaffoldingDetails, ArtifactToGenerate[] artifactsToGenerate) {
+		// While calling this method within the constructor of this class
+		// violates command/query separation, I want to make it very difficult to forget invoking it.
+		DeleteT4OutputLog();
+		
+		this.entityScaffoldingDetails = entityScaffoldingDetails;
+		this.solutionName = solutionName;
+
+		this.solutionRootPath = solutionRootPath;
+
+		this.appFolderRelativePath = "..\\..\\app\\";
+		this.appFolderPath = solutionRootPath + "app\\";
+
+		this.testsFolderRelativePath = "..\\..\\tests\\";
+		this.testsFolderPath = solutionRootPath + "tests\\";
+
+		this.logsFolderPath = solutionRootPath + "logs\\";
+	}
+
+    /// <summary>
+	/// Removes any T4 output log generated on previous generation runs.  If you don't do this, 
+	/// the templating mechanism will delete the files listed in the existing log file before
+	/// generating new files.
+    /// </summary>
+	public void DeleteT4OutputLog() {
+		ProjectItem t4ToolboxOuputLog = 
+			TransformationContext.FindProjectItem("ScaffoldingGeneratorCommand.tt.log");
+		
+		if (t4ToolboxOuputLog != null) {
+			t4ToolboxOuputLog.Remove();
+			t4ToolboxOuputLog.Delete();
+		}
+	}
+	
+	protected override void RunCore() {
+		// Get rid of the existing generation log
+		File.Delete(logsFolderPath + LOG_FILE_NAME);
+		
+		Log("Started adding generated files");
+		
+		GenerateDomainObjectAndTests();
+		GenerateControllerAndTests();
+		GenerateViews();
+		
+		Log("Finished adding generated files");
+	}
+
+	private void GenerateDomainObjectAndTests() {
+		if (DidRequestToGenerate(ArtifactToGenerate.DomainObject)) {
+			string fileName = entityScaffoldingDetails.EntityName + "Tests.cs";
+			string targetPathRoot = testsFolderPath + solutionName + ".Tests\\" + solutionName + ".Domain\\";
+			string targetPath = CreateDirectoriesAndAppendNamespacePathTo(targetPathRoot);
+
+			if (! File.Exists(targetPath + fileName)) {
+				DomainObjectTestsTemplate domainObjectTestsTemplate = 
+					new DomainObjectTestsTemplate(solutionName, entityScaffoldingDetails);
+
+				string outputFile = solutionName + ".Core\\" + entityScaffoldingDetails.GetNamespaceDelimitedWith("\\") + fileName;
+				string outputProject = testsFolderRelativePath + solutionName + ".Tests\\" + solutionName + ".Tests.csproj";
+				RenderFileToProject(domainObjectTestsTemplate, outputFile, outputProject);
+			}
+			else {
+				Log("File already exists " + targetPath + fileName);
+			}
+
+			fileName = entityScaffoldingDetails.EntityName + ".cs";
+			targetPathRoot = appFolderPath + solutionName + ".Domain\\";
+			targetPath = CreateDirectoriesAndAppendNamespacePathTo(targetPathRoot);
+
+			if (! File.Exists(targetPath + fileName)) {
+				DomainObjectTemplate domainObjectTemplate = 
+					new DomainObjectTemplate(solutionName, entityScaffoldingDetails);
+				
+				string outputFile = entityScaffoldingDetails.GetNamespaceDelimitedWith("\\") + fileName;
+				string outputProject = targetPathRoot + solutionName + ".Domain.csproj";
+				RenderFileToProject(domainObjectTemplate, outputFile, outputProject);
+			}
+			else {
+				Log("File already exists " + targetPath + fileName);
+			}
+		}
+		else {
+			Log("Skipped generation of domain and domain tests");
+		}
+	}
+
+	private void GenerateControllerAndTests() {
+		if (DidRequestToGenerate(ArtifactToGenerate.Controller)) {
+			string fileName = entityScaffoldingDetails.EntityNamePlural + "ControllerTests.cs";
+			string targetPathRoot = testsFolderPath + solutionName + ".Tests\\" + solutionName + ".Web\\Controllers\\";
+			string targetPath = CreateDirectoriesAndAppendNamespacePathTo(targetPathRoot);
+
+			if (! File.Exists(targetPath + fileName)) {
+				ControllerTestsTemplate controllerTestsTemplate = 
+					new ControllerTestsTemplate(solutionName, entityScaffoldingDetails);
+
+				string outputFile = solutionName + ".Web\\Controllers\\" + 
+					entityScaffoldingDetails.GetNamespaceDelimitedWith("\\") + fileName;
+				string outputProject = testsFolderRelativePath + solutionName + ".Tests\\" + solutionName + ".Tests.csproj";
+				RenderFileToProject(controllerTestsTemplate, outputFile, outputProject);
+			}
+			else {
+				Log("File already exists " + targetPath + fileName);
+			}
+
+			fileName = entityScaffoldingDetails.EntityNamePlural + "Controller.cs";
+			targetPathRoot = appFolderPath + solutionName + ".Web.Controllers\\";
+			targetPath = CreateDirectoriesAndAppendNamespacePathTo(targetPathRoot);
+
+			if (! File.Exists(targetPath + fileName)) {
+				ControllerTemplate controllerTemplate = 
+					new ControllerTemplate(solutionName, entityScaffoldingDetails);
+				
+				string outputFile = entityScaffoldingDetails.GetNamespaceDelimitedWith("\\") + fileName;
+				string outputProject = targetPathRoot + solutionName + ".Web.Controllers.csproj";
+				RenderFileToProject(controllerTemplate, outputFile, outputProject);
+			}
+			else {
+				Log("File already exists " + targetPath + fileName);
+			}
+		}
+		else {
+			Log("Skipped generation of controller and controller tests");
+		}
+	}
+	
+	private void GenerateViews() {
+		if (DidRequestToGenerate(ArtifactToGenerate.Views)) {
+			string targetPathRoot = appFolderPath + solutionName + ".Web\\Views\\";
+			string targetPath = CreateDirectoriesAndAppendNamespacePathTo(targetPathRoot) + 
+				entityScaffoldingDetails.EntityNamePlural + "\\";
+
+			if (! Directory.Exists(targetPath)) {
+				Directory.CreateDirectory(targetPath);
+
+				Log("Added directory " + targetPath);
+			}
+
+			GenerateDomainObjectFormView(targetPath);
+			GenerateCreateView(targetPath);
+			GenerateEditView(targetPath);
+			GenerateIndexView(targetPath);
+			GenerateShowView(targetPath);
+		}
+		else {
+			Log("Skipped generation of views");
+		}
+	}
+
+	private void GenerateDomainObjectFormView(string targetPath) {
+		string fileName = entityScaffoldingDetails.EntityName + "Form.ascx";
+
+		if (! File.Exists(targetPath + fileName)) {
+			DomainObjectFormTemplate domainObjectFormTemplate = 
+				new DomainObjectFormTemplate(solutionName, entityScaffoldingDetails);
+			RenderViewFile(domainObjectFormTemplate, targetPath + fileName);
+		}
+		else {
+			Log("File already exists " + targetPath + fileName);
+		}
+	}
+
+	private void GenerateCreateView(string targetPath) {
+		string fileName = "Create.aspx";
+
+		if (! File.Exists(targetPath + fileName)) {
+			CreateTemplate createTemplate = new CreateTemplate(solutionName, entityScaffoldingDetails);
+			RenderViewFile(createTemplate, targetPath + fileName);
+		}
+		else {
+			Log("File already exists " + targetPath + fileName);
+		}
+	}
+	
+	private void GenerateEditView(string targetPath) {
+		string fileName = "Edit.aspx";
+
+		if (! File.Exists(targetPath + fileName)) {
+			EditTemplate editTemplate = new EditTemplate(solutionName, entityScaffoldingDetails);
+			RenderViewFile(editTemplate, targetPath + fileName);
+		}
+		else {
+			Log("File already exists " + targetPath + fileName);
+		}
+	}
+	
+	private void GenerateIndexView(string targetPath) {
+		string fileName = "Index.aspx";
+
+		if (! File.Exists(targetPath + fileName)) {
+			IndexTemplate indexTemplate = 
+				new IndexTemplate(solutionName, entityScaffoldingDetails);
+			RenderViewFile(indexTemplate, targetPath + fileName);
+		}
+		else {
+			Log("File already exists " + targetPath + fileName);
+		}
+	}
+	
+	private void GenerateShowView(string targetPath) {
+		string fileName = "Show.aspx";
+
+		if (! File.Exists(targetPath + fileName)) {
+			ShowTemplate showTemplate = new ShowTemplate(solutionName, entityScaffoldingDetails);
+			RenderViewFile(showTemplate, targetPath + fileName);
+		}
+		else {
+			Log("File already exists " + targetPath + fileName);
+		}
+	}
+
+	private void RenderViewFile(Template template, string outputFile) {
+		string outputProject = appFolderRelativePath + solutionName + ".Web\\" + solutionName + ".Web.csproj";
+		RenderFileToProject(template, outputFile, outputProject);
+	}
+
+	private void RenderFileToProject(Template template, string outputFile, string outputProject) {
+		template.Output.File = outputFile;
+		template.Output.Project = outputProject;
+		template.Render();
+
+		Log(string.Format("Added file {0} to project {1}", outputFile, outputProject));
+	}
+	
+    /// <summary>
+	/// Takes the namespace of the entity and verifies and creates, if necessary, a folder path after the provided
+	/// path which reflects the namespace of the entity.  For example, if you provide "C:\MyProject\" as the path and the
+	/// entity's namespace is "Organization.Whatever", then this method will verify and/or generate 
+	/// "C:\MyProject\Organization\Whatever\".  It then returns the full path, e.g., "C:\MyProject\Organization\Whatever\"
+    /// </summary>
+	private string CreateDirectoriesAndAppendNamespacePathTo(string path) {
+		if (entityScaffoldingDetails.NamespaceHierarchy == null)
+			return path;
+			
+		for (int i=0; i < entityScaffoldingDetails.NamespaceHierarchy.Length; i++) {
+			path += entityScaffoldingDetails.NamespaceHierarchy[i] + "\\";
+			Log("path = " + path + "; exists? " + Directory.Exists(path).ToString());
+			
+			if (! Directory.Exists(path)) {
+				Directory.CreateDirectory(path);
+				Log("Added directory " + path);
+			}
+		}
+		
+		return path;
+	}
+	
+	private bool DidRequestToGenerate(ArtifactToGenerate artifactToGenerate) {
+		// If specific artifacts were not designated, then assume creation
+		if (entityScaffoldingDetails.ArtifactsToGenerate == null)
+			return true;
+
+        for (int i=0; i < entityScaffoldingDetails.ArtifactsToGenerate.Length; i++) {
+            if (entityScaffoldingDetails.ArtifactsToGenerate[i] == artifactToGenerate) {
+				return true;
+            }
+        }
+        
+        return false;
+	}
+
+	private void Log(string message) {
+		StreamWriter streamWriter = File.AppendText(logsFolderPath + LOG_FILE_NAME);
+		streamWriter.WriteLine(DateTime.Now.ToLongTimeString() + "\t" + message);
+		streamWriter.Close();
+	}
+
+	private readonly EntityScaffoldingDetails entityScaffoldingDetails;
+	private readonly string logsFolderPath;
+	
+	private readonly string testsFolderPath;
+	private readonly string testsFolderRelativePath;
+
+	private readonly string appFolderPath;
+	private readonly string appFolderRelativePath;
+	
+	private readonly string solutionRootPath;
+	private readonly string solutionName;
+	
+	private const string LOG_FILE_NAME = "CrudScaffolding.log";
+}
+#>

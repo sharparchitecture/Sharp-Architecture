@@ -1,0 +1,35 @@
+﻿<#+
+public class IDomainObjectManagementServiceTemplate : BaseTemplate
+{
+	public IDomainObjectManagementServiceTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	public override string TransformText()
+	{
+#>
+using System.Collections.Generic;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".ApplicationServices.ViewModels") #>;
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain.QueryDtos") #>;
+<#+ if (EntityScaffoldingDetails.NamespaceHierarchy != null) { 
+#>using <#= SolutionName + ".Domain" #>;<#+ } #> 
+
+namespace <#= AppendNamespaceHierarchyTo(SolutionName + ".ApplicationServices") #>
+{
+    public interface I<#= EntityScaffoldingDetails.EntityName #>ManagementService
+    {
+        <#= EntityScaffoldingDetails.EntityName #>FormViewModel CreateFormViewModel();
+        <#= EntityScaffoldingDetails.EntityName #>FormViewModel CreateFormViewModelFor(int <#= EntityScaffoldingDetails.EntityNameCamelCase #>Id);
+        <#= EntityScaffoldingDetails.EntityName #>FormViewModel CreateFormViewModelFor(<#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>);
+        <#= EntityScaffoldingDetails.EntityName #> Get(int id);
+        IList<<#= EntityScaffoldingDetails.EntityName #>> GetAll();
+        IList<<#= EntityScaffoldingDetails.EntityName #>Dto> Get<#= EntityScaffoldingDetails.EntityName #>Summaries();
+        ActionConfirmation SaveOrUpdate(<#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>);
+        ActionConfirmation UpdateWith(<#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #>FromForm, int idOf<#= EntityScaffoldingDetails.EntityName #>ToUpdate);
+        ActionConfirmation Delete(int id);
+    }
+}
+<#+ return this.GenerationEnvironment.ToString();
+	}
+}
+#>

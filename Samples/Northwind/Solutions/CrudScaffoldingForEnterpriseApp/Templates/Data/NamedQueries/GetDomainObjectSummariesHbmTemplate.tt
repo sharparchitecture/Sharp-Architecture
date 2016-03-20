@@ -1,0 +1,28 @@
+﻿<#+
+public class GetDomainObjectSummariesHbmTemplate : BaseTemplate
+{
+	public GetDomainObjectSummariesHbmTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	public override string TransformText()
+	{
+#>
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+    <sql-query name="Get<#= EntityScaffoldingDetails.EntityName #>Summaries">
+        SET NOCOUNT ON;
+
+	    SELECT Id<#+
+		         foreach (EntityProperty property in EntityScaffoldingDetails.EntityProperties) {
+			        Write(", " + property.PropertyName);
+		         }
+
+                 WriteLine("");
+		     #>
+	    FROM <#= EntityScaffoldingDetails.EntityNamePlural #>
+    </sql-query>
+</hibernate-mapping>
+<#+ return this.GenerationEnvironment.ToString();
+	}
+}
+#>

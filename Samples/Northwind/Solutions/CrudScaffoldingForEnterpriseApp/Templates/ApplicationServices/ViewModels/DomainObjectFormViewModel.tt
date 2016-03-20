@@ -1,0 +1,22 @@
+﻿<#+
+public class DomainObjectFormViewModel : BaseTemplate
+{
+	public DomainObjectFormViewModel(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	public override string TransformText()
+	{
+#>
+using <#= AppendNamespaceHierarchyTo(SolutionName + ".Domain") #>;
+
+namespace <#= AppendNamespaceHierarchyTo(SolutionName + ".ApplicationServices.ViewModels") #>
+{
+    public class <#= EntityScaffoldingDetails.EntityName #>FormViewModel
+    {
+        public <#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityName #> { get; set; }
+    }
+}
+<#+ return this.GenerationEnvironment.ToString();
+	}
+}
+#>

@@ -1,0 +1,68 @@
+﻿<#@ import namespace="System.Collections" #>
+
+<#+
+public class IndexTemplate : BaseTemplate
+{
+	public IndexTemplate(string solutionName, EntityScaffoldingDetails entityScaffoldingDetails) 
+		: base(solutionName, entityScaffoldingDetails) { }
+
+	protected override void RenderCore()
+	{
+#>
+<%@ Page Title="<#= EntityScaffoldingDetails.EntityNamePlural #>" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" AutoEventWireup="true" 
+	Inherits="System.Web.Mvc.ViewPage<IEnumerable<<#= AppendNamespaceHierarchyTo(SolutionName + ".Domain") #>.<#= EntityScaffoldingDetails.EntityName #>>>" %>
+<%@ Import Namespace="<#= AppendNamespaceHierarchyTo(SolutionName + ".Domain") #>" %>
+<%@ Import Namespace="<#= SolutionName #>.Web.Controllers" %>
+<#+ if (EntityScaffoldingDetails.NamespaceHierarchy != null) { 
+#><%@ Import Namespace="<#= AppendNamespaceHierarchyTo(SolutionName + ".Web.Controllers") #>" %><#+ 
+	} #> 
+
+<asp:Content ContentPlaceHolderID="MainContentPlaceHolder" runat="server">
+    <h1><#= EntityScaffoldingDetails.EntityNamePlural #></h1>
+
+    <% if (ViewContext.TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()] != null) { %>
+        <p id="pageMessage"><%= ViewContext.TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()]%></p>
+    <% } %>
+
+    <table>
+        <thead>
+            <tr>
+			<#+
+			foreach (EntityProperty property in EntityScaffoldingDetails.EntityProperties) {
+			#>
+    <th><#= property.PropertyName #></th>
+			<#+
+			}
+			#>
+    <th colspan="3">Action</th>
+            </tr>
+        </thead>
+
+		<%
+		foreach (<#= EntityScaffoldingDetails.EntityName #> <#= EntityScaffoldingDetails.EntityNameCamelCase #> in ViewData.Model) { %>
+			<tr>
+			<#+
+			foreach (EntityProperty property in EntityScaffoldingDetails.EntityProperties) {
+			#>
+	<td><%= <#= EntityScaffoldingDetails.EntityNameCamelCase #>.<#= property.PropertyName #> %></td>
+			<#+
+			}
+			#>
+	<td><%=Html.ActionLink<<#= EntityScaffoldingDetails.EntityNamePlural #>Controller>( c => c.Show( <#= EntityScaffoldingDetails.EntityNameCamelCase #>.Id ), "Details ") %></td>
+				<td><%=Html.ActionLink<<#= EntityScaffoldingDetails.EntityNamePlural #>Controller>( c => c.Edit( <#= EntityScaffoldingDetails.EntityNameCamelCase #>.Id ), "Edit") %></td>
+				<td>
+    				<% using (Html.BeginForm<<#= EntityScaffoldingDetails.EntityNamePlural #>Controller>(c => c.Delete(<#= EntityScaffoldingDetails.EntityNameCamelCase #>.Id))) { %>
+                        <%= Html.AntiForgeryToken() %>
+    				    <input type="submit" value="Delete" onclick="return confirm('Are you sure?');" />
+                    <% } %>
+				</td>
+			</tr>
+		<%} %>
+    </table>
+
+    <p><%= Html.ActionLink<<#= EntityScaffoldingDetails.EntityNamePlural #>Controller>(c => c.Create(), "Create New <#= EntityScaffoldingDetails.EntityName #>") %></p>
+</asp:Content>
+<#+
+	}
+}
+#>
