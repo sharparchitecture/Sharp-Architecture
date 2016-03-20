@@ -1,4 +1,7 @@
-﻿namespace Northwind.Wcf.Web.CastleWindsor
+﻿using System;
+using Castle.Facilities.WcfIntegration;
+
+namespace Northwind.Wcf.Web.CastleWindsor
 {
     using Castle.MicroKernel.Registration;
     using Castle.Windsor;
@@ -41,9 +44,10 @@
 
         private static void AddWcfServicesTo(IWindsorContainer container)
         {
-            // Since the TerritoriesService.svc must be associated with a concrete class,
-            // we must register the concrete implementation here as the service
-            container.AddComponent("territoriesWcfService", typeof(TerritoriesWcfService));
+            container.AddFacility<WcfFacility>(f => f.CloseTimeout = TimeSpan.Zero)
+                .Register(Component.For<ITerritoriesWcfService>()
+                    .ImplementedBy<TerritoriesWcfService>()
+                    .ActAs(new DefaultServiceModel()));
         }
     }
 }

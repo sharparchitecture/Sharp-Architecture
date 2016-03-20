@@ -14,7 +14,7 @@
     ///   which needs to be disposed with Close/Abort.
     /// </summary>
     [ServiceContract]
-    public interface ITerritoriesWcfService : ICloseableAndAbortable
+    public interface ITerritoriesWcfService
     {
         /// <summary>
         ///   Returns all territories as DTOs.

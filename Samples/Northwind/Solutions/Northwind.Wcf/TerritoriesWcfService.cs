@@ -22,22 +22,6 @@
             this.territoryRepository = territoryRepository;
         }
 
-        /// <summary>
-        ///   Doesn't do anything because it only exists to be interchangeable with WCF client 
-        ///   proxies, such as <see cref = "TerritoriesWcfServiceClient" />
-        /// </summary>
-        public void Abort()
-        {
-        }
-
-        /// <summary>
-        ///   Doesn't do anything because it only exists to be interchangeable with WCF client 
-        ///   proxies, such as <see cref = "TerritoriesWcfServiceClient" />
-        /// </summary>
-        public void Close()
-        {
-        }
-
         public IList<TerritoryDto> GetTerritories()
         {
             // I'd rather have the transaction begun via an attribute, like with a controller action, 
