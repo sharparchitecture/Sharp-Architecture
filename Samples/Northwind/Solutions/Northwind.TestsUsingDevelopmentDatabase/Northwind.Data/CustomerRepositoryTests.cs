@@ -1,4 +1,6 @@
-﻿namespace Tests.Northwind.Data
+﻿using SharpArch.NHibernate;
+
+namespace Tests.Northwind.Data
 {
     using System;
     using System.Collections.Generic;
@@ -16,7 +18,13 @@
     [Category("DB Tests")]
     public class CustomerRepositoryTests : DatabaseRepositoryTestsBase
     {
-        private readonly CustomerRepository customerRepository = new CustomerRepository();
+        private CustomerRepository customerRepository;
+        [SetUp]
+        public override void SetUp()
+        {
+            base.SetUp();
+            customerRepository= new CustomerRepository(new TransactionManager(Session), Session);
+        }
 
         [Test]
         public void CanFindCustomerOrdersViaCustomFilter()

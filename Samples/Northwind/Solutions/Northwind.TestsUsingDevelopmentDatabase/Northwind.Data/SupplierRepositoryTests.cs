@@ -1,4 +1,6 @@
-﻿namespace Tests.Northwind.Data
+﻿using SharpArch.NHibernate;
+
+namespace Tests.Northwind.Data
 {
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -15,7 +17,14 @@
     [Category("DB Tests")]
     public class SupplierRepositoryTests : DatabaseRepositoryTestsBase
     {
-        private readonly ISupplierRepository supplierRepository = new SupplierRepository();
+        private ISupplierRepository supplierRepository;
+
+        public override void SetUp()
+        {
+            base.SetUp();
+            var transactionManager = new TransactionManager(Session);
+            supplierRepository = new SupplierRepository(transactionManager, Session);
+        }
 
         [Test]
         public void CanLoadSuppliersByProductCategoryName()

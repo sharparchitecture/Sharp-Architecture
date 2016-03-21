@@ -49,14 +49,6 @@
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SharpArch.Domain, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpArch.Domain.3.1.1\lib\net45\SharpArch.Domain.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SharpArch.Wcf, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpArch.Wcf.3.1.1\lib\net45\SharpArch.Wcf.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core">
@@ -90,6 +82,10 @@
     <Content Include="Dtos\README.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Solutions\SharpArch.Domain\SharpArch.Domain.csproj">
+      <Project>{E12E99BB-8732-441F-B3A6-861F0CE23D3D}</Project>
+      <Name>SharpArch.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Northwind.Domain\Northwind.Domain.csproj">
       <Project>{A412F40A-805B-49C6-8F3B-C6F0B4D57EFE}</Project>
       <Name>Northwind.Domain</Name>

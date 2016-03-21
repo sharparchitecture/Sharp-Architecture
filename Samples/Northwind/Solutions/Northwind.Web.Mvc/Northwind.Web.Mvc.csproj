@@ -88,28 +88,13 @@
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\packages\NHibernate.4.0.0.4000\lib\net40\NHibernate.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SharpArch.Domain, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpArch.Domain.3.1.1\lib\net45\SharpArch.Domain.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SharpArch.NHibernate, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpArch.NHibernate.3.1.1\lib\net45\SharpArch.NHibernate.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SharpArch.Wcf, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpArch.Wcf.3.1.1\lib\net45\SharpArch.Wcf.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SharpArch.Web.Mvc, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpArch.Web.Mvc.Castle.3.1.1\lib\net45\SharpArch.Web.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
@@ -260,6 +245,22 @@
     <Folder Include="Views\Territories\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Solutions\SharpArch.Domain\SharpArch.Domain.csproj">
+      <Project>{E12E99BB-8732-441F-B3A6-861F0CE23D3D}</Project>
+      <Name>SharpArch.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Solutions\SharpArch.NHibernate\SharpArch.NHibernate.csproj">
+      <Project>{0BD77F13-8DF6-4C16-9508-33AA4CF0677A}</Project>
+      <Name>SharpArch.NHibernate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Solutions\SharpArch.Web.Mvc.Castle\SharpArch.Web.Mvc.Castle.csproj">
+      <Project>{5C2EA19A-E547-4E55-B36E-B25CA9EFEF21}</Project>
+      <Name>SharpArch.Web.Mvc.Castle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Solutions\SharpArch.Web.Mvc\SharpArch.Web.Mvc.csproj">
+      <Project>{BF4E3D18-2EFB-49E3-9D8D-0F9F9BE1094A}</Project>
+      <Name>SharpArch.Web.Mvc</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Northwind.Domain\Northwind.Domain.csproj">
       <Project>{A412F40A-805B-49C6-8F3B-C6F0B4D57EFE}</Project>
       <Name>Northwind.Domain</Name>

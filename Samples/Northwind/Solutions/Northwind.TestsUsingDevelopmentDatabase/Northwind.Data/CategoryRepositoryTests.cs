@@ -12,12 +12,12 @@
     [Category("DB Tests")]
     public class CategoryRepositoryTests : DatabaseRepositoryTestsBase
     {
-        private readonly IRepository<Category> categoryRepository = new NHibernateRepository<Category>();
-
         [Test]
         public void CanGetAllCategories()
         {
-            var categories = this.categoryRepository.GetAll();
+            IRepository<Category> categoryRepository = new NHibernateRepository<Category>(new TransactionManager(Session), Session);
+
+            var categories = categoryRepository.GetAll();
 
             Assert.That(categories, Is.Not.Null);
             Assert.That(categories, Is.Not.Empty);
@@ -26,7 +26,9 @@
         [Test]
         public void CanGetCategoryById()
         {
-            var category = this.categoryRepository.Get(1);
+            IRepository<Category> categoryRepository = new NHibernateRepository<Category>(new TransactionManager(Session), Session);
+            
+            var category = categoryRepository.Get(1);
 
             Assert.That(category.CategoryName, Is.EqualTo("Beverages"));
         }

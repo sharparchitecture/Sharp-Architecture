@@ -12,8 +12,6 @@
     [Category("DB Tests")]
     public class EmployeeRepositoryTests : DatabaseRepositoryTestsBase
     {
-        private readonly IRepository<Employee> employeeRepository = new NHibernateRepository<Employee>();
-
         /// <summary>
         ///   WARNING: This is a very fragile test is will likely break over time.  It assumes 
         ///   a particular employee exists in the database and has exactly 7 territories.  Fragile 
@@ -23,7 +21,9 @@
         [Test]
         public void CanLoadEmployee()
         {
-            var employeeFromDb = this.employeeRepository.Get(2);
+            IRepository<Employee> employeeRepository = new NHibernateRepository<Employee>(new TransactionManager(Session), Session);
+
+            var employeeFromDb = employeeRepository.Get(2);
 
             Assert.That(employeeFromDb.FirstName, Is.EqualTo("Andrew"));
             Assert.That(employeeFromDb.LastName, Is.EqualTo("Fuller"));

@@ -1,4 +1,7 @@
-﻿namespace Northwind.Infrastructure
+﻿using NHibernate;
+using SharpArch.Domain.PersistenceSupport;
+
+namespace Northwind.Infrastructure
 {
     using System.Collections.Generic;
 
@@ -29,6 +32,11 @@
                             new DistinctRootEntityResultTransformer());
 
             return criteria.List<Supplier>() as List<Supplier>;
+        }
+
+        public SupplierRepository(ITransactionManager transactionManager, ISession session) : base(transactionManager, session)
+        {
+
         }
     }
 }

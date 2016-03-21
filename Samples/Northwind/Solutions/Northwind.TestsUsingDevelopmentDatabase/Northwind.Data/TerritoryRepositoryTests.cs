@@ -12,9 +12,14 @@
     [Category("DB Tests")]
     public class TerritoryRepositoryTests : DatabaseRepositoryTestsBase
     {
-        private readonly IRepositoryWithTypedId<Territory, string> territoryRepository =
-            new NHibernateRepositoryWithTypedId<Territory, string>();
+        private IRepositoryWithTypedId<Territory, string> territoryRepository;
 
+        public override void SetUp()
+        {
+            base.SetUp();
+            var transactionManager = new TransactionManager(Session);
+            territoryRepository = new NHibernateRepositoryWithTypedId<Territory, string>(transactionManager, Session);
+        }
         /// <summary>
         ///   WARNING: This is a very fragile test is will likely break over time.  It assumes 
         ///   a particular territory exists in the database and has exactly 1 employee.  Fragile 

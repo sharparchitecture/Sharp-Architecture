@@ -14,18 +14,12 @@
     using Northwind.Wcf.Web.CastleWindsor;
 
     using SharpArch.NHibernate;
-    using SharpArch.NHibernate.Wcf;
 
     public class Global : HttpApplication
     {
-        private WcfSessionStorage wcfSessionStorage;
-
         public override void Init()
         {
             base.Init();
-
-            // The WebSessionStorage must be created during the Init() to tie in HttpApplication events
-            this.wcfSessionStorage = new WcfSessionStorage();
         }
 
         /// <summary>
@@ -35,7 +29,6 @@
         /// </summary>
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            NHibernateInitializer.Instance().InitializeNHibernateOnce(() => this.InitializeNHibernateSession());
         }
 
         protected void Application_Error(object sender, EventArgs e)
@@ -61,19 +54,6 @@
             ComponentRegistrar.AddComponentsTo(container);
             ServiceLocator.SetLocatorProvider(() => new WindsorServiceLocator(container));
             return container;
-        }
-
-        /// <summary>
-        ///   If you need to communicate to multiple databases, you'd add a line to this method to
-        ///   initialize the other database as well.
-        /// </summary>
-        private void InitializeNHibernateSession()
-        {
-            NHibernateSession.Init(
-                this.wcfSessionStorage, 
-                new[] { this.Server.MapPath("~/bin/Northwind.Infrastructure.dll") }, 
-                new AutoPersistenceModelGenerator().Generate(), 
-                this.Server.MapPath("~/NHibernate.config"));
         }
     }
 }

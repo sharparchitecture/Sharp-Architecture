@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Northwind.Domain.Organization
 {
     using System;
@@ -57,7 +59,7 @@ namespace Northwind.Domain.Organization
         [JsonProperty]
         public virtual bool Valid
         {
-            get { return IsValid(); }
+            get { return IsValid(new ValidationContext(this,null)); }
         }
         
         private void InitMembers()

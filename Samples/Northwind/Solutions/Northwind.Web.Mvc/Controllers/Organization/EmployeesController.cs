@@ -1,3 +1,6 @@
+using System.ComponentModel.DataAnnotations;
+using SharpArch.Web.Mvc;
+
 namespace Northwind.Web.Mvc.Controllers.Organization
 {
     using System.Collections.Generic;
@@ -6,8 +9,7 @@ namespace Northwind.Web.Mvc.Controllers.Organization
     using Northwind.Domain;
     using Northwind.Domain.Contracts.Tasks;
     using Northwind.Domain.Organization;
-
-    using SharpArch.NHibernate.Web.Mvc;
+    
     using SharpArch.Web.Mvc.ModelBinder;
 
     [HandleError]
@@ -51,7 +53,7 @@ namespace Northwind.Web.Mvc.Controllers.Organization
         {
             this.employeeTasks.CreateOrUpdate(employee);
 
-            if (employee.IsValid())
+            if (employee.IsValid(new ValidationContext(employee, null)))
             {
                 this.TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()] =
                     "The employee was successfully updated.";

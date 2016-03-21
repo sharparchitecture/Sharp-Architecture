@@ -12,10 +12,17 @@
     [Category("DB Tests")]
     public class ProxyEqualityTests : DatabaseRepositoryTestsBase
     {
-        private readonly IRepository<Region> regionRepository = new NHibernateRepository<Region>();
+        private IRepository<Region> regionRepository;
 
-        private readonly IRepositoryWithTypedId<Territory, string> territoryRepository =
-            new NHibernateRepositoryWithTypedId<Territory, string>();
+        private IRepositoryWithTypedId<Territory, string> territoryRepository;
+
+        public override void SetUp()
+        {
+            base.SetUp();
+            var transactionManager = new TransactionManager(Session);
+            regionRepository = new NHibernateRepository<Region>(transactionManager, Session);
+            territoryRepository = new NHibernateRepositoryWithTypedId<Territory, string>(transactionManager, Session);
+        }
 
         [Test]
         public void ProxyEqualityTest()

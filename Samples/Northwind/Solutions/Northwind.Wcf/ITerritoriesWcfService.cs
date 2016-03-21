@@ -4,9 +4,7 @@
     using System.ServiceModel;
 
     using Northwind.WcfServices.Dtos;
-
-    using SharpArch.Wcf;
-
+    
     /// <summary>
     ///   This inherits from <see cref = "SharpArch.Wcf.ICloseableAndAbortable" /> so that it can be 
     ///   interchanged with a WCF client proxy without having to worry about if you can call Close() 

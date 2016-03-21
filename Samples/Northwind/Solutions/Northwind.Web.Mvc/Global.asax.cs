@@ -18,7 +18,6 @@
     using Northwind.Web.Mvc.Controllers;
 
     using SharpArch.NHibernate;
-    using SharpArch.NHibernate.Web.Mvc;
     using SharpArch.Web.Mvc.Castle;
     using SharpArch.Web.Mvc.ModelBinder;
 
@@ -27,14 +26,9 @@
 
     public class MvcApplication : System.Web.HttpApplication
     {
-        private WebSessionStorage webSessionStorage;
-
         public override void Init()
         {
             base.Init();
-
-            // The WebSessionStorage must be created during the Init() to tie in HttpApplication events
-            this.webSessionStorage = new WebSessionStorage(this);
         }
 
         /// <summary>
@@ -44,7 +38,6 @@
         /// </summary>
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            NHibernateInitializer.Instance().InitializeNHibernateOnce(() => this.InitializeNHibernateSession());
         }
 
         protected void Application_Error(object sender, EventArgs e)
@@ -79,26 +72,11 @@
             IWindsorContainer container = new WindsorContainer();
             ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(container));
 
-            container.RegisterControllers(typeof(HomeController).Assembly);
             ComponentRegistrar.AddComponentsTo(container);
 
             ServiceLocator.SetLocatorProvider(() => new WindsorServiceLocator(container));
 
             return container;
-        }
-
-        /// <summary>
-        ///   If you need to communicate to multiple databases, you'd add a line to this method to
-        ///   initialize the other database as well.
-        /// </summary>
-        private void InitializeNHibernateSession()
-        {
-            NHibernateSession.ConfigurationCache = new NHibernateConfigurationFileCache(new[] { "Northwind.Domain" });
-            NHibernateSession.Init(
-                this.webSessionStorage,
-                new[] { this.Server.MapPath("~/bin/Northwind.Infrastructure.dll") },
-                new AutoPersistenceModelGenerator().Generate(),
-                this.Server.MapPath("~/NHibernate.config"));
         }
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)

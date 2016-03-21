@@ -37,8 +37,8 @@
             IRepository<Territory> repository = MockRepository.GenerateMock<IRepository<Territory>>();
             repository.Expect(r => r.GetAll()).Return(CreateTerritories());
 
-            IDbContext dbContext = MockRepository.GenerateStub<IDbContext>();
-            repository.Stub(r => r.DbContext).Return(dbContext);
+            ITransactionManager dbContext = MockRepository.GenerateStub<ITransactionManager>();
+            repository.Stub(r => r.TransactionManager).Return(dbContext);
 
             return repository;
         }

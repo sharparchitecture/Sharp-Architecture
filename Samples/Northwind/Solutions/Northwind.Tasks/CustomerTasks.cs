@@ -22,9 +22,9 @@
             var customerToCreate = new Customer(companyName);
             customerToCreate.SetAssignedIdTo(assignedId);
 
-            this.customerRepository.DbContext.BeginTransaction();
+            this.customerRepository.TransactionManager.BeginTransaction();
             this.customerRepository.SaveOrUpdate(customerToCreate);
-            this.customerRepository.DbContext.CommitTransaction();
+            this.customerRepository.TransactionManager.CommitTransaction();
 
             return customerToCreate;
         }

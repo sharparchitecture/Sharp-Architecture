@@ -1,4 +1,8 @@
-﻿namespace Northwind.Infrastructure
+﻿using JetBrains.Annotations;
+using NHibernate;
+using SharpArch.Domain.PersistenceSupport;
+
+namespace Northwind.Infrastructure
 {
     using System.Collections.Generic;
 
@@ -16,6 +20,10 @@
             var criteria = this.Session.CreateCriteria(typeof(Customer)).Add(Restrictions.Eq("Country", countryName));
 
             return criteria.List<Customer>() as List<Customer>;
+        }
+
+        public CustomerRepository([NotNull] ITransactionManager transactionManager, [NotNull] ISession session) : base(transactionManager, session)
+        {
         }
     }
 }

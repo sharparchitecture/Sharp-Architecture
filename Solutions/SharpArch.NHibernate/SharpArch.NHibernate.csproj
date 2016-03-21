@@ -116,10 +116,6 @@
       <Project>{E12E99BB-8732-441F-B3A6-861F0CE23D3D}</Project>
       <Name>SharpArch.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SharpArch.Wcf\SharpArch.Wcf.csproj">
-      <Project>{F7F5E614-3B4E-43EC-8F8A-CB46B89A3827}</Project>
-      <Name>SharpArch.Wcf</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">

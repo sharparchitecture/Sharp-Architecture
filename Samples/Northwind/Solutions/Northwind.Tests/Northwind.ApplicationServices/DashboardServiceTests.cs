@@ -1,4 +1,6 @@
-﻿namespace Tests.Northwind.ApplicationServices
+﻿using SharpArch.Testing.NUnit;
+
+namespace Tests.Northwind.ApplicationServices
 {
     using Rhino.Mocks;
 

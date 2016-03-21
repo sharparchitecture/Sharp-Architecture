@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Northwind.Domain;
 
 namespace Northwind.Tasks
@@ -32,15 +33,15 @@ namespace Northwind.Tasks
                 employee.Territories.Add(territory);
             }
 
-            if (employee.IsValid())
+            if (employee.IsValid(new ValidationContext(employee,null)))
             {
-                this.employeeRepository.DbContext.BeginTransaction();
+                this.employeeRepository.TransactionManager.BeginTransaction();
                 this.employeeRepository.SaveOrUpdate(employee);
-                this.employeeRepository.DbContext.CommitChanges();
+                this.employeeRepository.TransactionManager.CommitTransaction();
             }
             else
             {
-                this.employeeRepository.DbContext.RollbackTransaction();
+                this.employeeRepository.TransactionManager.RollbackTransaction();
             }
         }
 
@@ -61,15 +62,15 @@ namespace Northwind.Tasks
             }
 
             // Currently crashes on duplicates, Territories probably should be a hash set and not a list
-            if (employee.IsValid())
+            if (employee.IsValid(new ValidationContext(employee, null)))
             {
-                this.employeeRepository.DbContext.BeginTransaction();
+                this.employeeRepository.TransactionManager.BeginTransaction();
                 this.employeeRepository.SaveOrUpdate(employee);
-                this.employeeRepository.DbContext.CommitChanges();
+                this.employeeRepository.TransactionManager.CommitTransaction();
             }
             else
             {
-                this.employeeRepository.DbContext.RollbackTransaction();
+                this.employeeRepository.TransactionManager.RollbackTransaction();
             }
         }
 
@@ -81,17 +82,17 @@ namespace Northwind.Tasks
 
             if (employeeToRemove != null)
             {
-                this.employeeRepository.DbContext.BeginTransaction();
+                this.employeeRepository.TransactionManager.BeginTransaction();
                 this.employeeRepository.Delete(employeeToRemove);
-                this.employeeRepository.DbContext.CommitTransaction();
+                this.employeeRepository.TransactionManager.CommitTransaction();
             }
         }
 
         public IList<Employee> GetAllEmployees()
         {
-            this.employeeRepository.DbContext.BeginTransaction();
+            this.employeeRepository.TransactionManager.BeginTransaction();
             var employees = this.employeeRepository.GetAll();
-            this.employeeRepository.DbContext.CommitTransaction();
+            this.employeeRepository.TransactionManager.CommitTransaction();
             return employees;
         }
 
@@ -102,9 +103,9 @@ namespace Northwind.Tasks
                 return new Employee();
             }
 
-            this.employeeRepository.DbContext.BeginTransaction();
+            this.employeeRepository.TransactionManager.BeginTransaction();
             var employee = this.employeeRepository.Get(id);
-            this.employeeRepository.DbContext.CommitTransaction();
+            this.employeeRepository.TransactionManager.CommitTransaction();
 
             Check.Require(employee != null, "employee must exist.");
             return employee;

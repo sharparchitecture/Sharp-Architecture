@@ -1,14 +1,13 @@
 ﻿namespace Northwind.Web.Mvc.Controllers.Organization
 {
-    using Newtonsoft.Json;
-
     using System.Web.Mvc;
 
+    using Newtonsoft.Json;
     using Northwind.Domain.Contracts.Tasks;
     using Northwind.Web.Controllers;
     using Northwind.Web.Mvc.Controllers.Organization.ViewModels;
-
-    using SharpArch.NHibernate.Web.Mvc;
+    
+    using SharpArch.Web.Mvc;
     using SharpArch.Web.Mvc.JsonNet;
 
     [HandleError]

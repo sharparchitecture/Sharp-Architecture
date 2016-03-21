@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
-using Castle.Facilities.FactorySupport;
-
-namespace Northwind.Web.Mvc.CastleWindsor
+﻿namespace Northwind.Web.Mvc.CastleWindsor
 {
+    using System.Diagnostics;
+
     using Castle.Core;
     using Castle.Core.Configuration;
     using Castle.DynamicProxy;
+    using Castle.Facilities.FactorySupport;
     using Castle.MicroKernel.Registration;
     using Castle.Windsor;
 

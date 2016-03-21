@@ -88,14 +88,6 @@
       <HintPath>..\packages\NHibernate.4.0.0.4000\lib\net40\NHibernate.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SharpArch.Domain, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpArch.Domain.3.1.1\lib\net45\SharpArch.Domain.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SharpArch.NHibernate, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpArch.NHibernate.3.1.1\lib\net45\SharpArch.NHibernate.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -164,6 +156,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Solutions\SharpArch.Domain\SharpArch.Domain.csproj">
+      <Project>{E12E99BB-8732-441F-B3A6-861F0CE23D3D}</Project>
+      <Name>SharpArch.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Solutions\SharpArch.NHibernate\SharpArch.NHibernate.csproj">
+      <Project>{0BD77F13-8DF6-4C16-9508-33AA4CF0677A}</Project>
+      <Name>SharpArch.NHibernate</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Northwind.Infrastructure\Northwind.Infrastructure.csproj">
       <Project>{0F2F3AAF-6486-4472-B92B-54EDB15095AA}</Project>
       <Name>Northwind.Infrastructure</Name>

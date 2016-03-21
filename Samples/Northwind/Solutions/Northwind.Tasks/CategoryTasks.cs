@@ -20,27 +20,27 @@
         public Category Create(string categoryName)
         {
             var category = new Category(categoryName);
-            this.categoryRepository.DbContext.BeginTransaction();
+            this.categoryRepository.TransactionManager.BeginTransaction();
             category = this.categoryRepository.SaveOrUpdate(category);
-            this.categoryRepository.DbContext.CommitTransaction();
+            this.categoryRepository.TransactionManager.CommitTransaction();
 
             return category;
         }
 
         public List<Category> GetAllCategories()
         {
-            this.categoryRepository.DbContext.BeginTransaction();
+            this.categoryRepository.TransactionManager.BeginTransaction();
             var categories = this.categoryRepository.GetAll();
-            this.categoryRepository.DbContext.CommitTransaction();
+            this.categoryRepository.TransactionManager.CommitTransaction();
 
             return categories.ToList();
         }
 
         public Category GetCategoryById(int id)
         {
-            this.categoryRepository.DbContext.BeginTransaction();
+            this.categoryRepository.TransactionManager.BeginTransaction();
             var category = this.categoryRepository.Get(id);
-            this.categoryRepository.DbContext.CommitTransaction();
+            this.categoryRepository.TransactionManager.CommitTransaction();
 
             return category;
         }
