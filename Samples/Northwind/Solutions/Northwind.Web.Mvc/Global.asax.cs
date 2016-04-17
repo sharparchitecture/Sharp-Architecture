@@ -1,4 +1,6 @@
-﻿namespace Northwind.Web.Mvc
+﻿using Castle.Windsor.Installer;
+
+namespace Northwind.Web.Mvc
 {
     using System;
     using System.Reflection;
@@ -13,11 +15,6 @@
 
     using Microsoft.Practices.ServiceLocation;
 
-    using Northwind.Infrastructure.NHibernateMaps;
-    using Northwind.Web.Mvc.CastleWindsor;
-    using Northwind.Web.Mvc.Controllers;
-
-    using SharpArch.NHibernate;
     using SharpArch.Web.Mvc.Castle;
     using SharpArch.Web.Mvc.ModelBinder;
 
@@ -72,7 +69,7 @@
             IWindsorContainer container = new WindsorContainer();
             ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(container));
 
-            ComponentRegistrar.AddComponentsTo(container);
+            container.Install(FromAssembly.This());
 
             ServiceLocator.SetLocatorProvider(() => new WindsorServiceLocator(container));
 

@@ -1,8 +1,8 @@
-﻿using System;
-using Castle.Facilities.WcfIntegration;
-
+﻿
 namespace Northwind.Wcf.Web.CastleWindsor
 {
+    using System;
+    using Castle.Facilities.WcfIntegration;
     using Castle.MicroKernel.Registration;
     using Castle.Windsor;
 
@@ -19,6 +19,7 @@ namespace Northwind.Wcf.Web.CastleWindsor
             AddGenericRepositoriesTo(container);
             AddCustomRepositoriesTo(container);
             AddWcfServicesTo(container);
+            container.Install(new NHibernateInstaller());
         }
 
         private static void AddCustomRepositoriesTo(IWindsorContainer container)
@@ -29,6 +30,8 @@ namespace Northwind.Wcf.Web.CastleWindsor
 
         private static void AddGenericRepositoriesTo(IWindsorContainer container)
         {
+            container.Register(Component.For<ITransactionManager>()
+                .ImplementedBy<TransactionManager>());
             container.AddComponent(
                 "sessionFactoryKeyProvider", typeof(ISessionFactoryKeyProvider), typeof(DefaultSessionFactoryKeyProvider));
             container.AddComponent("repositoryType", typeof(IRepository<>), typeof(NHibernateRepository<>));

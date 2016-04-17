@@ -141,7 +141,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CastleWindsor\ComponentRegistrar.cs" />
+    <Compile Include="CastleWindsor\TasksInstaller.cs" />
+    <Compile Include="CastleWindsor\WcfInstaller.cs" />
+    <Compile Include="CastleWindsor\MvcControllersInstaller.cs" />
+    <Compile Include="CastleWindsor\NHibernateInstaller.cs" />
+    <Compile Include="CastleWindsor\RepositoriesInstaller.cs" />
+    <Compile Include="CastleWindsor\SharpArchInstaller.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\ControllerEnums.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
