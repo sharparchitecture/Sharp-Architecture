@@ -138,6 +138,10 @@
       <Project>{d6dde603-4678-44b9-a2d1-101bf5d12ad7}</Project>
       <Name>SharpArch.Testing.NUnit</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Solutions\SharpArch.Wcf\SharpArch.Wcf.csproj">
+      <Project>{f7f5e614-3b4e-43ec-8f8a-cb46b89a3827}</Project>
+      <Name>SharpArch.Wcf</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Northwind.Domain\Northwind.Domain.csproj">
       <Project>{A412F40A-805B-49C6-8F3B-C6F0B4D57EFE}</Project>
       <Name>Northwind.Domain</Name>

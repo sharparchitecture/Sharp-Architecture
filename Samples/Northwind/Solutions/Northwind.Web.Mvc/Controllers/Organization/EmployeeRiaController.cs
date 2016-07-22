@@ -1,14 +1,11 @@
 ﻿namespace Northwind.Web.Mvc.Controllers.Organization
 {
-    using Newtonsoft.Json;
-
     using System.Web.Mvc;
-
+    using Newtonsoft.Json;
     using Northwind.Domain.Contracts.Tasks;
-    using Northwind.Web.Controllers;
+    using Northwind.Infrastructure;
     using Northwind.Web.Mvc.Controllers.Organization.ViewModels;
-
-    using SharpArch.NHibernate.Web.Mvc;
+    using SharpArch.Web.Mvc;
     using SharpArch.Web.Mvc.JsonNet;
 
     [HandleError]
@@ -42,27 +39,28 @@
             {
                 NullValueHandling = NullValueHandling.Ignore,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                ContractResolver = new NHibernateContractResolver(),
+                ContractResolver = new NHibernateContractResolver()
             };
 
             return new JsonNetResult
-                {
-                    Data = employeeViewModel,
-                    SerializerSettings = serializer
-                };
+            {
+                Data = employeeViewModel,
+                SerializerSettings = serializer
+            };
         }
 
         [Transaction]
         [HttpPost]
         public JsonNetResult Edit(CreateEmployeeViewModel createEmployeeViewModel)
         {
-            this.employeeTasks.RiaCreateOrUpdate(createEmployeeViewModel.Employee, createEmployeeViewModel.TerritoriesString);
+            this.employeeTasks.RiaCreateOrUpdate(createEmployeeViewModel.Employee,
+                createEmployeeViewModel.TerritoriesString);
 
             var serializer = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                ContractResolver = new NHibernateContractResolver(),
+                ContractResolver = new NHibernateContractResolver()
             };
 
             var jsonNetResult = new JsonNetResult
@@ -83,10 +81,10 @@
             {
                 NullValueHandling = NullValueHandling.Ignore,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                ContractResolver = new NHibernateContractResolver(),
+                ContractResolver = new NHibernateContractResolver()
             };
 
-            return new JsonNetResult { Data = this.employeeTasks.GetAllEmployees(), SerializerSettings = serializer };
+            return new JsonNetResult {Data = this.employeeTasks.GetAllEmployees(), SerializerSettings = serializer};
         }
     }
 }

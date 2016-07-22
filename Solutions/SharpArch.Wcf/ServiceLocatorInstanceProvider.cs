@@ -8,7 +8,7 @@ namespace SharpArch.Wcf
     using Microsoft.Practices.ServiceLocation;
 
     [PublicAPI]
-    [Obsolete("Avoid using Service Locator as it may be removed in the next version.")]
+    [Obsolete("Avoid using Service Locator as it will be removed in the next version.")]
     public class ServiceLocatorInstanceProvider : IInstanceProvider
     {
         private readonly Type serviceType;

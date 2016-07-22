@@ -1,3 +1,3 @@
-﻿<%@ ServiceHost Language="C#" Debug="true" 
-    Service="Northwind.WcfServices.TerritoriesWcfService" 
-    Factory="SharpArch.NHibernate.Wcf.ServiceHostFactory, SharpArch.NHibernate" %>
+﻿<%@ ServiceHost Language="C#" Debug="true"
+    Service="Northwind.WcfServices.TerritoriesWcfService"
+    Factory="Castle.Facilities.WcfIntegration.DefaultServiceHostFactory, Castle.Facilities.WcfIntegration" %>

@@ -2,7 +2,6 @@
 {
     using System.IO;
     using Newtonsoft.Json;
-    using Web.Controllers;
 
     public static class NHibernateExtension
     {

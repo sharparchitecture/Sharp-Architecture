@@ -12,7 +12,7 @@
     [Category("DB Tests")]
     public class CategoryRepositoryTests : DatabaseRepositoryTestsBase
     {
-        private readonly IRepository<Category> categoryRepository;
+        private IRepository<Category> categoryRepository;
 
 
         /// <summary>

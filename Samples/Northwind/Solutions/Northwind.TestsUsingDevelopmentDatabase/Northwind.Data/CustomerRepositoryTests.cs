@@ -6,7 +6,7 @@
     using global::Northwind.Domain;
     using global::Northwind.Domain.Contracts;
     using global::Northwind.Infrastructure;
-
+    using NHibernate;
     using NUnit.Framework;
 
     using SharpArch.Domain;
@@ -16,7 +16,16 @@
     [Category("DB Tests")]
     public class CustomerRepositoryTests : DatabaseRepositoryTestsBase
     {
-        private readonly CustomerRepository customerRepository = new CustomerRepository();
+        private  CustomerRepository customerRepository;
+
+        /// <summary>
+        /// Creates new <see cref="ISession"/>.
+        /// </summary>
+        public override void SetUp()
+        {
+            base.SetUp();
+            this.customerRepository = new CustomerRepository(TransactionManager, Session);
+        }
 
         [Test]
         public void CanFindCustomerOrdersViaCustomFilter()
@@ -75,7 +84,7 @@
 
         /// <summary>
         ///   This test demonstrates that the orders collection is lazily loaded.  Since lazilly loaded
-        ///   collections depend on a persisted session, this method is wrapped in a rolled-back transaction 
+        ///   collections depend on a persisted session, this method is wrapped in a rolled-back transaction
         ///   managed via the superclass.
         /// </summary>
         [Test]

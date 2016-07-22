@@ -1,13 +1,14 @@
 namespace Northwind.Web.Mvc.Controllers.Organization
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
 
     using Northwind.Domain;
     using Northwind.Domain.Contracts.Tasks;
     using Northwind.Domain.Organization;
 
-    using SharpArch.NHibernate.Web.Mvc;
+    using SharpArch.Web.Mvc;
     using SharpArch.Web.Mvc.ModelBinder;
 
     [HandleError]
@@ -17,7 +18,7 @@ namespace Northwind.Web.Mvc.Controllers.Organization
 
         private readonly ITerritoryTasks territoryTasks;
 
-        /// <param name = "territoriesRepository">This service dependency will be used by the controller 
+        /// <param name = "territoryTasks">This service dependency will be used by the controller 
         ///   to populate the view model with a listing of all the available territories to select from.
         ///   Instead of passing this to the controller, the repository could instead be used by an 
         ///   application service, which would be injected into this controller, to populate the view
@@ -51,7 +52,7 @@ namespace Northwind.Web.Mvc.Controllers.Organization
         {
             this.employeeTasks.CreateOrUpdate(employee);
 
-            if (employee.IsValid())
+            if (employee.IsValid(new ValidationContext(employee)))
             {
                 this.TempData[ControllerEnums.GlobalViewDataProperty.PageMessage.ToString()] =
                     "The employee was successfully updated.";

@@ -1,7 +1,7 @@
 ﻿namespace Tests.Northwind.Data
 {
     using global::Northwind.Domain;
-
+    using NHibernate;
     using NUnit.Framework;
 
     using SharpArch.Domain.PersistenceSupport;
@@ -12,12 +12,20 @@
     [Category("DB Tests")]
     public class TerritoryRepositoryTests : DatabaseRepositoryTestsBase
     {
-        private readonly IRepositoryWithTypedId<Territory, string> territoryRepository =
-            new NHibernateRepositoryWithTypedId<Territory, string>();
+        IRepositoryWithTypedId<Territory, string> territoryRepository;
 
         /// <summary>
-        ///   WARNING: This is a very fragile test is will likely break over time.  It assumes 
-        ///   a particular territory exists in the database and has exactly 1 employee.  Fragile 
+        /// Creates new <see cref="ISession"/>.
+        /// </summary>
+        public override void SetUp()
+        {
+            base.SetUp();
+            this.territoryRepository = new NHibernateRepositoryWithTypedId<Territory, string>(TransactionManager, Session);
+        }
+
+        /// <summary>
+        ///   WARNING: This is a very fragile test is will likely break over time.  It assumes
+        ///   a particular territory exists in the database and has exactly 1 employee.  Fragile
         ///   tests that break over time can lead to people stopping to run tests at all.  In these
         ///   instances, it's very important to use a test DB with known data.
         /// </summary>

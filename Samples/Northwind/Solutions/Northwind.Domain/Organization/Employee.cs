@@ -54,11 +54,6 @@ namespace Northwind.Domain.Organization
         [JsonProperty]
         public virtual IList<Territory> Territories { get; protected set; }
 
-        [JsonProperty]
-        public virtual bool Valid
-        {
-            get { return IsValid(); }
-        }
         
         private void InitMembers()
         {

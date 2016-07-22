@@ -53,13 +53,14 @@
       <HintPath>..\..\..\..\Packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Castle.Facilities.WcfIntegration">
+      <HintPath>..\..\..\..\Packages\Castle.WcfIntegrationFacility.3.3.0\lib\net45\Castle.Facilities.WcfIntegration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="CommonServiceLocator.WindsorAdapter">
-      <HintPath>..\packages\CommonServiceLocator.WindsorAdapter.1.0\lib\NET35\CommonServiceLocator.WindsorAdapter.dll</HintPath>
     </Reference>
     <Reference Include="FluentNHibernate, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -100,14 +101,19 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Services" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.IdentityModel" />
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.ServiceModel">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Discovery" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
@@ -129,6 +135,8 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CastleWindsor\ComponentRegistrar.cs" />
+    <Compile Include="CastleWindsor\NHibernateInstaller.cs" />
+    <Compile Include="CastleWindsor\RepositoriesInstaller.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -142,6 +150,14 @@
     <ProjectReference Include="..\..\..\..\Solutions\SharpArch.NHibernate\SharpArch.NHibernate.csproj">
       <Project>{0bd77f13-8df6-4c16-9508-33aa4cf0677a}</Project>
       <Name>SharpArch.NHibernate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Solutions\SharpArch.WcfClient.Castle\SharpArch.WcfClient.Castle.csproj">
+      <Project>{a3b21e07-f25f-46d3-b4de-ea29a0a4a831}</Project>
+      <Name>SharpArch.WcfClient.Castle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Solutions\SharpArch.Wcf\SharpArch.Wcf.csproj">
+      <Project>{f7f5e614-3b4e-43ec-8f8a-cb46b89a3827}</Project>
+      <Name>SharpArch.Wcf</Name>
     </ProjectReference>
     <ProjectReference Include="..\Northwind.Infrastructure\Northwind.Infrastructure.csproj">
       <Project>{0F2F3AAF-6486-4472-B92B-54EDB15095AA}</Project>

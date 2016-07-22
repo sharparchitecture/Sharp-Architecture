@@ -1,9 +1,6 @@
 ﻿namespace Tests.Northwind.Web.Controllers
 {
     using System.Web.Routing;
-
-    using MvcContrib.TestHelper;
-
     using NUnit.Framework;
 
     [TestFixture]

@@ -6,7 +6,7 @@
     using global::Northwind.Domain;
     using global::Northwind.Domain.Contracts;
     using global::Northwind.Infrastructure;
-
+    using NHibernate;
     using NUnit.Framework;
 
     using SharpArch.Testing.NUnit.NHibernate;
@@ -15,7 +15,16 @@
     [Category("DB Tests")]
     public class SupplierRepositoryTests : DatabaseRepositoryTestsBase
     {
-        private readonly ISupplierRepository supplierRepository = new SupplierRepository();
+        ISupplierRepository supplierRepository;
+
+        /// <summary>
+        /// Creates new <see cref="ISession"/>.
+        /// </summary>
+        public override void SetUp()
+        {
+            base.SetUp();
+            this.supplierRepository = new SupplierRepository(TransactionManager, Session);
+        }
 
         [Test]
         public void CanLoadSuppliersByProductCategoryName()

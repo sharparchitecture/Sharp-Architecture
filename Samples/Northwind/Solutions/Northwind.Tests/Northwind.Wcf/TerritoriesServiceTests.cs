@@ -18,13 +18,13 @@
     public class TerritoriesWcfServiceTests
     {
         /// <summary>
-        /// This is testing the behavior of the logic within the WCF service class; it's not actually 
+        /// This is testing the behavior of the logic within the WCF service class; it's not actually
         /// invoking a WCF service or testing integration but focusing on the logic within the service
         /// itself.
         /// </summary>
         [Test]
         public void CanGetTerritories() {
-            ITerritoriesWcfService territoriesWcfService = 
+            ITerritoriesWcfService territoriesWcfService =
                 new TerritoriesWcfService(CreateMockTerritoryRepository());
 
             IList<TerritoryDto> territoryDtos = territoriesWcfService.GetTerritories();
@@ -37,14 +37,14 @@
             IRepository<Territory> repository = MockRepository.GenerateMock<IRepository<Territory>>();
             repository.Expect(r => r.GetAll()).Return(CreateTerritories());
 
-            IDbContext dbContext = MockRepository.GenerateStub<IDbContext>();
-            repository.Stub(r => r.DbContext).Return(dbContext);
+            ITransactionManager dbContext = MockRepository.GenerateStub<ITransactionManager>();
+            repository.Stub(r => r.TransactionManager).Return(dbContext);
 
             return repository;
         }
 
         /// <summary>
-        /// This creates "shallow" territories; there's no need to build out the remainder of the 
+        /// This creates "shallow" territories; there's no need to build out the remainder of the
         /// model as there are other tests which confirm the DTO creation process.
         /// </summary>
         private List<Territory> CreateTerritories() {

@@ -53,8 +53,22 @@
       <HintPath>..\..\..\..\Packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Castle.Facilities.WcfIntegration">
+      <HintPath>..\..\..\..\Packages\Castle.WcfIntegrationFacility.3.3.0\lib\net45\Castle.Facilities.WcfIntegration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Castle.Windsor">
       <HintPath>..\..\..\..\Packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentNHibernate, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Packages\FluentNHibernate.2.0.3.0\lib\net40\FluentNHibernate.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="JetBrains.Annotations">
@@ -72,10 +86,21 @@
       <HintPath>..\..\..\..\Packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Packages\NHibernate.4.0.4.4000\lib\net40\NHibernate.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Services" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activation" />
+    <Reference Include="System.ServiceModel.Discovery" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -186,6 +211,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="CastleWindsor\ComponentRegistrar.cs" />
+    <Compile Include="CastleWindsor\NHibernateInstaller.cs" />
+    <Compile Include="CastleWindsor\RepositoriesInstaller.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\ControllerEnums.cs" />
@@ -329,6 +356,10 @@
       <Project>{0bd77f13-8df6-4c16-9508-33aa4cf0677a}</Project>
       <Name>SharpArch.NHibernate</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Solutions\SharpArch.Wcf\SharpArch.Wcf.csproj">
+      <Project>{F7F5E614-3B4E-43EC-8F8A-CB46B89A3827}</Project>
+      <Name>SharpArch.Wcf</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\Solutions\SharpArch.Web.Mvc.Castle\SharpArch.Web.Mvc.Castle.csproj">
       <Project>{5c2ea19a-e547-4e55-b36e-b25ca9efef21}</Project>
       <Name>SharpArch.Web.Mvc.Castle</Name>
@@ -341,9 +372,17 @@
       <Project>{a412f40a-805b-49c6-8f3b-c6f0b4d57efe}</Project>
       <Name>Northwind.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Northwind.Infrastructure\Northwind.Infrastructure.csproj">
+      <Project>{0F2F3AAF-6486-4472-B92B-54EDB15095AA}</Project>
+      <Name>Northwind.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Northwind.Tasks\Northwind.Tasks.csproj">
       <Project>{55d3231a-9b42-402f-91fc-ca58f1daaede}</Project>
       <Name>Northwind.Tasks</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Northwind.Wcf\Northwind.Wcf.csproj">
+      <Project>{7ab75e1d-30d2-4df5-a2e6-03916fb24bba}</Project>
+      <Name>Northwind.Wcf</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

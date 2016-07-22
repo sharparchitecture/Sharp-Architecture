@@ -4,7 +4,7 @@ using Northwind.Domain;
 namespace Northwind.Tasks
 {
     using System.Collections.Generic;
-
+    using System.ComponentModel.DataAnnotations;
     using Northwind.Domain.Contracts.Tasks;
     using Northwind.Domain.Organization;
 
@@ -32,11 +32,11 @@ namespace Northwind.Tasks
                 employee.Territories.Add(territory);
             }
 
-            if (employee.IsValid())
+            if (employee.IsValid(new ValidationContext(employee)))
             {
                 this.employeeRepository.TransactionManager.BeginTransaction();
                 this.employeeRepository.SaveOrUpdate(employee);
-                this.employeeRepository.TransactionManager.CommitChanges();
+                this.employeeRepository.TransactionManager.CommitTransaction();
             }
             else
             {
@@ -48,24 +48,24 @@ namespace Northwind.Tasks
         {
             employee.Territories.Clear();
 
-            foreach (var territory in availableTerritories.Split(',')) 
+            foreach (var territory in availableTerritories.Split(','))
             {
                 // Depending on how you're accepting user input, better to use NHSearch
                 var hydratedTerritory =
                     this.territoryRepository.GetAll().Where(x => x.Description.Trim() == territory.Trim()).FirstOrDefault();
 
-                if (hydratedTerritory != null) 
+                if (hydratedTerritory != null)
                 {
                     employee.Territories.Add(hydratedTerritory);
                 }
             }
 
             // Currently crashes on duplicates, Territories probably should be a hash set and not a list
-            if (employee.IsValid())
+            if (employee.IsValid(new ValidationContext(employee)))
             {
                 this.employeeRepository.TransactionManager.BeginTransaction();
                 this.employeeRepository.SaveOrUpdate(employee);
-                this.employeeRepository.TransactionManager.CommitChanges();
+                this.employeeRepository.TransactionManager.CommitTransaction();
             }
             else
             {
