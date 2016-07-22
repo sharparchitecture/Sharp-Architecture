@@ -15,7 +15,7 @@
         ISessionFactory CreateSessionFactory(IKernel kernel)
         {
             ISessionFactory sessionFactory = new NHibernateSessionFactoryBuilder()
-                .AddMappingAssemblies(new[] { HostingEnvironment.MapPath(@"~/bin/Suteki.TardisBank.Infrastructure.dll") })
+                .AddMappingAssemblies(new[] { HostingEnvironment.MapPath(@"~/bin/Northwind.Infrastructure.dll") })
                 .UseAutoPersistenceModel(new AutoPersistenceModelGenerator().Generate())
                 .UseConfigFile(HostingEnvironment.MapPath("~/NHibernate.config"))
                 .UseConfigurationCache(new NHibernateConfigurationFileCache())

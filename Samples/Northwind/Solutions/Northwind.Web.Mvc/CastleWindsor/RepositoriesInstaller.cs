@@ -21,8 +21,8 @@ namespace Suteki.TardisBank.Web.Mvc.CastleWindsor
         private static void AddCustomRepositoriesTo(IWindsorContainer container)
         {
             container.Register(
-                Classes.FromAssemblyNamed("Suteki.TardisBank.Infrastructure")
-                    .BasedOn(typeof(IRepositoryWithTypedId<,>))
+                Classes.FromAssemblyNamed("Northwind.Infrastructure")
+                    .BasedOn(typeof (IRepositoryWithTypedId<,>))
                     .WithService.DefaultInterfaces().LifestyleTransient());
         }
 
