@@ -13,8 +13,8 @@
     <summary>Architectural foundation for building maintainable applications with Domain Driven Design patterns and practices</summary>
     <language>en-US</language>
     <dependencies>      
-      <dependency id="CommonServiceLocator" version="1.3" />      
-      <dependency id="Newtonsoft.Json" version="[7.0.1,9.0)" />
+      <dependency id="CommonServiceLocator" version="1.3" />
+      <dependency id="Newtonsoft.Json" version="[9.0.1,10.0)" />
     </dependencies>
 	<frameworkAssemblies>
       <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework="net45" />

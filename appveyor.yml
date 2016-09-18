@@ -1,4 +1,4 @@
-version: 3.1.2.{build}
+version: 3.2.0.{build}
 clone_depth: 3
 clone_folder: c:\work\sharp-arch
 install:
