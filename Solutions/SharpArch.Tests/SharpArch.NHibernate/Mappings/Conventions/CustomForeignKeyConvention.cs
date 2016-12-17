@@ -1,7 +1,6 @@
-namespace SharpArch.Specifications.NHibernate.Mappings.Conventions
+namespace Tests.SharpArch.NHibernate.Mappings.Conventions
 {
     using System;
-
     using FluentNHibernate;
     using FluentNHibernate.Conventions;
 

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpArch.Domain", "SharpArch.Domain\SharpArch.Domain.csproj", "{E12E99BB-8732-441F-B3A6-861F0CE23D3D}"
 EndProject
@@ -27,12 +27,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5029AAB4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{ED61719A-DB60-4E15-BCBB-BA6A71978E99}"
 	ProjectSection(SolutionItems) = preProject
+		..\appveyor.yml = ..\appveyor.yml
 		..\Build\Build.cmd = ..\Build\Build.cmd
 		..\Build\Build.proj = ..\Build\Build.proj
-		..\Build\BuildAndPackage.cmd = ..\Build\BuildAndPackage.cmd
 		..\Build\BuildAndTest.cmd = ..\Build\BuildAndTest.cmd
 		..\Build\codeInspections.xslt = ..\Build\codeInspections.xslt
 		..\Build\dupFinder.xslt = ..\Build\dupFinder.xslt
+		..\GitReleaseManager.yaml = ..\GitReleaseManager.yaml
+		..\GitVersion.yml = ..\GitVersion.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{D5220D0A-6367-41C4-8409-989C4A909113}"
@@ -54,7 +56,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpArch.Web.Http.Castle",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpArch.Web.Http", "SharpArch.Web.Http\SharpArch.Web.Http.csproj", "{35EC85F7-5D2E-4FE0-842A-807598FB6D1F}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SharpArch.Domain.Shared", "SharpArch.Domain.Shared\SharpArch.Domain.Shared.shproj", "{2974FA61-30BD-4F6F-A880-A16774EA913B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpArch.Domain.NetStandard14", "SharpArch.Domain.NetStandard14\SharpArch.Domain.NetStandard14.csproj", "{37AF8D57-06F4-458E-9E0A-900BAED1A35A}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		SharpArch.Domain.Shared\SharpArch.Domain.Shared.projitems*{2974fa61-30bd-4f6f-a880-a16774ea913b}*SharedItemsImports = 13
+		SharpArch.Domain.Shared\SharpArch.Domain.Shared.projitems*{37af8d57-06f4-458e-9e0a-900baed1a35a}*SharedItemsImports = 4
+		SharpArch.Domain.Shared\SharpArch.Domain.Shared.projitems*{e12e99bb-8732-441f-b3a6-861f0ce23d3d}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -125,14 +136,10 @@ Global
 		{A3B21E07-F25F-46D3-B4DE-EA29A0A4A831}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A3B21E07-F25F-46D3-B4DE-EA29A0A4A831}.Release|x86.ActiveCfg = Release|Any CPU
 		{CB7976A2-5089-4AC8-83C3-24FAB6F50ED4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CB7976A2-5089-4AC8-83C3-24FAB6F50ED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB7976A2-5089-4AC8-83C3-24FAB6F50ED4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{CB7976A2-5089-4AC8-83C3-24FAB6F50ED4}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{CB7976A2-5089-4AC8-83C3-24FAB6F50ED4}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{CB7976A2-5089-4AC8-83C3-24FAB6F50ED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CB7976A2-5089-4AC8-83C3-24FAB6F50ED4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CB7976A2-5089-4AC8-83C3-24FAB6F50ED4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{CB7976A2-5089-4AC8-83C3-24FAB6F50ED4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{CB7976A2-5089-4AC8-83C3-24FAB6F50ED4}.Release|x86.ActiveCfg = Release|Any CPU
 		{B556850E-2EE3-4D1E-9A56-1D7C7C1C95EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B556850E-2EE3-4D1E-9A56-1D7C7C1C95EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -184,6 +191,18 @@ Global
 		{35EC85F7-5D2E-4FE0-842A-807598FB6D1F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{35EC85F7-5D2E-4FE0-842A-807598FB6D1F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{35EC85F7-5D2E-4FE0-842A-807598FB6D1F}.Release|x86.ActiveCfg = Release|Any CPU
+		{37AF8D57-06F4-458E-9E0A-900BAED1A35A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37AF8D57-06F4-458E-9E0A-900BAED1A35A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37AF8D57-06F4-458E-9E0A-900BAED1A35A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{37AF8D57-06F4-458E-9E0A-900BAED1A35A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{37AF8D57-06F4-458E-9E0A-900BAED1A35A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{37AF8D57-06F4-458E-9E0A-900BAED1A35A}.Debug|x86.Build.0 = Debug|Any CPU
+		{37AF8D57-06F4-458E-9E0A-900BAED1A35A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37AF8D57-06F4-458E-9E0A-900BAED1A35A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37AF8D57-06F4-458E-9E0A-900BAED1A35A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{37AF8D57-06F4-458E-9E0A-900BAED1A35A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{37AF8D57-06F4-458E-9E0A-900BAED1A35A}.Release|x86.ActiveCfg = Release|Any CPU
+		{37AF8D57-06F4-458E-9E0A-900BAED1A35A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -201,5 +220,7 @@ Global
 		{5C2EA19A-E547-4E55-B36E-B25CA9EFEF21} = {8086F206-D8C3-4D8B-968C-A5EF3BA79D12}
 		{EB01CD4D-CFB9-4924-8388-078D59543D58} = {8086F206-D8C3-4D8B-968C-A5EF3BA79D12}
 		{35EC85F7-5D2E-4FE0-842A-807598FB6D1F} = {C3FCEC2B-1A32-4AA3-8989-69559CFF568B}
+		{2974FA61-30BD-4F6F-A880-A16774EA913B} = {C17FF2BE-F51B-49EA-9670-92CD4531B4D1}
+		{37AF8D57-06F4-458E-9E0A-900BAED1A35A} = {C17FF2BE-F51B-49EA-9670-92CD4531B4D1}
 	EndGlobalSection
 EndGlobal

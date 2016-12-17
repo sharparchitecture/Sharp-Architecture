@@ -1,5 +1,6 @@
 ﻿namespace SharpArch.Testing.NUnit.NHibernate
 {
+    using System;
     using global::NHibernate;
     using global::NUnit.Framework;
     using JetBrains.Annotations;
@@ -62,9 +63,23 @@
         /// Flushes the session and evicts entity from it.
         /// </summary>
         /// <param name="instance">The entity instance.</param>
-        protected void FlushSessionAndEvict(object instance)
+        /// <exception cref="ArgumentNullException"><paramref name="instance"/> is <see langword="null"/></exception>
+        protected void FlushSessionAndEvict([NotNull] object instance)
         {
+            if (instance == null) throw new ArgumentNullException(nameof(instance));
             Session.FlushAndEvict(instance);
+        }
+
+        /// <summary>
+        /// Saves entity then flushes sessions and evicts it.
+        /// </summary>
+        /// <param name="instance">The entity instance.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="instance"/> is <see langword="null"/></exception>
+        protected void SaveAndEvict([NotNull] object instance)
+        {
+            if (instance == null) throw new ArgumentNullException(nameof(instance));
+            Session.Save(instance);
+            FlushSessionAndEvict(instance);
         }
 
         /// <summary>

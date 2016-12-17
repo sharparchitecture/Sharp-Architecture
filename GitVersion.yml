@@ -1,3 +1,4 @@
 branches: {}
 ignore:
   sha: []
+tag-prefix: '[vV]'

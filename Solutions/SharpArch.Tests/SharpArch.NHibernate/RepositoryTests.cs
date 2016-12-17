@@ -12,6 +12,7 @@ namespace Tests.SharpArch.NHibernate
     using NUnit.Framework;
 
     [TestFixture]
+    // ReSharper disable once TestFileNameWarning
     public class RepositoryTests
     {
         [Test]

@@ -1,23 +1,24 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-    <metadata>
-        <id>SharpArch.Wcf</id>
-        <version/>
-        <authors>Sharp Architecture Dev Team</authors>
-        <owners>Sharp Architecture Dev Team</owners>
-        <licenseUrl>https://github.com/sharparchitecture/Sharp-Architecture/blob/master/License.txt</licenseUrl>
-        <iconUrl>https://github.com/sharparchitecture/Sharp-Architecture/raw/master/Artefacts/Documentation/Logo_100x100.png</iconUrl>
-        <projectUrl>http://sharparchitecture.github.io/</projectUrl>
-        <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Provides functionality to allow using CommonServiceLocator to instantiate WCF services. It is persistence ignorant and would be used with other packages that provide persistence support.</description>
-        <summary>Architectural foundation for building maintainable applications with Domain Driven Design patterns and practices</summary>
-        <language>en-US</language>
-        <releaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/release%2F0SemanticVersion)</releaseNotes>
-        <dependencies>
-            <dependency id="SharpArch.Domain" version="[$(SemanticVersion),$(NextMajorRelease))" />
-        </dependencies>
-        <frameworkAssemblies>
-            <frameworkAssembly assemblyName="System.ServiceModel" targetFramework="net45" />
-        </frameworkAssemblies>
-    </metadata>
+  <metadata>
+    <id>SharpArch.Wcf</id>
+    <version/>
+    <authors>Sharp Architecture Dev Team</authors>
+    <owners>Sharp Architecture Dev Team</owners>
+    <licenseUrl>https://github.com/sharparchitecture/Sharp-Architecture/blob/master/License.txt</licenseUrl>
+    <iconUrl>https://github.com/sharparchitecture/Sharp-Architecture/raw/master/Artefacts/Documentation/Logo_100x100.png</iconUrl>
+    <projectUrl>http://sharparchitecture.github.io/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Provides functionality to allow using CommonServiceLocator to instantiate WCF services. It is persistence ignorant and would be used with other packages that provide persistence support.</description>
+    <summary>Architectural foundation for building maintainable applications with Domain Driven Design patterns and practices</summary>
+    <language>en-US</language>
+    <releaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/release%2F0SemanticVersion)</releaseNotes>
+    <tags>sharp-architecture</tags>
+    <dependencies>
+        <dependency id="SharpArch.Domain" version="[$(SemanticVersion),$(NextMajorRelease))" />
+    </dependencies>
+    <frameworkAssemblies>
+        <frameworkAssembly assemblyName="System.ServiceModel" targetFramework="net462" />
+    </frameworkAssemblies>
+  </metadata>
 </package>

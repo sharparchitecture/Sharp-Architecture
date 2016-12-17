@@ -80,8 +80,12 @@
         /// <exception cref="InvalidOperationException">ValueObject has properties marked with <see cref="DomainSignatureAttribute"/></exception>
         protected override PropertyInfo[] GetTypeSpecificSignatureProperties()
         {
+#if NETSTANDARD14
+            var hasDomainSignature = this.GetType().GetProperties().Any(p => p.IsDefined(typeof(DomainSignatureAttribute), true));
+#else
             var hasDomainSignature =
                 this.GetType().GetProperties().Any(p => Attribute.IsDefined(p, typeof(DomainSignatureAttribute), true));
+#endif
 
             if (hasDomainSignature)
             {

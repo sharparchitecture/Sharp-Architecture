@@ -52,3 +52,8 @@ Make sure to discuss new features on the [mailing first](http://groups.google.co
 - Sharp Architecture follows [GitFlow](http://gitversion.readthedocs.io/en/latest/git-branching-strategies/gitflow/#gitflow) strategy.
 - Sharp Architecture uses [GitVerion](https://github.com/GitTools/GitVersion) in [ContinuousDeployment mode](http://gitversion.readthedocs.io/en/latest/reference/continuous-deployment/).
 
+###Release steps###
+- Create releases/SemVer branch from develop and make required changes here.
+- Merge releases/SemVer branch to master.
+- Tag master with releases/vSemVer and push tags to github.
+- Merge master back to develop.

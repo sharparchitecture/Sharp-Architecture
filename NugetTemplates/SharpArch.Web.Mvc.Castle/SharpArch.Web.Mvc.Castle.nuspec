@@ -13,6 +13,7 @@
     <summary>Architectural foundation for building maintainable applications with Domain Driven Design patterns and practices</summary>
     <language>en-US</language>
     <releaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/release%2F0SemanticVersion)</releaseNotes>
+    <tags>sharp-architecture</tags>
     <dependencies>
       <dependency id="Castle.Core" version="[3.3.3,4.0)" />
       <dependency id="Castle.Windsor" version="[3.3.0,4.0)" />
@@ -22,9 +23,9 @@
       <dependency id="Microsoft.AspNet.Mvc" version="[5.2.3,6.0.0)" />
     </dependencies>
     <frameworkAssemblies>
-      <frameworkAssembly assemblyName="System.Web" targetFramework="net45" />
-      <frameworkAssembly assemblyName="System.Web.Routing" targetFramework="net45" />
-      <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework="net45" />
+      <frameworkAssembly assemblyName="System.Web" targetFramework="net462" />
+      <frameworkAssembly assemblyName="System.Web.Routing" targetFramework="net462" />
+      <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations" targetFramework="net462" />
     </frameworkAssemblies>
   </metadata>
 </package>

@@ -2,8 +2,9 @@
 
 ||Stable|Pre-release|
 |:--:|:--:|:--:|
-|Build|[![Build status](https://ci.appveyor.com/api/projects/status/q90e3hg7g3wgf79p/branch/master?svg=true)](https://ci.appveyor.com/project/sharparchitecture/sharp-architecture/branch/master)|[![Build status](https://ci.appveyor.com/api/projects/status/q90e3hg7g3wgf79p?svg=true)](https://ci.appveyor.com/project/sharparchitecture/sharp-architecture)
-|NuGet|[![NuGet](https://img.shields.io/nuget/v/Sharp-Architecture.svg)](Release)|[![NuGet](https://img.shields.io/nuget/vpre/Sharp-Architecture.svg)](PreRelease)|
+|Build|[![Build status](https://ci.appveyor.com/api/projects/status/q90e3hg7g3wgf79p/branch/master?svg=true)](https://ci.appveyor.com/project/sharparchitecture/sharp-architecture/branch/master)|[![Build status](https://ci.appveyor.com/api/projects/status/q90e3hg7g3wgf79p?svg=true)](https://ci.appveyor.com/project/sharparchitecture/sharp-architecture)|
+|NuGet|[![NuGet](https://img.shields.io/nuget/v/Sharp-Architecture.svg)](https://www.nuget.org/packages?q=SharpArch)|[![NuGet](https://img.shields.io/nuget/vpre/Sharp-Architecture.svg)](https://www.nuget.org/packages?q=SharpArch)|
+|Coverage|[![Coveralls](https://img.shields.io/coveralls/sharparchitecture/Sharp-Architecture.svg)](https://coveralls.io/github/sharparchitecture/Sharp-Architecture)|[![Coveralls](https://img.shields.io/coveralls/sharparchitecture/Sharp-Architecture/develop.svg)](https://coveralls.io/github/sharparchitecture/Sharp-Architecture)|
 
 
 ## Templify / Visual Studio templates

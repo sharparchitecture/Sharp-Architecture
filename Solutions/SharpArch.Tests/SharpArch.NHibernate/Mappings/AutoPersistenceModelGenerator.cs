@@ -1,15 +1,13 @@
-namespace SharpArch.Specifications.NHibernate.Mappings
+namespace Tests.SharpArch.NHibernate.Mappings
 {
     #region Using Directives
 
     using System;
-
     using FluentNHibernate.Automapping;
     using FluentNHibernate.Conventions;
-
     using global::SharpArch.Domain.DomainModel;
     using global::SharpArch.NHibernate.FluentNHibernate;
-    using global::SharpArch.Specifications.NHibernate.Mappings.Conventions;
+    using Tests.SharpArch.NHibernate.Mappings.Conventions;
 
     #endregion
 

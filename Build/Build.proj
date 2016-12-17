@@ -2,16 +2,13 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <RunMSpecTests>True</RunMSpecTests>
-    <MSpecRunner>mspec-clr4.exe</MSpecRunner>
-    <MSpecSpecificationAssemblies>"$(MSBuildProjectDirectory)\..\Solutions\SharpArch.Specifications\Bin\Release\SharpArch.Specifications.dll"</MSpecSpecificationAssemblies>
-    <ReSharperToolsVersion>2016.2.20160913.100041</ReSharperToolsVersion>
-    <XsltTransformVersion>0.3.0</XsltTransformVersion>
+    <ReSharperToolsVersion>2016.3.20161215.134936</ReSharperToolsVersion>
+    <XsltTransformVersion>0.3.1</XsltTransformVersion>
   </PropertyGroup>
 
   <!-- build settings -->
   <PropertyGroup>
-    <NugetLibFrameworkVersion>net45</NugetLibFrameworkVersion>
+    <NugetLibFrameworkVersion>net462</NugetLibFrameworkVersion>
     <UseNUnit3>true</UseNUnit3>
   </PropertyGroup>
 
@@ -19,44 +16,12 @@
     <AssembliesToTestWithNUnit Include="$(SolutionsPath)\SharpArch.Tests\bin\Release\SharpArch.Tests.dll;" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageFiles Include="$(SolutionsPath)\**\*.*"
-                  Exclude="$(SolutionsPath)\**\bin\**;
-                           $(SolutionsPath)\.nuget\**;
-                           $(SolutionsPath)\**\Logs\**;
-                           $(SolutionsPath)\**\obj\**;
-                           $(SolutionsPath)\**\*.suo;
-                           $(SolutionsPath)\**\*.cache;
-                           $(SolutionsPath)\**\.vs\**;
-                           $(SolutionsPath)\**\_ReSharper*\**;
-                           $(SolutionsPath)\**\*ReSharper*">
-      <PackageName>$(DropsPath)\$(SemanticVersion)\$(PackageName).Source.v$(SemanticVersion).zip</PackageName>
-      <WorkingDirectory>$(SolutionsPath)</WorkingDirectory>
-      <Flatten>False</Flatten>
-    </PackageFiles>
-
-    <PackageFiles Include="$(SolutionsPath)\SharpArch.Domain\bin\Release\SharpArch.Domain.dll;
-                  $(SolutionsPath)\SharpArch.NHibernate\bin\Release\SharpArch.NHibernate.dll;
-                  $(SolutionsPath)\SharpArch.RavenDB\bin\Release\SharpArch.RavenDB.dll;
-                  $(SolutionsPath)\SharpArch.Testing.NUnit\bin\Release\SharpArch.Testing.NUnit.xml;
-                  $(SolutionsPath)\SharpArch.Wcf\bin\Release\SharpArch.Wcf.dll;
-                  $(SolutionsPath)\SharpArch.WcfClient.Castle\bin\Release\SharpArch.WcfClient.Castle.dll;
-                  $(SolutionsPath)\SharpArch.Web.Http\bin\Release\SharpArch.Web.Http.dll;
-                  $(SolutionsPath)\SharpArch.Web.Http.Castle\bin\Release\SharpArch.Web.Http.Castle.dll;
-                  $(SolutionsPath)\SharpArch.Web.Mvc\bin\Release\SharpArch.Web.Mvc.dll;
-                  $(SolutionsPath)\SharpArch.Web.Mvc.Castle\bin\Release\SharpArch.Web.Mvc.Castle.dll;
-                  ">
-      <PackageName>$(DropsPath)\$(SemanticVersion)\$(PackageName).dlls.v$(SemanticVersion).zip</PackageName>
-      <WorkingDirectory>$(SolutionsPath)</WorkingDirectory>
-      <Flatten>True</Flatten>
-    </PackageFiles>
-  </ItemGroup>
-
 
   <ItemGroup>
     <NugetPackage Include="$(SolutionRoot)\License.txt;">
       <PackageName>sharp-architecture</PackageName>
       <NuspecFile>sharp-architecture.nuspec</NuspecFile>
+      <TargetFramework></TargetFramework>
     </NugetPackage>
 
     <NugetPackage Include="$(SolutionsPath)\SharpArch.Domain\bin\Release\SharpArch.Domain.dll;
@@ -64,6 +29,15 @@
                            $(SolutionsPath)\SharpArch.Domain\bin\Release\SharpArch.Domain.pdb;">
       <PackageName>SharpArch.Domain</PackageName>
       <NuspecFile>SharpArch.Domain.nuspec</NuspecFile>
+      <TargetFramework>net462</TargetFramework>
+    </NugetPackage>
+
+    <NugetPackage Include="$(SolutionsPath)\SharpArch.Domain.NetStandard14\bin\Release\SharpArch.Domain.dll;
+                           $(SolutionsPath)\SharpArch.Domain.NetStandard14\bin\Release\SharpArch.Domain.xml;
+                           $(SolutionsPath)\SharpArch.Domain.NetStandard14\bin\Release\SharpArch.Domain.pdb;">
+      <PackageName>SharpArch.Domain</PackageName>
+      <NuspecFile>SharpArch.Domain.nuspec</NuspecFile>
+      <TargetFramework>netstandard1.4</TargetFramework>
     </NugetPackage>
 
     <NugetPackage Include="$(SolutionsPath)\SharpArch.NHibernate\bin\Release\SharpArch.NHibernate.dll;
@@ -71,6 +45,7 @@
                            $(SolutionsPath)\SharpArch.NHibernate\bin\Release\SharpArch.NHibernate.pdb;">
       <PackageName>SharpArch.NHibernate</PackageName>
       <NuspecFile>SharpArch.NHibernate.nuspec</NuspecFile>
+      <TargetFramework>net462</TargetFramework>
     </NugetPackage>
 
     <NugetPackage Include="$(SolutionsPath)\SharpArch.RavenDB\bin\Release\SharpArch.RavenDB.dll;
@@ -78,6 +53,7 @@
                            $(SolutionsPath)\SharpArch.RavenDB\bin\Release\SharpArch.RavenDB.pdb;">
       <PackageName>SharpArch.RavenDB</PackageName>
       <NuspecFile>SharpArch.RavenDB.nuspec</NuspecFile>
+      <TargetFramework>net462</TargetFramework>
     </NugetPackage>
 
     <NugetPackage Include="$(SolutionsPath)\SharpArch.Testing.NUnit\bin\Release\SharpArch.Testing.NUnit.dll;
@@ -85,6 +61,7 @@
                            $(SolutionsPath)\SharpArch.Testing.NUnit\bin\Release\SharpArch.Testing.NUnit.pdb;">
       <PackageName>SharpArch.Testing.NUnit</PackageName>
       <NuspecFile>SharpArch.Testing.NUnit.nuspec</NuspecFile>
+      <TargetFramework>net462</TargetFramework>
     </NugetPackage>
 
     <NugetPackage Include="$(SolutionsPath)\SharpArch.Wcf\bin\Release\SharpArch.Wcf.dll;
@@ -92,6 +69,7 @@
                            $(SolutionsPath)\SharpArch.Wcf\bin\Release\SharpArch.Wcf.pdb;">
       <PackageName>SharpArch.Wcf</PackageName>
       <NuspecFile>SharpArch.Wcf.nuspec</NuspecFile>
+      <TargetFramework>net462</TargetFramework>
     </NugetPackage>
 
     <NugetPackage Include="$(SolutionsPath)\SharpArch.WcfClient.Castle\bin\Release\SharpArch.WcfClient.Castle.dll;
@@ -99,6 +77,7 @@
                            $(SolutionsPath)\SharpArch.WcfClient.Castle\bin\Release\SharpArch.WcfClient.Castle.pdb;">
       <PackageName>SharpArch.WcfClient.Castle</PackageName>
       <NuspecFile>SharpArch.WcfClient.Castle.nuspec</NuspecFile>
+      <TargetFramework>net462</TargetFramework>
     </NugetPackage>
 
     <NugetPackage Include="$(SolutionsPath)\SharpArch.Web.Http\bin\Release\SharpArch.Web.Http.dll;
@@ -106,6 +85,7 @@
                            $(SolutionsPath)\SharpArch.Web.Http\bin\Release\SharpArch.Web.Http.pdb;">
       <PackageName>SharpArch.Web.Http</PackageName>
       <NuspecFile>SharpArch.Web.Http.nuspec</NuspecFile>
+      <TargetFramework>net462</TargetFramework>
     </NugetPackage>
 
     <NugetPackage Include="$(SolutionsPath)\SharpArch.Web.Http.Castle\bin\Release\SharpArch.Web.Http.Castle.dll;
@@ -113,6 +93,7 @@
                            $(SolutionsPath)\SharpArch.Web.Http.Castle\bin\Release\SharpArch.Web.Http.Castle.pdb;">
       <PackageName>SharpArch.Web.Http.Castle</PackageName>
       <NuspecFile>SharpArch.Web.Http.Castle.nuspec</NuspecFile>
+      <TargetFramework>net462</TargetFramework>
     </NugetPackage>
 
 
@@ -121,6 +102,7 @@
                            $(SolutionsPath)\SharpArch.Web.Mvc\bin\Release\SharpArch.Web.Mvc.pdb;">
       <PackageName>SharpArch.Web.Mvc</PackageName>
       <NuspecFile>SharpArch.Web.Mvc.nuspec</NuspecFile>
+      <TargetFramework>net462</TargetFramework>
     </NugetPackage>
 
     <NugetPackage Include="$(SolutionsPath)\SharpArch.Web.Mvc.Castle\bin\Release\SharpArch.Web.Mvc.Castle.dll;
@@ -128,15 +110,16 @@
                            $(SolutionsPath)\SharpArch.Web.Mvc.Castle\bin\Release\SharpArch.Web.Mvc.Castle.pdb;">
       <PackageName>SharpArch.Web.Mvc.Castle</PackageName>
       <NuspecFile>SharpArch.Web.Mvc.Castle.nuspec</NuspecFile>
+      <TargetFramework>net462</TargetFramework>
     </NugetPackage>
 
   </ItemGroup>
 
   <PropertyGroup>
     <SolutionName>SharpArch</SolutionName>
-    <SolutionsPath>$(MSBuildProjectDirectory)\..\Solutions</SolutionsPath>
-    <BuildPath>$(MSBuildProjectDirectory)\..\BuildSystem</BuildPath>
-    <SamplesPath>$(MSBuildProjectDirectory)\..\Samples</SamplesPath>
+    <SolutionsPath>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Solutions'))</SolutionsPath>
+    <BuildPath>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\BuildSystem'))</BuildPath>
+    <SamplesPath>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\Samples'))</SamplesPath>
   </PropertyGroup>
 
   <Import Project="$(BuildPath)\BuildSystem.proj" />
@@ -150,6 +133,10 @@
     <CodeInspectionsReportPath>$(DropsPath)\Inspections</CodeInspectionsReportPath>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <OpenCoverFilter>+[SharpArch.*]* -[SharpArch.Tests]*</OpenCoverFilter>
+  </PropertyGroup>
+  
   <ItemGroup>
     <DuplicatesReportTemplate Include="$(MSBuildProjectDirectory)\dupFinder.xslt">
       <BuildNumber>$(SemanticVersion)</BuildNumber>
@@ -158,10 +145,8 @@
         <BuildNumber>$(SemanticVersion)</BuildNumber>
     </CodeInspectionsReportTemplate>
   </ItemGroup>
-
   
   <Import Project="$(MSBuildProjectDirectory)\..\Packages\Alphacloud.MSBuild.Xslt.$(XsltTransformVersion)\tools\Alphacloud.MSBuild.Xslt.targets" />
-
   
   <Target Name="Build"
 	DependsOnTargets="CleanSolution;
@@ -177,19 +162,15 @@
 
   <Target Name="BuildSamples">
     <MSBuild Projects="$(SamplesPath)\TardisBank\Build\Build.Proj" Targets="RunTests" 
-      Properties="CreateHardLinksForCopyLocalIfPossible=true;
+      Properties="CreateHardLinksForCopyLocalIfPossible=true;IsDesktopBuild=$(IsDesktopBuild);
         NUnit3TestsFilter=&quot;cat != DatabaseTests&quot;
         "/>
   </Target>
 		
-  <Target Name="RunSpecs"
-      DependsOnTargets="RunMSpecSpecifications;" />
-
 
   <Target Name="PackageArtefacts"
 	DependsOnTargets="Build;
 		RunTests;
-		RunSpecs;
 		Package;
 		PackageNuget;
 		BuildSuccess" 
@@ -208,7 +189,7 @@
     <MakeDir Directories="$(CodeInspectionsReportPath)" ContinueOnError="true" />
       <Exec
           WorkingDirectory="$(SolutionsPath)"
-          Command="$(CodeInspectionsExe) &quot;$(SolutionName).sln&quot; /output=&quot;$(CodeInspectionsReportPath)\codeInspections.xml&quot;" />
+          Command="$(CodeInspectionsExe) &quot;$(SolutionName).sln&quot; /output=&quot;$(CodeInspectionsReportPath)\codeInspections.xml&quot; --caches-home=&quot;$(SolutionRoot)\ResharperCaches&quot;" />
 
     <Xslt3SingleFileTransform  Xslt="@(CodeInspectionsReportTemplate)"
       Input="$(CodeInspectionsReportPath)\codeInspections.xml"

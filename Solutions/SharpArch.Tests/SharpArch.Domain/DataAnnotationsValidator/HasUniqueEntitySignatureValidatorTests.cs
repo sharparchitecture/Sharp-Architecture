@@ -29,38 +29,35 @@ namespace Tests.SharpArch.Domain.DataAnnotationsValidator
                 .Returns(new DuplicateCheckerStub());
         }
 
-        private Mock<IServiceProvider> serviceProviderMock;
+        Mock<IServiceProvider> serviceProviderMock;
 
-        private ValidationContext ValidationContextFor(object instance)
+        ValidationContext ValidationContextFor(object instance)
         {
             return new ValidationContext(instance, serviceProviderMock.Object, null);
         }
 
         [HasUniqueDomainSignature]
-        private class Contractor : Entity
+        class Contractor : Entity
         {
             [DomainSignature]
             public string Name { get; set; }
         }
 
-        private class DuplicateCheckerStub : IEntityDuplicateChecker
+        class DuplicateCheckerStub : IEntityDuplicateChecker
         {
             public bool DoesDuplicateExistWithTypedIdOf<IdT>(IEntityWithTypedId<IdT> entity)
             {
                 Trace.Assert(entity != null);
 
-                if (entity is Contractor)
-                {
+                if (entity is Contractor) {
                     var contractor = entity as Contractor;
                     return !string.IsNullOrEmpty(contractor.Name) && contractor.Name.ToLower() == @"codai";
                 }
-                if (entity is User)
-                {
+                if (entity is User) {
                     var user = entity as User;
                     return !string.IsNullOrEmpty(user.SSN) && user.SSN.ToLower() == "123-12-1234";
                 }
-                if (entity is ObjectWithGuidId)
-                {
+                if (entity is ObjectWithGuidId) {
                     var objectWithGuidId = entity as ObjectWithGuidId;
                     return !string.IsNullOrEmpty(objectWithGuidId.Name) && objectWithGuidId.Name.ToLower() == @"codai";
                 }
@@ -71,21 +68,21 @@ namespace Tests.SharpArch.Domain.DataAnnotationsValidator
         }
 
         [HasUniqueDomainSignatureWithGuidId]
-        private class ObjectWithGuidId : EntityWithTypedId<Guid>
+        class ObjectWithGuidId : EntityWithTypedId<Guid>
         {
             [DomainSignature]
             public string Name { get; set; }
         }
 
         [HasUniqueDomainSignature]
-        private class ObjectWithStringIdAndValidatorForIntId : EntityWithTypedId<string>
+        class ObjectWithStringIdAndValidatorForIntId : EntityWithTypedId<string>
         {
             [DomainSignature]
             public string Name { get; set; }
         }
 
         [HasUniqueDomainSignatureWithStringId]
-        private class User : EntityWithTypedId<string>
+        class User : EntityWithTypedId<string>
         {
             [DomainSignature]
             public string SSN { get; set; }
@@ -100,8 +97,7 @@ namespace Tests.SharpArch.Domain.DataAnnotationsValidator
 
             Assert.That(contractor.IsValid(validationContext), Is.False);
 
-            foreach (ValidationResult invalidValue in invalidValues)
-            {
+            foreach (ValidationResult invalidValue in invalidValues) {
                 Debug.WriteLine(invalidValue.ErrorMessage);
             }
         }

@@ -1,10 +1,11 @@
-namespace SharpArch.Specifications.NHibernate.Mappings
+namespace Tests.SharpArch.NHibernate.Mappings
 {
     using System;
     using System.Linq;
     using FluentNHibernate;
     using FluentNHibernate.Automapping;
     using global::SharpArch.Domain.DomainModel;
+    using Tests.SharpArch.Domain.DomainModel;
 
     /// <summary>
     ///     Applies custom mapping conventions to S#Arch entities.
@@ -34,7 +35,7 @@ namespace SharpArch.Specifications.NHibernate.Mappings
         /// </summary>
         public override bool ShouldMap(Type type)
         {
-            return type.GetInterfaces().Any(x =>
+            return !type.IsNested && type.GetInterfaces().Any(x =>
                 x.IsGenericType &&
                     x.GetGenericTypeDefinition() == typeof(IEntityWithTypedId<>));
         }

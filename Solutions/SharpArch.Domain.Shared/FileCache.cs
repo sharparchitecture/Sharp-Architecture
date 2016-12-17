@@ -4,7 +4,11 @@
     using System.Diagnostics;
     using System.IO;
     using System.Runtime.Serialization;
+#if NET462
     using System.Runtime.Serialization.Formatters.Binary;
+#else
+    using Newtonsoft.Json;
+#endif
     using System.Security;
     using JetBrains.Annotations;
 
@@ -17,9 +21,9 @@
         /// <summary>
         ///     Deserializes a data file into an object of type {T}.
         /// </summary>
-        /// <typeparam name="T">Type of object to deseralize and return.</typeparam>
+        /// <typeparam name="T">Type of object to deserialize and return.</typeparam>
         /// <param name="path">Full path to file containing seralized data.</param>
-        /// <returns>If object is successfully deseralized, the object of type {T}, otherwise null.</returns>
+        /// <returns>If object is successfully deserialized, the object of type {T}, otherwise null.</returns>
         /// <exception cref="ArgumentNullException">Thrown if the path parameter is null or empty.</exception>
         public static T RetrieveFromCache<T>(string path) where T : class
         {
@@ -39,7 +43,7 @@
             catch(Exception ex)
             {
                 Debug.WriteLine(ex, "FileCache");
-                // Return null if the object can't be deseralized
+                // Return null if the object can't be deserialized
                 return null;
             }
         }
@@ -68,7 +72,7 @@
         public static void StoreInCache<T>([NotNull] T obj, [NotNull] string path) where T : class
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
-            if (String.IsNullOrEmpty(path)) throw new ArgumentException("Path is null or empty.", nameof(path));
+            if (string.IsNullOrEmpty(path)) throw new ArgumentException("Path is null or empty.", nameof(path));
 
             using (var file = File.Open(path, FileMode.Create))
             {
@@ -88,7 +92,15 @@
         /// <exception cref="SecurityException">The caller does not have the required permission. </exception>
         internal static void Save<T>(Stream stream, T obj) where T : class
         {
+#if NETSTANDARD14
+            using (var sw = new StreamWriter(stream))
+            {
+                sw.Write(JsonConvert.SerializeObject(obj, Formatting.None));
+                sw.Flush();
+            }
+#else
             new BinaryFormatter().Serialize(stream, obj);
+#endif
         }
 
         /// <summary>
@@ -103,7 +115,14 @@
         /// <exception cref="SecurityException">The caller does not have the required permission. </exception>
         internal static T Load<T>([NotNull] Stream stream) where T : class
         {
+#if NETSTANDARD14
+            using (var sr = new StreamReader(stream))
+            {
+                return JsonConvert.DeserializeObject<T>(sr.ReadToEnd());
+            }
+#else
             return new BinaryFormatter().Deserialize(stream) as T;
+#endif
         }
 
 

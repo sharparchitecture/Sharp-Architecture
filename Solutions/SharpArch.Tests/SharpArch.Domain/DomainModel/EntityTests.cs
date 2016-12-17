@@ -5,6 +5,8 @@
 // ReSharper disable HeapView.BoxingAllocation
 // ReSharper disable InternalMembersMustHaveComments
 
+// ReSharper disable MissingAnnotation
+
 namespace Tests.SharpArch.Domain.DomainModel
 {
     using System.IO;
@@ -20,38 +22,32 @@ namespace Tests.SharpArch.Domain.DomainModel
         [SetUp]
         public void Setup()
         {
-            this._obj = new MockEntityObjectWithDefaultId
-            {
+            _obj = new MockEntityObjectWithDefaultId {
                 FirstName = "FName1",
                 LastName = "LName1",
                 Email = @"testus...@mail.com"
             };
-            this._sameObj = new MockEntityObjectWithDefaultId
-            {
+            _sameObj = new MockEntityObjectWithDefaultId {
                 FirstName = "FName1",
                 LastName = "LName1",
                 Email = @"testus...@mail.com"
             };
-            this._diffObj = new MockEntityObjectWithDefaultId
-            {
+            _diffObj = new MockEntityObjectWithDefaultId {
                 FirstName = "FName2",
                 LastName = "LName2",
                 Email = @"testuse...@mail.com"
             };
-            this._objWithId = new MockEntityObjectWithSetId
-            {
+            _objWithId = new MockEntityObjectWithSetId {
                 FirstName = "FName1",
                 LastName = "LName1",
                 Email = @"testus...@mail.com"
             };
-            this._sameObjWithId = new MockEntityObjectWithSetId
-            {
+            _sameObjWithId = new MockEntityObjectWithSetId {
                 FirstName = "FName1",
                 LastName = "LName1",
                 Email = @"testus...@mail.com"
             };
-            this._diffObjWithId = new MockEntityObjectWithSetId
-            {
+            _diffObjWithId = new MockEntityObjectWithSetId {
                 FirstName = "FName2",
                 LastName = "LName2",
                 Email = @"testuse...@mail.com"
@@ -61,24 +57,24 @@ namespace Tests.SharpArch.Domain.DomainModel
         [TearDown]
         public void TearDown()
         {
-            this._obj = null;
-            this._sameObj = null;
-            this._diffObj = null;
+            _obj = null;
+            _sameObj = null;
+            _diffObj = null;
         }
 
-        private MockEntityObjectWithDefaultId _diffObj;
+        MockEntityObjectWithDefaultId _diffObj;
 
-        private MockEntityObjectWithSetId _diffObjWithId;
+        MockEntityObjectWithSetId _diffObjWithId;
 
-        private MockEntityObjectWithDefaultId _obj;
+        MockEntityObjectWithDefaultId _obj;
 
-        private MockEntityObjectWithSetId _objWithId;
+        MockEntityObjectWithSetId _objWithId;
 
-        private MockEntityObjectWithDefaultId _sameObj;
+        MockEntityObjectWithDefaultId _sameObj;
 
-        private MockEntityObjectWithSetId _sameObjWithId;
+        MockEntityObjectWithSetId _sameObjWithId;
 
-        public class MockEntityObjectBase<T> : EntityWithTypedId<T>
+        public abstract class MockEntityObjectBase<T> : EntityWithTypedId<T>
         {
             public string Email { get; set; }
 
@@ -97,7 +93,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             public string Name { get; set; }
         }
 
-        private class AddressBeingDomainSignatureComparable : Entity
+        class AddressBeingDomainSignatureComparable : Entity
         {
             [DomainSignature]
             public string Address1 { get; set; }
@@ -108,7 +104,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             public int ZipCode { get; set; }
         }
 
-        private class InheritedObjectWithExtraDomainSignatureProperty : ObjectWithOneDomainSignatureProperty
+        class InheritedObjectWithExtraDomainSignatureProperty : ObjectWithOneDomainSignatureProperty
         {
             public string Address { get; set; }
 
@@ -116,35 +112,32 @@ namespace Tests.SharpArch.Domain.DomainModel
             public bool IsLiving { get; set; }
         }
 
-        private class MockEntityObjectBase : MockEntityObjectBase<int>
-        {
-        }
+        class MockEntityObjectBase : MockEntityObjectBase<int>
+        {}
 
-        private class MockEntityObjectWithDefaultId : MockEntityObjectBase, IHasAssignedId<int>
+        class MockEntityObjectWithDefaultId : MockEntityObjectBase, IHasAssignedId<int>
         {
             public void SetAssignedIdTo(int assignedId)
             {
-                this.Id = assignedId;
+                Id = assignedId;
             }
         }
 
-        private class MockEntityObjectWithSetId : MockEntityObjectBase<string>, IHasAssignedId<string>
+        class MockEntityObjectWithSetId : MockEntityObjectBase<string>, IHasAssignedId<string>
         {
             public void SetAssignedIdTo(string assignedId)
             {
-                this.Id = assignedId;
+                Id = assignedId;
             }
         }
 
-        private class Object1 : Entity
-        {
-        }
+        class Object1 : Entity
+        {}
 
-        private class Object2 : Entity
-        {
-        }
+        class Object2 : Entity
+        {}
 
-        private class ObjectWithAllDomainSignatureProperty : Entity
+        class ObjectWithAllDomainSignatureProperty : Entity
         {
             [DomainSignature]
             public int Age { get; set; }
@@ -153,18 +146,18 @@ namespace Tests.SharpArch.Domain.DomainModel
             public string Name { get; set; }
         }
 
-        private class ObjectWithAssignedId : EntityWithTypedId<string>, IHasAssignedId<string>
+        class ObjectWithAssignedId : EntityWithTypedId<string>, IHasAssignedId<string>
         {
             [DomainSignature]
             public string Name { get; set; }
 
             public void SetAssignedIdTo(string assignedId)
             {
-                this.Id = assignedId;
+                Id = assignedId;
             }
         }
 
-        private class ObjectWithComplexProperties : Entity
+        class ObjectWithComplexProperties : Entity
         {
             [DomainSignature]
             public AddressBeingDomainSignatureComparable Address { get; set; }
@@ -176,7 +169,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             public PhoneBeingNotDomainObject Phone { get; set; }
         }
 
-        private class ObjectWithIdenticalTypedProperties : Entity
+        class ObjectWithIdenticalTypedProperties : Entity
         {
             [DomainSignature]
             public string Address { get; set; }
@@ -185,7 +178,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             public string Name { get; set; }
         }
 
-        private class ObjectWithIntId : Entity
+        class ObjectWithIntId : Entity
         {
             [DomainSignature]
             public string Name { get; set; }
@@ -195,27 +188,27 @@ namespace Tests.SharpArch.Domain.DomainModel
         ///     This is a nonsense object; i.e., it doesn't make sense to have
         ///     an entity without a domain signature.
         /// </summary>
-        private class ObjectWithNoDomainSignatureProperties : Entity
+        class ObjectWithNoDomainSignatureProperties : Entity
         {
             public int Age { get; set; }
 
             public string Name { get; set; }
         }
 
-        private class PhoneBeingNotDomainObject
+        class PhoneBeingNotDomainObject
         {
             public string Extension { get; set; }
 
             public string PhoneNumber { get; set; }
         }
 
-        private class PhoneBeingNotDomainObjectButWithOverriddenEquals : PhoneBeingNotDomainObject
+        class PhoneBeingNotDomainObjectButWithOverriddenEquals : PhoneBeingNotDomainObject
         {
             public override bool Equals(object obj)
             {
                 var compareTo = obj as PhoneBeingNotDomainObject;
 
-                return compareTo != null && this.PhoneNumber.Equals(compareTo.PhoneNumber);
+                return compareTo != null && PhoneNumber.Equals(compareTo.PhoneNumber);
             }
 
             public override int GetHashCode()
@@ -225,7 +218,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             }
         }
 
-        private class Contact : Entity
+        class Contact : Entity
         {
             public virtual string EmailAddress { get; set; }
         }
@@ -358,8 +351,7 @@ namespace Tests.SharpArch.Domain.DomainModel
 
             Assert.AreEqual(object1, object2);
 
-            object1.Address = new AddressBeingDomainSignatureComparable
-            {
+            object1.Address = new AddressBeingDomainSignatureComparable {
                 Address1 = "123 Smith Ln.",
                 Address2 = "Suite 201",
                 ZipCode = 12345
@@ -367,8 +359,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             Assert.AreNotEqual(object1, object2);
 
             // Set the address of the 2nd to be different to the address of the first
-            object2.Address = new AddressBeingDomainSignatureComparable
-            {
+            object2.Address = new AddressBeingDomainSignatureComparable {
                 Address1 = "123 Smith Ln.",
 
                 // Address2 isn't marked as being part of the domain signature; 
@@ -429,57 +420,57 @@ namespace Tests.SharpArch.Domain.DomainModel
         [Test]
         public void DoDefaultEntityEqualsOverrideWorkWhenIdIsAssigned()
         {
-            this._obj.SetAssignedIdTo(1);
-            this._diffObj.SetAssignedIdTo(1);
-            Assert.That(this._obj.Equals(this._diffObj));
+            _obj.SetAssignedIdTo(1);
+            _diffObj.SetAssignedIdTo(1);
+            Assert.That(_obj.Equals(_diffObj));
         }
 
         [Test]
         public void DoEntityEqualsOverrideWorkWhenIdIsAssigned()
         {
-            this._objWithId.SetAssignedIdTo("1");
-            this._diffObjWithId.SetAssignedIdTo("1");
-            Assert.That(this._objWithId.Equals(this._diffObjWithId));
+            _objWithId.SetAssignedIdTo("1");
+            _diffObjWithId.SetAssignedIdTo("1");
+            Assert.That(_objWithId.Equals(_diffObjWithId));
         }
 
         [Test]
         public void DoEqualDefaultEntitiesWithMatchingIdsGenerateDifferentHashCodes()
         {
-            Assert.That(!this._obj.GetHashCode().Equals(this._diffObj.GetHashCode()));
+            Assert.That(!_obj.GetHashCode().Equals(_diffObj.GetHashCode()));
         }
 
         [Test]
         public void DoEqualDefaultEntitiesWithNoIdsGenerateSameHashCodes()
         {
-            Assert.That(this._obj.GetHashCode().Equals(this._sameObj.GetHashCode()));
+            Assert.That(_obj.GetHashCode().Equals(_sameObj.GetHashCode()));
         }
 
         [Test]
         public void DoEqualEntitiesWithMatchingIdsGenerateDifferentHashCodes()
         {
-            Assert.That(!this._objWithId.GetHashCode().Equals(this._diffObjWithId.GetHashCode()));
+            Assert.That(!_objWithId.GetHashCode().Equals(_diffObjWithId.GetHashCode()));
         }
 
         [Test]
         public void DoEqualEntitiesWithNoIdsGenerateSameHashCodes()
         {
-            Assert.That(this._objWithId.GetHashCode().Equals(this._sameObjWithId.GetHashCode()));
+            Assert.That(_objWithId.GetHashCode().Equals(_sameObjWithId.GetHashCode()));
         }
 
         [Test]
         public void DoesDefaultEntityEqualsOverrideWorkWhenNoIdIsAssigned()
         {
-            Assert.That(this._obj.Equals(this._sameObj));
-            Assert.That(!this._obj.Equals(this._diffObj));
-            Assert.That(!this._obj.Equals(new MockEntityObjectWithDefaultId()));
+            Assert.That(_obj.Equals(_sameObj));
+            Assert.That(!_obj.Equals(_diffObj));
+            Assert.That(!_obj.Equals(new MockEntityObjectWithDefaultId()));
         }
 
         [Test]
         public void DoesEntityEqualsOverrideWorkWhenNoIdIsAssigned()
         {
-            Assert.That(this._objWithId.Equals(this._sameObjWithId));
-            Assert.That(!this._objWithId.Equals(this._diffObjWithId));
-            Assert.That(!this._objWithId.Equals(new MockEntityObjectWithSetId()));
+            Assert.That(_objWithId.Equals(_sameObjWithId));
+            Assert.That(!_objWithId.Equals(_diffObjWithId));
+            Assert.That(!_objWithId.Equals(new MockEntityObjectWithSetId()));
         }
 
         [Test]
@@ -524,16 +515,13 @@ namespace Tests.SharpArch.Domain.DomainModel
             var jsonSerializer = new JsonSerializer();
 
             string jsonString;
-            using (var stringWriter = new StringWriter())
-            {
+            using (var stringWriter = new StringWriter()) {
                 jsonSerializer.Serialize(stringWriter, object1);
                 jsonString = stringWriter.ToString();
             }
 
-            using (var stringReader = new StringReader(jsonString))
-            {
-                using (var jsonReader = new JsonTextReader(stringReader))
-                {
+            using (var stringReader = new StringReader(jsonString)) {
+                using (var jsonReader = new JsonTextReader(stringReader)) {
                     var deserialized = jsonSerializer.Deserialize<ObjectWithOneDomainSignatureProperty>(jsonReader);
                     Assert.IsNotNull(deserialized);
                     Assert.AreEqual(999, deserialized.Id);
@@ -623,7 +611,7 @@ namespace Tests.SharpArch.Domain.DomainModel
 
         [Test]
         public void Two_persistent_entities_with_no_signature_properties_and_different_ids_generate_different_hashcodes(
-            )
+        )
         {
             IEntityWithTypedId<int> sut1 = new ObjectWithNoDomainSignatureProperties().SetIdTo(1);
             IEntityWithTypedId<int> sut2 = new ObjectWithNoDomainSignatureProperties().SetIdTo(2);

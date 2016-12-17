@@ -21,6 +21,9 @@
     </PackageFiles>
   </ItemGroup>
 
+  <PropertyGroup>
+    <OpenCoverFilter>+[Suteki.*]* -[Suteki.TardisBank.Tests]*</OpenCoverFilter>
+  </PropertyGroup>
 
   <ItemGroup>
     <AssembliesToTestWithNUnit Include="$(SolutionsPath)\Suteki.TardisBank.Tests\bin\Release\Suteki.TardisBank.Tests.dll;" />

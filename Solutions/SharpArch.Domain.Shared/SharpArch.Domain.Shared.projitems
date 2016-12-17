@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>2974fa61-30bd-4f6f-a880-a16774ea913b</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>SharpArch.Domain.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DomainModel\BaseObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DomainModel\BaseObjectEqualityComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DomainModel\DomainSignatureAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DomainModel\Entity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DomainModel\EntityWithTypedId.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DomainModel\IEntityWithTypedId.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DomainModel\IHasAssignedId.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DomainModel\ValidatableObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DomainModel\ValueObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PersistenceSupport\IEntityDuplicateChecker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PersistenceSupport\ILinqRepository.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PersistenceSupport\ILinqRepositoryWithTypedId.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PersistenceSupport\IRepository.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PersistenceSupport\IRepositoryWithTypedId.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PersistenceSupport\ITransactionManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PersistenceSupport\RepositoryExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reflection\ITypePropertyDescriptorCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reflection\TypePropertyDescriptor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reflection\TypePropertyDescriptorCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Specifications\AdHoc.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Specifications\ILinqSpecification.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Specifications\ISpecification.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Specifications\QuerySpecification.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Specifications\QuerySpecificationExtensions.cs" />
+  </ItemGroup>
+</Project>

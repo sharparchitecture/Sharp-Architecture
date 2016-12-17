@@ -10,46 +10,42 @@ nuget:
 os: Visual Studio 2015
 
 cache:
-  - Packages -> Solutions\**\packages.config
+  - Packages -> Solutions\**\packages.config, Solutions\**\project.json
+  - ResharperCaches -> Solutions\**\packages.config
   
 install:
   - cmd: git submodule update --init --recursive
   - ps: choco install GitVersion.Portable -y
 
+environment:
+  coveralls_repo_token:
+    secure: FgZlD1O2ilcGB6nF7cIgNcF6f8wWJk//ish6EG800QfuMd0y3BQWUXkl9u7TB4yG
+  appveyor_cache_entry_zip_args: -t7z -m0=lzma -mx=5 -ms=on
+    
 before_build:
   - cmd: nuget restore Solutions/SharpArch.sln
-  - ps: gitversion /l console /output buildserver /updateAssemblyInfo .\Common\AssemblyVersion.cs /ensureAssemblyInfo
+  - ps: gitversion /output buildserver /updateAssemblyInfo .\Common\AssemblyVersion.cs /ensureAssemblyInfo
 
 build_script:
-  - cmd: '"%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" Build\Build.proj /t:Build,BuildSamples;Package,FindDuplicates,InspectCode,PackageNuget'
+  - cmd: '"%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" Build\Build.proj /t:Build;RunTests;UploadNUnitCoverage;BuildSamples;FindDuplicates;InspectCode;PackageNuget /p:IsDesktopBuild=false'
+
+test: off
   
 artifacts:
   - path: Drops/**/*.nupkg
     name: Nugets
-  - path: Drops/**/*.zip
-    name: Binaries 
   - path: Drops/Duplicates/CodeDuplicatesReport.html
     name: CodeDuplicates
   - path: Drops/Inspections/CodeInspectionsReport.html
     name: CodeInspections
 
-test_script:
-- cmd: >-
-    cd Solutions\SharpArch.Tests\bin\Release
-
-    nunit3-console SharpArch.Tests.dll --result=myresults.xml;format=AppVeyor --dispose-runners --nocolor
-
-    cd ..\..\..\SharpArch.Specifications\bin\Release
-
-    mspec-clr4.exe SharpArch.Specifications.dll
-    
 deploy:
   - provider: NuGet
     api_key:
       secure: QzSLSnRAnpTRqWWhDzHNkHJP6RCd5pwWMv0myf88h0OCk0TTPJdhflsDql3kAlip
     on:
       branch: 
-        - master
         - develop
+        - /release\/v.*/
         - /releases.*/
         - /hotfixes.*/

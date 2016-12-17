@@ -139,8 +139,14 @@ namespace SharpArch.Domain.DomainModel
         /// </remarks>
         protected override PropertyInfo[] GetTypeSpecificSignatureProperties()
         {
+#if NETSTANDARD14
             return
-                this.GetType().GetProperties().Where(p => Attribute.IsDefined(p, typeof (DomainSignatureAttribute), true)).ToArray();
+                this.GetType().GetProperties().Where(p => p.IsDefined(typeof (DomainSignatureAttribute), true)).ToArray();
+#else
+            return
+                this.GetType().GetProperties().Where(p => Attribute.IsDefined(p, typeof(DomainSignatureAttribute), true)).ToArray();
+#endif
+
         }
 
         /// <summary>
