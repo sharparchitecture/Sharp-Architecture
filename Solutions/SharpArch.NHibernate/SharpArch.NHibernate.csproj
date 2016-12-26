@@ -60,8 +60,8 @@
       <HintPath>..\..\Packages\JetBrains.Annotations.10.2.1\lib\net\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <HintPath>..\..\Packages\NHibernate.4.0.4.4000\lib\net40\NHibernate.dll</HintPath>
+    <Reference Include="NHibernate, Version=4.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\..\Packages\NHibernate.4.1.0.4000\lib\net40\NHibernate.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -129,9 +129,7 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-    <Error Condition="!Exists('..\..\Packages\JetBrains.ReSharper.CommandLineTools.2016.3.20161215.134936\build\JetBrains.ReSharper.CommandLineTools.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Packages\JetBrains.ReSharper.CommandLineTools.2016.3.20161215.134936\build\JetBrains.ReSharper.CommandLineTools.Targets'))" />
   </Target>
-  <Import Project="..\..\Packages\JetBrains.ReSharper.CommandLineTools.2016.3.20161215.134936\build\JetBrains.ReSharper.CommandLineTools.Targets" Condition="Exists('..\..\Packages\JetBrains.ReSharper.CommandLineTools.2016.3.20161215.134936\build\JetBrains.ReSharper.CommandLineTools.Targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

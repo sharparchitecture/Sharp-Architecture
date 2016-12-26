@@ -2,7 +2,7 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <ReSharperToolsVersion>2016.3.20161215.134936</ReSharperToolsVersion>
+    <ReSharperToolsVersion>2016.3.20161223.160402</ReSharperToolsVersion>
     <XsltTransformVersion>0.3.1</XsltTransformVersion>
   </PropertyGroup>
 
@@ -148,17 +148,16 @@
   
   <Import Project="$(MSBuildProjectDirectory)\..\Packages\Alphacloud.MSBuild.Xslt.$(XsltTransformVersion)\tools\Alphacloud.MSBuild.Xslt.targets" />
   
-  <Target Name="Build"
-	DependsOnTargets="CleanSolution;
-		EnsureAssemblyVersion;
-		BuildSolutions;" 
-		/>
-
+  <Target Name="Build" DependsOnTargets="
+    CleanSolution;
+    EnsureAssemblyVersion;
+    BuildSolutions;
+    " />
 		
-  <Target Name="RunTests"
-	DependsOnTargets="Build;
-		RunNUnitTests;" />
-
+  <Target Name="RunTests" DependsOnTargets="
+    Build;
+    RunNUnitTests;
+    " />
 
   <Target Name="BuildSamples">
     <MSBuild Projects="$(SamplesPath)\TardisBank\Build\Build.Proj" Targets="RunTests" 
@@ -166,15 +165,14 @@
         NUnit3TestsFilter=&quot;cat != DatabaseTests&quot;
         "/>
   </Target>
-		
 
-  <Target Name="PackageArtefacts"
-	DependsOnTargets="Build;
-		RunTests;
-		Package;
-		PackageNuget;
-		BuildSuccess" 
-		/>
+  <Target Name="PackageArtefacts" DependsOnTargets="
+    Build;
+    RunTests;
+    Package;
+    PackageNuget;
+    BuildSuccess;
+    " />
 
   <Target Name="FindDuplicates">
     <MakeDir Directories="$(DuplicatesReportPath)" ContinueOnError="true" />
@@ -188,8 +186,8 @@
   <Target Name="InspectCode">
     <MakeDir Directories="$(CodeInspectionsReportPath)" ContinueOnError="true" />
       <Exec
-          WorkingDirectory="$(SolutionsPath)"
-          Command="$(CodeInspectionsExe) &quot;$(SolutionName).sln&quot; /output=&quot;$(CodeInspectionsReportPath)\codeInspections.xml&quot; --caches-home=&quot;$(SolutionRoot)\ResharperCaches&quot;" />
+        WorkingDirectory="$(SolutionsPath)"
+        Command="$(CodeInspectionsExe) &quot;$(SolutionName).sln&quot; /output=&quot;$(CodeInspectionsReportPath)\codeInspections.xml&quot; --caches-home=&quot;$(SolutionRoot)\ResharperCaches&quot;" />
 
     <Xslt3SingleFileTransform  Xslt="@(CodeInspectionsReportTemplate)"
       Input="$(CodeInspectionsReportPath)\codeInspections.xml"
