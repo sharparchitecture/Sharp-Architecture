@@ -138,11 +138,11 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <DuplicatesReportTemplate Include="$(MSBuildProjectDirectory)\dupFinder.xslt">
+    <DuplicatesReportTemplate Include="$(ToolsPath)\DupFinder.xslt">
       <BuildNumber>$(SemanticVersion)</BuildNumber>
     </DuplicatesReportTemplate>
-    <CodeInspectionsReportTemplate Include="$(MSBuildProjectDirectory)\codeInspections.xslt">
-        <BuildNumber>$(SemanticVersion)</BuildNumber>
+    <CodeInspectionsReportTemplate Include="$(ToolsPath)\CodeInspections.xslt">
+      <BuildNumber>$(SemanticVersion)</BuildNumber>
     </CodeInspectionsReportTemplate>
   </ItemGroup>
   
