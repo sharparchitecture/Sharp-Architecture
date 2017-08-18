@@ -174,24 +174,4 @@
     BuildSuccess;
     " />
 
-  <Target Name="FindDuplicates">
-    <MakeDir Directories="$(DuplicatesReportPath)" ContinueOnError="true" />
-    <Exec
-      WorkingDirectory="$(SolutionsPath)"
-      Command="$(DupFinderExe) /output=&quot;$(DuplicatesReportPath)\dupReport.xml&quot; /show-text &quot;$(SolutionsPath)\$(SolutionName).sln&quot; /exclude=&quot;SharpArch.Tests\**\*.cs" />
-    <Xslt3SingleFileTransform Xslt="@(DuplicatesReportTemplate)" Input="$(DuplicatesReportPath)\dupReport.xml" Output="$(DuplicatesReportPath)\CodeDuplicatesReport.html" />
-  </Target>
-
-
-  <Target Name="InspectCode">
-    <MakeDir Directories="$(CodeInspectionsReportPath)" ContinueOnError="true" />
-      <Exec
-        WorkingDirectory="$(SolutionsPath)"
-        Command="$(CodeInspectionsExe) &quot;$(SolutionName).sln&quot; /output=&quot;$(CodeInspectionsReportPath)\codeInspections.xml&quot; --caches-home=&quot;$(SolutionRoot)\ResharperCaches&quot;" />
-
-    <Xslt3SingleFileTransform  Xslt="@(CodeInspectionsReportTemplate)"
-      Input="$(CodeInspectionsReportPath)\codeInspections.xml"
-      Output="$(CodeInspectionsReportPath)\CodeInspectionsReport.html" />
-  </Target>
-
 </Project>
