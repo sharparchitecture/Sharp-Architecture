@@ -8,12 +8,12 @@
 
   <!-- build settings -->
   <PropertyGroup>
-    <NugetLibFrameworkVersion>net462</NugetLibFrameworkVersion>
+    <!-- <NugetLibFrameworkVersion>net462</NugetLibFrameworkVersion> -->
     <UseNUnit3>true</UseNUnit3>
   </PropertyGroup>
 
   <ItemGroup>
-    <AssembliesToTestWithNUnit Include="$(SolutionsPath)\SharpArch.Tests\bin\Release\SharpArch.Tests.dll;" />
+    <AssembliesToTestWithNUnit Include="$(SolutionsPath)\SharpArch.Tests\bin\Release\**\SharpArch.Tests.dll;" />
   </ItemGroup>
 
 
@@ -24,9 +24,9 @@
       <TargetFramework></TargetFramework>
     </NugetPackage>
 
-    <NugetPackage Include="$(SolutionsPath)\SharpArch.Domain\bin\Release\SharpArch.Domain.dll;
-                           $(SolutionsPath)\SharpArch.Domain\bin\Release\SharpArch.Domain.xml;
-                           $(SolutionsPath)\SharpArch.Domain\bin\Release\SharpArch.Domain.pdb;">
+    <NugetPackage Include="$(SolutionsPath)\SharpArch.Domain\bin\Release\**\SharpArch.Domain.dll;
+                           $(SolutionsPath)\SharpArch.Domain\bin\Release\**\SharpArch.Domain.xml;
+                           $(SolutionsPath)\SharpArch.Domain\bin\Release\**\SharpArch.Domain.pdb;">
       <PackageName>SharpArch.Domain</PackageName>
       <NuspecFile>SharpArch.Domain.nuspec</NuspecFile>
       <TargetFramework>net462</TargetFramework>

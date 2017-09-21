@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
+    <SignAssembly>False</SignAssembly>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <RootNamespace>Tests</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <DefineConstants>NETSTANDARD;NETSTANDARD2_0</DefineConstants>
+  </PropertyGroup>
+   
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net462' ">
+    <DefineConstants>NETFULL;NET462</DefineConstants>
+  </PropertyGroup>
+   
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="4.19.4" />
+    <PackageReference Include="JetBrains.Annotations" Version="11.0.0" />
+    <PackageReference Include="Moq" Version="4.7.99" />
+    <PackageReference Include="NUnit" Version="3.8.1" />
+  </ItemGroup>
+   
+  <ItemGroup>
+    <ProjectReference Include="..\..\SharpArch.Domain\SharpArch.Domain.csproj" />
+    <ProjectReference Include="..\..\SharpArch.Testing.NUnit\SharpArch.Testing.NUnit.csproj" />
+  </ItemGroup>
+
+</Project>

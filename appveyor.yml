@@ -7,7 +7,7 @@ pull_requests:
 nuget:
   disable_publish_on_pr: true
   
-os: Visual Studio 2015
+os: Visual Studio 2017
 
 cache:
   - ResharperCaches -> Solutions\**\packages.config
@@ -26,7 +26,7 @@ before_build:
   - ps: gitversion /output buildserver /updateAssemblyInfo .\Common\AssemblyVersion.cs /ensureAssemblyInfo
 
 build_script:
-  - cmd: '"%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe" Build\Build.proj /t:Build;RunTests;UploadNUnitCoverage;BuildSamples;FindDuplicates;InspectCode;PackageNuget /p:IsDesktopBuild=false'
+  - cmd: 'MSBuild.exe Build\Build.proj /t:Build;RunTests;UploadNUnitCoverage;BuildSamples;FindDuplicates;InspectCode;PackageNuget /p:IsDesktopBuild=false'
 
 test: off
   
