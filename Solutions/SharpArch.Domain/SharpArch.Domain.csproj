@@ -26,7 +26,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\Release\$(TargetFramework)\$(ProjectFileName).xml</DocumentationFile>
-    <DebugType>portable</DebugType>
+    <DebugType>pdbonly</DebugType>
     <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
 

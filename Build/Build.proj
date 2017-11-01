@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <AssembliesToTestWithNUnit Include="$(SolutionsPath)\SharpArch.Tests\bin\Release\**\SharpArch.Tests.dll;" />
+    <AssembliesToTestWithNUnit Include="$(SolutionsPath)\tests\SharpArch.Tests\bin\Release\net462\SharpArch.Tests.dll;" />
   </ItemGroup>
 
 
