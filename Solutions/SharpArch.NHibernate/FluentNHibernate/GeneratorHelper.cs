@@ -15,8 +15,12 @@
     [PublicAPI]
     public class GeneratorHelper
     {
-        private const string GeneratorInterface = "IMapGenerator";
+        private const string GeneratorInterface = nameof(IMapGenerator);
 
+        /// <summary>
+        /// Scans assembly for <c>IMapGenerator</c> implementers.
+        /// </summary>
+        /// <returns></returns>
         public static IList<IMapGenerator> GetMapGenerators()
         {
             var assembly = Assembly.GetAssembly(typeof(IMapGenerator));

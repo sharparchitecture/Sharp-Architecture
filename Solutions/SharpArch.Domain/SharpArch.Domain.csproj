@@ -37,7 +37,7 @@
   </ItemGroup>
    
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="11.0.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.0" />
     <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />

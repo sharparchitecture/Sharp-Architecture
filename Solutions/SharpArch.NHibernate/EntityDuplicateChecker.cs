@@ -28,8 +28,7 @@
         /// <exception cref="System.ArgumentNullException"></exception>
         public EntityDuplicateChecker([NotNull] ISession session)
         {
-            if (session == null) throw new ArgumentNullException(nameof(session));
-            this.session = session;
+            this.session = session ?? throw new ArgumentNullException(nameof(session));
         }
 
         private static readonly DateTime uninitializedDatetime = default(DateTime);
@@ -53,7 +52,7 @@
 
             // We do NOT want this to flush pending changes as checking for a duplicate should 
             // only compare the object against data that's already in the database
-            sessionForEntity.FlushMode = FlushMode.Never;
+            sessionForEntity.FlushMode = FlushMode.Manual;
             try
             {
                 var criteria =
