@@ -8,13 +8,10 @@ nuget:
   disable_publish_on_pr: true
   
 os: Visual Studio 2017
-
-cache:
-  - ResharperCaches -> Solutions\**\packages.config
   
 install:
   - cmd: git submodule update --init --recursive
-  - ps: choco install GitVersion.Portable -y
+  - ps: choco install GitVersion.Portable opencover.portable opencover.portable msbuild-xslt.portable resharper-clt.portable -y --no-progress 
 
 environment:
   coveralls_repo_token:

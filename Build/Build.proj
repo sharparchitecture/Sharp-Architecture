@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+<!--
   <PropertyGroup>
     <ReSharperToolsVersion>2016.3.20161223.160402</ReSharperToolsVersion>
     <XsltTransformVersion>0.3.1</XsltTransformVersion>
   </PropertyGroup>
+-->
 
   <!-- build settings -->
   <PropertyGroup>
     <!-- <NugetLibFrameworkVersion>net462</NugetLibFrameworkVersion> -->
+    <UseDotNetCli>true</UseDotNetCli>
     <UseNUnit3>true</UseNUnit3>
   </PropertyGroup>
 
@@ -29,88 +32,34 @@
                            $(SolutionsPath)\SharpArch.Domain\bin\Release\**\SharpArch.Domain.pdb;">
       <PackageName>SharpArch.Domain</PackageName>
       <NuspecFile>SharpArch.Domain.nuspec</NuspecFile>
-      <TargetFramework>net462</TargetFramework>
     </NugetPackage>
 
-    <NugetPackage Include="$(SolutionsPath)\SharpArch.Domain.NetStandard14\bin\Release\SharpArch.Domain.dll;
-                           $(SolutionsPath)\SharpArch.Domain.NetStandard14\bin\Release\SharpArch.Domain.xml;
-                           $(SolutionsPath)\SharpArch.Domain.NetStandard14\bin\Release\SharpArch.Domain.pdb;">
-      <PackageName>SharpArch.Domain</PackageName>
-      <NuspecFile>SharpArch.Domain.nuspec</NuspecFile>
-      <TargetFramework>netstandard1.4</TargetFramework>
-    </NugetPackage>
-
-    <NugetPackage Include="$(SolutionsPath)\SharpArch.NHibernate\bin\Release\SharpArch.NHibernate.dll;
-                           $(SolutionsPath)\SharpArch.NHibernate\bin\Release\SharpArch.NHibernate.xml;
-                           $(SolutionsPath)\SharpArch.NHibernate\bin\Release\SharpArch.NHibernate.pdb;">
+    <NugetPackage Include="$(SolutionsPath)\SharpArch.NHibernate\bin\Release\**\SharpArch.NHibernate.dll;
+                           $(SolutionsPath)\SharpArch.NHibernate\bin\Release\**\SharpArch.NHibernate.xml;
+                           $(SolutionsPath)\SharpArch.NHibernate\bin\Release\**\SharpArch.NHibernate.pdb;">
       <PackageName>SharpArch.NHibernate</PackageName>
       <NuspecFile>SharpArch.NHibernate.nuspec</NuspecFile>
-      <TargetFramework>net462</TargetFramework>
     </NugetPackage>
 
-    <NugetPackage Include="$(SolutionsPath)\SharpArch.RavenDB\bin\Release\SharpArch.RavenDB.dll;
-                           $(SolutionsPath)\SharpArch.RavenDB\bin\Release\SharpArch.RavenDB.xml;
-                           $(SolutionsPath)\SharpArch.RavenDB\bin\Release\SharpArch.RavenDB.pdb;">
+    <NugetPackage Include="$(SolutionsPath)\SharpArch.RavenDB\bin\Release\**\SharpArch.RavenDB.dll;
+                           $(SolutionsPath)\SharpArch.RavenDB\bin\Release\**\SharpArch.RavenDB.xml;
+                           $(SolutionsPath)\SharpArch.RavenDB\bin\Release\**\SharpArch.RavenDB.pdb;">
       <PackageName>SharpArch.RavenDB</PackageName>
       <NuspecFile>SharpArch.RavenDB.nuspec</NuspecFile>
-      <TargetFramework>net462</TargetFramework>
     </NugetPackage>
 
-    <NugetPackage Include="$(SolutionsPath)\SharpArch.Testing.NUnit\bin\Release\SharpArch.Testing.NUnit.dll;
-                           $(SolutionsPath)\SharpArch.Testing.NUnit\bin\Release\SharpArch.Testing.NUnit.xml;
-                           $(SolutionsPath)\SharpArch.Testing.NUnit\bin\Release\SharpArch.Testing.NUnit.pdb;">
+    <NugetPackage Include="$(SolutionsPath)\SharpArch.Testing.NUnit\bin\Release\**\SharpArch.Testing.NUnit.dll;
+                           $(SolutionsPath)\SharpArch.Testing.NUnit\bin\Release\**\SharpArch.Testing.NUnit.xml;
+                           $(SolutionsPath)\SharpArch.Testing.NUnit\bin\Release\**\SharpArch.Testing.NUnit.pdb;">
       <PackageName>SharpArch.Testing.NUnit</PackageName>
       <NuspecFile>SharpArch.Testing.NUnit.nuspec</NuspecFile>
-      <TargetFramework>net462</TargetFramework>
     </NugetPackage>
 
-    <NugetPackage Include="$(SolutionsPath)\SharpArch.Wcf\bin\Release\SharpArch.Wcf.dll;
-                           $(SolutionsPath)\SharpArch.Wcf\bin\Release\SharpArch.Wcf.xml;
-                           $(SolutionsPath)\SharpArch.Wcf\bin\Release\SharpArch.Wcf.pdb;">
-      <PackageName>SharpArch.Wcf</PackageName>
-      <NuspecFile>SharpArch.Wcf.nuspec</NuspecFile>
-      <TargetFramework>net462</TargetFramework>
-    </NugetPackage>
-
-    <NugetPackage Include="$(SolutionsPath)\SharpArch.WcfClient.Castle\bin\Release\SharpArch.WcfClient.Castle.dll;
-                           $(SolutionsPath)\SharpArch.WcfClient.Castle\bin\Release\SharpArch.WcfClient.Castle.xml;
-                           $(SolutionsPath)\SharpArch.WcfClient.Castle\bin\Release\SharpArch.WcfClient.Castle.pdb;">
-      <PackageName>SharpArch.WcfClient.Castle</PackageName>
-      <NuspecFile>SharpArch.WcfClient.Castle.nuspec</NuspecFile>
-      <TargetFramework>net462</TargetFramework>
-    </NugetPackage>
-
-    <NugetPackage Include="$(SolutionsPath)\SharpArch.Web.Http\bin\Release\SharpArch.Web.Http.dll;
-                           $(SolutionsPath)\SharpArch.Web.Http\bin\Release\SharpArch.Web.Http.xml;
-                           $(SolutionsPath)\SharpArch.Web.Http\bin\Release\SharpArch.Web.Http.pdb;">
-      <PackageName>SharpArch.Web.Http</PackageName>
-      <NuspecFile>SharpArch.Web.Http.nuspec</NuspecFile>
-      <TargetFramework>net462</TargetFramework>
-    </NugetPackage>
-
-    <NugetPackage Include="$(SolutionsPath)\SharpArch.Web.Http.Castle\bin\Release\SharpArch.Web.Http.Castle.dll;
-                           $(SolutionsPath)\SharpArch.Web.Http.Castle\bin\Release\SharpArch.Web.Http.Castle.xml;
-                           $(SolutionsPath)\SharpArch.Web.Http.Castle\bin\Release\SharpArch.Web.Http.Castle.pdb;">
-      <PackageName>SharpArch.Web.Http.Castle</PackageName>
-      <NuspecFile>SharpArch.Web.Http.Castle.nuspec</NuspecFile>
-      <TargetFramework>net462</TargetFramework>
-    </NugetPackage>
-
-
-    <NugetPackage Include="$(SolutionsPath)\SharpArch.Web.Mvc\bin\Release\SharpArch.Web.Mvc.dll;
-                           $(SolutionsPath)\SharpArch.Web.Mvc\bin\Release\SharpArch.Web.Mvc.xml;
-                           $(SolutionsPath)\SharpArch.Web.Mvc\bin\Release\SharpArch.Web.Mvc.pdb;">
+    <NugetPackage Include="$(SolutionsPath)\SharpArch.Web.Mvc\bin\Release\**\SharpArch.Web.Mvc.dll;
+                           $(SolutionsPath)\SharpArch.Web.Mvc\bin\Release\**\SharpArch.Web.Mvc.xml;
+                           $(SolutionsPath)\SharpArch.Web.Mvc\bin\Release\**\SharpArch.Web.Mvc.pdb;">
       <PackageName>SharpArch.Web.Mvc</PackageName>
       <NuspecFile>SharpArch.Web.Mvc.nuspec</NuspecFile>
-      <TargetFramework>net462</TargetFramework>
-    </NugetPackage>
-
-    <NugetPackage Include="$(SolutionsPath)\SharpArch.Web.Mvc.Castle\bin\Release\SharpArch.Web.Mvc.Castle.dll;
-                           $(SolutionsPath)\SharpArch.Web.Mvc.Castle\bin\Release\SharpArch.Web.Mvc.Castle.xml;
-                           $(SolutionsPath)\SharpArch.Web.Mvc.Castle\bin\Release\SharpArch.Web.Mvc.Castle.pdb;">
-      <PackageName>SharpArch.Web.Mvc.Castle</PackageName>
-      <NuspecFile>SharpArch.Web.Mvc.Castle.nuspec</NuspecFile>
-      <TargetFramework>net462</TargetFramework>
     </NugetPackage>
 
   </ItemGroup>
@@ -145,13 +94,15 @@
       <BuildNumber>$(SemanticVersion)</BuildNumber>
     </CodeInspectionsReportTemplate>
   </ItemGroup>
-  
+
+  <!--  
   <Import Project="$(MSBuildProjectDirectory)\..\Packages\Alphacloud.MSBuild.Xslt.$(XsltTransformVersion)\tools\Alphacloud.MSBuild.Xslt.targets" />
+  -->
   
   <Target Name="Build" DependsOnTargets="
     CleanSolution;
     EnsureAssemblyVersion;
-    BuildSolutions;
+    DotNetBuild;
     " />
 		
   <Target Name="RunTests" DependsOnTargets="
