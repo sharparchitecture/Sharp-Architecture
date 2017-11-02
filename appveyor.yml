@@ -23,7 +23,8 @@ before_build:
   - ps: gitversion /output buildserver /updateAssemblyInfo .\Common\AssemblyVersion.cs /ensureAssemblyInfo
 
 build_script:
-  - cmd: 'MSBuild.exe Build\Build.proj /t:Build;RunTests;UploadNUnitCoverage;BuildSamples;FindDuplicates;InspectCode;PackageNuget /p:IsDesktopBuild=false'
+# skip BuildSamples; for now..
+  - cmd: 'MSBuild.exe Build\Build.proj /t:Build;RunTests;UploadNUnitCoverage;FindDuplicates;InspectCode;PackageNuget /p:IsDesktopBuild=false'
 
 test: off
   
