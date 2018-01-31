@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462</TargetFrameworks>
+    <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
     <SignAssembly>False</SignAssembly>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
@@ -37,7 +37,6 @@
   </ItemGroup>
    
   <ItemGroup>
-    <PackageReference Include="FluentNHibernate" Version="2.0.3" />
     <PackageReference Include="Iesi.Collections" Version="4.0.3" />
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />

@@ -1,6 +1,7 @@
 ﻿namespace SharpArch.Testing.NUnit.NHibernate
 {
     using System;
+    using System.Transactions;
     using global::NHibernate;
     using global::NUnit.Framework;
     using JetBrains.Annotations;

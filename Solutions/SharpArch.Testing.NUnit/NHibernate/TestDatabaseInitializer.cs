@@ -9,7 +9,6 @@
 
     using FluentNHibernate.Automapping;
     using SharpArch.NHibernate;
-    using SharpArch.NHibernate.FluentNHibernate;
 
     using global::NHibernate;
     using global::NHibernate.Tool.hbm2ddl;
@@ -37,28 +36,6 @@
         }
 
 
-        /// <summary>
-        /// Generates auto-persistence model.
-        /// </summary>
-        /// <param name="assemblies">List of assemblies to look for auto-persistence model generators.</param>
-        /// <returns><see cref="AutoPersistenceModel"/></returns>
-        /// <remarks>
-        /// This method will load and scan assemblies for <see cref="IAutoPersistenceModelGenerator"/>.
-        /// Only first generated model is returned.
-        /// </remarks>
-        [CLSCompliant(false)]
-        public static AutoPersistenceModel GenerateAutoPersistenceModel([NotNull] string[] assemblies)
-        {
-            if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
-            return (from asmName in assemblies
-                    select TryLoadAssembly(asmName)
-                    into asm 
-                    from asmType in asm.GetTypes()
-                    where typeof(IAutoPersistenceModelGenerator).IsAssignableFrom(asmType)
-                    select Activator.CreateInstance(asmType) as IAutoPersistenceModelGenerator
-                    into generator 
-                    select generator.Generate()).FirstOrDefault();
-        }
 
 
         /// <summary>

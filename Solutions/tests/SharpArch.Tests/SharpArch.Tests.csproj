@@ -24,6 +24,7 @@
    
   <ItemGroup>
     <ProjectReference Include="..\..\SharpArch.Domain\SharpArch.Domain.csproj" />
+    <ProjectReference Include="..\..\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
     <ProjectReference Include="..\..\SharpArch.Testing.NUnit\SharpArch.Testing.NUnit.csproj" />
   </ItemGroup>
 
