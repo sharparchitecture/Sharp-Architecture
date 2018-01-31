@@ -1,11 +1,14 @@
-namespace SharpArch.Web.Mvc
+namespace SharpArch.AspNetCore
 {
     using System;
     using System.Data;
     using System.Runtime.CompilerServices;
-    using System.Web.Mvc;
     using JetBrains.Annotations;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Filters;
     using SharpArch.Domain.PersistenceSupport;
+
+    //todo: rewrite
 
     /// <summary>
     ///     An attribute that implies a transaction per MVC action.
@@ -18,11 +21,11 @@ namespace SharpArch.Web.Mvc
     /// <remarks>
     ///     Transaction will be committed after action execution is completed and no unhandled exception occurred, see
     ///     <see cref="ActionExecutedContext.ExceptionHandled" />.
-    ///     Transaction will be rolled back if there was unhandled exeption in action or model vaildation was failed and
+    ///     Transaction will be rolled back if there was unhandled exception in action or model validation was failed and
     ///     <see cref="RollbackOnModelValidationError" /> is <c>true</c>.
     /// </remarks>
     [PublicAPI]
-    [BaseTypeRequired(typeof(IController))]
+    [BaseTypeRequired(typeof(ControllerBase))]
     public sealed class TransactionAttribute : ActionFilterAttribute
     {
         /// <summary>
@@ -54,19 +57,10 @@ namespace SharpArch.Web.Mvc
         /// <param name="filterContext">Action execution context.</param>
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            if (filterContext.IsChildAction)
-            {
-                return;
-            }
-
-            if (HasUnhandledException(filterContext) || this.ShouldRollbackOnModelError(filterContext))
-            {
-                this.TransactionManager.RollbackTransaction();
-            }
+            if (HasUnhandledException(filterContext) || ShouldRollbackOnModelError(filterContext))
+                TransactionManager.RollbackTransaction();
             else
-            {
-                this.TransactionManager.CommitTransaction();
-            }
+                TransactionManager.CommitTransaction();
         }
 
         /// <summary>
@@ -75,29 +69,24 @@ namespace SharpArch.Web.Mvc
         /// <param name="filterContext"></param>
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            throw new NotImplementedException("Needs rewrite");
             if (TransactionManager == null)
                 throw new InvalidOperationException(
                     "TransactionManager was null, make sure implementation of TransactionManager is registered in the IoC container.");
-            if (filterContext.IsChildAction)
-            {
-                return;
-            }
 
-            this.TransactionManager.BeginTransaction(IsolationLevel);
+            TransactionManager.BeginTransaction(IsolationLevel);
         }
-
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool HasUnhandledException(ActionExecutedContext filterContext)
         {
-            return (filterContext.Exception != null) && !filterContext.ExceptionHandled;
+            return filterContext.Exception != null && !filterContext.ExceptionHandled;
         }
 
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool ShouldRollbackOnModelError(ControllerContext filterContext)
+        private bool ShouldRollbackOnModelError(FilterContext filterContext)
         {
-            return this.RollbackOnModelValidationError && filterContext.Controller.ViewData.ModelState.IsValid == false;
+            return RollbackOnModelValidationError && filterContext.ModelState.IsValid == false;
         }
     }
 }
