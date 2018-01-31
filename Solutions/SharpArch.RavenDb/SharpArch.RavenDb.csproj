@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
     <SignAssembly>False</SignAssembly>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup>
-    <ProjectFileName>SharpArch.Nhibernate</ProjectFileName>
+    <ProjectFileName>SharpArch.Domain</ProjectFileName>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
@@ -26,7 +26,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>bin\Release\$(TargetFramework)\$(ProjectFileName).xml</DocumentationFile>
-    <DebugType>portable</DebugType>
+    <DebugType>pdbonly</DebugType>
     <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
 
@@ -35,13 +35,15 @@
     <Compile Include="..\..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
     <Compile Include="..\..\Common\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
-   
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
+    <Reference Include="System.Transactions" />
+  </ItemGroup>
+  
   <ItemGroup>
-    <PackageReference Include="FluentNHibernate" Version="2.0.3" />
-    <PackageReference Include="Iesi.Collections" Version="4.0.3" />
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="NHibernate" Version="5.0.3" />
+    <PackageReference Include="RavenDb.Client" Version="3.5.5" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
     <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
   </ItemGroup>
@@ -49,5 +51,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SharpArch.Domain\SharpArch.Domain.csproj" />
   </ItemGroup>
-   
+
+
 </Project>
