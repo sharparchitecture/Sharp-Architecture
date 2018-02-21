@@ -1,0 +1,45 @@
+namespace Tests.SharpArch.NHibernate.Mappings
+{
+    #region Using Directives
+
+    using System;
+    using FluentNHibernate.Automapping;
+    using FluentNHibernate.Conventions;
+    using global::SharpArch.Domain.DomainModel;
+    using global::SharpArch.NHibernate.FluentNHibernate;
+    using Tests.SharpArch.NHibernate.Mappings.Conventions;
+
+    #endregion
+
+    /// <summary>
+    /// Generates the auto-mapping for the domain assembly.
+    /// </summary>
+    public class AutoPersistenceModelGenerator : IAutoPersistenceModelGenerator
+    {
+        /// <summary>
+        /// Generates persistence model.
+        /// </summary>
+        /// <returns></returns>
+        public AutoPersistenceModel Generate()
+        {
+            var mappings = AutoMap.AssemblyOf<AutoPersistenceModelGenerator>(new AutomappingConfiguration());
+            mappings.IgnoreBase<Entity>();
+            mappings.IgnoreBase(typeof(EntityWithTypedId<>));
+            mappings.Conventions.Setup(GetConventions());
+            mappings.UseOverridesFromAssemblyOf<AutoPersistenceModelGenerator>();
+
+            return mappings;
+        }
+
+        private static Action<IConventionFinder> GetConventions()
+        {
+            return c =>
+                   {
+                       c.Add<PrimaryKeyConvention>();
+                       c.Add<CustomForeignKeyConvention>();
+                       c.Add<HasManyConvention>();
+                       c.Add<TableNameConvention>();
+                   };
+        }
+    }
+}

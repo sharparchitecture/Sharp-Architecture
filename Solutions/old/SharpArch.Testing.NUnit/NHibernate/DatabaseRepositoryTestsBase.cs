@@ -1,6 +1,4 @@
-﻿#if NETFULL
-
-namespace SharpArch.Testing.NUnit.NHibernate
+﻿namespace SharpArch.Testing.NUnit.NHibernate
 {
     using global::NHibernate;
     using global::NHibernate.Cfg;
@@ -14,7 +12,7 @@ namespace SharpArch.Testing.NUnit.NHibernate
     ///     database.  If, alternatively, you'd prefer to use an in-memory database such as SqlLite,
     ///     then use <see cref="RepositoryTestsBase" /> or <see cref="RepositoryBehaviorSpecificationTestsBase" />
     ///     as your base class.
-    ///     As the preferred mechanism is for in-memory unit testing, this class is provided mainly
+    ///     As the preferred mechanism is for in-memory unit testsing, this class is provided mainly
     ///     for backward compatibility.
     /// </summary>
     /// <remarks>
@@ -28,11 +26,7 @@ namespace SharpArch.Testing.NUnit.NHibernate
         /// </summary>
         protected ISession Session { get; private set; }
 
-        TestDatabaseInitializer _initializer;
-        /// <summary>
-        /// Additional assemblies to look for mappings,
-        /// </summary>
-        internal static string MappingAssemblyNames { get; set; }
+        TestDatabaseInitializer initializer;
 
 
         /// <summary>
@@ -41,8 +35,8 @@ namespace SharpArch.Testing.NUnit.NHibernate
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _initializer = new TestDatabaseInitializer(TestContext.CurrentContext.TestDirectory, MappingAssemblyNames);
-            UpdateConfiguration(_initializer.GetConfiguration());
+            initializer = new TestDatabaseInitializer(TestContext.CurrentContext.TestDirectory);
+            UpdateConfiguration(initializer.GetConfiguration());
         }
 
         /// <summary>
@@ -59,7 +53,7 @@ namespace SharpArch.Testing.NUnit.NHibernate
         [SetUp]
         public virtual void SetUp()
         {
-            Session = _initializer.GetSessionFactory().OpenSession();
+            Session = initializer.GetSessionFactory().OpenSession();
             Session.BeginTransaction();
         }
 
@@ -85,10 +79,8 @@ namespace SharpArch.Testing.NUnit.NHibernate
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            _initializer?.Dispose();
-            _initializer = null;
+            initializer?.Dispose();
+            initializer = null;
         }
     }
 }
-
-#endif

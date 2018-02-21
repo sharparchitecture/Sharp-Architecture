@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
+    <TargetFramework>net462</TargetFramework>
     <SignAssembly>False</SignAssembly>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <RootNamespace>Tests</RootNamespace>
+    <RootNamespace>Tests.SharpArch.NHibernate</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
@@ -24,7 +24,9 @@
    
   <ItemGroup>
     <ProjectReference Include="..\..\SharpArch.Domain\SharpArch.Domain.csproj" />
+    <ProjectReference Include="..\..\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
     <ProjectReference Include="..\..\SharpArch.Testing.NUnit\SharpArch.Testing.NUnit.csproj" />
+    <ProjectReference Include="..\SharpArch.Tests\SharpArch.Tests.csproj" />
   </ItemGroup>
 
 </Project>

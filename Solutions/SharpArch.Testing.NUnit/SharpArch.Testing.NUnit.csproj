@@ -29,20 +29,26 @@
     <DebugType>portable</DebugType>
     <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
-   
+
   <ItemGroup>
     <Compile Include="..\..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
     <Compile Include="..\..\Common\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
    
-  <ItemGroup>
+  <ItemGroup Label="Common references">
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
     <PackageReference Include="NUnit" Version="3.9.0" />
+  </ItemGroup>
+
+  <ItemGroup Label=".NET Framework specific references" Condition=" '$(TargetFramework)' == 'net462' ">
     <PackageReference Include="NHibernate" Version="5.0.3" />
   </ItemGroup>
-   
-  <ItemGroup>
+  
+  <ItemGroup Label="Common project references">
     <ProjectReference Include="..\SharpArch.Domain\SharpArch.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Label=".NET Framework specific references" Condition=" '$(TargetFramework)' == 'net462' ">
     <ProjectReference Include="..\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
   </ItemGroup>
 
