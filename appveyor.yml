@@ -19,8 +19,8 @@ environment:
   appveyor_cache_entry_zip_args: -t7z -m0=lzma -mx=5 -ms=on
     
 before_build:
-  - cmd: nuget restore Solutions/SharpArch.sln
-  - ps: gitversion /output buildserver /updateAssemblyInfo .\Common\AssemblyVersion.cs /ensureAssemblyInfo
+#  - cmd: nuget restore Solutions/SharpArch.sln
+#  - ps: gitversion /output buildserver /updateAssemblyInfo .\Common\AssemblyVersion.cs /ensureAssemblyInfo
 
 build_script:
 # skip BuildSamples; for now..
