@@ -108,6 +108,7 @@ Task("Restore")
 
 
 Task("Build")
+    .IsDependentOn("SetVersion")
     .IsDependentOn("UpdateAppVeyorBuildNumber")
     .IsDependentOn("Restore")
     .Does(() =>

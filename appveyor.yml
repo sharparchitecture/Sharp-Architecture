@@ -9,19 +9,12 @@ nuget:
   
 os: Visual Studio 2017
   
-install:
-  - cmd: git submodule update --init --recursive
-  - ps: choco install GitVersion.Portable opencover.portable opencover.portable msbuild-xslt.portable resharper-clt.portable nunit-console.portable nuget.commandline -y --no-progress 
-
 environment:
   coveralls_repo_token:
     secure: FgZlD1O2ilcGB6nF7cIgNcF6f8wWJk//ish6EG800QfuMd0y3BQWUXkl9u7TB4yG
   appveyor_cache_entry_zip_args: -t7z -m0=lzma -mx=5 -ms=on
   CAKE_SETTINGS_SKIPVERIFICATION: true
     
-before_build:
-#  - cmd: nuget restore Solutions/SharpArch.sln
-#  - ps: gitversion /output buildserver /updateAssemblyInfo .\Common\AssemblyVersion.cs /ensureAssemblyInfo
 
 build_script:
 # skip BuildSamples; for now..
