@@ -167,7 +167,7 @@ Task("UploadTestResults")
     .WithCriteria(() => !local)
     .Does(() => {
         CoverallsIo(testCoverageOutputFile);
-        UploadFile("https://ci.appveyor.com/api/testresults/nunit3/"+appVeyorJobId, nunitTestResults)
+        UploadFile("https://ci.appveyor.com/api/testresults/nunit3/"+appVeyorJobId, nunitTestResults);
     });
 
 
