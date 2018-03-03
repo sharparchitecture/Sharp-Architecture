@@ -113,8 +113,9 @@ Task("Build")
     .IsDependentOn("Restore")
     .Does(() =>
     {
-        DotNetCoreBuild("./Solutions/", new DotNetCoreBuildSettings{
-
+        DotNetCoreBuild("./Solutions/", new DotNetCoreBuildSettings {
+            NoRestore = true,
+            Configuration = buildConfig,
         });
     });
 
