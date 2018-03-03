@@ -17,6 +17,7 @@ environment:
   coveralls_repo_token:
     secure: FgZlD1O2ilcGB6nF7cIgNcF6f8wWJk//ish6EG800QfuMd0y3BQWUXkl9u7TB4yG
   appveyor_cache_entry_zip_args: -t7z -m0=lzma -mx=5 -ms=on
+  CAKE_SETTINGS_SKIPVERIFICATION: true
     
 before_build:
 #  - cmd: nuget restore Solutions/SharpArch.sln
@@ -24,16 +25,16 @@ before_build:
 
 build_script:
 # skip BuildSamples; for now..
-  - cmd: 'MSBuild.exe Build\Build.proj /t:Build;RunTests;UploadNUnitCoverage;FindDuplicates;InspectCode;PackageNuget /p:IsDesktopBuild=false'
+  - ps: ./build.ps1
 
 test: off
   
 artifacts:
   - path: Drops/**/*.nupkg
     name: Nugets
-  - path: Drops/Duplicates/CodeDuplicatesReport.html
+  - path: Drops/Inspections/CodeDuplicates.html
     name: CodeDuplicates
-  - path: Drops/Inspections/CodeInspectionsReport.html
+  - path: Drops/Inspections/CodeInspections.html
     name: CodeInspections
 
 deploy:
