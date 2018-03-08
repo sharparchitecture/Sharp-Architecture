@@ -2,6 +2,7 @@
 
 namespace SharpArch.Testing.NUnit.NHibernate
 {
+    using System;
     using global::NHibernate;
     using global::NHibernate.Cfg;
     using global::NUnit.Framework;
@@ -23,55 +24,57 @@ namespace SharpArch.Testing.NUnit.NHibernate
     [PublicAPI]
     public abstract class DatabaseRepositoryTestsBase
     {
+        protected internal static TestDatabaseInitializer _initializer;
+
         /// <summary>
-        /// Returns current NHibernate session.
+        ///     Returns current NHibernate session.
         /// </summary>
         protected ISession Session { get; private set; }
 
-        TestDatabaseInitializer _initializer;
         /// <summary>
-        /// Additional assemblies to look for mappings,
+        ///     Additional assemblies to look for mappings,
         /// </summary>
         internal static string MappingAssemblyNames { get; set; }
 
 
         /// <summary>
-        /// Creates NHibernate <see cref="ISessionFactory"/>.
+        ///     Creates NHibernate <see cref="ISessionFactory" />.
         /// </summary>
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _initializer = new TestDatabaseInitializer(TestContext.CurrentContext.TestDirectory, MappingAssemblyNames);
+            if (_initializer == null)
+                throw new InvalidOperationException($"{nameof(_initializer)} is not set.");
             UpdateConfiguration(_initializer.GetConfiguration());
         }
 
         /// <summary>
-        /// Can be used to override Session Factory settings.
+        ///     Can be used to override Session Factory settings.
         /// </summary>
         /// <param name="configuration"></param>
         protected virtual void UpdateConfiguration([NotNull] Configuration configuration)
-        {
-        }
+        { }
 
         /// <summary>
-        /// Creates new <see cref="ISession"/>.
+        ///     Creates new <see cref="ISession" />.
         /// </summary>
         [SetUp]
         public virtual void SetUp()
         {
+            if (_initializer == null)
+                throw new InvalidOperationException($"{nameof(_initializer)} is not set.");
             Session = _initializer.GetSessionFactory().OpenSession();
             Session.BeginTransaction();
         }
 
 
         /// <summary>
-        /// Rollbacks active transaction and closes <see cref="ISession"/>.
+        ///     Rollbacks active transaction and closes <see cref="ISession" />.
         /// </summary>
         [TearDown]
         public virtual void TearDown()
         {
-            if (Session != null)
-            {
+            if (Session != null) {
                 if (Session.Transaction.IsActive)
                     Session.Transaction.Rollback();
                 Session.Dispose();
@@ -80,7 +83,7 @@ namespace SharpArch.Testing.NUnit.NHibernate
         }
 
         /// <summary>
-        /// Disposes <see cref="ISessionFactory"/>.
+        ///     Disposes <see cref="ISessionFactory" />.
         /// </summary>
         [OneTimeTearDown]
         public void OneTimeTearDown()

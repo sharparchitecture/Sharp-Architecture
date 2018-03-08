@@ -5,12 +5,12 @@ namespace Tests.SharpArch.NHibernate
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    using global::NHibernate;
     using global::SharpArch.Domain.PersistenceSupport;
     using global::SharpArch.NHibernate;
     using global::SharpArch.Testing.NUnit.NHibernate;
     using Moq;
     using NUnit.Framework;
+    using Tests.SharpArch.NHibernate.Mappings;
 
     internal class HasUniqueDomainSignatureTestsBase : RepositoryTestsBase
     {
@@ -23,6 +23,8 @@ namespace Tests.SharpArch.NHibernate
         [SetUp]
         protected override void SetUp()
         {
+            dbInitializer = new TestDatabaseInitializer(TestContext.CurrentContext.TestDirectory,
+                typeof(TestsPersistenceModelGenerator).Assembly);
             base.SetUp();
 
             ServiceProviderMock = new Mock<IServiceProvider>();

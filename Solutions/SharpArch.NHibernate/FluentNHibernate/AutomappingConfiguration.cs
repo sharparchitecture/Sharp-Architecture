@@ -1,11 +1,10 @@
-namespace Tests.SharpArch.NHibernate.Mappings
+namespace SharpArch.NHibernate.FluentNHibernate
 {
     using System;
     using System.Linq;
-    using FluentNHibernate;
-    using FluentNHibernate.Automapping;
-    using global::SharpArch.Domain.DomainModel;
-    using Tests.SharpArch.Domain.DomainModel;
+    using global::FluentNHibernate;
+    using global::FluentNHibernate.Automapping;
+    using SharpArch.Domain.DomainModel;
 
     /// <summary>
     ///     Applies custom mapping conventions to S#Arch entities.
@@ -25,7 +24,7 @@ namespace Tests.SharpArch.NHibernate.Mappings
     ///         </item>
     ///     </list>
     /// </remarks>
-    /// <seealso cref="FluentNHibernate.Automapping.DefaultAutomappingConfiguration" />
+    /// <seealso cref="DefaultAutomappingConfiguration" />
     /// <seealso cref="IEntityWithTypedId{TId}" />
     /// <seealso cref="ValueObject" />
     public class AutomappingConfiguration : DefaultAutomappingConfiguration

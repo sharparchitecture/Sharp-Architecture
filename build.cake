@@ -124,7 +124,7 @@ Task("RunTests")
     .Does(() => 
     {
         var testAssemblies = GetFiles("./Solutions/tests/SharpArch.Tests/bin/Release/net462/SharpArch.Tests.dll")
-            //.Union(GetFiles("./Solutions/tests/SharpArch.Tests.NHibernate/bin/Release/net462/SharpArch.Tests.NHibernate.dll"))
+            .Union(GetFiles("./Solutions/tests/SharpArch.Tests.NHibernate/bin/Release/net462/SharpArch.Tests.NHibernate.dll"))
             ;
         foreach (var item in testAssemblies)
         {
@@ -185,7 +185,11 @@ Task("RunUnitTests")
 
 Task("InspectCode")
     .Does(() => {
-        DupFinder(solutionFile, new DupFinderSettings() {
+        DupFinder(solutionFile, new DupFinderSettings {
+            DiscardCost = 70,
+            DiscardFieldsName = false,
+            DiscardLiterals = false,
+            NormalizeTypes = true,
             ShowStats = true,
             ShowText = true,
             OutputFile = duplicateFinderOutputFile,

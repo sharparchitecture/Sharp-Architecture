@@ -21,7 +21,7 @@ namespace SharpArch.Testing.NUnit.NHibernate
     public class TestDatabaseInitializer : IDisposable
     {
         readonly string _basePath;
-        readonly string _mappingAssemblies;
+        readonly Assembly[] _mappingAssemblies;
         Configuration _configuration;
         ISessionFactory _sessionFactory;
         static readonly char[] assemblySeparator = new[] {','};
@@ -35,10 +35,10 @@ namespace SharpArch.Testing.NUnit.NHibernate
         ///     A comma delimited list of assemblies containing NHibernate mapping files. Including
         ///     '.dll' at the end of each is optional.
         /// </param>
-        public TestDatabaseInitializer(string basePath, string mappingAssemblies)
+        public TestDatabaseInitializer(string basePath, [NotNull] params Assembly[] mappingAssemblies)
         {
             _basePath = basePath;
-            _mappingAssemblies = mappingAssemblies ?? string.Empty;
+            _mappingAssemblies = mappingAssemblies ?? throw new ArgumentNullException(nameof(mappingAssemblies));
         }
 
         /// <summary>
@@ -65,51 +65,18 @@ namespace SharpArch.Testing.NUnit.NHibernate
         ///     Only first generated model is returned.
         /// </remarks>
         [CLSCompliant(false)]
-        public static AutoPersistenceModel GenerateAutoPersistenceModel([NotNull] string[] assemblies)
+        public static AutoPersistenceModel GenerateAutoPersistenceModel([NotNull] Assembly[] assemblies)
         {
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
-            return (from asmName in assemblies
-                select TryLoadAssembly(asmName)
-                into asm
-                from asmType in asm.GetTypes()
-                where typeof(IAutoPersistenceModelGenerator).IsAssignableFrom(asmType)
-                select Activator.CreateInstance(asmType) as IAutoPersistenceModelGenerator
-                into generator
-                select generator.Generate()).FirstOrDefault();
-        }
+            var persistenceGeneratorTypes = assemblies.SelectMany(a =>
+                    a.GetTypes().Where(t =>
+                        !t.IsAbstract && typeof(IAutoPersistenceModelGenerator).IsAssignableFrom(t)))
+                .ToArray();
+            if (persistenceGeneratorTypes.Length > 1)
+                throw new InvalidOperationException($"Found multiple classes implementing {nameof(IAutoPersistenceModelGenerator)}.");
 
-
-        /// <summary>
-        ///     Returns list of assemblies containing NHibernate mappings.
-        /// </summary>
-        public string[] GetMappingAssemblies()
-        {
-            return GetMappingAssemblies(_basePath, _mappingAssemblies);
-        }
-
-
-        /// <summary>
-        ///     Returns list of assemblies containing NHibernate mappings.
-        /// </summary>
-        /// <param name="basePath">Base path to prepend assembly names.</param>
-        /// <param name="mappingAssemblies">
-        ///     A comma delimited list of assemblies containing NHibernate mapping files. Including
-        ///     '.dll' at the end of each is optional.
-        /// </param>
-        [NotNull]
-        public static string[] GetMappingAssemblies(string basePath, [NotNull] string mappingAssemblies)
-        {
-            if (mappingAssemblies == null) throw new ArgumentNullException(nameof(mappingAssemblies));
-
-            var assemblies =
-                mappingAssemblies.Split(assemblySeparator, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(s => EnsureDllExtension(s)).ToArray();
-
-            for (int i = 0; i < assemblies.Length; i++) {
-                assemblies[i] = Path.Combine(basePath, assemblies[i]);
-            }
-
-            return assemblies;
+            var generator = (IAutoPersistenceModelGenerator) Activator.CreateInstance(persistenceGeneratorTypes[0]);
+            return generator.Generate();
         }
 
 
@@ -123,11 +90,10 @@ namespace SharpArch.Testing.NUnit.NHibernate
             if (_configuration != null)
                 return _configuration;
 
-            var mappingAssemblies = GetMappingAssemblies();
-            var autoPersistenceModel = GenerateAutoPersistenceModel(mappingAssemblies);
+            var autoPersistenceModel = GenerateAutoPersistenceModel(_mappingAssemblies);
 
             var builder = new NHibernateSessionFactoryBuilder()
-                .AddMappingAssemblies(mappingAssemblies)
+                .AddMappingAssemblies(_mappingAssemblies)
                 .UseAutoPersistenceModel(autoPersistenceModel);
 
             var defaultConfigFilePath =

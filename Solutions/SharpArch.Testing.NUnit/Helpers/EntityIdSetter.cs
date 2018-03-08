@@ -1,4 +1,4 @@
-﻿namespace SharpArch.Testing.NUnit.Helpers
+﻿namespace SharpArch.Testing.Helpers
 {
     using System;
     using System.Reflection;

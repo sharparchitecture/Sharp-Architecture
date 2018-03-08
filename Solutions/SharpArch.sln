@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.AspNetCore", "Sha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Tests.NHibernate", "tests\SharpArch.Tests.NHibernate\SharpArch.Tests.NHibernate.csproj", "{7C34A181-2719-457C-9A23-62BFEF182B40}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing", "SharpArch.Testing\SharpArch.Testing.csproj", "{1E09DC26-B287-48CE-948D-645C06053474}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{7C34A181-2719-457C-9A23-62BFEF182B40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C34A181-2719-457C-9A23-62BFEF182B40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C34A181-2719-457C-9A23-62BFEF182B40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E09DC26-B287-48CE-948D-645C06053474}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E09DC26-B287-48CE-948D-645C06053474}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E09DC26-B287-48CE-948D-645C06053474}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E09DC26-B287-48CE-948D-645C06053474}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +73,7 @@ Global
 		{7DD611C9-22A4-4545-B4E5-761F843D92C5} = {B33554BD-5B88-4BB2-96E0-9FD2F47FBA07}
 		{685D5CA7-3492-4386-B8DC-37116BA234CE} = {B33554BD-5B88-4BB2-96E0-9FD2F47FBA07}
 		{7C34A181-2719-457C-9A23-62BFEF182B40} = {1E0FC93D-9540-42B7-B639-5F7E0ABC4B75}
+		{1E09DC26-B287-48CE-948D-645C06053474} = {B33554BD-5B88-4BB2-96E0-9FD2F47FBA07}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {66570DE6-E62E-4899-9B61-57AF560D7F3B}

@@ -9,7 +9,7 @@ namespace Tests.SharpArch.Domain.DomainModel
     using System.Linq;
     using System.Reflection;
     using global::SharpArch.Domain.DomainModel;
-    using global::SharpArch.Testing.NUnit.Helpers;
+    using global::SharpArch.Testing.Helpers;
     using NUnit.Framework;
 
     [TestFixture]

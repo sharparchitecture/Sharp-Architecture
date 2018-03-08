@@ -12,7 +12,7 @@ namespace Tests.SharpArch.Domain.DomainModel
     using System.IO;
     using FluentAssertions;
     using global::SharpArch.Domain.DomainModel;
-    using global::SharpArch.Testing.NUnit.Helpers;
+    using global::SharpArch.Testing.Helpers;
     using Newtonsoft.Json;
     using NUnit.Framework;
 

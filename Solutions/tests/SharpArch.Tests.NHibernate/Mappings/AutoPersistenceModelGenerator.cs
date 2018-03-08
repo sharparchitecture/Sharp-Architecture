@@ -7,39 +7,39 @@ namespace Tests.SharpArch.NHibernate.Mappings
     using FluentNHibernate.Conventions;
     using global::SharpArch.Domain.DomainModel;
     using global::SharpArch.NHibernate.FluentNHibernate;
-    using Tests.SharpArch.NHibernate.Mappings.Conventions;
+    using global::SharpArch.NHibernate.FluentNHibernate.Conventions;
+    using Tests.SharpArch.Domain;
 
     #endregion
 
     /// <summary>
-    /// Generates the auto-mapping for the domain assembly.
+    ///     Generates the auto-mapping for test entities.
     /// </summary>
-    public class AutoPersistenceModelGenerator : IAutoPersistenceModelGenerator
+    public class TestsPersistenceModelGenerator : IAutoPersistenceModelGenerator
     {
         /// <summary>
-        /// Generates persistence model.
+        ///     Generates persistence model.
         /// </summary>
         /// <returns></returns>
         public AutoPersistenceModel Generate()
         {
-            var mappings = AutoMap.AssemblyOf<AutoPersistenceModelGenerator>(new AutomappingConfiguration());
+            var mappings = AutoMap.AssemblyOf<Customer>(new AutomappingConfiguration());
             mappings.IgnoreBase<Entity>();
             mappings.IgnoreBase(typeof(EntityWithTypedId<>));
             mappings.Conventions.Setup(GetConventions());
-            mappings.UseOverridesFromAssemblyOf<AutoPersistenceModelGenerator>();
+            mappings.UseOverridesFromAssemblyOf<TestsPersistenceModelGenerator>();
 
             return mappings;
         }
 
         private static Action<IConventionFinder> GetConventions()
         {
-            return c =>
-                   {
-                       c.Add<PrimaryKeyConvention>();
-                       c.Add<CustomForeignKeyConvention>();
-                       c.Add<HasManyConvention>();
-                       c.Add<TableNameConvention>();
-                   };
+            return c => {
+                c.Add<PrimaryKeyConvention>();
+                c.Add<CustomForeignKeyConvention>();
+                c.Add<HasManyConvention>();
+                c.Add<TableNameConvention>();
+            };
         }
     }
 }

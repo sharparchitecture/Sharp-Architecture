@@ -33,23 +33,23 @@
         /// </summary>
         public static readonly string DefaultConfigurationName = "nhibernate.current_session";
 
-        private INHibernateConfigurationCache configurationCache;
-        
-        private AutoPersistenceModel autoPersistenceModel;
-        private string configFile;
-        private readonly List<string> mappingAssemblies;
-        private IPersistenceConfigurer persistenceConfigurer;
-        private IDictionary<string, string> properties;
-        private bool useDataAnnotationValidators;
-        Action<Configuration> exposeConfiguration;
+        INHibernateConfigurationCache _configurationCache;
+
+        AutoPersistenceModel _autoPersistenceModel;
+        string _configFile;
+        readonly List<Assembly> _mappingAssemblies;
+        IPersistenceConfigurer _persistenceConfigurer;
+        IDictionary<string, string> _properties;
+        bool _useDataAnnotationValidators;
+        Action<Configuration> _exposeConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NHibernateSessionFactoryBuilder"/> class.
         /// </summary>
         public NHibernateSessionFactoryBuilder()
         {
-            this.configurationCache = NullNHibernateConfigurationCache.Null;
-            this.mappingAssemblies = new List<string>();
+            _configurationCache = NullNHibernateConfigurationCache.Null;
+            _mappingAssemblies = new List<Assembly>();
         }
 
 
@@ -80,13 +80,13 @@
         [NotNull]
         public Configuration BuildConfiguration()
         {
-            var configuration = configurationCache.LoadConfiguration(DefaultConfigurationName, configFile, mappingAssemblies);
+            var configuration = _configurationCache.LoadConfiguration(DefaultConfigurationName, _configFile, _mappingAssemblies.Select(x=>x.Location));
 
             if (configuration == null)
             {
                 configuration = LoadExternalConfiguration();
                 configuration = ApplyCustomSettings(configuration);
-                configurationCache.SaveConfiguration(DefaultConfigurationName, configuration);
+                _configurationCache.SaveConfiguration(DefaultConfigurationName, configuration);
             }
             return configuration;
         }
@@ -103,13 +103,13 @@
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
 
-            this.exposeConfiguration = config;
+            _exposeConfiguration = config;
             return this;
         }
 
-        private bool ShouldExposeConfiguration()
+        bool ShouldExposeConfiguration()
         {
-            return exposeConfiguration != null;
+            return _exposeConfiguration != null;
         }
 
         /// <summary>
@@ -123,7 +123,7 @@
             [NotNull] INHibernateConfigurationCache configurationCache)
         {
             if (configurationCache == null) throw new ArgumentNullException(nameof(configurationCache), "Please provide configuration cache instance.");
-            this.configurationCache = configurationCache;
+            _configurationCache = configurationCache;
             return this;
         }
 
@@ -134,11 +134,11 @@
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">Mapping assemblies are not specified.</exception>
         [NotNull]
-        public NHibernateSessionFactoryBuilder AddMappingAssemblies([NotNull] IEnumerable<string> mappingAssemblies)
+        public NHibernateSessionFactoryBuilder AddMappingAssemblies([NotNull] IEnumerable<Assembly> mappingAssemblies)
         {
             if (mappingAssemblies == null) throw new ArgumentNullException(nameof(mappingAssemblies), "Mapping assemblies are not specified.");
 
-            this.mappingAssemblies.AddRange(mappingAssemblies);
+            _mappingAssemblies.AddRange(mappingAssemblies);
             return this;
         }
 
@@ -152,9 +152,7 @@
         public NHibernateSessionFactoryBuilder UseAutoPersistenceModel(
             [NotNull] AutoPersistenceModel autoPersistenceModel)
         {
-            if (autoPersistenceModel == null) throw new ArgumentNullException(nameof(autoPersistenceModel));
-            
-            this.autoPersistenceModel = autoPersistenceModel;
+            _autoPersistenceModel = autoPersistenceModel ?? throw new ArgumentNullException(nameof(autoPersistenceModel));
             return this;
         }
 
@@ -169,7 +167,7 @@
         {
             if (properties == null) throw new ArgumentNullException(nameof(properties));
 
-            this.properties = properties;
+            _properties = properties;
             return this;
         }
 
@@ -184,7 +182,7 @@
         [NotNull]
         public NHibernateSessionFactoryBuilder UseDataAnnotationValidators(bool addDataAnnotatonValidators)
         {
-            this.useDataAnnotationValidators = addDataAnnotatonValidators;
+            _useDataAnnotationValidators = addDataAnnotatonValidators;
             return this;
         }
 
@@ -202,7 +200,7 @@
             if (string.IsNullOrWhiteSpace(nhibernateConfigFile))
                 throw new ArgumentException("NHibernate config was not specified.", nameof(nhibernateConfigFile));
             
-            configFile = nhibernateConfigFile;
+            _configFile = nhibernateConfigFile;
 
             return this;
         }
@@ -225,52 +223,50 @@
             [NotNull] IPersistenceConfigurer persistenceConfigurer)
         {
             if (persistenceConfigurer == null) throw new ArgumentNullException(nameof(persistenceConfigurer));
-            
-            this.persistenceConfigurer = persistenceConfigurer;
+
+            _persistenceConfigurer = persistenceConfigurer;
             return this;
         }
 
-        private Configuration ApplyCustomSettings(Configuration cfg)
+        Configuration ApplyCustomSettings(Configuration cfg)
         {
             var fluentConfig = Fluently.Configure(cfg);
-            if (persistenceConfigurer != null)
+            if (_persistenceConfigurer != null)
             {
-                fluentConfig.Database(persistenceConfigurer);
+                fluentConfig.Database(_persistenceConfigurer);
             }
 
             fluentConfig.Mappings(m =>
             {
-                foreach (string mappingAssembly in this.mappingAssemblies)
+                foreach (var mappingAssembly in _mappingAssemblies)
                 {
-                    Assembly assembly = Assembly.LoadFrom(MakeLoadReadyAssemblyName(mappingAssembly));
-
-                    m.HbmMappings.AddFromAssembly(assembly);
-                    m.FluentMappings.AddFromAssembly(assembly).Conventions.AddAssembly(assembly);
+                    m.HbmMappings.AddFromAssembly(mappingAssembly);
+                    m.FluentMappings.AddFromAssembly(mappingAssembly).Conventions.AddAssembly(mappingAssembly);
                 }
 
-                if (autoPersistenceModel != null)
+                if (_autoPersistenceModel != null)
                 {
-                    m.AutoMappings.Add(autoPersistenceModel);
+                    m.AutoMappings.Add(_autoPersistenceModel);
                 }
             });
 
-            if (this.useDataAnnotationValidators || ShouldExposeConfiguration())
+            if (_useDataAnnotationValidators || ShouldExposeConfiguration())
             {
                 fluentConfig.ExposeConfiguration(AddValidatorsAndExposeConfiguration);
             }
             return fluentConfig.BuildConfiguration();
         }
 
-        private void AddValidatorsAndExposeConfiguration(Configuration e)
+        void AddValidatorsAndExposeConfiguration(Configuration e)
         {
-            if (useDataAnnotationValidators)
+            if (_useDataAnnotationValidators)
             {
                 e.EventListeners.PreInsertEventListeners = InsertFirst(e.EventListeners.PreInsertEventListeners, new DataAnnotationsEventListener());
                 e.EventListeners.PreUpdateEventListeners = InsertFirst(e.EventListeners.PreUpdateEventListeners, new DataAnnotationsEventListener());
             }
             if (ShouldExposeConfiguration())
             {
-                exposeConfiguration(e);
+                _exposeConfiguration(e);
             }
         }
 
@@ -278,16 +274,16 @@
         ///     Loads configuration from properties dictionary and from external file if available.
         /// </summary>
         /// <returns></returns>
-        private Configuration LoadExternalConfiguration()
+        Configuration LoadExternalConfiguration()
         {
             var cfg = new Configuration();
-            if (properties != null && properties.Any())
+            if (_properties != null && _properties.Any())
             {
-                cfg.AddProperties(properties);
+                cfg.AddProperties(_properties);
             }
-            if (!string.IsNullOrEmpty(configFile))
+            if (!string.IsNullOrEmpty(_configFile))
             {
-                return cfg.Configure(configFile);
+                return cfg.Configure(_configFile);
             }
             if (File.Exists(DefaultNHibernateConfigFileName))
             {
@@ -296,7 +292,7 @@
             return cfg;
         }
 
-        private static T[] InsertFirst<T>(T[] array, T item)
+        static T[] InsertFirst<T>(T[] array, T item)
         {
             if (array == null)
             {
@@ -308,7 +304,7 @@
             return items.ToArray();
         }
 
-        private static string MakeLoadReadyAssemblyName(string assemblyName)
+        static string MakeLoadReadyAssemblyName(string assemblyName)
         {
             return (assemblyName.IndexOf(".dll", StringComparison.OrdinalIgnoreCase) == -1)
                 ? assemblyName.Trim() + ".dll"

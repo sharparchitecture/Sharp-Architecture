@@ -1,7 +1,7 @@
-namespace Tests.SharpArch.NHibernate.Mappings.Conventions
+namespace SharpArch.NHibernate.FluentNHibernate.Conventions
 {
-    using FluentNHibernate.Conventions;
-    using FluentNHibernate.Conventions.Instances;
+    using global::FluentNHibernate.Conventions;
+    using global::FluentNHibernate.Conventions.Instances;
 
     /// <summary>
     ///     One-to-many convention.
@@ -22,13 +22,13 @@ namespace Tests.SharpArch.NHibernate.Mappings.Conventions
     ///         <item>
     ///             <term>Inverse</term>
     ///         </item>
-    /// <item>
-    /// <term>Foreign Key</term>
-    /// <description>Entity name + Id. E.g. <c>ColorId</c></description>
-    /// </item>
+    ///         <item>
+    ///             <term>Foreign Key</term>
+    ///             <description>Entity name + Id. E.g. <c>ColorId</c></description>
+    ///         </item>
     ///     </list>
     /// </remarks>
-    /// <seealso cref="FluentNHibernate.Conventions.IHasManyConvention" />
+    /// <seealso cref="IHasManyConvention" />
     public class HasManyConvention : IHasManyConvention
     {
         /// <summary>

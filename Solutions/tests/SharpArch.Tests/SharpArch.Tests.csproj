@@ -25,6 +25,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\SharpArch.Domain\SharpArch.Domain.csproj" />
     <ProjectReference Include="..\..\SharpArch.Testing.NUnit\SharpArch.Testing.NUnit.csproj" />
+    <ProjectReference Include="..\..\SharpArch.Testing\SharpArch.Testing.csproj" />
+  </ItemGroup>
+   
+  <ItemGroup>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
 
 </Project>
