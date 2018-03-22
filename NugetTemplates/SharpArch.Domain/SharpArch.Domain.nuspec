@@ -9,7 +9,7 @@
     <iconUrl>https://github.com/sharparchitecture/Sharp-Architecture/raw/master/Artefacts/Documentation/Logo_100x100.png</iconUrl>
     <projectUrl>http://sharparchitecture.github.io/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Provides the core interfaces and classes needed by a Sharp Architecture application. It is persitance ignorant and would be used with other packages that provide persistance support.</description>
+    <description>Provides the core interfaces and classes needed by a Sharp Architecture application. It is persistence ignorant and would be used with other packages that provide persistance support.</description>
     <summary>Architectural foundation for building maintainable applications with Domain Driven Design patterns and practices</summary>
     <language>en-US</language>
     <releaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/release%2F0SemanticVersion)</releaseNotes>
@@ -18,8 +18,7 @@
       <group targetFramework="net462">
         <dependency id="Newtonsoft.Json" version="[9.0.1,10.0)" />
       </group>
-      <group targetFramework="netstandard1.4">
-        <dependency id="NETStandard.Library" version="1.6.1" />
+      <group targetFramework="netstandard2.0">
         <dependency id="System.ComponentModel.Annotations" version="[4.3.0,)" />
         <dependency id="System.Data.Common" version="[4.3.0,)" />
         <dependency id="System.Linq.Queryable" version="[4.3.0,)" />

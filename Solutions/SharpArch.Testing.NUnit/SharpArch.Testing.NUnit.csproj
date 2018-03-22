@@ -37,11 +37,8 @@
    
   <ItemGroup Label="Common references">
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
+    <PackageReference Include="NHibernate" Version="5.1.0" />
     <PackageReference Include="NUnit" Version="3.10.1" />
-  </ItemGroup>
-
-  <ItemGroup Label=".NET Framework specific references" Condition=" '$(TargetFramework)' == 'net462' ">
-    <PackageReference Include="NHibernate" Version="5.0.3" />
   </ItemGroup>
   
   <ItemGroup Label="Common project references">

@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
     <SignAssembly>False</SignAssembly>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup>
-    <ProjectFileName>SharpArch.Nhibernate</ProjectFileName>
+    <ProjectFileName>SharpArch.NHibernate</ProjectFileName>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
@@ -38,10 +38,9 @@
    
   <ItemGroup>
     <PackageReference Include="FluentNHibernate" Version="2.1.0" />
-    <PackageReference Include="Iesi.Collections" Version="4.0.4" />
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
-    <PackageReference Include="NHibernate" Version="5.0.3" />
+    <PackageReference Include="NHibernate" Version="5.1.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
     <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
   </ItemGroup>
