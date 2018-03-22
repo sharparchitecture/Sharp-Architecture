@@ -3,11 +3,11 @@ namespace SharpArch.RavenDb.Contracts.Repositories
     using System;
     using System.Collections.Generic;
     using JetBrains.Annotations;
-    using Raven.Client;
+    using Raven.Client.Documents.Session;
     using SharpArch.Domain.PersistenceSupport;
 
     /// <summary>
-    ///     RavenDB-speficic repository implementation.
+    ///     RavenDB-specific repository implementation.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TIdT">The type of the identifier t.</typeparam>

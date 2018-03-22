@@ -18,7 +18,7 @@
     ///     Creates NHibernate SessionFactory <see cref="ISessionFactory" />
     /// </summary>
     /// <remarks>
-    ///     Transient object, session factory must be redistered as singletone in DI Container.
+    ///     Transient object, session factory must be registered as singleton in DI Container.
     /// </remarks>
     [PublicAPI]
     public class NHibernateSessionFactoryBuilder

@@ -41,21 +41,21 @@ namespace Tests.SharpArch.Domain
 
             var copy = FileCache.RetrieveFromCache<DummyType>(_tempFileName);
             copy.Should().BeOfType<DummyType>();
-            copy.ShouldBeEquivalentTo(original, opt => opt.IncludingProperties());
+            copy.Should().BeEquivalentTo(original, opt => opt.IncludingProperties());
         }
 
         [Test]
         public void Retrieve_ShouldThrow_WhenEmptyPathSpecified()
         {
             Action a = () => FileCache.RetrieveFromCache<DummyType>("");
-            a.ShouldThrow<ArgumentException>();
+            a.Should().Throw<ArgumentException>();
         }
 
         [Test]
         public void Retrieve_ShouldThrow_WhenNullPathSpecified()
         {
             Action a = () => FileCache.RetrieveFromCache<DummyType>(null);
-            a.ShouldThrow<ArgumentException>().Which.ParamName.Should().Be("path");
+            a.Should().Throw<ArgumentException>().Which.ParamName.Should().Be("path");
         }
 
         [Test]
@@ -71,14 +71,14 @@ namespace Tests.SharpArch.Domain
         public void Store_ShouldThrow_WhenTryingToStoreNull()
         {
             Action a = () => FileCache.StoreInCache<DummyType>(null, _tempFileName);
-            a.ShouldThrow<ArgumentNullException>();
+            a.Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Store_ShouldThrow_WhenPathIsEmpty()
         {
             Action a = () => FileCache.StoreInCache(new DummyType(), "");
-            a.ShouldThrow<ArgumentException>();
+            a.Should().Throw<ArgumentException>();
         }
 
         [Test]

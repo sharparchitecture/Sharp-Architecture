@@ -2,6 +2,7 @@ namespace SharpArch.RavenDb
 {
     using JetBrains.Annotations;
     using Raven.Client;
+    using Raven.Client.Documents.Session;
     using SharpArch.Domain.PersistenceSupport;
     using SharpArch.RavenDb.Contracts.Repositories;
 

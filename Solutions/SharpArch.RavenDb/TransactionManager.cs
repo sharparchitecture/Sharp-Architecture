@@ -4,7 +4,7 @@ namespace SharpArch.RavenDb
     using System.Runtime.CompilerServices;
     using System.Transactions;
     using JetBrains.Annotations;
-    using Raven.Client;
+    using Raven.Client.Documents.Session;
     using SharpArch.Domain.PersistenceSupport;
     using IsolationLevel = System.Data.IsolationLevel;
 
@@ -18,9 +18,9 @@ namespace SharpArch.RavenDb
     [PublicAPI]
     public class TransactionManager : ITransactionManager
     {
-        private readonly IDocumentSession session;
+        [NotNull] readonly IDocumentSession _session;
 
-        private TransactionScope transaction;
+        [CanBeNull] TransactionScope _transaction;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="TransactionManager" /> class.
@@ -28,10 +28,7 @@ namespace SharpArch.RavenDb
         /// <param name="session">The document session.</param>
         public TransactionManager([NotNull] IDocumentSession session)
         {
-            if (session == null)
-                throw new ArgumentNullException(nameof(session));
-
-            this.session = session;
+            _session = session ?? throw new ArgumentNullException(nameof(session));
         }
 
         /// <summary>
@@ -45,8 +42,8 @@ namespace SharpArch.RavenDb
         /// <returns>The transaction instance.</returns>
         public IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
-            return this.transaction ??
-                (this.transaction = new TransactionScope(TransactionScopeOption.Required,
+            return _transaction ??
+                (_transaction = new TransactionScope(TransactionScopeOption.Required,
                     new TransactionOptions {IsolationLevel = MapIsolationLevel(isolationLevel)}));
         }
 
@@ -56,11 +53,11 @@ namespace SharpArch.RavenDb
         /// </summary>
         public void CommitTransaction()
         {
-            if (this.transaction == null)
+            if (_transaction == null)
                 throw new InvalidOperationException("Transaction was not start, make sure there is matching BeginTransaction() call.");
-            this.session.SaveChanges();
-            this.transaction.Complete();
-            this.ClearTransaction();
+            _session.SaveChanges();
+            _transaction.Complete();
+            ClearTransaction();
         }
 
         /// <summary>
@@ -68,12 +65,12 @@ namespace SharpArch.RavenDb
         /// </summary>
         public void RollbackTransaction()
         {
-            this.ClearTransaction();
+            ClearTransaction();
         }
 
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static System.Transactions.IsolationLevel MapIsolationLevel(IsolationLevel isolationLevel)
+        static System.Transactions.IsolationLevel MapIsolationLevel(IsolationLevel isolationLevel)
         {
             switch (isolationLevel)
             {
@@ -96,10 +93,10 @@ namespace SharpArch.RavenDb
             }
         }
 
-        private void ClearTransaction()
+        void ClearTransaction()
         {
-            this.transaction?.Dispose();
-            this.transaction = null;
+            _transaction?.Dispose();
+            _transaction = null;
         }
     }
 }
