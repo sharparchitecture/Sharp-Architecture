@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>SharpArch.Testing.NUnit</id>
-    <version></version>
+    <version>$(SemanticVersion)</version>
     <authors>Sharp Architecture Dev Team</authors>
     <owners>Sharp Architecture Dev Team</owners>
     <licenseUrl>https://github.com/sharparchitecture/Sharp-Architecture/blob/master/License.txt</licenseUrl>
@@ -16,6 +16,7 @@
     <tags>sharp-architecture</tags>
     <dependencies>
       <dependency id="SharpArch.Domain" version="[$(SemanticVersion),$(NextMajorRelease))" />
+      <dependency id="SharpArch.Testing" version="[$(SemanticVersion),$(NextMajorRelease))" />
       <dependency id="SharpArch.NHibernate" version="[$(SemanticVersion),$(NextMajorRelease))" />
       <dependency id="NHibernate" version="[4.0.4.4000,5.0.0.0)" />
       <dependency id="NUnit" version="[3.5.0,4.0.0)" />
