@@ -1,5 +1,4 @@
-﻿#if NETFULL
-namespace SharpArch.Testing.NUnit.NHibernate
+﻿namespace SharpArch.Testing.NUnit.NHibernate
 {
     using System;
     using System.Diagnostics;
@@ -184,5 +183,3 @@ namespace SharpArch.Testing.NUnit.NHibernate
         }
     }
 }
-
-#endif

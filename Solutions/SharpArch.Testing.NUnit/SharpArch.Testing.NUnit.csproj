@@ -44,9 +44,6 @@
   <ItemGroup Label="Common project references">
     <ProjectReference Include="..\SharpArch.Domain\SharpArch.Domain.csproj" />
     <ProjectReference Include="..\SharpArch.Testing\SharpArch.Testing.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Label=".NET Framework specific references" Condition=" '$(TargetFramework)' == 'net462' ">
     <ProjectReference Include="..\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
   </ItemGroup>
 

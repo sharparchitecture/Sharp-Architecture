@@ -1,6 +1,4 @@
-﻿#if NETFULL
-
-namespace SharpArch.Testing.NUnit.NHibernate
+﻿namespace SharpArch.Testing.NUnit.NHibernate
 {
     using System;
     using global::NHibernate;
@@ -93,5 +91,3 @@ namespace SharpArch.Testing.NUnit.NHibernate
         }
     }
 }
-
-#endif

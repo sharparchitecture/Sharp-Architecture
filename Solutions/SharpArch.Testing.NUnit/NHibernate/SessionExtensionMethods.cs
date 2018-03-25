@@ -1,4 +1,3 @@
-#if NETFULL
 namespace SharpArch.Testing.NUnit.NHibernate
 {
     using System;
@@ -30,5 +29,3 @@ namespace SharpArch.Testing.NUnit.NHibernate
         }
     }
 }
-
-#endif
