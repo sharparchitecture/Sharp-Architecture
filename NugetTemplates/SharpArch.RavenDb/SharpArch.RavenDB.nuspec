@@ -2,6 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>SharpArch.RavenDB</id>
+    <minClientVersion>3.0</minClientVersion>
     <version>$(SemanticVersion)</version>
     <authors>Sharp Architecture Dev Team</authors>
     <owners>Sharp Architecture Dev Team</owners>
@@ -12,11 +13,11 @@
     <description>Provides RavenDB persistance support for a Sharp Architecture application, providing implementations of core SharpArch data access interfaces.</description>
     <summary>Architectural foundation for building maintainable applications with Domain Driven Design patterns and practices</summary>
     <language>en-US</language>
-    <releaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/release%2F0SemanticVersion)</releaseNotes>
+    <releaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/release/$(SemanticVersion)</releaseNotes>
     <tags>sharp-architecture</tags>
     <dependencies>
-      <dependency id="RavenDB.Client" version="[3.5.1,4.0.0)" />
       <dependency id="SharpArch.Domain" version="[$(SemanticVersion),$(NextMajorRelease))" />
+      <dependency id="RavenDB.Client" version="[4.0.2,5.0.0)" />
     </dependencies>
   </metadata>
 </package>

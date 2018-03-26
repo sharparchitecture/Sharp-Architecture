@@ -2,6 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>SharpArch.Testing.NUnit</id>
+    <minClientVersion>3.0</minClientVersion>
     <version>$(SemanticVersion)</version>
     <authors>Sharp Architecture Dev Team</authors>
     <owners>Sharp Architecture Dev Team</owners>
@@ -12,14 +13,13 @@
     <description>Provides base classes to help with testing applications written with Sharp Architecture and extension methods that improve the syntax of NUnit assertions.</description>
     <summary>Architectural foundation for building maintainable applications with Domain Driven Design patterns and practices</summary>
     <language>en-US</language>
-    <releaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/release%2F0SemanticVersion)</releaseNotes>
+    <releaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/release/$(SemanticVersion)</releaseNotes>
     <tags>sharp-architecture</tags>
     <dependencies>
       <dependency id="SharpArch.Domain" version="[$(SemanticVersion),$(NextMajorRelease))" />
-      <dependency id="SharpArch.Testing" version="[$(SemanticVersion),$(NextMajorRelease))" />
       <dependency id="SharpArch.NHibernate" version="[$(SemanticVersion),$(NextMajorRelease))" />
-      <dependency id="NHibernate" version="[4.0.4.4000,5.0.0.0)" />
-      <dependency id="NUnit" version="[3.5.0,4.0.0)" />
+      <dependency id="SharpArch.Testing" version="[$(SemanticVersion),$(NextMajorRelease))" />
+      <dependency id="NUnit" version="[3.10.1,4.0.0)" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.ServiceModel" targetFramework="net462" />

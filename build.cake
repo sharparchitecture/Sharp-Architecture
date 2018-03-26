@@ -47,6 +47,7 @@ GitVersion semVersion = GitVersion();
 var nugetVersion = semVersion.NuGetVersion;
 var buildVersion = semVersion.FullBuildMetaData;
 var informationalVersion = semVersion.InformationalVersion;
+var nextMajorRelease = $"{semVersion.Major+1}.0.0";
 
 // SETUP / TEARDOWN
 
@@ -55,8 +56,11 @@ var artifactDirectory = "./Drops/";
 var testCoverageOutputFile = artifactDirectory + "OpenCover.xml";
 var codeInspectionsOutputFile = artifactDirectory + "Inspections/CodeInspections.xml";
 var duplicateFinderOutputFile = artifactDirectory + "Inspections/CodeDuplicates.xml";
-var solutionFile = "./Solutions/SharpArch.sln";
+var solutionsFolder = "./Solutions/";
+var solutionFile = solutionsFolder + "/SharpArch.sln";
 var nunitTestResults = artifactDirectory + "Nunit3TestResults.xml";
+var nugetTemplates = "./NugetTemplates/";
+var nugetTemp = artifactDirectory + "Packages/";
 
 Setup((context) =>
 {
@@ -211,6 +215,26 @@ Task("InspectCode")
         );
     });
 
+
+Task("CreateNugetPackages")
+    .Does(() => {
+        // copy templates to temp folder
+        CopyDirectory(nugetTemplates, nugetTemp);
+        // update templates
+        ReplaceTextInFiles(nugetTemp+"**/*.nuspec", "$(SemanticVersion)", nugetVersion);
+        ReplaceTextInFiles(nugetTemp+"**/*.nuspec", "$(NextMajorRelease)", nextMajorRelease);
+        // todo: filter and copy binaries to lib/folder
+        var files = GetFiles(solutionsFolder + "SharpArch.Domain/bin/Release/**/SharpArch.Domain.*");
+        foreach (var file in files) {
+            Information("File: {0}", file);
+        }
+    });
+
+Task("PublishNugetPackages")
+    .IsDependentOn("CreateNugetPackages")
+    .Does(() => {
+
+    });
 
 Task("Default")
     .IsDependentOn("UpdateAppVeyorBuildNumber")

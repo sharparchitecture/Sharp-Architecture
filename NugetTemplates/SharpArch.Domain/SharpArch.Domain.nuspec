@@ -2,6 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>SharpArch.Domain</id>
+    <minClientVersion>3.0</minClientVersion>
     <version>$(SemanticVersion)</version>
     <authors>Sharp Architecture Dev Team</authors>
     <owners>Sharp Architecture Dev Team</owners>
@@ -12,22 +13,16 @@
     <description>Provides the core interfaces and classes needed by a Sharp Architecture application. It is persistence ignorant and would be used with other packages that provide persistance support.</description>
     <summary>Architectural foundation for building maintainable applications with Domain Driven Design patterns and practices</summary>
     <language>en-US</language>
-    <releaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/release%2F0SemanticVersion)</releaseNotes>
+    <releaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/release/$(SemanticVersion)</releaseNotes>
     <tags>sharp-architecture</tags>
     <dependencies>
       <group targetFramework="net462">
-        <dependency id="Newtonsoft.Json" version="[9.0.1,10.0)" />
+        <dependency id="Newtonsoft.Json" version="[11.0.1,12.0.0)" />
       </group>
       <group targetFramework="netstandard2.0">
-        <dependency id="System.ComponentModel.Annotations" version="[4.3.0,)" />
-        <dependency id="System.Data.Common" version="[4.3.0,)" />
-        <dependency id="System.Linq.Queryable" version="[4.3.0,)" />
-        <dependency id="System.Reflection" version="[4.3.0,)" />
-        <dependency id="System.Reflection.Extensions" version="[4.3.0,)" />
-        <dependency id="System.Reflection.TypeExtensions" version="[4.3.0,)" />
-        <dependency id="System.Runtime.Serialization.Formatters" version="[4.3.0,)" />
-        <dependency id="System.Xml.XmlSerializer" version="[4.3.0,)" />
-        <dependency id="Newtonsoft.Json" version="[9.0.1,10.0)" />
+        <dependency id="Newtonsoft.Json" version="[11.0.1,12.0)" />
+        <dependency id="System.ComponentModel.Annotations" version="[4.4.1,5.0.0)" />
+        <dependency id="System.Runtime.Serialization.Formatters" version="[4.3.0,5.0.0)" />
       </group>
     </dependencies>
     <frameworkAssemblies>
