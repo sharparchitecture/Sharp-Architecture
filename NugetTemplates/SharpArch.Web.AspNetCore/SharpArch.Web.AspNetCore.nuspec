@@ -3,7 +3,6 @@
   <metadata>
     <id>SharpArch.Web.AspNetCore</id>
     <version></version>
-    <minClientVersion>3.0</minClientVersion>
     <authors>Sharp Architecture Dev Team</authors>
     <owners>Sharp Architecture Dev Team</owners>
     <licenseUrl>https://github.com/sharparchitecture/Sharp-Architecture/blob/master/License.txt</licenseUrl>

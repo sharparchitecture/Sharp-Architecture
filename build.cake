@@ -52,15 +52,15 @@ var nextMajorRelease = $"{semVersion.Major+1}.0.0";
 // SETUP / TEARDOWN
 
 // Artifacts
-var artifactDirectory = "./Drops/";
-var testCoverageOutputFile = artifactDirectory + "OpenCover.xml";
-var codeInspectionsOutputFile = artifactDirectory + "Inspections/CodeInspections.xml";
-var duplicateFinderOutputFile = artifactDirectory + "Inspections/CodeDuplicates.xml";
-var solutionsFolder = "./Solutions/";
+var artifactDirectory = "./Drops";
+var testCoverageOutputFile = artifactDirectory + "/OpenCover.xml";
+var codeInspectionsOutputFile = artifactDirectory + "/Inspections/CodeInspections.xml";
+var duplicateFinderOutputFile = artifactDirectory + "/Inspections/CodeDuplicates.xml";
+var solutionsFolder = "./Solutions";
 var solutionFile = solutionsFolder + "/SharpArch.sln";
-var nunitTestResults = artifactDirectory + "Nunit3TestResults.xml";
-var nugetTemplates = "./NugetTemplates/";
-var nugetTemp = artifactDirectory + "Packages/";
+var nunitTestResults = artifactDirectory + "/Nunit3TestResults.xml";
+var nugetTemplates = "./NugetTemplates";
+var nugetTemp = artifactDirectory + "/Packages";
 
 Setup((context) =>
 {
@@ -221,18 +221,31 @@ Task("CreateNugetPackages")
         // copy templates to temp folder
         CopyDirectory(nugetTemplates, nugetTemp);
         // update templates
-        ReplaceTextInFiles(nugetTemp+"**/*.nuspec", "$(SemanticVersion)", nugetVersion);
-        ReplaceTextInFiles(nugetTemp+"**/*.nuspec", "$(NextMajorRelease)", nextMajorRelease);
+        ReplaceTextInFiles(nugetTemp+"/**/*.nuspec", "$(SemanticVersion)", nugetVersion);
+        ReplaceTextInFiles(nugetTemp+"/**/*.nuspec", "$(NextMajorRelease)", nextMajorRelease);
 
-        var basePath = Directory(solutionsFolder + "SharpArch.Domain/bin/Release/");
-        Information("BasePath: {0}", basePath);
-        Func<IFileSystemInfo, bool> filter =
-            fileSystemInfo => !fileSystemInfo.Path.FullPath.EndsWith(
-            ".deps.json", StringComparison.OrdinalIgnoreCase);
+        var assemblyName = "SharpArch.Domain";
+
+        Func<string, string, string> removeBasePath = (path, basePath) => {
+            var endOfBase = path.IndexOf(basePath);
+            if (endOfBase < 0)
+                return path; // base not found
+            endOfBase += basePath.Length;
+            return path.Substring(endOfBase);
+        };
+
         // todo: filter and copy binaries to lib/folder
-        var files = GetFiles(solutionsFolder + "SharpArch.Domain/bin/Release/**/SharpArch.Domain.*", filter);
-        foreach (var file in files) {
-            Information("File: {0}", file);
+        var files = GetFiles($"{solutionsFolder}/{assemblyName}/bin/Release/**/SharpArch.Domain.*");
+        var filePathes = files.Where(f=> !f.FullPath.EndsWith(".deps.json", StringComparison.OrdinalIgnoreCase))
+            .Select(filePath => removeBasePath(filePath.FullPath, $"{assemblyName}/bin/Release/"));
+
+        foreach (var file in filePathes) {
+            var srcFile = $"{solutionsFolder}/{assemblyName}/bin/Release/{file}";
+            var dstFile = $"{nugetTemp}/SharpArch.Domain/lib/{file}";
+            //Information("Copy: {0} to {1}", sr);
+            var directory = new FilePath(file).GetDirectory();
+            CreateDirectory($"{nugetTemp}/SharpArch.Domain/lib/{directory}");
+            CopyFile(srcFile, dstFile);
         }
     });
 
