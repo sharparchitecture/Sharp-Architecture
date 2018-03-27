@@ -223,8 +223,14 @@ Task("CreateNugetPackages")
         // update templates
         ReplaceTextInFiles(nugetTemp+"**/*.nuspec", "$(SemanticVersion)", nugetVersion);
         ReplaceTextInFiles(nugetTemp+"**/*.nuspec", "$(NextMajorRelease)", nextMajorRelease);
+
+        var basePath = Directory(solutionsFolder + "SharpArch.Domain/bin/Release/");
+        Information("BasePath: {0}", basePath);
+        Func<IFileSystemInfo, bool> filter =
+            fileSystemInfo => !fileSystemInfo.Path.FullPath.EndsWith(
+            ".deps.json", StringComparison.OrdinalIgnoreCase);
         // todo: filter and copy binaries to lib/folder
-        var files = GetFiles(solutionsFolder + "SharpArch.Domain/bin/Release/**/SharpArch.Domain.*");
+        var files = GetFiles(solutionsFolder + "SharpArch.Domain/bin/Release/**/SharpArch.Domain.*", filter);
         foreach (var file in files) {
             Information("File: {0}", file);
         }
