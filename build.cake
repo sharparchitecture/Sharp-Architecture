@@ -42,6 +42,9 @@ var isReleaseBranch = StringComparer.OrdinalIgnoreCase.Equals("master", AppVeyor
 var isTagged = AppVeyor.Environment.Repository.Tag.IsTag;
 var appVeyorJobId = AppVeyor.Environment.JobId;
 
+// Solution settings
+// Nuget packages to build
+var nugetPackages = new [] {"SharpArch.Domain", "SharpArch.NHibernate", "SharpArch.RavedDb", "SharpArch.Testing", "SharpArch.Testing.NUnit", "SharpArch.Web.AspNetCore" };
 
 GitVersion semVersion = GitVersion();
 var nugetVersion = semVersion.NuGetVersion;
@@ -224,8 +227,6 @@ Task("CreateNugetPackages")
         ReplaceTextInFiles(nugetTemp+"/**/*.nuspec", "$(SemanticVersion)", nugetVersion);
         ReplaceTextInFiles(nugetTemp+"/**/*.nuspec", "$(NextMajorRelease)", nextMajorRelease);
 
-        var assemblyName = "SharpArch.Domain";
-
         Func<string, string, string> removeBasePath = (path, basePath) => {
             var endOfBase = path.IndexOf(basePath);
             if (endOfBase < 0)
@@ -234,19 +235,37 @@ Task("CreateNugetPackages")
             return path.Substring(endOfBase);
         };
 
-        // todo: filter and copy binaries to lib/folder
-        var files = GetFiles($"{solutionsFolder}/{assemblyName}/bin/Release/**/SharpArch.Domain.*");
-        var filePathes = files.Where(f=> !f.FullPath.EndsWith(".deps.json", StringComparison.OrdinalIgnoreCase))
-            .Select(filePath => removeBasePath(filePath.FullPath, $"{assemblyName}/bin/Release/"));
+        Action<string> buildPackage = (string projectName) => {
+            Information("Creating package {0}", projectName);
+            var files = GetFiles($"{solutionsFolder}/{projectName}/bin/Release/**/{projectName}.*");
+            var filePathes = files.Where(f=> !f.FullPath.EndsWith(".deps.json", StringComparison.OrdinalIgnoreCase))
+                .Select(filePath => removeBasePath(filePath.FullPath, $"{projectName}/bin/Release/"));
+            
+            // create folders
+            foreach(var frameworkLib in filePathes.Select(fp => new FilePath(fp).GetDirectory().FullPath).Distinct()) {
+                Information("Creating folder: {0}", frameworkLib);
+                CreateDirectory($"{nugetTemp}/{projectName}/lib/{frameworkLib}");
+            };
 
-        foreach (var file in filePathes) {
-            var srcFile = $"{solutionsFolder}/{assemblyName}/bin/Release/{file}";
-            var dstFile = $"{nugetTemp}/SharpArch.Domain/lib/{file}";
-            //Information("Copy: {0} to {1}", sr);
-            var directory = new FilePath(file).GetDirectory();
-            CreateDirectory($"{nugetTemp}/SharpArch.Domain/lib/{directory}");
-            CopyFile(srcFile, dstFile);
-        }
+            foreach (var file in filePathes) {
+                var srcFile = $"{solutionsFolder}/{projectName}/bin/Release/{file}";
+                var dstFile = $"{nugetTemp}/{projectName}/lib/{file}";
+                //Information("Copy: {0} to {1}", sr);
+                CopyFile(srcFile, dstFile);
+            };
+
+            StartProcess("nuget.exe", new ProcessSettings {
+                WorkingDirectory = $"{nugetTemp}/{projectName}",
+                Arguments = "pack -OutputDirectory .."
+            });
+            // NuGetPack(new NuGetPackSettings {
+            //     Id = projectName,
+            //     BasePath = $"{nugetTemp}/{projectName}",
+            //     OutputDirectory = "./.."
+            // });
+        };
+
+        buildPackage("SharpArch.Domain");
     });
 
 Task("PublishNugetPackages")
