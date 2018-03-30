@@ -286,3 +286,5 @@ Common/AssemblyVersion.cs
 Artefacts/Documentation/build/
 /ReleaseNotes.md
 /ResharperCaches
+/DropsErrorOutput.xml
+/DropsTestOutput.xml
