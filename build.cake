@@ -44,7 +44,14 @@ var appVeyorJobId = AppVeyor.Environment.JobId;
 
 // Solution settings
 // Nuget packages to build
-var nugetPackages = new [] {"SharpArch.Domain", "SharpArch.NHibernate", "SharpArch.RavedDb", "SharpArch.Testing", "SharpArch.Testing.NUnit", "SharpArch.Web.AspNetCore" };
+var nugetPackages = new [] {
+    "SharpArch.Domain",
+    "SharpArch.NHibernate",
+    "SharpArch.RavenDb",
+    "SharpArch.Testing",
+    "SharpArch.Web.AspNetCore",
+    "SharpArch.Testing.NUnit" 
+};
 
 GitVersion semVersion = GitVersion();
 var nugetVersion = semVersion.NuGetVersion;
@@ -69,6 +76,7 @@ Setup((context) =>
 {
     Information("Building SharpArchitecture, version {0} (isTagged: {1}, isLocal: {2})...", nugetVersion, isTagged, local);
     CreateDirectory(artifactDirectory);
+    CleanDirectory(artifactDirectory);
 });
 
 Teardown((context) =>
@@ -181,7 +189,7 @@ Task("UploadTestResults")
 
 
 Task("RunUnitTests")
-//    .IsDependentOn("Build")
+    .IsDependentOn("Build")
     .IsDependentOn("RunTests")
     .IsDependentOn("GenerateCoverageReport")
     .IsDependentOn("UploadTestResults")
@@ -243,29 +251,26 @@ Task("CreateNugetPackages")
             
             // create folders
             foreach(var frameworkLib in filePathes.Select(fp => new FilePath(fp).GetDirectory().FullPath).Distinct()) {
-                Information("Creating folder: {0}", frameworkLib);
                 CreateDirectory($"{nugetTemp}/{projectName}/lib/{frameworkLib}");
             };
 
             foreach (var file in filePathes) {
                 var srcFile = $"{solutionsFolder}/{projectName}/bin/Release/{file}";
                 var dstFile = $"{nugetTemp}/{projectName}/lib/{file}";
-                //Information("Copy: {0} to {1}", sr);
                 CopyFile(srcFile, dstFile);
             };
 
-            StartProcess("nuget.exe", new ProcessSettings {
+            var exitCode = StartProcess("nuget.exe", new ProcessSettings {
                 WorkingDirectory = $"{nugetTemp}/{projectName}",
                 Arguments = "pack -OutputDirectory .."
             });
-            // NuGetPack(new NuGetPackSettings {
-            //     Id = projectName,
-            //     BasePath = $"{nugetTemp}/{projectName}",
-            //     OutputDirectory = "./.."
-            // });
+            if (exitCode != 0)
+                throw new Exception($"Build package {projectName} failed with code {1}.");
         };
 
-        buildPackage("SharpArch.Domain");
+        foreach(var projectName in nugetPackages) {
+            buildPackage(projectName);
+        };
     });
 
 Task("PublishNugetPackages")
@@ -279,6 +284,7 @@ Task("Default")
     .IsDependentOn("Build")
     .IsDependentOn("RunUnitTests")
     .IsDependentOn("InspectCode")
+    .IsDependentOn("CreateNugetPackages")
     .Does(
         () => {}
     );
