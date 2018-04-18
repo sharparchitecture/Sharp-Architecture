@@ -16,8 +16,8 @@
     <tags>sharp-architecture</tags>
     <dependencies>
       <dependency id="SharpArch.Domain" version="[$(SemanticVersion),$(NextMajorRelease))" />
-      <dependency id="FluentNhibernate" version="[2.1.0,3.0.0)" />
-      <dependency id="NHibernate" version="[5.1.0,6.0.0)" />
+      <dependency id="FluentNhibernate" version="[2.1.2,3.0.0)" />
+      <dependency id="NHibernate" version="[5.1.1,6.0.0)" />
     </dependencies>
   </metadata>
 </package>

@@ -71,7 +71,8 @@
         /// <remarks>
         /// <para>
         /// Any changes made to configuration object <b>will not be persisted</b> in configuration cache.
-        /// This can be useful to make dynamic changes to configuration or in case changes cannot be serialized (e.g. event listeners are not marked with <see cref="SerializableAttribute"/>.
+        /// This can be useful to make dynamic changes to configuration or in case changes cannot be serialized
+        /// (e.g. event listeners are not marked with <see cref="SerializableAttribute"/>.
         /// </para>
         /// <para>
         /// To make persistent changes use <seealso cref="ExposeConfiguration"/>.
