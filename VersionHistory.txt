@@ -1,4 +1,15 @@
 ========================
+S#arp 5.0
+========================
+
+BREAKING CHANGES:
+* [BREAKING] NetStandard2.0 support.
+* [BREAKING] Removed Castle.Windsor integration for ASP.NET.
+* [BREAKING] SharpArch.Testing extracted from SharpArch.Testing.NUnit.
+
+
+
+========================
 S#arp 4.0
 ========================
  

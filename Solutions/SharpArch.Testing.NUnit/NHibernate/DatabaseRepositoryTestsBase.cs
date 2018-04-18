@@ -1,5 +1,6 @@
 ﻿namespace SharpArch.Testing.NUnit.NHibernate
 {
+    using System;
     using global::NHibernate;
     using global::NHibernate.Cfg;
     using global::NUnit.Framework;
@@ -12,7 +13,7 @@
     ///     database.  If, alternatively, you'd prefer to use an in-memory database such as SqlLite,
     ///     then use <see cref="RepositoryTestsBase" /> or <see cref="RepositoryBehaviorSpecificationTestsBase" />
     ///     as your base class.
-    ///     As the preferred mechanism is for in-memory unit testsing, this class is provided mainly
+    ///     As the preferred mechanism is for in-memory unit testing, this class is provided mainly
     ///     for backward compatibility.
     /// </summary>
     /// <remarks>
@@ -21,51 +22,57 @@
     [PublicAPI]
     public abstract class DatabaseRepositoryTestsBase
     {
+        protected internal static TestDatabaseInitializer _initializer;
+
         /// <summary>
-        /// Returns current NHibernate session.
+        ///     Returns current NHibernate session.
         /// </summary>
         protected ISession Session { get; private set; }
 
-        TestDatabaseInitializer initializer;
+        /// <summary>
+        ///     Additional assemblies to look for mappings,
+        /// </summary>
+        internal static string MappingAssemblyNames { get; set; }
 
 
         /// <summary>
-        /// Creates NHibernate <see cref="ISessionFactory"/>.
+        ///     Creates NHibernate <see cref="ISessionFactory" />.
         /// </summary>
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            initializer = new TestDatabaseInitializer(TestContext.CurrentContext.TestDirectory);
-            UpdateConfiguration(initializer.GetConfiguration());
+            if (_initializer == null)
+                throw new InvalidOperationException($"{nameof(_initializer)} is not set.");
+            UpdateConfiguration(_initializer.GetConfiguration());
         }
 
         /// <summary>
-        /// Can be used to override Session Factory settings.
+        ///     Can be used to override Session Factory settings.
         /// </summary>
         /// <param name="configuration"></param>
         protected virtual void UpdateConfiguration([NotNull] Configuration configuration)
-        {
-        }
+        { }
 
         /// <summary>
-        /// Creates new <see cref="ISession"/>.
+        ///     Creates new <see cref="ISession" />.
         /// </summary>
         [SetUp]
         public virtual void SetUp()
         {
-            Session = initializer.GetSessionFactory().OpenSession();
+            if (_initializer == null)
+                throw new InvalidOperationException($"{nameof(_initializer)} is not set.");
+            Session = _initializer.GetSessionFactory().OpenSession();
             Session.BeginTransaction();
         }
 
 
         /// <summary>
-        /// Rollbacks active transaction and closes <see cref="ISession"/>.
+        ///     Rollbacks active transaction and closes <see cref="ISession" />.
         /// </summary>
         [TearDown]
         public virtual void TearDown()
         {
-            if (Session != null)
-            {
+            if (Session != null) {
                 if (Session.Transaction.IsActive)
                     Session.Transaction.Rollback();
                 Session.Dispose();
@@ -74,13 +81,13 @@
         }
 
         /// <summary>
-        /// Disposes <see cref="ISessionFactory"/>.
+        ///     Disposes <see cref="ISessionFactory" />.
         /// </summary>
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            initializer?.Dispose();
-            initializer = null;
+            _initializer?.Dispose();
+            _initializer = null;
         }
     }
 }

@@ -7,6 +7,7 @@
     using System.Reflection;
 
     using global::NHibernate.Cfg;
+    using global::NHibernate.UserTypes;
     using JetBrains.Annotations;
     using SharpArch.Domain;
 
@@ -14,9 +15,9 @@
     /// File cache implementation of INHibernateConfigurationCache.  Saves and loads a
     /// seralized version of <see cref="Configuration"/> to a temporary file location.
     /// </summary>
-    /// <remarks>Seralizing a <see cref="Configuration"/> object requires that all components
+    /// <remarks>Serializing a <see cref="Configuration"/> object requires that all components
     /// that make up the Configuration object be Serializable.  This includes any custom NHibernate 
-    /// user types implementing <see cref="NHibernate.UserTypes.IUserType"/>.</remarks>
+    /// user types implementing <see cref="IUserType"/>.</remarks>
     [PublicAPI]
     public class NHibernateConfigurationFileCache : INHibernateConfigurationCache
     {

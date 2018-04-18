@@ -2,7 +2,8 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-
+    using System.Threading;
+    using System.Threading.Tasks;
     using global::NHibernate.Event;
 
     using Domain.DomainModel;
@@ -14,6 +15,8 @@
     [Serializable]
     internal class DataAnnotationsEventListener : IPreUpdateEventListener, IPreInsertEventListener
     {
+        private static readonly Task<bool> False = Task.FromResult(false);
+
         class SessionProvider : IServiceProvider
         {
             private readonly ISession session;
@@ -33,6 +36,12 @@
             }
         }
 
+        public Task<bool> OnPreUpdateAsync(PreUpdateEvent @event, CancellationToken cancellationToken)
+        {
+            OnPreUpdate(@event);
+            return False;
+        }
+
         public bool OnPreUpdate(PreUpdateEvent @event)
         {
             if (@event.Entity is ValidatableObject)
@@ -46,6 +55,12 @@
         private static ValidationContext CreateValidationContext(IDatabaseEventArgs @event, object entity)
         {
             return new ValidationContext(entity, new SessionProvider(@event.Session), null);
+        }
+
+        public Task<bool> OnPreInsertAsync(PreInsertEvent @event, CancellationToken cancellationToken)
+        {
+            OnPreInsert(@event);
+            return False;
         }
 
         public bool OnPreInsert(PreInsertEvent @event)

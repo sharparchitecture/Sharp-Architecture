@@ -4,8 +4,8 @@ namespace SharpArch.RavenDb
     using System.Collections.Generic;
     using System.Linq;
     using JetBrains.Annotations;
-    using Raven.Abstractions.Commands;
-    using Raven.Client;
+    using Raven.Client.Documents.Commands.Batches;
+    using Raven.Client.Documents.Session;
     using SharpArch.Domain.PersistenceSupport;
     using SharpArch.Domain.Specifications;
     using SharpArch.RavenDb.Contracts.Repositories;
@@ -26,10 +26,10 @@ namespace SharpArch.RavenDb
         /// Initializes a new instance of the <see cref="RavenDbRepositoryWithTypedId{T, TIdT}"/> class.
         /// </summary>
         /// <param name="session">The session.</param>
-        public RavenDbRepositoryWithTypedId(IDocumentSession session)
+        public RavenDbRepositoryWithTypedId([NotNull] IDocumentSession session)
         {
-            this.Session = session;
-            this.TransactionManager = new TransactionManager(session);
+            Session = session;
+            TransactionManager = new TransactionManager(session);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace SharpArch.RavenDb
         /// </returns>
         public T FindOne(TIdT id)
         {
-            return this.Get(id);
+            return Get(id);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace SharpArch.RavenDb
         /// </returns>
         public T FindOne(ILinqSpecification<T> specification)
         {
-            return specification.SatisfyingElementsFrom(this.FindAll()).SingleOrDefault();
+            return specification.SatisfyingElementsFrom(FindAll()).SingleOrDefault();
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace SharpArch.RavenDb
         /// </returns>
         public IQueryable<T> FindAll()
         {
-            return this.Session.Query<T>();
+            return Session.Query<T>();
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace SharpArch.RavenDb
         /// </returns>
         public IQueryable<T> FindAll(ILinqSpecification<T> specification)
         {
-            return specification.SatisfyingElementsFrom(this.FindAll());
+            return specification.SatisfyingElementsFrom(FindAll());
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace SharpArch.RavenDb
         /// </returns>
         public IEnumerable<T> FindAll(Func<T, bool> where)
         {
-            return this.FindAll().Where(where);
+            return FindAll().Where(where);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace SharpArch.RavenDb
         /// <exception cref="System.InvalidOperationException">The query returned more than one result. Please refine your query.</exception>
         public T FindOne(Func<T, bool> where)
         {
-            IEnumerable<T> foundList = this.FindAll(where);
+            IEnumerable<T> foundList = FindAll(where);
 
             try
             {
@@ -135,7 +135,7 @@ namespace SharpArch.RavenDb
         /// </returns>
         public T First(Func<T, bool> where)
         {
-            return this.FindAll(where).First(where);
+            return FindAll(where).First(where);
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace SharpArch.RavenDb
         /// <param name="entity"></param>
         public void Delete(T entity)
         {
-            this.Session.Delete(entity);
+            Session.Delete(entity);
         }
 
         /// <summary>
@@ -155,11 +155,11 @@ namespace SharpArch.RavenDb
         {
             if (id is ValueType)
             {
-                this.Delete(this.Get(id));
+                Delete(Get(id));
             }
             else
             {
-                this.Session.Advanced.Defer(new DeleteCommandData {Key = id.ToString()});
+                Session.Advanced.Defer(new DeleteCommandData(id.ToString(), changeVector: null));
             }
         }
 
@@ -170,7 +170,7 @@ namespace SharpArch.RavenDb
         /// <returns>Stored document.</returns>
         public T Save(T entity)
         {
-            return this.SaveOrUpdate(entity);
+            return SaveOrUpdate(entity);
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace SharpArch.RavenDb
         /// <param name="entity"></param>
         public void Evict(T entity)
         {
-            this.Session.Advanced.Evict(entity);
+            Session.Advanced.Evict(entity);
         }
 
         /// <summary>
@@ -193,12 +193,7 @@ namespace SharpArch.RavenDb
         /// </remarks>
         public T Get(TIdT id)
         {
-            if (id is ValueType)
-            {
-                return this.Session.Load<T>(id as ValueType);
-            }
-
-            return this.Session.Load<T>(id.ToString());
+            return Session.Load<T>(id.ToString());
         }
 
         /// <summary>
@@ -207,7 +202,7 @@ namespace SharpArch.RavenDb
         /// <returns></returns>
         public IList<T> GetAll()
         {
-            return this.FindAll().ToList();
+            return FindAll().ToList();
         }
 
         /// <summary>
@@ -219,7 +214,7 @@ namespace SharpArch.RavenDb
         /// </returns>
         public IList<T> GetAll(IEnumerable<TIdT> ids)
         {
-            return this.Session.Load<T>(ids.Select(p => p.ToString()));
+            return Session.Load<T>(ids.Select(p => p.ToString())).Select(kvp => kvp.Value).ToList();
         }
 
         /// <summary>
@@ -240,7 +235,7 @@ namespace SharpArch.RavenDb
         /// </remarks>
         public T SaveOrUpdate(T entity)
         {
-            this.Session.Store(entity);
+            Session.Store(entity);
             return entity;
         }
     }

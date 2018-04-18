@@ -24,6 +24,8 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+tools/
+.ReSharperCaches/
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -284,3 +286,5 @@ Common/AssemblyVersion.cs
 Artefacts/Documentation/build/
 /ReleaseNotes.md
 /ResharperCaches
+/DropsErrorOutput.xml
+/DropsTestOutput.xml

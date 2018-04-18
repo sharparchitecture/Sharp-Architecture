@@ -1,0 +1,65 @@
+namespace SharpArch.Domain.Validation
+{
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.Globalization;
+    using JetBrains.Annotations;
+    using SharpArch.Domain.DomainModel;
+    using SharpArch.Domain.PersistenceSupport;
+
+    /// <summary>
+    ///     Performs validation of domain signature uniqueness.
+    /// </summary>
+    /// <remarks>
+    ///     Performs database search to ensure no other entity with same domain signature exists.
+    /// </remarks>
+    /// <seealso cref="System.ComponentModel.DataAnnotations.ValidationAttribute" />
+    /// <seealso cref="DomainSignatureAttribute" />
+    /// .
+    [PublicAPI]
+    [BaseTypeRequired(typeof(IEntityWithTypedId<>))]
+    public class HasUniqueDomainSignatureAttributeBase : ValidationAttribute
+    {
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="HasUniqueDomainSignatureAttributeBase" /> class.
+        /// </summary>
+        protected HasUniqueDomainSignatureAttributeBase()
+            : base("Provided values matched an existing, duplicate entity")
+        { }
+
+        /// <summary>
+        ///     Gets a value that indicates whether the attribute requires validation context.
+        /// </summary>
+        public override bool RequiresValidationContext => true;
+
+        /// <summary>
+        ///     Performs database lookup to ensure domain signature uniqueness.
+        /// </summary>
+        /// <typeparam name="TId">The type of the identifier.</typeparam>
+        /// <param name="value">The entity.</param>
+        /// <param name="validationContext">The validation context.</param>
+        /// <returns></returns>
+        /// <exception cref="System.InvalidOperationException">
+        ///     <see cref="IEntityDuplicateChecker" />can not be resolvedfrom
+        ///     <paramref name="validationContext" />.
+        /// </exception>
+        protected ValidationResult DoValidate<TId>([NotNull] object value,
+            [NotNull] ValidationContext validationContext)
+        {
+            var entityToValidate = value as IEntityWithTypedId<TId>;
+            if (entityToValidate == null)
+                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
+                    "This validator must be used at the class level of an IDomainWithTypedId<{0}>. The type you provided was {1}",
+                    typeof(TId), value.GetType()));
+
+            var duplicateChecker =
+                (IEntityDuplicateChecker) validationContext.GetService(typeof(IEntityDuplicateChecker));
+            if (duplicateChecker == null)
+                throw new InvalidOperationException(
+                    $"'{typeof(IEntityDuplicateChecker).Name}' can not be resolved from validation context.");
+            return duplicateChecker.DoesDuplicateExistWithTypedIdOf(entityToValidate)
+                ? new ValidationResult(ErrorMessage)
+                : ValidationResult.Success;
+        }
+    }
+}
