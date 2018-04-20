@@ -149,8 +149,8 @@ Task("RunTests")
         Action<ICakeContext> testAction = tool => {
             tool.NUnit3(testAssemblies, 
                 new NUnit3Settings {
-                    OutputFile = artifactDirectory + "TestOutput.xml",
-                    ErrorOutputFile = artifactDirectory + "ErrorOutput.xml",
+                    OutputFile = artifactDirectory + "/TestOutput.xml",
+                    ErrorOutputFile = artifactDirectory + "/ErrorOutput.xml",
                     Results = new [] {
                         new NUnit3Result {
                             FileName = nunitTestResults
@@ -176,7 +176,7 @@ Task("GenerateCoverageReport")
     .WithCriteria(() => local)
     .Does(() =>
     {
-        ReportGenerator(testCoverageOutputFile, artifactDirectory+"CodeCoverageReport");
+        ReportGenerator(testCoverageOutputFile, artifactDirectory + "/CodeCoverageReport");
     });
 
 
