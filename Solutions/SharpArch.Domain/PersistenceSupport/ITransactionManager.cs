@@ -4,6 +4,7 @@
     using System.Data;
     using JetBrains.Annotations;
 
+
     /// <summary>
     ///     Defines the public members of a class that represents a database context which handles
     ///     application wide DB activities such as committing any pending changes, beginning a

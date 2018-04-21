@@ -20,7 +20,7 @@
         /// </summary>
         /// <param name="transactionManager">The transaction manager.</param>
         /// <param name="session">The session.</param>
-        public NHibernateRepository(ITransactionManager transactionManager, ISession session) : base(transactionManager, session)
+        public NHibernateRepository(IAsyncTransactionManager transactionManager, ISession session) : base(transactionManager, session)
         {
         }
     }

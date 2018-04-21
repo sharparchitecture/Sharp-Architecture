@@ -3,10 +3,11 @@ S#arp 5.0
 ========================
 
 BREAKING CHANGES:
-* [BREAKING] NetStandard2.0 support.
-* [BREAKING] Removed Castle.Windsor integration for ASP.NET.
-* [BREAKING] SharpArch.Testing extracted from SharpArch.Testing.NUnit.
-
+* NetStandard2.0 support.
+* Removed Castle.Windsor integration for ASP.NET.
+* SharpArch.Testing extracted from SharpArch.Testing.NUnit.
+* SharpArch.NHibernate: NHibernateRepository.FindAll() now accepts IReadOnlyDictionary<> instead of IDictionary<>.
+* SharpArch.Testing.NUnit: ISession.FlushAndEvict moved to SharpArch.NHibernate.
 
 
 ========================

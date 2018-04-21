@@ -15,7 +15,7 @@
     <releaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/release/$(SemanticVersion)</releaseNotes>
     <tags>sharp-architecture</tags>
     <dependencies>
-      <group targetFramework="net462">
+      <group targetFramework="net461">
         <dependency id="Newtonsoft.Json" version="[11.0.1,12.0.0)" />
       </group>
       <group targetFramework="netstandard2.0">

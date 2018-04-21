@@ -22,7 +22,7 @@ namespace SharpArch.NHibernate.Contracts.Repositories
         /// The key of the collection should be the property name and the value should be
         /// the value of the property to filter by.
         /// </summary>
-        IList<T> FindAll(IDictionary<string, object> propertyValuePairs);
+        IList<T> FindAll(IReadOnlyDictionary<string, object> propertyValuePairs);
 
         /// <summary>
         /// Looks for zero or more instances using the example provided.
@@ -33,7 +33,7 @@ namespace SharpArch.NHibernate.Contracts.Repositories
         /// Looks for a single instance using the property/values provided.
         /// </summary>
         /// <exception cref="NonUniqueResultException" />
-        T FindOne(IDictionary<string, object> propertyValuePairs);
+        T FindOne(IReadOnlyDictionary<string, object> propertyValuePairs);
 
         /// <summary>
         /// Looks for a single instance using the example provided.

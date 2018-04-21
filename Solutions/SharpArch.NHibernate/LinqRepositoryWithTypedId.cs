@@ -23,7 +23,7 @@ namespace SharpArch.NHibernate
         /// </summary>
         /// <param name="transactionManager">The transaction manager.</param>
         /// <param name="session">The session.</param>
-        public LinqRepositoryWithTypedId(ITransactionManager transactionManager, ISession session) : base(transactionManager, session)
+        public LinqRepositoryWithTypedId(IAsyncTransactionManager transactionManager, ISession session) : base(transactionManager, session)
         {
         }
 

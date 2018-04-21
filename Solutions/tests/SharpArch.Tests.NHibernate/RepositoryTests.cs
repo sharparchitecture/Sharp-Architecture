@@ -19,7 +19,7 @@ namespace Tests.SharpArch.NHibernate
         public void CanCastConcreteLinqRepositoryToInterfaceILinqRepository()
         {
             var session = new Mock<ISession>();
-            var transactionManager = new Mock<ITransactionManager>();
+            var transactionManager = new Mock<IAsyncTransactionManager>();
             var concreteRepository = new LinqRepository<MyEntity>(transactionManager.Object, session.Object);
 
             concreteRepository.Should().BeAssignableTo<ILinqRepository<MyEntity>>();

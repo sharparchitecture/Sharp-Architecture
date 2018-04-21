@@ -22,7 +22,7 @@ namespace SharpArch.NHibernate.Contracts.Repositories
         ///     The key of the collection should be the property name and the value should be
         ///     the value of the property to filter by.
         /// </summary>
-        Task<IList<T>> FindAllAsync(IDictionary<string, object> propertyValuePairs, CancellationToken cancellationToken = default(CancellationToken));
+        Task<IList<T>> FindAllAsync(IReadOnlyDictionary<string, object> propertyValuePairs, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         ///     Looks for zero or more instances using the example provided.

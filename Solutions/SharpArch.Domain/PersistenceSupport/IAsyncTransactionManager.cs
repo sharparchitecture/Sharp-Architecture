@@ -1,9 +1,9 @@
 ﻿namespace SharpArch.Domain.PersistenceSupport
 {
-    using System;
-    using System.Data;
+    using System.Threading;
     using System.Threading.Tasks;
     using JetBrains.Annotations;
+
 
     /// <summary>
     ///     Defines the public members of a class that represents an asynchronous database context which handles
@@ -17,23 +17,16 @@
     ///     opening/committing will be taken care of for you.
     /// </remarks>
     [PublicAPI]
-    public interface IAsyncTransactionManager
+    public interface IAsyncTransactionManager : ITransactionManager
     {
-        /// <summary>
-        ///     Begins the transaction.
-        /// </summary>
-        /// <param name="isolationLevel">Transaction isolation level, see <see cref="IsolationLevel" /> for details. </param>
-        /// <returns>The transaction instance.</returns>
-        IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
-
         /// <summary>
         ///     Commits the transaction, saving all changes.
         /// </summary>
-        Task CommitTransactionAsync();
+        Task CommitTransactionAsync(CancellationToken cancellationToken);
 
         /// <summary>
         ///     Rolls the transaction back, discarding any changes.
         /// </summary>
-        Task RollbackTransactionAsync();
+        Task RollbackTransactionAsync(CancellationToken cancellationToken);
     }
 }

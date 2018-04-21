@@ -19,7 +19,7 @@
         /// </summary>
         /// <param name="transactionManager">The transaction manager.</param>
         /// <param name="session">The session.</param>
-        public LinqRepository(ITransactionManager transactionManager, ISession session) : base(transactionManager, session)
+        public LinqRepository(IAsyncTransactionManager transactionManager, ISession session) : base(transactionManager, session)
         {
         }
     }
