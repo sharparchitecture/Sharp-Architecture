@@ -17,7 +17,7 @@
     ///     opening/committing will be taken care of for you.
     /// </remarks>
     [PublicAPI]
-    public interface IAsyncTransactionManager : ITransactionManager
+    public interface IAsyncTransactionManager
     {
         /// <summary>
         ///     Commits the transaction, saving all changes.

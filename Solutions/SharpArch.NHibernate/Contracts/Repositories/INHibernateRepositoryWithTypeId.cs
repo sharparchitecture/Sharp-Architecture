@@ -6,8 +6,9 @@ namespace SharpArch.NHibernate.Contracts.Repositories
     using SharpArch.Domain;
     using SharpArch.Domain.PersistenceSupport;
 
+
     /// <summary>
-    /// NHibernate-specific repository extensions.
+    ///     NHibernate-specific repository extensions.
     /// </summary>
     /// <typeparam name="T">Entity type/</typeparam>
     /// <typeparam name="TId">Entity identifier type.</typeparam>
@@ -15,54 +16,51 @@ namespace SharpArch.NHibernate.Contracts.Repositories
     [PublicAPI]
     public interface INHibernateRepositoryWithTypedId<T, in TId> : IRepositoryWithTypedId<T, TId>
     {
-        #region Public Methods
-
         /// <summary>
-        /// Looks for zero or more instances using the properties provided.
-        /// The key of the collection should be the property name and the value should be
-        /// the value of the property to filter by.
+        ///     Looks for zero or more instances using the properties provided.
+        ///     The key of the collection should be the property name and the value should be
+        ///     the value of the property to filter by.
         /// </summary>
         IList<T> FindAll(IReadOnlyDictionary<string, object> propertyValuePairs);
 
         /// <summary>
-        /// Looks for zero or more instances using the example provided.
+        ///     Looks for zero or more instances using the example provided.
         /// </summary>
         IList<T> FindAll(T exampleInstance, params string[] propertiesToExclude);
 
         /// <summary>
-        /// Looks for a single instance using the property/values provided.
+        ///     Looks for a single instance using the property/values provided.
         /// </summary>
         /// <exception cref="NonUniqueResultException" />
         T FindOne(IReadOnlyDictionary<string, object> propertyValuePairs);
 
         /// <summary>
-        /// Looks for a single instance using the example provided.
+        ///     Looks for a single instance using the example provided.
         /// </summary>
         /// <exception cref="NonUniqueResultException" />
         T FindOne(T exampleInstance, params string[] propertiesToExclude);
 
         /// <summary>
-        /// Returns null if a row is not found matching the provided Id.
+        ///     Returns null if a row is not found matching the provided Id.
         /// </summary>
         T Get(TId id, Enums.LockMode lockMode);
 
         /// <summary>
-        /// Throws an exception if a row is not found matching the provided Id.
+        ///     Throws an exception if a row is not found matching the provided Id.
         /// </summary>
         T Load(TId id);
 
         /// <summary>
-        /// Throws an exception if a row is not found matching the provided Id.
+        ///     Throws an exception if a row is not found matching the provided Id.
         /// </summary>
         T Load(TId id, Enums.LockMode lockMode);
 
         /// <summary>
-        /// For entities that have assigned Id's, you should explicitly call Update to update an existing one.
-        /// Updating also allows you to commit changes to a detached object.  More info may be found at:
-        /// http://www.hibernate.org/hib_docs/nhibernate/html_single/#manipulatingdata-updating-detached
+        ///     For entities that have assigned Id's, you should explicitly call Update to update an existing one.
+        ///     Updating also allows you to commit changes to a detached object.  More info may be found at:
+        ///     http://www.hibernate.org/hib_docs/nhibernate/html_single/#manipulatingdata-updating-detached
         /// </summary>
         T Update(T entity);
 
-        #endregion
     }
 }

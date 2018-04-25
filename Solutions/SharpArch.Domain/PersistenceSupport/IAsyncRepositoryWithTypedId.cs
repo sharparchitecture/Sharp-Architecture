@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using JetBrains.Annotations;
 
+
     /// <summary>
     ///     Defines the public members of a class that implements the asynchronous repository pattern for entities
     ///     of the specified type.
@@ -67,7 +68,6 @@
         [NotNull]
         Task<T> SaveOrUpdateAsync([NotNull] T entity, CancellationToken cancellationToken = default(CancellationToken));
 
-
         /// <summary>
         ///     Dissasociates the entity with the ORM so that changes made to it are not automatically
         ///     saved to the database.
@@ -78,7 +78,6 @@
         /// </remarks>
         Task EvictAsync([NotNull] T entity, CancellationToken cancellationToken = default(CancellationToken));
 
-
         /// <summary>
         ///     Deletes the specified entity.
         /// </summary>
@@ -88,6 +87,5 @@
         ///     Deletes the entity that matches the provided ID.
         /// </summary>
         Task DeleteAsync(TId id, CancellationToken cancellationToken = default(CancellationToken));
-
     }
 }

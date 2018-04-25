@@ -1,12 +1,11 @@
 ﻿namespace SharpArch.NHibernate
 {
-    using global::NHibernate;
-
-    using Domain.PersistenceSupport;
     using JetBrains.Annotations;
+    using SharpArch.Domain.PersistenceSupport;
+
 
     /// <summary>
-    /// LINQ extensions to NHibernate repository.    
+    ///     LINQ extensions to NHibernate repository.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <seealso cref="int" />
@@ -15,12 +14,10 @@
     public class LinqRepository<T> : LinqRepositoryWithTypedId<T, int>, ILinqRepository<T>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LinqRepository{T}"/> class.
+        ///     Initializes a new instance of the <see cref="LinqRepository{T}" /> class.
         /// </summary>
         /// <param name="transactionManager">The transaction manager.</param>
-        /// <param name="session">The session.</param>
-        public LinqRepository(IAsyncTransactionManager transactionManager, ISession session) : base(transactionManager, session)
-        {
-        }
+        public LinqRepository(INHibernateTransactionManager transactionManager) : base(transactionManager)
+        { }
     }
 }

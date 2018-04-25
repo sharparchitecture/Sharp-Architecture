@@ -22,17 +22,20 @@ namespace SharpArch.NHibernate
     /// </summary>
     [PublicAPI]
     public class NHibernateRepositoryWithTypedId<T, TId> : INHibernateRepositoryWithTypedId<T, TId>,
-        INHibernateAsyncRepositoryWithTypedId<T, TId>
+        IAsynNHibernatecRepositoryWithTypedId<T, TId>
 
     {
         /// <summary>
-        ///     Gets the session.
+        ///     Gets NHiernate session.
         /// </summary>
-        /// <value>
-        ///     The session.
-        /// </value>
-        // ReSharper disable once VirtualMemberNeverOverriden.Global
-        protected virtual ISession Session { get; }
+        protected ISession Session => TransactionManager.Session;
+
+        /// <summary>
+        ///     Returns the database context, which provides a handle to application wide DB
+        ///     activities such as committing any pending changes, beginning a transaction,
+        ///     rolling back a transaction, etc.
+        /// </summary>
+        protected INHibernateTransactionManager TransactionManager { get; }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="NHibernateRepositoryWithTypedId{T, TId}" /> class.
@@ -41,11 +44,9 @@ namespace SharpArch.NHibernate
         /// <param name="session">The session.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
         public NHibernateRepositoryWithTypedId(
-            [NotNull] IAsyncTransactionManager transactionManager,
-            [NotNull] ISession session)
+            [NotNull] INHibernateTransactionManager transactionManager)
         {
             TransactionManager = transactionManager ?? throw new ArgumentNullException(nameof(transactionManager));
-            Session = session ?? throw new ArgumentNullException(nameof(session));
         }
 
         public Task<IList<T>> FindAllAsync(
@@ -185,18 +186,9 @@ namespace SharpArch.NHibernate
                 await DeleteAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
-        protected IAsyncTransactionManager TransactionManager { get; }
-
         ITransactionManager IAsyncRepositoryWithTypedId<T, TId>.TransactionManager => TransactionManager;
 
         ITransactionManager IRepositoryWithTypedId<T, TId>.TransactionManager => TransactionManager;
-
-        ///// <summary>
-        /////     Returns the database context, which provides a handle to application wide DB
-        /////     activities such as committing any pending changes, beginning a transaction,
-        /////     rolling back a transaction, etc.
-        ///// </summary>
-        //public virtual IAsyncTransactionManager TransactionManager { get; }
 
         /// <summary>
         ///     Dissasociates the entity with the ORM so that changes made to it are not automatically

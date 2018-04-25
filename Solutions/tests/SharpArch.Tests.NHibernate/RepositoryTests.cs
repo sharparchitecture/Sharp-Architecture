@@ -11,6 +11,7 @@ namespace Tests.SharpArch.NHibernate
     using Moq;
     using NUnit.Framework;
 
+
     [TestFixture]
     // ReSharper disable once TestFileNameWarning
     public class RepositoryTests
@@ -19,12 +20,14 @@ namespace Tests.SharpArch.NHibernate
         public void CanCastConcreteLinqRepositoryToInterfaceILinqRepository()
         {
             var session = new Mock<ISession>();
-            var transactionManager = new Mock<IAsyncTransactionManager>();
-            var concreteRepository = new LinqRepository<MyEntity>(transactionManager.Object, session.Object);
+            var transactionManager = new Mock<INHibernateTransactionManager>();
+            transactionManager.SetupProperty(t => t.Session, session.Object);
+            var concreteRepository = new LinqRepository<MyEntity>(transactionManager.Object);
 
             concreteRepository.Should().BeAssignableTo<ILinqRepository<MyEntity>>();
         }
     }
+
 
     public class MyEntity
     {

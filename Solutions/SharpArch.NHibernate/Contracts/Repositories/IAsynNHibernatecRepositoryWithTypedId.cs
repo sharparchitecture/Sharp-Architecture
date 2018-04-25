@@ -8,6 +8,7 @@ namespace SharpArch.NHibernate.Contracts.Repositories
     using SharpArch.Domain;
     using SharpArch.Domain.PersistenceSupport;
 
+
     /// <summary>
     ///     NHibernate-specific asynchronous repository extensions.
     /// </summary>
@@ -15,25 +16,28 @@ namespace SharpArch.NHibernate.Contracts.Repositories
     /// <typeparam name="TId">Entity identifier type.</typeparam>
     /// <seealso cref="SharpArch.Domain.PersistenceSupport.IRepositoryWithTypedId{T, TId}" />
     [PublicAPI]
-    public interface INHibernateAsyncRepositoryWithTypedId<T, in TId> : IAsyncRepositoryWithTypedId<T, TId>
+    public interface IAsynNHibernatecRepositoryWithTypedId<T, in TId> : IAsyncRepositoryWithTypedId<T, TId>
     {
         /// <summary>
         ///     Looks for zero or more instances using the properties provided.
         ///     The key of the collection should be the property name and the value should be
         ///     the value of the property to filter by.
         /// </summary>
-        Task<IList<T>> FindAllAsync(IReadOnlyDictionary<string, object> propertyValuePairs, CancellationToken cancellationToken = default(CancellationToken));
+        Task<IList<T>> FindAllAsync(
+            IReadOnlyDictionary<string, object> propertyValuePairs, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         ///     Looks for zero or more instances using the example provided.
         /// </summary>
-        Task<IList<T>> FindAllAsync(T exampleInstance, string[] propertiesToExclude, CancellationToken cancellationToken = default(CancellationToken));
+        Task<IList<T>> FindAllAsync(
+            T exampleInstance, string[] propertiesToExclude, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         ///     Looks for a single instance using the property/values provided.
         /// </summary>
         /// <exception cref="NonUniqueResultException" />
-        Task<T> FindOneAsync(IReadOnlyDictionary<string, object> propertyValuePairs, CancellationToken cancellationToken = default(CancellationToken));
+        Task<T> FindOneAsync(
+            IReadOnlyDictionary<string, object> propertyValuePairs, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         ///     Looks for a single instance using the example provided.
