@@ -8,7 +8,9 @@ BREAKING CHANGES:
 * SharpArch.Testing extracted from SharpArch.Testing.NUnit.
 * SharpArch.NHibernate: NHibernateRepository.FindAll() now accepts IReadOnlyDictionary<> instead of IDictionary<>.
 * SharpArch.Testing.NUnit: ISession.FlushAndEvict moved to SharpArch.NHibernate.
-
+* FileCache is no-op in Netstandard. 
+  * Binary serialization does not work for Type objects, see https://github.com/dotnet/corefx/issues/23213
+  * Considering containerized deployments it does not make a lot of sense.
 
 ========================
 S#arp 4.0

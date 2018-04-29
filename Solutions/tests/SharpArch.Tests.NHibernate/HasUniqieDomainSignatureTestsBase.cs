@@ -12,10 +12,15 @@ namespace Tests.SharpArch.NHibernate
     using NUnit.Framework;
     using Tests.SharpArch.NHibernate.Mappings;
 
-    internal class HasUniqueDomainSignatureTestsBase : RepositoryTestsBase
+    class HasUniqueDomainSignatureTestsBase : RepositoryTestsBase
     {
         protected Mock<IServiceProvider> ServiceProviderMock;
         protected ValidationContext ValidationContext;
+
+        public HasUniqueDomainSignatureTestsBase() : base(new TestDatabaseInitializer(
+            TestContext.CurrentContext.TestDirectory, typeof(TestsPersistenceModelGenerator).Assembly
+        ))
+        { }
 
         protected override void LoadTestData()
         { }
@@ -23,8 +28,6 @@ namespace Tests.SharpArch.NHibernate
         [SetUp]
         protected override void SetUp()
         {
-            dbInitializer = new TestDatabaseInitializer(TestContext.CurrentContext.TestDirectory,
-                typeof(TestsPersistenceModelGenerator).Assembly);
             base.SetUp();
 
             ServiceProviderMock = new Mock<IServiceProvider>();

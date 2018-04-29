@@ -8,8 +8,6 @@
     using JetBrains.Annotations;
 #if NETFULL
     using System.Runtime.Serialization.Formatters.Binary;
-#else
-    using Newtonsoft.Json;
 #endif
 
     /// <summary>
@@ -30,6 +28,7 @@
             if (string.IsNullOrEmpty(path)) {
                 throw new ArgumentNullException(nameof(path));
             }
+#if NETFULL                
 
             try {
                 using (FileStream file = File.Open(path, FileMode.Open)) {
@@ -42,6 +41,9 @@
                 // Return null if the object can't be deserialized
                 return null;
             }
+#else
+            return null;
+#endif
         }
 
         /// <summary>
@@ -79,10 +81,11 @@
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             if (string.IsNullOrEmpty(path)) throw new ArgumentException("Path is null or empty.", nameof(path));
-
+#if NETFULL
             using (FileStream file = File.Open(path, FileMode.Create)) {
                 Save(file, obj);
             }
+#endif
         }
 
         /// <summary>
@@ -99,10 +102,6 @@
         internal static void Save<T>([NotNull] Stream stream, T obj) where T : class
         {
 #if NETSTANDARD
-            using (var sw = new StreamWriter(stream)) {
-                sw.Write(JsonConvert.SerializeObject(obj, Formatting.None));
-                sw.Flush();
-            }
 #else
             new BinaryFormatter().Serialize(stream, obj);
 #endif
@@ -123,9 +122,7 @@
         internal static T Load<T>([NotNull] Stream stream) where T : class
         {
 #if NETSTANDARD
-            using (var sr = new StreamReader(stream)) {
-                return JsonConvert.DeserializeObject<T>(sr.ReadToEnd());
-            }
+            return null;
 #else
             return new BinaryFormatter().Deserialize(stream) as T;
 #endif
