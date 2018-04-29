@@ -11,8 +11,6 @@
     ///     during test execution.  This builds the database using the connection details within
     ///     NHibernate.config.  If you'd prefer unit testing against a "live" development database
     ///     such as a SQL Server instance, then use <see cref="DatabaseRepositoryTestsBase" /> instead.
-    ///     If you'd prefer a more behavior driven approach to testing against the in-memory database,
-    ///     use <see cref="RepositoryBehaviorSpecificationTestsBase" /> instead.
     /// </summary>
     [PublicAPI]
     public abstract class RepositoryTestsBase
@@ -22,13 +20,18 @@
         /// </summary>
         protected TransactionManager TransactionManager { get; private set; }
 
-        /// <summary>
-        ///     NHibernate session
-        /// </summary>
-        protected ISession Session { get; private set; }
+        protected TestDatabaseInitializer DbInitializer { get; private set; }
 
-        protected TestDatabaseInitializer dbInitializer { get; set; }
+        protected ISession Session => TransactionManager.Session;
 
+        RepositoryTestsBase()
+        { }
+
+        protected RepositoryTestsBase([NotNull] TestDatabaseInitializer dbInitializer)
+        {
+            DbInitializer = dbInitializer ?? throw new ArgumentNullException(nameof(dbInitializer));
+            DbInitializer.GetSessionFactory();
+        }
 
         /// <summary>
         ///     Called when [time tear down].
@@ -36,8 +39,8 @@
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            dbInitializer?.Dispose();
-            dbInitializer = null;
+            DbInitializer?.Dispose();
+            DbInitializer = null;
         }
 
         /// <summary>
@@ -83,8 +86,7 @@
         [SetUp]
         protected virtual void SetUp()
         {
-            Session = dbInitializer.InitializeSession();
-            TransactionManager = new TransactionManager(Session);
+            TransactionManager = new TransactionManager(DbInitializer.InitializeSession());
             LoadTestData();
         }
     }

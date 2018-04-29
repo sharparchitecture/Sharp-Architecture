@@ -7,22 +7,46 @@
     using JetBrains.Annotations;
 
     /// <summary>
-    ///     Initiates a transaction before each test is run and rolls back the transaction after
-    ///     the test completes.  Consequently, tests make no permanent changes to the DB.
-    ///     This is appropriate as a base class if you're unit tests run against a live, development
-    ///     database.  If, alternatively, you'd prefer to use an in-memory database such as SqlLite,
-    ///     then use <see cref="RepositoryTestsBase" /> or <see cref="RepositoryBehaviorSpecificationTestsBase" />
-    ///     as your base class.
-    ///     As the preferred mechanism is for in-memory unit testing, this class is provided mainly
-    ///     for backward compatibility.
+    ///     <para>
+    ///         Initiates a transaction before each test is run and rolls back the transaction after
+    ///         the test completes.  Consequently, tests make no permanent changes to the DB.
+    ///     </para>
+    ///     <para>
+    ///         This is appropriate as a base class if you're unit tests run against a live, development
+    ///         database.  If, alternatively, you'd prefer to use an in-memory database such as SqlLite,
+    ///         then use <see cref="RepositoryTestsBase" /> as your base class.
+    ///         As the preferred mechanism is in-memory unit testing, this class is provided mainly
+    ///         for backward compatibility.
+    ///     </para>
     /// </summary>
     /// <remarks>
-    ///     This class expects database structure to be present and up-to-date. It will not run schema export on it.
+    ///     <list type="bullet">
+    ///         <item>
+    ///             <description>
+    ///                 Descendants must have a default constructor which provides <see cref="TestDatabaseInitializer" />.
+    ///                 Session factory in initialized once per test fixture.
+    ///             </description>
+    ///         </item>
+    ///         <item>
+    ///             <description>
+    ///                 This class expects database structure to be present and up-to-date.
+    ///                 It will not run schema export on it.
+    ///             </description>
+    ///         </item>
+    ///     </list>
     /// </remarks>
     [PublicAPI]
     public abstract class DatabaseRepositoryTestsBase
     {
-        protected internal static TestDatabaseInitializer _initializer;
+        DatabaseRepositoryTestsBase()
+        { }
+
+        protected DatabaseRepositoryTestsBase([NotNull] TestDatabaseInitializer initializer)
+        {
+            Initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));
+        }
+
+        protected TestDatabaseInitializer Initializer { get; private set; }
 
         /// <summary>
         ///     Returns current NHibernate session.
@@ -30,20 +54,14 @@
         protected ISession Session { get; private set; }
 
         /// <summary>
-        ///     Additional assemblies to look for mappings,
-        /// </summary>
-        internal static string MappingAssemblyNames { get; set; }
-
-
-        /// <summary>
         ///     Creates NHibernate <see cref="ISessionFactory" />.
         /// </summary>
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            if (_initializer == null)
-                throw new InvalidOperationException($"{nameof(_initializer)} is not set.");
-            UpdateConfiguration(_initializer.GetConfiguration());
+            if (Initializer == null)
+                throw new InvalidOperationException($"{nameof(Initializer)} is not set.");
+            UpdateConfiguration(Initializer.GetConfiguration());
         }
 
         /// <summary>
@@ -59,9 +77,9 @@
         [SetUp]
         public virtual void SetUp()
         {
-            if (_initializer == null)
-                throw new InvalidOperationException($"{nameof(_initializer)} is not set.");
-            Session = _initializer.GetSessionFactory().OpenSession();
+            if (Initializer == null)
+                throw new InvalidOperationException($"{nameof(Initializer)} is not set.");
+            Session = Initializer.GetSessionFactory().OpenSession();
             Session.BeginTransaction();
         }
 
@@ -86,8 +104,8 @@
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            _initializer?.Dispose();
-            _initializer = null;
+            Initializer?.Dispose();
+            Initializer = null;
         }
     }
 }

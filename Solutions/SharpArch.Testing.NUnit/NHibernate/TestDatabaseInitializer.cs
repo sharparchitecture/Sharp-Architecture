@@ -23,7 +23,7 @@
         readonly Assembly[] _mappingAssemblies;
         Configuration _configuration;
         ISessionFactory _sessionFactory;
-        static readonly char[] assemblySeparator = new[] {','};
+        static readonly char[] assemblySeparator = {','};
 
 
         /// <summary>
@@ -72,7 +72,11 @@
                         !t.IsAbstract && typeof(IAutoPersistenceModelGenerator).IsAssignableFrom(t)))
                 .ToArray();
             if (persistenceGeneratorTypes.Length > 1)
-                throw new InvalidOperationException($"Found multiple classes implementing {nameof(IAutoPersistenceModelGenerator)}.");
+                throw new InvalidOperationException($"Found multiple classes implementing {nameof(IAutoPersistenceModelGenerator)}.") {
+                    Data = {
+                        [nameof(IAutoPersistenceModelGenerator)+"s"] = persistenceGeneratorTypes
+                    }
+                };
 
             var generator = (IAutoPersistenceModelGenerator) Activator.CreateInstance(persistenceGeneratorTypes[0]);
             return generator.Generate();

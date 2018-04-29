@@ -1,12 +1,12 @@
 ﻿namespace SharpArch.Domain.PersistenceSupport
 {
-    using System;
-    using System.Data;
+    using System.Threading;
+    using System.Threading.Tasks;
     using JetBrains.Annotations;
 
 
     /// <summary>
-    ///     Defines the public members of a class that represents a database context which handles
+    ///     Defines the public members of a class that represents an asynchronous database context which handles
     ///     application wide DB activities such as committing any pending changes, beginning a
     ///     transaction, rolling back a transaction, etc.
     /// </summary>
@@ -17,23 +17,16 @@
     ///     opening/committing will be taken care of for you.
     /// </remarks>
     [PublicAPI]
-    public interface ITransactionManager
+    public interface IAsyncTransactionManager
     {
-        /// <summary>
-        ///     Begins the transaction.
-        /// </summary>
-        /// <param name="isolationLevel">Transaction isolation level, see <see cref="IsolationLevel" /> for details. </param>
-        /// <returns>The transaction instance.</returns>
-        IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
-
         /// <summary>
         ///     Commits the transaction, saving all changes.
         /// </summary>
-        void CommitTransaction();
+        Task CommitTransactionAsync(CancellationToken cancellationToken);
 
         /// <summary>
         ///     Rolls the transaction back, discarding any changes.
         /// </summary>
-        void RollbackTransaction();
+        Task RollbackTransactionAsync(CancellationToken cancellationToken);
     }
 }
