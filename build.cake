@@ -138,8 +138,8 @@ Task("Build")
 Task("RunTests")
     .Does(() => 
     {
-        var testAssemblies = GetFiles("./Solutions/tests/SharpArch.Tests/bin/Release/net462/SharpArch.Tests.dll")
-            .Union(GetFiles("./Solutions/tests/SharpArch.Tests.NHibernate/bin/Release/net462/SharpArch.Tests.NHibernate.dll"))
+        var testAssemblies = GetFiles("./Solutions/tests/SharpArch.Tests/bin/Release/**/SharpArch.Tests.dll")
+            .Union(GetFiles("./Solutions/tests/SharpArch.Tests.NHibernate/bin/Release/**/SharpArch.Tests.NHibernate.dll"))
             ;
         foreach (var item in testAssemblies)
         {

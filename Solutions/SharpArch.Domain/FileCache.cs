@@ -1,12 +1,13 @@
 ﻿namespace SharpArch.Domain
 {
     using System;
-    using System.Diagnostics;
     using System.IO;
     using System.Runtime.Serialization;
     using System.Security;
     using JetBrains.Annotations;
+
 #if NETFULL
+    using System.Diagnostics;
     using System.Runtime.Serialization.Formatters.Binary;
 #endif
 
@@ -28,8 +29,7 @@
             if (string.IsNullOrEmpty(path)) {
                 throw new ArgumentNullException(nameof(path));
             }
-#if NETFULL                
-
+#if NETFULL
             try {
                 using (FileStream file = File.Open(path, FileMode.Open)) {
                     return Load<T>(file);

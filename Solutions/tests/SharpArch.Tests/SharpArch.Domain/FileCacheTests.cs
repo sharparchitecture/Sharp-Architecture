@@ -1,5 +1,5 @@
 ﻿// ReSharper disable ExceptionNotDocumented
-
+#if NETFULL
 namespace Tests.SharpArch.Domain
 {
     using System;
@@ -7,6 +7,8 @@ namespace Tests.SharpArch.Domain
     using FluentAssertions;
     using global::SharpArch.Domain;
     using NUnit.Framework;
+
+
 
     [TestFixture]
     internal class FileCacheTests
@@ -89,3 +91,4 @@ namespace Tests.SharpArch.Domain
         }
     }
 }
+#endif
