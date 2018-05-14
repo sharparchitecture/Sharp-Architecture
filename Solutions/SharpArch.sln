@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\build.cake = ..\build.cake
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tests", "tests\SharpArch.xUnitTests\tests.csproj", "{1CA4039C-6BCE-484C-9141-EF0438E5AA0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,10 @@ Global
 		{1E09DC26-B287-48CE-948D-645C06053474}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E09DC26-B287-48CE-948D-645C06053474}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E09DC26-B287-48CE-948D-645C06053474}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CA4039C-6BCE-484C-9141-EF0438E5AA0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CA4039C-6BCE-484C-9141-EF0438E5AA0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CA4039C-6BCE-484C-9141-EF0438E5AA0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CA4039C-6BCE-484C-9141-EF0438E5AA0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +85,7 @@ Global
 		{685D5CA7-3492-4386-B8DC-37116BA234CE} = {B33554BD-5B88-4BB2-96E0-9FD2F47FBA07}
 		{7C34A181-2719-457C-9A23-62BFEF182B40} = {1E0FC93D-9540-42B7-B639-5F7E0ABC4B75}
 		{1E09DC26-B287-48CE-948D-645C06053474} = {B33554BD-5B88-4BB2-96E0-9FD2F47FBA07}
+		{1CA4039C-6BCE-484C-9141-EF0438E5AA0D} = {1E0FC93D-9540-42B7-B639-5F7E0ABC4B75}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {66570DE6-E62E-4899-9B61-57AF560D7F3B}
