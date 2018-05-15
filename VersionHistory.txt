@@ -5,12 +5,12 @@ S#arp 5.0
 BREAKING CHANGES:
 * NetStandard2.0 support.
 * Removed Castle.Windsor integration for ASP.NET.
-* SharpArch.Testing extracted from SharpArch.Testing.NUnit.
+* New package SharpArch.Testing extracted from SharpArch.Testing.NUnit.
 * SharpArch.NHibernate: NHibernateRepository.FindAll() now accepts IReadOnlyDictionary<> instead of IDictionary<>.
 * SharpArch.Testing.NUnit: ISession.FlushAndEvict moved to SharpArch.NHibernate.
-* FileCache is no-op in Netstandard. 
+* FileCache is no-op in NetStandard: 
   * Binary serialization does not work for Type objects, see https://github.com/dotnet/corefx/issues/23213
-  * Considering containerized deployments it does not make a lot of sense.
+  * Considering to refactor to ISessionCache to support file and distributed caches (e.g. Redis)
 
 ========================
 S#arp 4.0

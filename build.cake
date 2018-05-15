@@ -136,39 +136,46 @@ Task("Build")
 
 
 Task("RunTests")
-    .Does(() => 
+    .Does((ctx) => 
     {
-        var testAssemblies = GetFiles("./Solutions/tests/SharpArch.Tests/bin/Release/**/SharpArch.Tests.dll")
-            .Union(GetFiles("./Solutions/tests/SharpArch.Tests.NHibernate/bin/Release/**/SharpArch.Tests.NHibernate.dll"))
-            ;
-        foreach (var item in testAssemblies)
-        {
-            Information("Test assembly: {0}", item);
-        }
+		
+		var testProjects = GetFiles("./Solutions/tests/SharpArch.xUnitTests/**/*.csproj");
+		bool success = true;
 
-        Action<ICakeContext> testAction = tool => {
-            tool.NUnit3(testAssemblies, 
-                new NUnit3Settings {
-                    OutputFile = artifactDirectory + "/TestOutput.xml",
-                    ErrorOutputFile = artifactDirectory + "/ErrorOutput.xml",
-                    Results = new [] {
-                        new NUnit3Result {
-                            FileName = nunitTestResults
-                        }
-                    },
-                    ShadowCopy = false,
-                });
-        };
+		foreach(var testProj in testProjects) {
+			try 
+			{
+				var projectPath = testProj.GetDirectory();
+				var projectFilename = testProj.GetFilenameWithoutExtension();
+//				var dotnetSettings = new DotNetCoreToolSettings {
+//					WorkingDirectory = testProj.GetDirectory()
+//				};
+				var openCoverSettings = new OpenCoverSettings {
+					OldStyle = true,
+					ReturnTargetCodeOffset = 0,
+					ArgumentCustomization = args => args.Append("-mergeoutput"),
+					WorkingDirectory = projectPath,
+				}
+				.WithFilter("+[*]* -[*.Tests*]*")
+				.ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
+				.ExcludeByFile("*/*Designer.cs ");
 
-        OpenCover(testAction,
-            testCoverageOutputFile,
-            new OpenCoverSettings {
-                ReturnTargetCodeOffset = 0,
-                ArgumentCustomization = args => args.Append("-mergeoutput")
-            }
-            .WithFilter("+[*]* -[*.Tests*]*")
-            .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
-            .ExcludeByFile("*/*Designer.cs "));
+				var testOutput = $"{artifactDirectory}/xunitTests-{projectFilename}.xml";
+				Information("testOutput: {0}", MakeAbsolute(File(testOutput)));
+				// todo: Detect NetCore framework version
+				OpenCover(
+					tool => tool.DotNetCoreTool(projectPath.ToString(),
+						"xunit",
+						$"-xml {testOutput} -c {buildConfig} --no-build --fx-version 2.0.7"),
+					testCoverageOutputFile,
+					openCoverSettings);
+			}
+			catch (Exception ex)
+			{
+				Error("Error running tests", ex);
+				success = false;
+			}
+		}
     });
 
 
@@ -181,10 +188,14 @@ Task("GenerateCoverageReport")
 
 
 Task("UploadTestResults")
-    .WithCriteria(() => !local)
+    //.WithCriteria(() => !local)
     .Does(() => {
         CoverallsIo(testCoverageOutputFile);
         UploadFile("https://ci.appveyor.com/api/testresults/nunit3/"+appVeyorJobId, nunitTestResults);
+		foreach(var xunitResults in GetFiles($"{artifactDirectory}/xunitTests-*.xml"))
+		{
+			UploadFile("https://ci.appveyor.com/api/testresults/xunit2/"+appVeyorJobId, xunitResults);
+		}
     });
 
 
