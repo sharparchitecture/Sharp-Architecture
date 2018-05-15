@@ -166,7 +166,7 @@ Task("RunTests")
 				OpenCover(
 					tool => tool.DotNetCoreTool(projectPath.ToString(),
 						"xunit",
-						$"-xml {testOutput} -c {buildConfig} --no-build --fx-version 2.0.7"),
+						$"-xml {testOutput} -c {buildConfig} --no-build "),
 					testCoverageOutputFile,
 					openCoverSettings);
 			}
