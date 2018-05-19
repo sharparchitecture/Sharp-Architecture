@@ -53,31 +53,33 @@ var nugetPackages = new [] {
 	"SharpArch.Testing.NUnit"
 };
 
+// Calculate version
 GitVersion semVersion = GitVersion();
 var nugetVersion = semVersion.NuGetVersion;
 var buildVersion = semVersion.FullBuildMetaData;
 var informationalVersion = semVersion.InformationalVersion;
 var nextMajorRelease = $"{semVersion.Major+1}.0.0";
 
-// SETUP / TEARDOWN
-
 // Artifacts
-var artifactDirectory = "./Drops";
-var testCoverageOutputFile = artifactDirectory + "/OpenCover.xml";
-var codeInspectionsOutputFile = artifactDirectory + "/Inspections/CodeInspections.xml";
-var duplicateFinderOutputFile = artifactDirectory + "/Inspections/CodeDuplicates.xml";
-var solutionsFolder = "./Src";
-var solutionFile = solutionsFolder + "/SharpArch.sln";
-var nunitTestResults = artifactDirectory + "/Nunit3TestResults.xml";
-var nugetTemplates = "./NugetTemplates";
-var nugetTemp = artifactDirectory + "/Packages";
-var codeCoverageReportDirectory = artifactDirectory + "/CodeCoverageReport";
+var artifactsDir = "./Drops";
+var testCoverageOutputFile = artifactsDir + "/OpenCover.xml";
+var codeInspectionsOutputFile = artifactsDir + "/Inspections/CodeInspections.xml";
+var duplicateFinderOutputFile = artifactsDir + "/Inspections/CodeDuplicates.xml";
+var codeCoverageReportDir = artifactsDir + "/CodeCoverageReport";
+var srcDir = "./Src";
+var testsRootDir = srcDir + "/Tests";
+var solutionFile = srcDir + "/SharpArch.sln";
+var nunitTestResults = artifactsDir + "/Nunit3TestResults.xml";
+var nugetTemplatesDir = "./NugetTemplates";
+var nugetTempDir = artifactsDir + "/Packages";
+
+// SETUP / TEARDOWN
 
 Setup((context) =>
 {
 	Information("Building SharpArchitecture, version {0} (isTagged: {1}, isLocal: {2})...", nugetVersion, isTagged, local);
-	CreateDirectory(artifactDirectory);
-	CleanDirectory(artifactDirectory);
+	CreateDirectory(artifactsDir);
+	CleanDirectory(artifactsDir);
 });
 
 Teardown((context) =>
@@ -119,7 +121,7 @@ Task("UpdateAppVeyorBuildNumber")
 Task("Restore")
 	.Does(() =>
 	{
-		DotNetCoreRestore("Src");
+		DotNetCoreRestore(srcDir);
 	});
 
 
@@ -129,7 +131,7 @@ Task("Build")
 	.IsDependentOn("Restore")
 	.Does(() =>
 	{
-		DotNetCoreBuild("./Src/", new DotNetCoreBuildSettings {
+		DotNetCoreBuild(srcDir, new DotNetCoreBuildSettings {
 			NoRestore = true,
 			Configuration = buildConfig,
 		});
@@ -139,19 +141,19 @@ Task("Build")
 Task("RunNunitTests")
     .Does(() => 
     {
-        var testAssemblies = GetFiles($"./Src/tests/SharpArch.Tests/bin/{buildConfig}/net462/SharpArch.Tests.dll")
-            .Union(GetFiles($"./Src/tests/SharpArch.Tests.NHibernate/bin/{buildConfig}/net462/SharpArch.Tests.NHibernate.dll"))
+        var testAssemblies = GetFiles($"{testsRootDir}/SharpArch.Tests/bin/{buildConfig}/net462/SharpArch.Tests.dll")
+            .Union(GetFiles($"{testsRootDir}/SharpArch.Tests.NHibernate/bin/{buildConfig}/net462/SharpArch.Tests.NHibernate.dll"))
             ;
         foreach (var item in testAssemblies)
         {
-            Information("Test assembly: {0}", item);
+            Information("NUnit test assembly: {0}", item);
         }
 
         Action<ICakeContext> testAction = tool => {
             tool.NUnit3(testAssemblies, 
                 new NUnit3Settings {
-                    OutputFile = artifactDirectory + "/TestOutput.xml",
-                    ErrorOutputFile = artifactDirectory + "/ErrorOutput.xml",
+                    OutputFile = artifactsDir + "/TestOutput.xml",
+                    ErrorOutputFile = artifactsDir + "/ErrorOutput.xml",
                     Results = new [] {
                         new NUnit3Result {
                             FileName = nunitTestResults
@@ -178,7 +180,7 @@ Task("RunXunitTests")
 	.Does((ctx) =>
 	{
 
-		var testProjects = GetFiles("./Src/tests/SharpArch.xUnitTests/**/*.csproj");
+		var testProjects = GetFiles($"{testsRootDir}/SharpArch.xUnitTests/**/*.csproj");
 		bool success = true;
 
 		foreach(var testProj in testProjects) {
@@ -199,7 +201,7 @@ Task("RunXunitTests")
 				.ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
 				.ExcludeByFile("*/*Designer.cs ");
 
-				var testOutput = $"{artifactDirectory}/xunitTests-{projectFilename}.xml";
+				var testOutput = $"{artifactsDir}/xunitTests-{projectFilename}.xml";
 				Information("testOutput: {0}", MakeAbsolute(File(testOutput)));
 				// todo: Detect NetCore framework version
 				OpenCover(
@@ -222,16 +224,16 @@ Task("CleanPreviousTestResults")
 	{
 		if (FileExists(testCoverageOutputFile))
 			DeleteFile(testCoverageOutputFile);
-		DeleteFiles(artifactDirectory+ "/xunitTests-*.xml");
-		if (DirectoryExists(codeCoverageReportDirectory))
-			DeleteDirectory(codeCoverageReportDirectory, recursive: true);
+		DeleteFiles(artifactsDir + "/xunitTests-*.xml");
+		if (DirectoryExists(codeCoverageReportDir))
+			DeleteDirectory(codeCoverageReportDir, recursive: true);
 	});
 
 Task("GenerateCoverageReport")
 	.WithCriteria(() => local)
 	.Does(() =>
 	{
-		ReportGenerator(testCoverageOutputFile, codeCoverageReportDirectory);
+		ReportGenerator(testCoverageOutputFile, codeCoverageReportDir);
 	});
 
 
@@ -241,7 +243,7 @@ Task("UploadTestResults")
 		CoverallsIo(testCoverageOutputFile);
 		Information("Uploading nUnit result: {0}", nunitTestResults);
 		UploadFile("https://ci.appveyor.com/api/testresults/nunit3/"+appVeyorJobId, nunitTestResults);
-		foreach(var xunitResult in GetFiles($"{artifactDirectory}/xunitTests-*.xml"))
+		foreach(var xunitResult in GetFiles($"{artifactsDir}/xunitTests-*.xml"))
 		{
 			Information("Uploading xUnit results: {0}", xunitResult);
 			UploadFile("https://ci.appveyor.com/api/testresults/xunit2/"+appVeyorJobId, xunitResult);
@@ -250,7 +252,7 @@ Task("UploadTestResults")
 
 
 Task("RunUnitTests")
-	//.IsDependentOn("Build")
+	.IsDependentOn("Build")
 	.IsDependentOn("CleanPreviousTestResults")
 	.IsDependentOn("RunNunitTests")
 	.IsDependentOn("RunXunitTests")
@@ -279,7 +281,7 @@ Task("InspectCode")
 
 		InspectCode(solutionFile, new InspectCodeSettings() {
 			OutputFile = codeInspectionsOutputFile,
-			Profile = "./Src/SharpArch.sln.DotSettings",
+			Profile = $"{solutionFile}.DotSettings",
 			CachesHome = "./.ReSharperCaches",
 			SolutionWideAnalysis = true
 		});
@@ -293,10 +295,10 @@ Task("InspectCode")
 Task("CreateNugetPackages")
 	.Does(() => {
 		// copy templates to temp folder
-		CopyDirectory(nugetTemplates, nugetTemp);
+		CopyDirectory(nugetTemplatesDir, nugetTempDir);
 		// update templates
-		ReplaceTextInFiles(nugetTemp+"/**/*.nuspec", "$(SemanticVersion)", nugetVersion);
-		ReplaceTextInFiles(nugetTemp+"/**/*.nuspec", "$(NextMajorRelease)", nextMajorRelease);
+		ReplaceTextInFiles(nugetTempDir+"/**/*.nuspec", "$(SemanticVersion)", nugetVersion);
+		ReplaceTextInFiles(nugetTempDir+"/**/*.nuspec", "$(NextMajorRelease)", nextMajorRelease);
 
 		Func<string, string, string> removeBasePath = (path, basePath) => {
 			var endOfBase = path.IndexOf(basePath);
@@ -308,23 +310,23 @@ Task("CreateNugetPackages")
 
 		Action<string> buildPackage = (string projectName) => {
 			Information("Creating package {0}", projectName);
-			var files = GetFiles($"{solutionsFolder}/{projectName}/bin/Release/**/{projectName}.*");
+			var files = GetFiles($"{srcDir}/{projectName}/bin/Release/**/{projectName}.*");
 			var filePathes = files.Where(f=> !f.FullPath.EndsWith(".deps.json", StringComparison.OrdinalIgnoreCase))
 				.Select(filePath => removeBasePath(filePath.FullPath, $"{projectName}/bin/Release/"));
 
 			// create folders
 			foreach(var frameworkLib in filePathes.Select(fp => new FilePath(fp).GetDirectory().FullPath).Distinct()) {
-				CreateDirectory($"{nugetTemp}/{projectName}/lib/{frameworkLib}");
+				CreateDirectory($"{nugetTempDir}/{projectName}/lib/{frameworkLib}");
 			};
 
 			foreach (var file in filePathes) {
-				var srcFile = $"{solutionsFolder}/{projectName}/bin/Release/{file}";
-				var dstFile = $"{nugetTemp}/{projectName}/lib/{file}";
+				var srcFile = $"{srcDir}/{projectName}/bin/Release/{file}";
+				var dstFile = $"{nugetTempDir}/{projectName}/lib/{file}";
 				CopyFile(srcFile, dstFile);
 			};
 
 			var exitCode = StartProcess("nuget.exe", new ProcessSettings {
-				WorkingDirectory = $"{nugetTemp}/{projectName}",
+				WorkingDirectory = $"{nugetTempDir}/{projectName}",
 				Arguments = "pack -OutputDirectory .."
 			});
 			if (exitCode != 0)

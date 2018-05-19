@@ -23,7 +23,7 @@ install:
   - cmd: dotnet --info
   
 build_script:
-# skip BuildSamples; for now..
+# skip BuildSamples for now..
   - ps: ./build.ps1
 
 test: off
