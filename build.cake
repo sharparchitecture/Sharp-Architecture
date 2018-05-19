@@ -203,7 +203,6 @@ Task("RunXunitTests")
 
                 var testOutput = $"{artifactsDir}/xunitTests-{projectFilename}.xml";
                 var testOutputAbs = MakeAbsolute(File(testOutput));
-                Information("testOutput: {0}", MakeAbsolute(File(testOutput)));
                 // todo: Detect NetCore framework version
                 OpenCover(
                     tool => tool.DotNetCoreTool(projectPath.ToString(),
@@ -247,7 +246,7 @@ Task("UploadTestResults")
         foreach(var xunitResult in GetFiles($"{artifactsDir}/xunitTests-*.xml"))
         {
             Information("Uploading xUnit results: {0}", xunitResult);
-            UploadFile("https://ci.appveyor.com/api/testresults/xunit2/"+appVeyorJobId, xunitResult);
+            UploadFile("https://ci.appveyor.com/api/testresults/xunit/"+appVeyorJobId, xunitResult);
         }
     });
 
