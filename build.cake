@@ -24,12 +24,12 @@
 var target = Argument("target", "Default");
 if (string.IsNullOrWhiteSpace(target))
 {
-	target = "Default";
+    target = "Default";
 }
 
 var buildConfig = Argument("buildConfig", "Release");
 if (string.IsNullOrEmpty(buildConfig)) {
-	buildConfig = "Release";
+    buildConfig = "Release";
 }
 
 // Build configuration
@@ -45,12 +45,12 @@ var appVeyorJobId = AppVeyor.Environment.JobId;
 // Solution settings
 // Nuget packages to build
 var nugetPackages = new [] {
-	"SharpArch.Domain",
-	"SharpArch.NHibernate",
-	"SharpArch.RavenDb",
-	"SharpArch.Testing",
-	"SharpArch.Web.AspNetCore",
-	"SharpArch.Testing.NUnit"
+    "SharpArch.Domain",
+    "SharpArch.NHibernate",
+    "SharpArch.RavenDb",
+    "SharpArch.Testing",
+    "SharpArch.Web.AspNetCore",
+    "SharpArch.Testing.NUnit"
 };
 
 // Calculate version
@@ -77,69 +77,69 @@ var nugetTempDir = artifactsDir + "/Packages";
 
 Setup((context) =>
 {
-	Information("Building SharpArchitecture, version {0} (isTagged: {1}, isLocal: {2})...", nugetVersion, isTagged, local);
-	CreateDirectory(artifactsDir);
-	CleanDirectory(artifactsDir);
+    Information("Building SharpArchitecture, version {0} (isTagged: {1}, isLocal: {2})...", nugetVersion, isTagged, local);
+    CreateDirectory(artifactsDir);
+    CleanDirectory(artifactsDir);
 });
 
 Teardown((context) =>
 {
-	// Executed AFTER the last task.
+    // Executed AFTER the last task.
 });
 
 Task("SetVersion")
-	.Does(() =>
-	{
-		CreateAssemblyInfo("./Common/AssemblyVersion.cs", new AssemblyInfoSettings{
-			FileVersion = semVersion.MajorMinorPatch,
-			InformationalVersion = semVersion.InformationalVersion,
-			Version = semVersion.MajorMinorPatch
-		});
-	});
+    .Does(() =>
+    {
+        CreateAssemblyInfo("./Common/AssemblyVersion.cs", new AssemblyInfoSettings{
+            FileVersion = semVersion.MajorMinorPatch,
+            InformationalVersion = semVersion.InformationalVersion,
+            Version = semVersion.MajorMinorPatch
+        });
+    });
 
 
 Task("UpdateAppVeyorBuildNumber")
-	.WithCriteria(() => AppVeyor.IsRunningOnAppVeyor)
-	.Does(() =>
-	{
-		AppVeyor.UpdateBuildVersion(buildVersion);
+    .WithCriteria(() => AppVeyor.IsRunningOnAppVeyor)
+    .Does(() =>
+    {
+        AppVeyor.UpdateBuildVersion(buildVersion);
 
-	}).ReportError(exception =>
-	{
-		// When a build starts, the initial identifier is an auto-incremented value supplied by AppVeyor.
-		// As part of the build script, this version in AppVeyor is changed to be the version obtained from
-		// GitVersion. This identifier is purely cosmetic and is used by the core team to correlate a build
-		// with the pull-request. In some circumstances, such as restarting a failed/cancelled build the
-		// identifier in AppVeyor will be already updated and default behaviour is to throw an
-		// exception/cancel the build when in fact it is safe to swallow.
-		// See https://github.com/reactiveui/ReactiveUI/issues/1262
+    }).ReportError(exception =>
+    {
+        // When a build starts, the initial identifier is an auto-incremented value supplied by AppVeyor.
+        // As part of the build script, this version in AppVeyor is changed to be the version obtained from
+        // GitVersion. This identifier is purely cosmetic and is used by the core team to correlate a build
+        // with the pull-request. In some circumstances, such as restarting a failed/cancelled build the
+        // identifier in AppVeyor will be already updated and default behaviour is to throw an
+        // exception/cancel the build when in fact it is safe to swallow.
+        // See https://github.com/reactiveui/ReactiveUI/issues/1262
 
-		Warning("Build with version {0} already exists.", buildVersion);
-	});
+        Warning("Build with version {0} already exists.", buildVersion);
+    });
 
 
 Task("Restore")
-	.Does(() =>
-	{
-		DotNetCoreRestore(srcDir);
-	});
+    .Does(() =>
+    {
+        DotNetCoreRestore(srcDir);
+    });
 
 
 Task("Build")
-	.IsDependentOn("SetVersion")
-	.IsDependentOn("UpdateAppVeyorBuildNumber")
-	.IsDependentOn("Restore")
-	.Does(() =>
-	{
-		DotNetCoreBuild(srcDir, new DotNetCoreBuildSettings {
-			NoRestore = true,
-			Configuration = buildConfig,
-		});
-	});
+    .IsDependentOn("SetVersion")
+    .IsDependentOn("UpdateAppVeyorBuildNumber")
+    .IsDependentOn("Restore")
+    .Does(() =>
+    {
+        DotNetCoreBuild(srcDir, new DotNetCoreBuildSettings {
+            NoRestore = true,
+            Configuration = buildConfig,
+        });
+    });
 
 
 Task("RunNunitTests")
-    .Does(() => 
+    .Does(() =>
     {
         var testAssemblies = GetFiles($"{testsRootDir}/SharpArch.Tests/bin/{buildConfig}/net462/SharpArch.Tests.dll")
             .Union(GetFiles($"{testsRootDir}/SharpArch.Tests.NHibernate/bin/{buildConfig}/net462/SharpArch.Tests.NHibernate.dll"))
@@ -150,7 +150,7 @@ Task("RunNunitTests")
         }
 
         Action<ICakeContext> testAction = tool => {
-            tool.NUnit3(testAssemblies, 
+            tool.NUnit3(testAssemblies,
                 new NUnit3Settings {
                     OutputFile = artifactsDir + "/TestOutput.xml",
                     ErrorOutputFile = artifactsDir + "/ErrorOutput.xml",
@@ -177,182 +177,183 @@ Task("RunNunitTests")
 
 
 Task("RunXunitTests")
-	.Does((ctx) =>
-	{
+    .Does((ctx) =>
+    {
 
-		var testProjects = GetFiles($"{testsRootDir}/SharpArch.xUnitTests/**/*.csproj");
-		bool success = true;
+        var testProjects = GetFiles($"{testsRootDir}/SharpArch.xUnitTests/**/*.csproj");
+        bool success = true;
 
-		foreach(var testProj in testProjects) {
-			try
-			{
-				var projectPath = testProj.GetDirectory();
-				var projectFilename = testProj.GetFilenameWithoutExtension();
-//				var dotnetSettings = new DotNetCoreToolSettings {
-//					WorkingDirectory = testProj.GetDirectory()
-//				};
-				var openCoverSettings = new OpenCoverSettings {
-					OldStyle = true,
-					ReturnTargetCodeOffset = 0,
-					ArgumentCustomization = args => args.Append("-mergeoutput"),
-					WorkingDirectory = projectPath,
-				}
-				.WithFilter("+[*]* -[*.Tests*]*")
-				.ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
-				.ExcludeByFile("*/*Designer.cs ");
+        foreach(var testProj in testProjects) {
+            try
+            {
+                var projectPath = testProj.GetDirectory();
+                var projectFilename = testProj.GetFilenameWithoutExtension();
+//              var dotnetSettings = new DotNetCoreToolSettings {
+//                  WorkingDirectory = testProj.GetDirectory()
+//              };
+                var openCoverSettings = new OpenCoverSettings {
+                    OldStyle = true,
+                    ReturnTargetCodeOffset = 0,
+                    ArgumentCustomization = args => args.Append("-mergeoutput"),
+                    WorkingDirectory = projectPath,
+                }
+                .WithFilter("+[*]* -[*.Tests*]*")
+                .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
+                .ExcludeByFile("*/*Designer.cs ");
 
-				var testOutput = $"{artifactsDir}/xunitTests-{projectFilename}.xml";
-				Information("testOutput: {0}", MakeAbsolute(File(testOutput)));
-				// todo: Detect NetCore framework version
-				OpenCover(
-					tool => tool.DotNetCoreTool(projectPath.ToString(),
-						"xunit",
-						$"-xml {testOutput} -c {buildConfig} --no-build "),
-					testCoverageOutputFile,
-					openCoverSettings);
-			}
-			catch (Exception ex)
-			{
-				Error("Error running tests", ex);
-				success = false;
-			}
-		}
-	});
+                var testOutput = $"{artifactsDir}/xunitTests-{projectFilename}.xml";
+                var testOutputAbs = MakeAbsolute(File(testOutput));
+                Information("testOutput: {0}", MakeAbsolute(File(testOutput)));
+                // todo: Detect NetCore framework version
+                OpenCover(
+                    tool => tool.DotNetCoreTool(projectPath.ToString(),
+                        "xunit",
+                        $"-xml {testOutputAbs} -c {buildConfig} --no-build "),
+                    testCoverageOutputFile,
+                    openCoverSettings);
+            }
+            catch (Exception ex)
+            {
+                Error("Error running tests", ex);
+                success = false;
+            }
+        }
+    });
 
 Task("CleanPreviousTestResults")
-	.Does(() => 
-	{
-		if (FileExists(testCoverageOutputFile))
-			DeleteFile(testCoverageOutputFile);
-		DeleteFiles(artifactsDir + "/xunitTests-*.xml");
-		if (DirectoryExists(codeCoverageReportDir))
-			DeleteDirectory(codeCoverageReportDir, recursive: true);
-	});
+    .Does(() =>
+    {
+        if (FileExists(testCoverageOutputFile))
+            DeleteFile(testCoverageOutputFile);
+        DeleteFiles(artifactsDir + "/xunitTests-*.xml");
+        if (DirectoryExists(codeCoverageReportDir))
+            DeleteDirectory(codeCoverageReportDir, recursive: true);
+    });
 
 Task("GenerateCoverageReport")
-	.WithCriteria(() => local)
-	.Does(() =>
-	{
-		ReportGenerator(testCoverageOutputFile, codeCoverageReportDir);
-	});
+    .WithCriteria(() => local)
+    .Does(() =>
+    {
+        ReportGenerator(testCoverageOutputFile, codeCoverageReportDir);
+    });
 
 
 Task("UploadTestResults")
-	.WithCriteria(() => !local)
-	.Does(() => {
-		CoverallsIo(testCoverageOutputFile);
-		Information("Uploading nUnit result: {0}", nunitTestResults);
-		UploadFile("https://ci.appveyor.com/api/testresults/nunit3/"+appVeyorJobId, nunitTestResults);
-		foreach(var xunitResult in GetFiles($"{artifactsDir}/xunitTests-*.xml"))
-		{
-			Information("Uploading xUnit results: {0}", xunitResult);
-			UploadFile("https://ci.appveyor.com/api/testresults/xunit2/"+appVeyorJobId, xunitResult);
-		}
-	});
+    .WithCriteria(() => !local)
+    .Does(() => {
+        CoverallsIo(testCoverageOutputFile);
+        Information("Uploading nUnit result: {0}", nunitTestResults);
+        UploadFile("https://ci.appveyor.com/api/testresults/nunit3/"+appVeyorJobId, nunitTestResults);
+        foreach(var xunitResult in GetFiles($"{artifactsDir}/xunitTests-*.xml"))
+        {
+            Information("Uploading xUnit results: {0}", xunitResult);
+            UploadFile("https://ci.appveyor.com/api/testresults/xunit2/"+appVeyorJobId, xunitResult);
+        }
+    });
 
 
 Task("RunUnitTests")
-	.IsDependentOn("Build")
-	.IsDependentOn("CleanPreviousTestResults")
-	.IsDependentOn("RunNunitTests")
-	.IsDependentOn("RunXunitTests")
-	.IsDependentOn("GenerateCoverageReport")
-	.IsDependentOn("UploadTestResults")
-	.Does(() =>
-	{
-	});
+    .IsDependentOn("Build")
+    .IsDependentOn("CleanPreviousTestResults")
+    .IsDependentOn("RunNunitTests")
+    .IsDependentOn("RunXunitTests")
+    .IsDependentOn("GenerateCoverageReport")
+    .IsDependentOn("UploadTestResults")
+    .Does(() =>
+    {
+    });
 
 
 Task("InspectCode")
-	.Does(() => {
-		DupFinder(solutionFile, new DupFinderSettings {
-			DiscardCost = 70,
-			DiscardFieldsName = false,
-			DiscardLiterals = false,
-			NormalizeTypes = true,
-			ShowStats = true,
-			ShowText = true,
-			OutputFile = duplicateFinderOutputFile,
-		});
-		ReSharperReports(
-			duplicateFinderOutputFile,
-			System.IO.Path.ChangeExtension(duplicateFinderOutputFile, "html")
-		);
+    .Does(() => {
+        DupFinder(solutionFile, new DupFinderSettings {
+            DiscardCost = 70,
+            DiscardFieldsName = false,
+            DiscardLiterals = false,
+            NormalizeTypes = true,
+            ShowStats = true,
+            ShowText = true,
+            OutputFile = duplicateFinderOutputFile,
+        });
+        ReSharperReports(
+            duplicateFinderOutputFile,
+            System.IO.Path.ChangeExtension(duplicateFinderOutputFile, "html")
+        );
 
-		InspectCode(solutionFile, new InspectCodeSettings() {
-			OutputFile = codeInspectionsOutputFile,
-			Profile = $"{solutionFile}.DotSettings",
-			CachesHome = "./.ReSharperCaches",
-			SolutionWideAnalysis = true
-		});
-		ReSharperReports(
-			codeInspectionsOutputFile,
-			System.IO.Path.ChangeExtension(codeInspectionsOutputFile, "html")
-		);
-	});
+        InspectCode(solutionFile, new InspectCodeSettings() {
+            OutputFile = codeInspectionsOutputFile,
+            Profile = $"{solutionFile}.DotSettings",
+            CachesHome = "./.ReSharperCaches",
+            SolutionWideAnalysis = true
+        });
+        ReSharperReports(
+            codeInspectionsOutputFile,
+            System.IO.Path.ChangeExtension(codeInspectionsOutputFile, "html")
+        );
+    });
 
 
 Task("CreateNugetPackages")
-	.Does(() => {
-		// copy templates to temp folder
-		CopyDirectory(nugetTemplatesDir, nugetTempDir);
-		// update templates
-		ReplaceTextInFiles(nugetTempDir+"/**/*.nuspec", "$(SemanticVersion)", nugetVersion);
-		ReplaceTextInFiles(nugetTempDir+"/**/*.nuspec", "$(NextMajorRelease)", nextMajorRelease);
+    .Does(() => {
+        // copy templates to temp folder
+        CopyDirectory(nugetTemplatesDir, nugetTempDir);
+        // update templates
+        ReplaceTextInFiles(nugetTempDir+"/**/*.nuspec", "$(SemanticVersion)", nugetVersion);
+        ReplaceTextInFiles(nugetTempDir+"/**/*.nuspec", "$(NextMajorRelease)", nextMajorRelease);
 
-		Func<string, string, string> removeBasePath = (path, basePath) => {
-			var endOfBase = path.IndexOf(basePath);
-			if (endOfBase < 0)
-				return path; // base not found
-			endOfBase += basePath.Length;
-			return path.Substring(endOfBase);
-		};
+        Func<string, string, string> removeBasePath = (path, basePath) => {
+            var endOfBase = path.IndexOf(basePath);
+            if (endOfBase < 0)
+                return path; // base not found
+            endOfBase += basePath.Length;
+            return path.Substring(endOfBase);
+        };
 
-		Action<string> buildPackage = (string projectName) => {
-			Information("Creating package {0}", projectName);
-			var files = GetFiles($"{srcDir}/{projectName}/bin/Release/**/{projectName}.*");
-			var filePathes = files.Where(f=> !f.FullPath.EndsWith(".deps.json", StringComparison.OrdinalIgnoreCase))
-				.Select(filePath => removeBasePath(filePath.FullPath, $"{projectName}/bin/Release/"));
+        Action<string> buildPackage = (string projectName) => {
+            Information("Creating package {0}", projectName);
+            var files = GetFiles($"{srcDir}/{projectName}/bin/Release/**/{projectName}.*");
+            var filePathes = files.Where(f=> !f.FullPath.EndsWith(".deps.json", StringComparison.OrdinalIgnoreCase))
+                .Select(filePath => removeBasePath(filePath.FullPath, $"{projectName}/bin/Release/"));
 
-			// create folders
-			foreach(var frameworkLib in filePathes.Select(fp => new FilePath(fp).GetDirectory().FullPath).Distinct()) {
-				CreateDirectory($"{nugetTempDir}/{projectName}/lib/{frameworkLib}");
-			};
+            // create folders
+            foreach(var frameworkLib in filePathes.Select(fp => new FilePath(fp).GetDirectory().FullPath).Distinct()) {
+                CreateDirectory($"{nugetTempDir}/{projectName}/lib/{frameworkLib}");
+            };
 
-			foreach (var file in filePathes) {
-				var srcFile = $"{srcDir}/{projectName}/bin/Release/{file}";
-				var dstFile = $"{nugetTempDir}/{projectName}/lib/{file}";
-				CopyFile(srcFile, dstFile);
-			};
+            foreach (var file in filePathes) {
+                var srcFile = $"{srcDir}/{projectName}/bin/Release/{file}";
+                var dstFile = $"{nugetTempDir}/{projectName}/lib/{file}";
+                CopyFile(srcFile, dstFile);
+            };
 
-			var exitCode = StartProcess("nuget.exe", new ProcessSettings {
-				WorkingDirectory = $"{nugetTempDir}/{projectName}",
-				Arguments = "pack -OutputDirectory .."
-			});
-			if (exitCode != 0)
-				throw new Exception($"Build package {projectName} failed with code {1}.");
-		};
+            var exitCode = StartProcess("nuget.exe", new ProcessSettings {
+                WorkingDirectory = $"{nugetTempDir}/{projectName}",
+                Arguments = "pack -OutputDirectory .."
+            });
+            if (exitCode != 0)
+                throw new Exception($"Build package {projectName} failed with code {1}.");
+        };
 
-		foreach(var projectName in nugetPackages) {
-			buildPackage(projectName);
-		};
-	});
+        foreach(var projectName in nugetPackages) {
+            buildPackage(projectName);
+        };
+    });
 
 Task("PublishNugetPackages")
-	.IsDependentOn("CreateNugetPackages")
-	.Does(() => {
+    .IsDependentOn("CreateNugetPackages")
+    .Does(() => {
 
-	});
+    });
 
 Task("Default")
-	.IsDependentOn("UpdateAppVeyorBuildNumber")
-	.IsDependentOn("Build")
-	.IsDependentOn("RunUnitTests")
-	.IsDependentOn("InspectCode")
-	.IsDependentOn("CreateNugetPackages")
-	.Does(
-		() => {}
-	);
+    .IsDependentOn("UpdateAppVeyorBuildNumber")
+    .IsDependentOn("Build")
+    .IsDependentOn("RunUnitTests")
+    .IsDependentOn("InspectCode")
+    .IsDependentOn("CreateNugetPackages")
+    .Does(
+        () => {}
+    );
 
 
 // EXECUTION
