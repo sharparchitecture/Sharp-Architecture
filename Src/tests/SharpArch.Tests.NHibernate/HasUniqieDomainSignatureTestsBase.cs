@@ -12,6 +12,7 @@ namespace Tests.SharpArch.NHibernate
     using NUnit.Framework;
     using Tests.SharpArch.NHibernate.Mappings;
 
+
     class HasUniqueDomainSignatureTestsBase : RepositoryTestsBase
     {
         protected Mock<IServiceProvider> ServiceProviderMock;
@@ -34,7 +35,6 @@ namespace Tests.SharpArch.NHibernate
             ServiceProviderMock.Setup(sp => sp.GetService(typeof(IEntityDuplicateChecker)))
                 .Returns(new EntityDuplicateChecker(Session));
         }
-
 
         protected ValidationContext ValidationContextFor(object objectToValidate)
         {

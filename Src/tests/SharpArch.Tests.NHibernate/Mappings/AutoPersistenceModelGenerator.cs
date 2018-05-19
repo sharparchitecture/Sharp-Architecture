@@ -12,6 +12,7 @@ namespace Tests.SharpArch.NHibernate.Mappings
 
     #endregion
 
+
     /// <summary>
     ///     Generates the auto-mapping for test entities.
     /// </summary>

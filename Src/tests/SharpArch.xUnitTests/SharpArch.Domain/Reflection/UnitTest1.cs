@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace tests
+namespace Tests
 {
     using FluentAssertions;
     using SharpArch.Domain.Reflection;

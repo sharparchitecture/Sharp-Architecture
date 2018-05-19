@@ -54,6 +54,6 @@ to generate Semantic Version.
 
 * /License.txt:  I'll let you guess what this is.
 
-* /Solutions/: This contains all of the source code in their various projects.
+* /Src/: This contains all of the source code in their various projects.
 
 * /VersionHistory.txt:  Details version numbers of dependencies, changes since previous releases, upgrade details, and a roadmap of what's coming.

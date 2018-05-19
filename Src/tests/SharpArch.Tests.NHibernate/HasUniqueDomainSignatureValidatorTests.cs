@@ -4,11 +4,11 @@
     using NUnit.Framework;
     using Tests.SharpArch.Domain;
 
+
     [TestFixture]
     // ReSharper disable once TestFileNameWarning
     internal class HasUniqueDomainSignatureValidatorTests : HasUniqueDomainSignatureTestsBase
     {
-
         [Test]
         public void WhenEntityWithDuplicateGuidExists_Should_MarkEntityAsInvalid()
         {

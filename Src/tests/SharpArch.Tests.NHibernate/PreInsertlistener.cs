@@ -8,6 +8,7 @@ namespace Tests.SharpArch.NHibernate
     using System.Threading.Tasks;
     using global::NHibernate.Event;
 
+
     [Serializable]
     internal class PreInsertListener : IPreInsertEventListener
     {
@@ -21,6 +22,7 @@ namespace Tests.SharpArch.NHibernate
             return true;
         }
     }
+
 
     [Serializable]
     public class PreUpdateListener : IPreUpdateEventListener

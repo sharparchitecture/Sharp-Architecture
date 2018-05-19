@@ -66,11 +66,12 @@ var artifactDirectory = "./Drops";
 var testCoverageOutputFile = artifactDirectory + "/OpenCover.xml";
 var codeInspectionsOutputFile = artifactDirectory + "/Inspections/CodeInspections.xml";
 var duplicateFinderOutputFile = artifactDirectory + "/Inspections/CodeDuplicates.xml";
-var solutionsFolder = "./Solutions";
+var solutionsFolder = "./Src";
 var solutionFile = solutionsFolder + "/SharpArch.sln";
 var nunitTestResults = artifactDirectory + "/Nunit3TestResults.xml";
 var nugetTemplates = "./NugetTemplates";
 var nugetTemp = artifactDirectory + "/Packages";
+var codeCoverageReportDirectory = artifactDirectory + "/CodeCoverageReport";
 
 Setup((context) =>
 {
@@ -118,7 +119,7 @@ Task("UpdateAppVeyorBuildNumber")
 Task("Restore")
 	.Does(() =>
 	{
-		DotNetCoreRestore("Solutions");
+		DotNetCoreRestore("Src");
 	});
 
 
@@ -128,18 +129,56 @@ Task("Build")
 	.IsDependentOn("Restore")
 	.Does(() =>
 	{
-		DotNetCoreBuild("./Solutions/", new DotNetCoreBuildSettings {
+		DotNetCoreBuild("./Src/", new DotNetCoreBuildSettings {
 			NoRestore = true,
 			Configuration = buildConfig,
 		});
 	});
 
 
-Task("RunTests")
+Task("RunNunitTests")
+    .Does(() => 
+    {
+        var testAssemblies = GetFiles($"./Src/tests/SharpArch.Tests/bin/{buildConfig}/net462/SharpArch.Tests.dll")
+            .Union(GetFiles($"./Src/tests/SharpArch.Tests.NHibernate/bin/{buildConfig}/net462/SharpArch.Tests.NHibernate.dll"))
+            ;
+        foreach (var item in testAssemblies)
+        {
+            Information("Test assembly: {0}", item);
+        }
+
+        Action<ICakeContext> testAction = tool => {
+            tool.NUnit3(testAssemblies, 
+                new NUnit3Settings {
+                    OutputFile = artifactDirectory + "/TestOutput.xml",
+                    ErrorOutputFile = artifactDirectory + "/ErrorOutput.xml",
+                    Results = new [] {
+                        new NUnit3Result {
+                            FileName = nunitTestResults
+                        }
+                    },
+                    ShadowCopy = false,
+                });
+        };
+
+        OpenCover(testAction,
+            testCoverageOutputFile,
+            new OpenCoverSettings {
+                ReturnTargetCodeOffset = 0,
+                ArgumentCustomization = args => args.Append("-mergeoutput")
+            }
+            .WithFilter("+[*]* -[*.Tests*]*")
+            .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
+            .ExcludeByFile("*/*Designer.cs "));
+    });
+
+
+
+Task("RunXunitTests")
 	.Does((ctx) =>
 	{
 
-		var testProjects = GetFiles("./Solutions/tests/SharpArch.xUnitTests/**/*.csproj");
+		var testProjects = GetFiles("./Src/tests/SharpArch.xUnitTests/**/*.csproj");
 		bool success = true;
 
 		foreach(var testProj in testProjects) {
@@ -178,12 +217,21 @@ Task("RunTests")
 		}
 	});
 
+Task("CleanPreviousTestResults")
+	.Does(() => 
+	{
+		if (FileExists(testCoverageOutputFile))
+			DeleteFile(testCoverageOutputFile);
+		DeleteFiles(artifactDirectory+ "/xunitTests-*.xml");
+		if (DirectoryExists(codeCoverageReportDirectory))
+			DeleteDirectory(codeCoverageReportDirectory, recursive: true);
+	});
 
 Task("GenerateCoverageReport")
 	.WithCriteria(() => local)
 	.Does(() =>
 	{
-		ReportGenerator(testCoverageOutputFile, artifactDirectory + "/CodeCoverageReport");
+		ReportGenerator(testCoverageOutputFile, codeCoverageReportDirectory);
 	});
 
 
@@ -191,17 +239,21 @@ Task("UploadTestResults")
 	.WithCriteria(() => !local)
 	.Does(() => {
 		CoverallsIo(testCoverageOutputFile);
+		Information("Uploading nUnit result: {0}", nunitTestResults);
 		UploadFile("https://ci.appveyor.com/api/testresults/nunit3/"+appVeyorJobId, nunitTestResults);
-		foreach(var xunitResults in GetFiles($"{artifactDirectory}/xunitTests-*.xml"))
+		foreach(var xunitResult in GetFiles($"{artifactDirectory}/xunitTests-*.xml"))
 		{
-			UploadFile("https://ci.appveyor.com/api/testresults/xunit2/"+appVeyorJobId, xunitResults);
+			Information("Uploading xUnit results: {0}", xunitResult);
+			UploadFile("https://ci.appveyor.com/api/testresults/xunit2/"+appVeyorJobId, xunitResult);
 		}
 	});
 
 
 Task("RunUnitTests")
-	.IsDependentOn("Build")
-	.IsDependentOn("RunTests")
+	//.IsDependentOn("Build")
+	.IsDependentOn("CleanPreviousTestResults")
+	.IsDependentOn("RunNunitTests")
+	.IsDependentOn("RunXunitTests")
 	.IsDependentOn("GenerateCoverageReport")
 	.IsDependentOn("UploadTestResults")
 	.Does(() =>
@@ -227,7 +279,7 @@ Task("InspectCode")
 
 		InspectCode(solutionFile, new InspectCodeSettings() {
 			OutputFile = codeInspectionsOutputFile,
-			Profile = "./Solutions/SharpArch.sln.DotSettings",
+			Profile = "./Src/SharpArch.sln.DotSettings",
 			CachesHome = "./.ReSharperCaches",
 			SolutionWideAnalysis = true
 		});
