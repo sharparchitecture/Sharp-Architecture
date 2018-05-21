@@ -12,28 +12,28 @@ namespace Tests.SharpArch.Domain.DataAnnotationsValidator
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Diagnostics;
+    using FluentAssertions;
     using global::SharpArch.Domain.DomainModel;
     using global::SharpArch.Domain.PersistenceSupport;
     using global::SharpArch.Domain.Validation;
     using Moq;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
-    internal class HasUniqueObjectSignatureValidatorTests
+
+    public class HasUniqueObjectSignatureValidatorTests
     {
-        [SetUp]
-        public void SetUp()
+        public HasUniqueObjectSignatureValidatorTests()
         {
-            serviceProviderMock = new Mock<IServiceProvider>();
-            serviceProviderMock.Setup(sp => sp.GetService(typeof(IEntityDuplicateChecker)))
+            _serviceProviderMock = new Mock<IServiceProvider>();
+            _serviceProviderMock.Setup(sp => sp.GetService(typeof(IEntityDuplicateChecker)))
                 .Returns(new DuplicateCheckerStub());
         }
 
-        Mock<IServiceProvider> serviceProviderMock;
+        readonly Mock<IServiceProvider> _serviceProviderMock;
 
         ValidationContext ValidationContextFor(object instance)
         {
-            return new ValidationContext(instance, serviceProviderMock.Object, null);
+            return new ValidationContext(instance, _serviceProviderMock.Object, null);
         }
 
         [HasUniqueDomainSignature]
@@ -49,17 +49,14 @@ namespace Tests.SharpArch.Domain.DataAnnotationsValidator
             {
                 Trace.Assert(entity != null);
 
-                if (entity is Contractor) {
-                    var contractor = entity as Contractor;
-                    return !string.IsNullOrEmpty(contractor.Name) && contractor.Name.ToLower() == @"codai";
-                }
-                if (entity is User) {
-                    var user = entity as User;
-                    return !string.IsNullOrEmpty(user.SSN) && user.SSN.ToLower() == "123-12-1234";
-                }
-                if (entity is ObjectWithGuidId) {
-                    var objectWithGuidId = entity as ObjectWithGuidId;
-                    return !string.IsNullOrEmpty(objectWithGuidId.Name) && objectWithGuidId.Name.ToLower() == @"codai";
+                switch (entity) {
+                    case Contractor contractor:
+                        return !string.IsNullOrEmpty(contractor.Name) && string.Equals(contractor.Name, @"codai", StringComparison.OrdinalIgnoreCase);
+                    case User user:
+                        return !string.IsNullOrEmpty(user.SSN) && user.SSN == "123-12-1234";
+                    case ObjectWithGuidId objectWithGuidId:
+                        return !string.IsNullOrEmpty(objectWithGuidId.Name) &&
+                            string.Equals(objectWithGuidId.Name, @"codai", StringComparison.OrdinalIgnoreCase);
                 }
 
                 // By default, simply return false for no duplicates found
@@ -88,52 +85,51 @@ namespace Tests.SharpArch.Domain.DataAnnotationsValidator
             public string SSN { get; set; }
         }
 
-        [Test]
+        [Fact]
         public void CanVerifyThatDuplicateExistsDuringValidationProcess()
         {
             var contractor = new Contractor {Name = @"Codai"};
             ValidationContext validationContext = ValidationContextFor(contractor);
             IEnumerable<ValidationResult> invalidValues = contractor.ValidationResults(validationContext);
-
-            Assert.That(contractor.IsValid(validationContext), Is.False);
-
-            foreach (ValidationResult invalidValue in invalidValues) {
+            foreach (ValidationResult invalidValue in invalidValues)
+            {
                 Debug.WriteLine(invalidValue.ErrorMessage);
             }
+
+            contractor.IsValid(validationContext).Should().BeFalse();
         }
 
-        [Test]
+        [Fact]
         public void CanVerifyThatDuplicateExistsOfEntityWithGuidIdDuringValidationProcess()
         {
             var objectWithGuidId = new ObjectWithGuidId {Name = "codai"};
 
-            Assert.That(objectWithGuidId.IsValid(ValidationContextFor(objectWithGuidId)), Is.False);
+            objectWithGuidId.IsValid(ValidationContextFor(objectWithGuidId)).Should().BeFalse();
 
             objectWithGuidId = new ObjectWithGuidId {Name = "whatever"};
-            Assert.That(objectWithGuidId.IsValid(ValidationContextFor(objectWithGuidId)), Is.True);
+            objectWithGuidId.IsValid(ValidationContextFor(objectWithGuidId)).Should().BeTrue();
         }
 
-        [Test]
+        [Fact]
         public void CanVerifyThatDuplicateExistsOfEntityWithStringIdDuringValidationProcess()
         {
             var user = new User {SSN = "123-12-1234"};
-            Assert.That(user.IsValid(ValidationContextFor(user)), Is.False);
+            user.IsValid(ValidationContextFor(user)).Should().BeFalse();
         }
 
-        [Test]
+        [Fact]
         public void CanVerifyThatNoDuplicateExistsDuringValidationProcess()
         {
             var contractor = new Contractor {Name = "Some unique name"};
-            Assert.That(contractor.IsValid(ValidationContextFor(contractor)));
+            contractor.IsValid(ValidationContextFor(contractor)).Should().BeTrue();
         }
 
-        [Test]
+        [Fact]
         public void MayNotUseValidatorWithEntityHavingDifferentIdType()
         {
             var invalidCombination = new ObjectWithStringIdAndValidatorForIntId {Name = "whatever"};
-
-            Assert.Throws<InvalidOperationException>(
-                () => invalidCombination.ValidationResults(ValidationContextFor(invalidCombination)));
+            Action validate = () => invalidCombination.ValidationResults(ValidationContextFor(invalidCombination));
+            validate.Should().Throw<InvalidOperationException>();
         }
     }
 }

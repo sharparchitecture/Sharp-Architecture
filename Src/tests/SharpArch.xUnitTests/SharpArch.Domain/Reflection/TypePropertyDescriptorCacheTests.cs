@@ -1,28 +1,21 @@
-﻿// ReSharper disable InternalMembersMustHaveComments
-// ReSharper disable HeapView.ObjectAllocation
-// ReSharper disable HeapView.ObjectAllocation.Evident
-// ReSharper disable HeapView.ClosureAllocation
-// ReSharper disable HeapView.DelegateAllocation
-
 namespace Tests.SharpArch.Domain.Reflection
 {
     using System;
     using FluentAssertions;
     using global::SharpArch.Domain.Reflection;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
-    internal class TypePropertyDescriptorCacheTests
+
+    public class TypePropertyDescriptorCacheTests
     {
-        [SetUp]
-        public void SetUp()
+        public TypePropertyDescriptorCacheTests()
         {
             _cache = new TypePropertyDescriptorCache();
         }
 
-        TypePropertyDescriptorCache _cache;
+        readonly TypePropertyDescriptorCache _cache;
 
-        [Test]
+        [Fact]
         public void Clear_Should_ClearTheCache()
         {
             _cache.GetOrAdd(GetType(), t => new TypePropertyDescriptor(t, null));
@@ -30,13 +23,13 @@ namespace Tests.SharpArch.Domain.Reflection
             _cache.Find(GetType()).Should().BeNull();
         }
 
-        [Test]
+        [Fact]
         public void Find_Should_ReturnNullForMissingDescriptor()
         {
             _cache.Find(typeof(TypePropertyDescriptorCache)).Should().BeNull();
         }
 
-        [Test]
+        [Fact]
         public void GetOrAdd_Should_AddMissingItemToCache()
         {
             Type type = GetType();

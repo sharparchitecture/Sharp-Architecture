@@ -5,6 +5,7 @@
 // ReSharper disable HeapView.ClosureAllocation
 
 // ReSharper disable HeapView.ObjectAllocation
+
 namespace Tests.SharpArch.NHibernate
 {
     using System;
@@ -16,6 +17,7 @@ namespace Tests.SharpArch.NHibernate
     using global::SharpArch.Domain;
     using global::SharpArch.NHibernate;
     using NUnit.Framework;
+
 
     [TestFixture]
     internal class NHibernateSessionFactoryBuilderTests
@@ -39,7 +41,6 @@ namespace Tests.SharpArch.NHibernate
 
             exposeCalled.Should().BeTrue();
         }
-
 
         [Test]
         public void CanInitializeWithConfigFile()
@@ -99,8 +100,7 @@ namespace Tests.SharpArch.NHibernate
         public void DoesInitializeFailWhenCachingFileDependencyCannotBeFound()
         {
             Assert.Throws<FileNotFoundException>(
-                () =>
-                {
+                () => {
                     new NHibernateSessionFactoryBuilder()
                         // Random Guid value as dependency file to cause the exception
                         .UseConfigurationCache(new NHibernateConfigurationFileCache(new[] {Guid.NewGuid().ToString()}))
@@ -161,7 +161,8 @@ namespace Tests.SharpArch.NHibernate
             memoryStream = new MemoryStream();
         }
 
-        public Configuration LoadConfiguration(string configKey, string configPath,
+        public Configuration LoadConfiguration(
+            string configKey, string configPath,
             IEnumerable<string> mappingAssemblies)
         {
             if (memoryStream.Length == 0)
