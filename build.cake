@@ -188,9 +188,6 @@ Task("RunXunitTests")
             {
                 var projectPath = testProj.GetDirectory();
                 var projectFilename = testProj.GetFilenameWithoutExtension();
-//              var dotnetSettings = new DotNetCoreToolSettings {
-//                  WorkingDirectory = testProj.GetDirectory()
-//              };
                 var openCoverSettings = new OpenCoverSettings {
                     OldStyle = true,
                     ReturnTargetCodeOffset = 0,
@@ -201,8 +198,7 @@ Task("RunXunitTests")
                 .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
                 .ExcludeByFile("*/*Designer.cs ");
 
-                var testOutput = $"{artifactsDir}/xunitTests-{projectFilename}.xml";
-                var testOutputAbs = MakeAbsolute(File(testOutput));
+                var testOutputAbs = MakeAbsolute(File($"{artifactsDir}/xunitTests-{projectFilename}.xml"));
                 // todo: Detect NetCore framework version
                 OpenCover(
                     tool => tool.DotNetCoreTool(projectPath.ToString(),

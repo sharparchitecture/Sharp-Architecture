@@ -29,5 +29,9 @@
     <ProjectReference Include="..\..\SharpArch.Testing.NUnit\SharpArch.Testing.NUnit.csproj" />
     <ProjectReference Include="..\..\SharpArch.Testing\SharpArch.Testing.csproj" />
   </ItemGroup>
+   
+  <ItemGroup>
+    <Folder Include="SharpArch.Domain\Reflection\" />
+  </ItemGroup>
  
 </Project>

@@ -35,7 +35,7 @@ namespace Tests.SharpArch.Domain
             public string FirstProperty { get; set; }
         }
 
-        [Test]
+        [Fact]
         public void Retrieve_Should_LoadObjectFromCache()
         {
             var original = new DummyType {FirstProperty = "1"};
@@ -46,21 +46,21 @@ namespace Tests.SharpArch.Domain
             copy.Should().BeEquivalentTo(original, opt => opt.IncludingProperties());
         }
 
-        [Test]
+        [Fact]
         public void Retrieve_ShouldThrow_WhenEmptyPathSpecified()
         {
             Action a = () => FileCache.RetrieveFromCache<DummyType>("");
             a.Should().Throw<ArgumentException>();
         }
 
-        [Test]
+        [Fact]
         public void Retrieve_ShouldThrow_WhenNullPathSpecified()
         {
             Action a = () => FileCache.RetrieveFromCache<DummyType>(null);
             a.Should().Throw<ArgumentException>().Which.ParamName.Should().Be("path");
         }
 
-        [Test]
+        [Fact]
         public void Retrieve_ShouldReturnNull_WhenFileContentIsInvalid()
         {
             File.WriteAllText(_tempFileName, "&&&&");
@@ -69,21 +69,21 @@ namespace Tests.SharpArch.Domain
                 .Should().BeNull();
         }
 
-        [Test]
+        [Fact]
         public void Store_ShouldThrow_WhenTryingToStoreNull()
         {
             Action a = () => FileCache.StoreInCache<DummyType>(null, _tempFileName);
             a.Should().Throw<ArgumentNullException>();
         }
 
-        [Test]
+        [Fact]
         public void Store_ShouldThrow_WhenPathIsEmpty()
         {
             Action a = () => FileCache.StoreInCache(new DummyType(), "");
             a.Should().Throw<ArgumentException>();
         }
 
-        [Test]
+        [Fact]
         public void Store_Should_SerializeToFile()
         {
             FileCache.StoreInCache(new DummyType(), _tempFileName);
