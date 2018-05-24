@@ -8,6 +8,7 @@
 // ReSharper disable MissingAnnotation
 
 // ReSharper disable ExceptionNotDocumentedOptional
+
 namespace Tests.SharpArch.Domain.DomainModel
 {
     using System.IO;
@@ -17,10 +18,8 @@ namespace Tests.SharpArch.Domain.DomainModel
     using Newtonsoft.Json;
     using Xunit;
 
-
     public class EntityTests
     {
-        
         public EntityTests()
         {
             _obj = new MockEntityObjectWithDefaultId {
@@ -106,7 +105,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         }
 
         class MockEntityObjectBase : MockEntityObjectBase<int>
-        {}
+        { }
 
         class MockEntityObjectWithDefaultId : MockEntityObjectBase, IHasAssignedId<int>
         {
@@ -125,10 +124,10 @@ namespace Tests.SharpArch.Domain.DomainModel
         }
 
         class Entity1 : Entity
-        {}
+        { }
 
         class Entity2 : Entity
-        {}
+        { }
 
         class ObjectWithAllDomainSignatureProperty : Entity
         {
@@ -387,7 +386,6 @@ namespace Tests.SharpArch.Domain.DomainModel
             var invalidEntity = new ObjectWithNoDomainSignatureProperties();
 
             invalidEntity.GetSignatureProperties().Should().BeEmpty();
-
         }
 
         [Fact]
@@ -454,7 +452,6 @@ namespace Tests.SharpArch.Domain.DomainModel
         [Fact]
         public void DoesDefaultEntityEqualsOverrideWorkWhenNoIdIsAssigned()
         {
-
             _obj.Equals(_sameObj).Should().BeTrue();
             _obj.Equals(_diffObj).Should().BeFalse();
             _obj.Equals(new MockEntityObjectWithDefaultId()).Should().BeFalse();
