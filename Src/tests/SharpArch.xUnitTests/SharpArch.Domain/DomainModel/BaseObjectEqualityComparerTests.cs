@@ -70,11 +70,11 @@ namespace Tests.SharpArch.Domain.DomainModel
 
             objects1.Intersect(
                     objects2, new BaseObjectEqualityComparer<ConcreteEntityWithDomainSignatureProperties>()).First()
-                .Should().BeSameAs(obj1);
+                .Equals(obj1).Should().BeTrue();
 
             objects1.Intersect(
                     objects2, new BaseObjectEqualityComparer<ConcreteEntityWithDomainSignatureProperties>()).First()
-                .Should().BeSameAs(obj3);
+                .Equals(obj3).Should().BeTrue();
         }
 
         [Fact]

@@ -7,6 +7,7 @@
 
 // ReSharper disable MissingAnnotation
 
+// ReSharper disable ExceptionNotDocumentedOptional
 namespace Tests.SharpArch.Domain.DomainModel
 {
     using System.IO;
@@ -385,8 +386,8 @@ namespace Tests.SharpArch.Domain.DomainModel
         {
             var invalidEntity = new ObjectWithNoDomainSignatureProperties();
 
-            invalidEntity.GetSignatureProperties();
-            // todo: assert
+            invalidEntity.GetSignatureProperties().Should().BeEmpty();
+
         }
 
         [Fact]
@@ -447,7 +448,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         [Fact]
         public void DoEqualEntitiesWithNoIdsGenerateSameHashCodes()
         {
-            _objWithId.GetHashCode().Should().Be(_diffObjWithId.GetHashCode());
+            _objWithId.GetHashCode().Should().Be(_sameObjWithId.GetHashCode());
         }
 
         [Fact]
@@ -514,10 +515,6 @@ namespace Tests.SharpArch.Domain.DomainModel
                 using (var jsonReader = new JsonTextReader(stringReader)) {
                     var deserialized = jsonSerializer.Deserialize<ObjectWithOneDomainSignatureProperty>(jsonReader);
                     deserialized.Should().BeEquivalentTo(obj);
-                    //Assert.IsNotNull(deserialized);
-                    //Assert.AreEqual(999, deserialized.Id);
-                    //Assert.AreEqual(13, deserialized.Age);
-                    //Assert.AreEqual("Foo", deserialized.Name);
                 }
             }
         }
