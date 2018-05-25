@@ -168,9 +168,9 @@ Task("RunNunitTests")
                 ReturnTargetCodeOffset = 0,
                 ArgumentCustomization = args => args.Append("-mergeoutput")
             }
-            .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.xUnitTests*")
+            .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.xUnit*]*")
             .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
-            .ExcludeByFile("*/*Designer.cs "));
+            .ExcludeByFile("*/*Designer.cs"));
     });
 
 
@@ -179,7 +179,7 @@ Task("RunXunitTests")
     .Does((ctx) =>
     {
 
-        var testProjects = GetFiles($"{testsRootDir}/SharpArch.xUnitTests/**/*.csproj");
+        var testProjects = GetFiles($"{testsRootDir}/SharpArch.xUnit*/**/*.csproj");
         bool success = true;
 
         foreach (var testProj in testProjects) {
@@ -193,9 +193,9 @@ Task("RunXunitTests")
                     ArgumentCustomization = args => args.Append("-mergeoutput"),
                     WorkingDirectory = projectPath,
                 }
-                .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.xUnitTests*")
+                .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.xUnit*]*")
                 .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
-                .ExcludeByFile("*/*Designer.cs ");
+                .ExcludeByFile("*/*Designer.cs");
 
                 var testOutputAbs = MakeAbsolute(File($"{artifactsDir}/xunitTests-{projectFilename}.xml"));
                 // todo: Detect NetCore framework version
@@ -236,8 +236,8 @@ Task("UploadTestResults")
     .WithCriteria(() => !local)
     .Does(() => {
         CoverallsIo(testCoverageOutputFile);
-        Information("Uploading nUnit result: {0}", nunitTestResults);
-        UploadFile("https://ci.appveyor.com/api/testresults/nunit3/"+appVeyorJobId, nunitTestResults);
+        //Information("Uploading nUnit result: {0}", nunitTestResults);
+        //UploadFile("https://ci.appveyor.com/api/testresults/nunit3/"+appVeyorJobId, nunitTestResults);
         foreach(var xunitResult in GetFiles($"{artifactsDir}/xunitTests-*.xml"))
         {
             Information("Uploading xUnit results: {0}", xunitResult);
@@ -249,7 +249,7 @@ Task("UploadTestResults")
 Task("RunUnitTests")
     .IsDependentOn("Build")
     .IsDependentOn("CleanPreviousTestResults")
-    .IsDependentOn("RunNunitTests")
+    //.IsDependentOn("RunNunitTests")
     .IsDependentOn("RunXunitTests")
     .IsDependentOn("GenerateCoverageReport")
     .IsDependentOn("UploadTestResults")
