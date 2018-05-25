@@ -1,13 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <ProjectFileName>SharpArch.NHibernate</ProjectFileName>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Build">
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <SignAssembly>False</SignAssembly>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <ProjectFileName>SharpArch.NHibernate</ProjectFileName>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(ProjectFileName).xml</DocumentationFile>
+    <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
@@ -18,16 +20,12 @@
     <DefineConstants>NETFULL;NET461</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\$(TargetFramework)\$(ProjectFileName).xml</DocumentationFile>
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>True</DebugSymbols>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DebugType>full</DebugType>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\$(TargetFramework)\$(ProjectFileName).xml</DocumentationFile>
-    <DebugType>portable</DebugType>
-    <DebugSymbols>True</DebugSymbols>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>pdbonly</DebugType>
   </PropertyGroup>
 
    

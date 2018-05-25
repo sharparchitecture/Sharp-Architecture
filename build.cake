@@ -153,7 +153,6 @@ Task("RunNunitTests")
             tool.NUnit3(testAssemblies,
                 new NUnit3Settings {
                     OutputFile = artifactsDir + "/TestOutput.xml",
-                    ErrorOutputFile = artifactsDir + "/ErrorOutput.xml",
                     Results = new [] {
                         new NUnit3Result {
                             FileName = nunitTestResults
@@ -169,7 +168,7 @@ Task("RunNunitTests")
                 ReturnTargetCodeOffset = 0,
                 ArgumentCustomization = args => args.Append("-mergeoutput")
             }
-            .WithFilter("+[*]* -[*.Tests*]*")
+            .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.xUnitTests*")
             .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
             .ExcludeByFile("*/*Designer.cs "));
     });
@@ -183,7 +182,7 @@ Task("RunXunitTests")
         var testProjects = GetFiles($"{testsRootDir}/SharpArch.xUnitTests/**/*.csproj");
         bool success = true;
 
-        foreach(var testProj in testProjects) {
+        foreach (var testProj in testProjects) {
             try
             {
                 var projectPath = testProj.GetDirectory();
@@ -194,7 +193,7 @@ Task("RunXunitTests")
                     ArgumentCustomization = args => args.Append("-mergeoutput"),
                     WorkingDirectory = projectPath,
                 }
-                .WithFilter("+[*]* -[*.Tests*]*")
+                .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.xUnitTests*")
                 .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
                 .ExcludeByFile("*/*Designer.cs ");
 
