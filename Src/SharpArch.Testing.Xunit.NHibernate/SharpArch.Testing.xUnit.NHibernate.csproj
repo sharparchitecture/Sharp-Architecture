@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <ProjectFileName>SharpArch.NHibernate</ProjectFileName>
+    <ProjectFileName>SharpArch.Testing.Xunit.NHibernate</ProjectFileName>
   </PropertyGroup>
 
-  <PropertyGroup Label="Build">
+  <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <SignAssembly>False</SignAssembly>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -32,16 +32,21 @@
   <ItemGroup>
     <Compile Include="..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
     <Compile Include="..\Common\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
+    <Compile Include="..\Common\NHibernate\TestDatabaseInitializer.cs" Link="TestDatabaseInitializer.cs" />
   </ItemGroup>
    
   <ItemGroup>
     <PackageReference Include="FluentNHibernate" Version="2.1.2" />
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
     <PackageReference Include="NHibernate" Version="5.1.1" />
+    <PackageReference Include="xUnit" Version="2.3.1" />
   </ItemGroup>
    
   <ItemGroup>
     <ProjectReference Include="..\SharpArch.Domain\SharpArch.Domain.csproj" />
+    <ProjectReference Include="..\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
+    <ProjectReference Include="..\SharpArch.Testing\SharpArch.Testing.csproj" />
   </ItemGroup>
-   
+
+
 </Project>

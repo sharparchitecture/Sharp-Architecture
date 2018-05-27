@@ -1,11 +1,11 @@
-﻿namespace SharpArch.Testing.NUnit.NHibernate
+﻿namespace SharpArch.Testing.xUnit.NHibernate
 {
     using System;
     using global::NHibernate;
-    using global::NUnit.Framework;
     using JetBrains.Annotations;
     using SharpArch.NHibernate;
     using SharpArch.Testing.NHibernate;
+    using Xunit;
 
 
     /// <summary>
@@ -15,7 +15,8 @@
     ///     such as a SQL Server instance, then use <see cref="DatabaseRepositoryTestsBase" /> instead.
     /// </summary>
     [PublicAPI]
-    public abstract class RepositoryTestsBase
+    public abstract class RepositoryTestsFixture<TDatabaseInitializer>: IClassFixture<TestDatabaseInitializer>
+    where TDatabaseInitializer: TestDatabaseInitializer, new()
     {
         /// <summary>
         ///     Transaction manager.
@@ -26,24 +27,7 @@
 
         protected ISession Session => TransactionManager.Session;
 
-        RepositoryTestsBase()
-        { }
 
-        protected RepositoryTestsBase([NotNull] TestDatabaseInitializer dbInitializer)
-        {
-            DbInitializer = dbInitializer ?? throw new ArgumentNullException(nameof(dbInitializer));
-            DbInitializer.GetSessionFactory();
-        }
-
-        /// <summary>
-        ///     Called when [time tear down].
-        /// </summary>
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            DbInitializer?.Dispose();
-            DbInitializer = null;
-        }
 
         /// <summary>
         ///     Closes NHibernate session.

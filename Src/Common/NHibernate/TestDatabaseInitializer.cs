@@ -1,4 +1,4 @@
-﻿namespace SharpArch.Testing.NUnit.NHibernate
+﻿namespace SharpArch.Testing.NHibernate
 {
     using System;
     using System.Diagnostics;

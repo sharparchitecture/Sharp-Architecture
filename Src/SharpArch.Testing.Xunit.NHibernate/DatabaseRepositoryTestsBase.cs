@@ -1,9 +1,8 @@
-﻿namespace SharpArch.Testing.NUnit.NHibernate
+﻿namespace SharpArch.Testing.xUnit.NHibernate
 {
     using System;
     using global::NHibernate;
     using global::NHibernate.Cfg;
-    using global::NUnit.Framework;
     using JetBrains.Annotations;
     using SharpArch.Testing.NHibernate;
 
@@ -16,7 +15,7 @@
     ///     <para>
     ///         This is appropriate as a base class if you're unit tests run against a live, development
     ///         database.  If, alternatively, you'd prefer to use an in-memory database such as SqlLite,
-    ///         then use <see cref="RepositoryTestsBase" /> as your base class.
+    ///         then use <see cref="RepositoryTestsFixture" /> as your base class.
     ///         As the preferred mechanism is in-memory unit testing, this class is provided mainly
     ///         for backward compatibility.
     ///     </para>
