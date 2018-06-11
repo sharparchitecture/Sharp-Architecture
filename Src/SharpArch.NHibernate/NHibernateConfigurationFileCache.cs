@@ -13,7 +13,7 @@
 
     /// <summary>
     /// File cache implementation of INHibernateConfigurationCache.  Saves and loads a
-    /// seralized version of <see cref="Configuration"/> to a temporary file location.
+    /// serialized version of <see cref="Configuration"/> to a temporary file location.
     /// </summary>
     /// <remarks>Serializing a <see cref="Configuration"/> object requires that all components
     /// that make up the Configuration object be Serializable.  This includes any custom NHibernate 
@@ -25,7 +25,9 @@
         /// List of files that the cached configuration is dependent on.  If any of these
         /// files are newer than the cache file then the cache file could be out of date.
         /// </summary>
-        protected List<string> dependentFilePaths = new List<string>();
+        List<string> _dependentFilePaths = new List<string>(16);
+
+        static readonly DateTime _missingDependencyTime = new DateTime(1980, 1, 1);
 
         #region Constructors
 
@@ -113,12 +115,12 @@
         /// <returns>Latest file write time, or '1/1/1980' if list is empty.</returns>
         protected virtual DateTime GetMaxDependencyTime()
         {
-            if ((this.dependentFilePaths == null) || (this.dependentFilePaths.Count == 0))
+            if ((_dependentFilePaths == null) || (_dependentFilePaths.Count == 0))
             {
-                return DateTime.Parse("1/1/1980");
+                return _missingDependencyTime;
             }
 
-            return this.dependentFilePaths.Max(n => File.GetLastWriteTime(n));
+            return _dependentFilePaths.Max(n => File.GetLastWriteTime(n));
         }
 
         /// <summary>
@@ -130,7 +132,8 @@
         /// with other applications also using this cache feature.</remarks>
         protected virtual string CachedConfigPath(string configKey)
         {
-            var fileName = string.Format("{0}-{1}.bin", configKey, Assembly.GetCallingAssembly().CodeBase.GetHashCode());
+            var fileName = string.Format("{0}-{1:x8}.bin", configKey, 
+                Assembly.GetExecutingAssembly().CodeBase.GetHashCode());
 
             return Path.Combine(Path.GetTempPath(), fileName);
         }
@@ -143,20 +146,20 @@
         /// Append the given file path to the dependentFilePaths list.
         /// </summary>
         /// <param name="path">File path.</param>
-        private void AppendToDependentFilePaths(string path)
+        void AppendToDependentFilePaths(string path)
         {
-            this.dependentFilePaths.Add(FindFile(path));
+            _dependentFilePaths.Add(FindFile(path));
         }
 
         /// <summary>
         /// Append the given list of file paths to the dependentFilePaths list.
         /// </summary>
         /// <param name="paths"><see cref="IEnumerable{T}"/> list of file paths.</param>
-        private void AppendToDependentFilePaths(IEnumerable<string> paths)
+        void AppendToDependentFilePaths(IEnumerable<string> paths)
         {
             foreach (string path in paths)
             {
-                this.dependentFilePaths.Add(FindFile(path));
+                _dependentFilePaths.Add(FindFile(path));
             }
         }
 
@@ -164,24 +167,24 @@
         /// Tests if the file or assembly name exists either in the application's bin folder
         /// or elsewhere.
         /// </summary>
-        /// <param name="path">Path or file name to test for existance.</param>
+        /// <param name="path">Path or file name to test for existence.</param>
         /// <returns>Full path of the file.</returns>
         /// <remarks>If the path parameter does not end with ".dll" it is appended and 
         /// tested if the dll file exists.</remarks>
         /// <exception cref="FileNotFoundException">Thrown if the file is not found.</exception>
-        private string FindFile(string path)
+        string FindFile(string path)
         {
             if (File.Exists(path))
             {
                 return path;
             }
 
-            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-            UriBuilder uri = new UriBuilder(codeBase);
-            string uriPath = Uri.UnescapeDataString(uri.Path);
-            string codeLocation = Path.GetDirectoryName(uriPath);
+            string codeLocation = GetAssemblyCodeBasePath(Assembly.GetExecutingAssembly());
 
-            string codePath = Path.Combine(codeLocation, path);
+            string codePath = Path.IsPathRooted(path)
+                ? path
+                : Path.Combine(codeLocation, path);
+
             if (File.Exists(codePath))
             {
                 return codePath;
@@ -203,5 +206,20 @@
         }
 
         #endregion
+
+        /// <summary>
+        ///     Returns directory of assembly code base.
+        /// </summary>
+        /// <param name="assembly">Assembly</param>
+        /// <returns>Directory path</returns>
+        [NotNull]
+        public static string GetAssemblyCodeBasePath([NotNull] Assembly assembly)
+        {
+            if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+            UriBuilder uri = new UriBuilder(assembly.CodeBase);
+            string uriPath = Uri.UnescapeDataString(uri.Path);
+            return Path.GetDirectoryName(uriPath);
+        }
+
     }
 }

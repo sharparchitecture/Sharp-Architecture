@@ -9,33 +9,48 @@
 
 
     /// <summary>
-    ///     Provides a base class for running unit tests against an in-memory database created
-    ///     during test execution.  This builds the database using the connection details within
-    ///     NHibernate.config.  If you'd prefer unit testing against a "live" development database
-    ///     such as a SQL Server instance, then use <see cref="DatabaseRepositoryTestsBase" /> instead.
+    ///     Provides a base class for running unit tests against transient database created
+    ///     during test execution.
+    ///     <para>
+    ///         This builds the database using the connection details within NHibernate.config.
+    ///     </para>
+    ///     <para>
+    ///         If you'd prefer unit testing against a "live" development database
+    ///         such as a SQL Server instance, then use <see cref="LiveDatabaseTests{TDatabaseInitializer}" /> instead.
+    ///     </para>
     /// </summary>
     [PublicAPI]
-    public abstract class RepositoryTestsFixture<TDatabaseInitializer>: IClassFixture<TestDatabaseInitializer>
-    where TDatabaseInitializer: TestDatabaseInitializer, new()
+    public abstract class TransientDatabaseTests<TDatabaseSetup> : IClassFixture<TDatabaseSetup>, IDisposable
+        where TDatabaseSetup : TestDatabaseSetup, new()
     {
         /// <summary>
         ///     Transaction manager.
         /// </summary>
         protected TransactionManager TransactionManager { get; private set; }
 
-        protected TestDatabaseInitializer DbInitializer { get; private set; }
-
-        protected ISession Session => TransactionManager.Session;
-
-
+        /// <summary>
+        ///     Database initializer.
+        /// </summary>
+        protected TestDatabaseSetup DbSetup { get; private set; }
 
         /// <summary>
-        ///     Closes NHibernate session.
+        ///     Database session.
         /// </summary>
-        [TearDown]
-        public virtual void TearDown()
+        protected ISession Session => TransactionManager.Session;
+
+        /// <inheritdoc />
+        protected TransientDatabaseTests(TestDatabaseSetup dbSetup)
         {
-            TestDatabaseInitializer.Close(Session);
+            DbSetup = dbSetup;
+            TransactionManager = new TransactionManager(DbSetup.InitializeSession());
+            // ReSharper disable once VirtualMemberCallInConstructor
+            LoadTestData();
+        }
+
+        /// <inheritdoc />
+        public virtual void Dispose()
+        {
+            TestDatabaseSetup.Close(Session);
         }
 
         /// <summary>
@@ -65,15 +80,5 @@
         ///     Initializes database before each test run.
         /// </summary>
         protected abstract void LoadTestData();
-
-        /// <summary>
-        ///     Initializes session and database before test run.
-        /// </summary>
-        [SetUp]
-        protected virtual void SetUp()
-        {
-            TransactionManager = new TransactionManager(DbInitializer.InitializeSession());
-            LoadTestData();
-        }
     }
 }

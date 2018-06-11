@@ -9,14 +9,13 @@ namespace Tests.SharpArch.NHibernate
     using global::SharpArch.Domain.PersistenceSupport;
     using global::SharpArch.NHibernate;
     using Moq;
-    using NUnit.Framework;
+    using Xunit;
 
 
-    [TestFixture]
     // ReSharper disable once TestFileNameWarning
-    class RepositoryTests
+    public class RepositoryTests
     {
-        [Test]
+        [Fact]
         public void CanCastConcreteLinqRepositoryToInterfaceILinqRepository()
         {
             var session = new Mock<ISession>();

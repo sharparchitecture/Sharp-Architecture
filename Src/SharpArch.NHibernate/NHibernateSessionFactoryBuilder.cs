@@ -102,9 +102,7 @@
         [NotNull]
         public NHibernateSessionFactoryBuilder ExposeConfiguration([NotNull] Action<Configuration> config)
         {
-            if (config == null) throw new ArgumentNullException(nameof(config));
-
-            _exposeConfiguration = config;
+            _exposeConfiguration = config ?? throw new ArgumentNullException(nameof(config));
             return this;
         }
 
@@ -123,8 +121,7 @@
         public NHibernateSessionFactoryBuilder UseConfigurationCache(
             [NotNull] INHibernateConfigurationCache configurationCache)
         {
-            if (configurationCache == null) throw new ArgumentNullException(nameof(configurationCache), "Please provide configuration cache instance.");
-            _configurationCache = configurationCache;
+            _configurationCache = configurationCache ?? throw new ArgumentNullException(nameof(configurationCache), "Please provide configuration cache instance.");
             return this;
         }
 
@@ -166,9 +163,7 @@
         [NotNull]
         public NHibernateSessionFactoryBuilder UseProperties([NotNull] IDictionary<string, string> properties)
         {
-            if (properties == null) throw new ArgumentNullException(nameof(properties));
-
-            _properties = properties;
+            _properties = properties ?? throw new ArgumentNullException(nameof(properties));
             return this;
         }
 
@@ -223,11 +218,10 @@
         public NHibernateSessionFactoryBuilder UsePersistenceConfigurer(
             [NotNull] IPersistenceConfigurer persistenceConfigurer)
         {
-            if (persistenceConfigurer == null) throw new ArgumentNullException(nameof(persistenceConfigurer));
-
-            _persistenceConfigurer = persistenceConfigurer;
+            _persistenceConfigurer = persistenceConfigurer ?? throw new ArgumentNullException(nameof(persistenceConfigurer));
             return this;
         }
+
 
         Configuration ApplyCustomSettings(Configuration cfg)
         {
@@ -300,7 +294,7 @@
                 return new[] {item};
             }
 
-            var items = new List<T> {item};
+            var items = new List<T>(array.Length + 1) {item};
             items.AddRange(array);
             return items.ToArray();
         }

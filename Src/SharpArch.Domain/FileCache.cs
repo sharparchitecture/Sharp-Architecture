@@ -21,7 +21,7 @@
         ///     Deserializes a data file into an object of type {T}.
         /// </summary>
         /// <typeparam name="T">Type of object to deserialize and return.</typeparam>
-        /// <param name="path">Full path to file containing seralized data.</param>
+        /// <param name="path">Full path to file containing serialized data.</param>
         /// <returns>If object is successfully deserialized, the object of type {T}, otherwise null.</returns>
         /// <exception cref="ArgumentNullException">Thrown if the path parameter is null or empty.</exception>
         public static T RetrieveFromCache<T>(string path) where T : class

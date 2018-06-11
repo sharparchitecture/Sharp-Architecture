@@ -10,7 +10,7 @@ namespace Tests.SharpArch.NHibernate
 
 
     [Serializable]
-    internal class PreInsertListener : IPreInsertEventListener
+    class PreInsertListener : IPreInsertEventListener
     {
         public Task<bool> OnPreInsertAsync(PreInsertEvent @event, CancellationToken cancellationToken)
         {

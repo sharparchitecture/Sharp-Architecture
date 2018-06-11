@@ -17,34 +17,47 @@
     ///     Performs NHibernate and database initialization.
     /// </summary>
     [PublicAPI]
-    public class TestDatabaseInitializer : IDisposable
+    public class TestDatabaseSetup : IDisposable
     {
         readonly string _basePath;
         readonly Assembly[] _mappingAssemblies;
         Configuration _configuration;
         ISessionFactory _sessionFactory;
-        static readonly char[] assemblySeparator = {','};
+        static readonly char[] _assemblySeparator = {','};
 
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="TestDatabaseInitializer" /> class.
+        ///     Initializes a new instance of the <see cref="TestDatabaseSetup" /> class.
         /// </summary>
         /// <param name="basePath">Base bath to use when looking for mapping assemblies and default NHibernate configuration file.</param>
         /// <param name="mappingAssemblies">
-        ///     A comma delimited list of assemblies containing NHibernate mapping files. Including
-        ///     '.dll' at the end of each is optional.
+        ///     List of assemblies containing NHibernate mapping files and persistence model generator.
         /// </param>
-        public TestDatabaseInitializer(string basePath, [NotNull] params Assembly[] mappingAssemblies)
+        /// <exception cref="ArgumentNullException"><paramref name="basePath"/> or <paramref name="mappingAssemblies"/> is <c>null</c>.</exception>
+        public TestDatabaseSetup([NotNull] string basePath, [NotNull] Assembly[] mappingAssemblies)
         {
-            _basePath = basePath;
+            _basePath = basePath ?? throw new ArgumentNullException(nameof(basePath));
             _mappingAssemblies = mappingAssemblies ?? throw new ArgumentNullException(nameof(mappingAssemblies));
         }
 
+
         /// <summary>
-        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        ///     Method disposes SessionFactory.
+        ///     Initializes a new instance of the <see cref="TestDatabaseSetup" /> class.
         /// </summary>
-        public void Dispose()
+        /// <param name="baseAssembly">Assembly to use to determine configuration folder. Typically is it assembly containing tests.</param>
+        /// <param name="mappingAssemblies"></param>
+        /// <exception cref="ArgumentNullException"><paramref name="baseAssembly"/> or <paramref name="mappingAssemblies"/> is <c>null</c>.</exception>
+        public TestDatabaseSetup([NotNull] Assembly baseAssembly, [NotNull] Assembly[] mappingAssemblies)
+            :this(NHibernateConfigurationFileCache.GetAssemblyCodeBasePath(baseAssembly),
+                mappingAssemblies)
+        {
+        }
+
+
+        /// <summary>
+        ///     Disposes SessionFactory.
+        /// </summary>
+        public virtual void Dispose()
         {
             Shutdown(_sessionFactory);
             _sessionFactory = null;
@@ -72,12 +85,20 @@
                         !t.IsAbstract && typeof(IAutoPersistenceModelGenerator).IsAssignableFrom(t)))
                 .ToArray();
             if (persistenceGeneratorTypes.Length > 1)
-                throw new InvalidOperationException($"Found multiple classes implementing {nameof(IAutoPersistenceModelGenerator)}.") {
+                throw new InvalidOperationException($"Found multiple classes implementing {nameof(IAutoPersistenceModelGenerator)}. " +
+                    "Only one persistence model generator is supported.") {
                     Data = {
-                        [nameof(IAutoPersistenceModelGenerator)+"s"] = persistenceGeneratorTypes
+                        [nameof(IAutoPersistenceModelGenerator)+"s"] = persistenceGeneratorTypes,
+                        ["Assemblies"] = assemblies
                     }
                 };
-
+            if (persistenceGeneratorTypes.Length == 0)
+                throw new InvalidOperationException($"No classes implementing {nameof(IAutoPersistenceModelGenerator)} were found. " +
+                    $"{nameof(TestDatabaseSetup)} requires persistence model generator to create test database.") {
+                    Data = {
+                        ["Assemblies"] = assemblies
+                    }
+                };
             var generator = (IAutoPersistenceModelGenerator) Activator.CreateInstance(persistenceGeneratorTypes[0]);
             return generator.Generate();
         }
@@ -154,7 +175,7 @@
         /// </summary>
         /// <param name="sessionFactory">The session factory.</param>
         /// <remarks>
-        ///     Dispose <see cref="TestDatabaseInitializer" /> will destroy Session Factory associated with this instance.
+        ///     Dispose <see cref="TestDatabaseSetup" /> will destroy Session Factory associated with this instance.
         /// </remarks>
         public static void Shutdown([CanBeNull] ISessionFactory sessionFactory)
         {

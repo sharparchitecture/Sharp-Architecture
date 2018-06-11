@@ -25,7 +25,7 @@
     ///     <list type="bullet">
     ///         <item>
     ///             <description>
-    ///                 Descendants must have a default constructor which provides <see cref="TestDatabaseInitializer" />.
+    ///                 Descendants must have a default constructor which provides <see cref="TestDatabaseSetup" />.
     ///                 Session factory in initialized once per test fixture.
     ///             </description>
     ///         </item>
@@ -43,12 +43,12 @@
         DatabaseRepositoryTestsBase()
         { }
 
-        protected DatabaseRepositoryTestsBase([NotNull] TestDatabaseInitializer initializer)
+        protected DatabaseRepositoryTestsBase([NotNull] TestDatabaseSetup initializer)
         {
             Initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));
         }
 
-        protected TestDatabaseInitializer Initializer { get; private set; }
+        protected TestDatabaseSetup Initializer { get; private set; }
 
         /// <summary>
         ///     Returns current NHibernate session.

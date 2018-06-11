@@ -16,10 +16,10 @@
     <property name="show_sql">true</property>
 
     <event type="pre-insert">
-      <listener class="Tests.SharpArch.NHibernate.PreInsertListener, SharpArch.Tests.NHibernate" />
+      <listener class="Tests.SharpArch.NHibernate.PreInsertListener, SharpArch.XunitTests.NHibernate" />
     </event>
     <event type="pre-update">
-      <listener class="Tests.SharpArch.NHibernate.PreUpdateListener, SharpArch.Tests.NHibernate" />
+      <listener class="Tests.SharpArch.NHibernate.PreUpdateListener, SharpArch.XunitTests.NHibernate" />
     </event>
 
   </session-factory>

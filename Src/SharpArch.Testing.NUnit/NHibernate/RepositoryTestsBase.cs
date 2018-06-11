@@ -22,14 +22,14 @@
         /// </summary>
         protected TransactionManager TransactionManager { get; private set; }
 
-        protected TestDatabaseInitializer DbInitializer { get; private set; }
+        protected TestDatabaseSetup DbInitializer { get; private set; }
 
         protected ISession Session => TransactionManager.Session;
 
         RepositoryTestsBase()
         { }
 
-        protected RepositoryTestsBase([NotNull] TestDatabaseInitializer dbInitializer)
+        protected RepositoryTestsBase([NotNull] TestDatabaseSetup dbInitializer)
         {
             DbInitializer = dbInitializer ?? throw new ArgumentNullException(nameof(dbInitializer));
             DbInitializer.GetSessionFactory();
@@ -51,7 +51,7 @@
         [TearDown]
         public virtual void TearDown()
         {
-            TestDatabaseInitializer.Close(Session);
+            TestDatabaseSetup.Close(Session);
         }
 
         /// <summary>

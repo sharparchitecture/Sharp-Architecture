@@ -6,29 +6,30 @@
 
 // ReSharper disable HeapView.ObjectAllocation
 
+// ReSharper disable MissingXmlDoc
 namespace Tests.SharpArch.NHibernate
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Reflection;
     using FluentAssertions;
     using FluentNHibernate.Cfg.Db;
     using global::NHibernate.Cfg;
     using global::SharpArch.Domain;
     using global::SharpArch.NHibernate;
-    using NUnit.Framework;
+    using Xunit;
 
 
-    [TestFixture]
-    internal class NHibernateSessionFactoryBuilderTests
+    public class NHibernateSessionFactoryBuilderTests
     {
-        private static string GetConfigFullName()
+        static string GetConfigFullName()
         {
             const string defaultConfigFile = "sqlite-nhibernate-config.xml";
-            return Path.Combine(TestContext.CurrentContext.TestDirectory, defaultConfigFile);
+            return Path.Combine(NHibernateConfigurationFileCache.GetAssemblyCodeBasePath(Assembly.GetExecutingAssembly()), defaultConfigFile);
         }
 
-        [Test]
+        [Fact]
         public void CanExposeConfiguration()
         {
             var exposeCalled = false;
@@ -42,19 +43,20 @@ namespace Tests.SharpArch.NHibernate
             exposeCalled.Should().BeTrue();
         }
 
-        [Test]
+        [Fact]
         public void CanInitializeWithConfigFile()
         {
             Configuration configuration = new NHibernateSessionFactoryBuilder()
                 .UseConfigFile(GetConfigFullName())
                 .BuildConfiguration();
 
-            Assert.That(configuration, Is.Not.Null);
+            configuration.Should().NotBeNull();
 
             configuration.BuildSessionFactory();
         }
 
-        [Test]
+#if NETFULL
+        [Fact]
         public void CanInitializeWithConfigFileAndConfigurationFileCache()
         {
             Configuration configuration = new NHibernateSessionFactoryBuilder()
@@ -62,54 +64,12 @@ namespace Tests.SharpArch.NHibernate
                 .UseConfigFile(GetConfigFullName())
                 .BuildConfiguration();
 
-            Assert.That(configuration, Is.Not.Null);
+            configuration.Should().NotBeNull();
 
             configuration.BuildSessionFactory();
         }
 
-        [Test]
-        public void CanInitializeWithPersistenceConfigurerAndConfigFile()
-        {
-            SQLiteConfiguration persistenceConfigurer =
-                SQLiteConfiguration.Standard.ConnectionString(c => c.Is("Data Source=:memory:;Version=3;New=True;"));
-
-            Configuration configuration = new NHibernateSessionFactoryBuilder()
-                .UsePersistenceConfigurer(persistenceConfigurer)
-                .UseConfigFile(GetConfigFullName())
-                .BuildConfiguration();
-
-            Assert.That(configuration, Is.Not.Null);
-            configuration.BuildSessionFactory();
-        }
-
-        [Test]
-        public void CanInitializeWithPersistenceConfigurerAndNoConfigFile()
-        {
-            SQLiteConfiguration persistenceConfigurer =
-                SQLiteConfiguration.Standard.ConnectionString(c => c.Is("Data Source=:memory:;Version=3;New=True;"));
-
-            Configuration configuration = new NHibernateSessionFactoryBuilder()
-                .UsePersistenceConfigurer(persistenceConfigurer)
-                .BuildConfiguration();
-
-            Assert.That(configuration, Is.Not.Null);
-            configuration.BuildSessionFactory();
-        }
-
-        [Test]
-        public void DoesInitializeFailWhenCachingFileDependencyCannotBeFound()
-        {
-            Assert.Throws<FileNotFoundException>(
-                () => {
-                    new NHibernateSessionFactoryBuilder()
-                        // Random Guid value as dependency file to cause the exception
-                        .UseConfigurationCache(new NHibernateConfigurationFileCache(new[] {Guid.NewGuid().ToString()}))
-                        .UseConfigFile(GetConfigFullName())
-                        .BuildConfiguration();
-                });
-        }
-
-        [Test]
+        [Fact]
         public void ShouldPersistExposedConfigurationChanges()
         {
             var cache = new InMemoryCache();
@@ -127,8 +87,50 @@ namespace Tests.SharpArch.NHibernate
 
             config.Properties["connection.connection_string"].Should().Be("updated-connection");
         }
+#endif
 
-        [Test]
+        [Fact]
+        public void CanInitializeWithPersistenceConfigurerAndConfigFile()
+        {
+            SQLiteConfiguration persistenceConfigurer =
+                SQLiteConfiguration.Standard.ConnectionString(c => c.Is("Data Source=:memory:;Version=3;New=True;"));
+
+            Configuration configuration = new NHibernateSessionFactoryBuilder()
+                .UsePersistenceConfigurer(persistenceConfigurer)
+                .UseConfigFile(GetConfigFullName())
+                .BuildConfiguration();
+
+            configuration.BuildSessionFactory();
+        }
+
+        [Fact]
+        public void CanInitializeWithPersistenceConfigurerAndNoConfigFile()
+        {
+            SQLiteConfiguration persistenceConfigurer =
+                SQLiteConfiguration.Standard.ConnectionString(c => c.Is("Data Source=:memory:;Version=3;New=True;"));
+
+            Configuration configuration = new NHibernateSessionFactoryBuilder()
+                .UsePersistenceConfigurer(persistenceConfigurer)
+                .BuildConfiguration();
+
+            configuration.BuildSessionFactory();
+        }
+
+        [Fact]
+        public void DoesInitializeFailWhenCachingFileDependencyCannotBeFound()
+        {
+            Assert.Throws<FileNotFoundException>(
+                () => {
+                    new NHibernateSessionFactoryBuilder()
+                        // Random Guid value as dependency file to cause the exception
+                        .UseConfigurationCache(new NHibernateConfigurationFileCache(new[] {Guid.NewGuid().ToString()}))
+                        .UseConfigFile(GetConfigFullName())
+                        .BuildConfiguration();
+                });
+        }
+
+
+        [Fact]
         public void WhenUsingDataAnnotationValidators_ShouldKeepRegisteredPreInsertEventListeners()
         {
             Configuration configuration = new NHibernateSessionFactoryBuilder()
@@ -139,7 +141,7 @@ namespace Tests.SharpArch.NHibernate
             configuration.EventListeners.PreInsertEventListeners.Should().Contain(l => l is PreInsertListener);
         }
 
-        [Test]
+        [Fact]
         public void WhenUsingDataAnnotationValidators_ShouldKeepRegisteredPreUpdateEventListeners()
         {
             Configuration configuration = new NHibernateSessionFactoryBuilder()

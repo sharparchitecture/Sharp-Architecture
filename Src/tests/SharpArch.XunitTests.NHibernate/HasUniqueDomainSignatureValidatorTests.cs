@@ -1,15 +1,14 @@
 ﻿namespace Tests.SharpArch.NHibernate
 {
     using FluentAssertions;
-    using NUnit.Framework;
     using Tests.SharpArch.Domain;
+    using Xunit;
 
 
-    [TestFixture]
     // ReSharper disable once TestFileNameWarning
-    internal class HasUniqueDomainSignatureValidatorTests : HasUniqueDomainSignatureTestsBase
+    public class HasUniqueDomainSignatureValidatorTests : HasUniqueDomainSignatureTestsBase
     {
-        [Test]
+        [Fact]
         public void WhenEntityWithDuplicateGuidExists_Should_MarkEntityAsInvalid()
         {
             var objectWithGuidId = new ObjectWithGuidId {Name = "codai"};
@@ -20,7 +19,7 @@
                 .Should().BeFalse();
         }
 
-        [Test]
+        [Fact]
         public void WhenEntityWithDuplicateIntIdExists_Should_MarkEntityAsInvalid()
         {
             var contractor = new Contractor {Name = "codai"};
@@ -30,7 +29,7 @@
                 .Should().BeFalse();
         }
 
-        [Test]
+        [Fact]
         public void WhenEntityWithDuplicateStringIdExists_Should_MarkEntityAsInvalid()
         {
             var user = new User("user1", "123-12-1234");
@@ -39,6 +38,11 @@
 
             duplicateUser.IsValid(ValidationContextFor(duplicateUser))
                 .Should().BeFalse();
+        }
+
+        /// <inheritdoc />
+        protected override void LoadTestData()
+        {
         }
     }
 }
