@@ -90,7 +90,7 @@ Teardown((context) =>
 Task("SetVersion")
     .Does(() =>
     {
-        CreateAssemblyInfo("./Common/AssemblyVersion.cs", new AssemblyInfoSettings{
+        CreateAssemblyInfo("./Src/Common/AssemblyVersion.cs", new AssemblyInfoSettings{
             FileVersion = semVersion.MajorMinorPatch,
             InformationalVersion = semVersion.InformationalVersion,
             Version = semVersion.MajorMinorPatch
