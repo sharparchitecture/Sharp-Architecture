@@ -1,11 +1,11 @@
-﻿namespace SharpArch.Testing.xUnit.NHibernate
+﻿namespace SharpArch.Testing.Xunit.NHibernate
 {
     using System;
     using global::NHibernate;
+    using global::Xunit;
     using JetBrains.Annotations;
     using SharpArch.NHibernate;
     using SharpArch.Testing.NHibernate;
-    using Xunit;
 
 
     /// <summary>

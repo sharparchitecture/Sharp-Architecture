@@ -1,10 +1,10 @@
-﻿namespace SharpArch.Testing.xUnit.NHibernate
+﻿namespace SharpArch.Testing.Xunit.NHibernate
 {
     using System;
     using global::NHibernate;
+    using global::Xunit;
     using JetBrains.Annotations;
     using SharpArch.Testing.NHibernate;
-    using Xunit;
 
 
     /// <summary>
@@ -28,6 +28,9 @@
     public abstract class LiveDatabaseTests<TDatabaseSetup> : IClassFixture<TDatabaseSetup>, IDisposable
         where TDatabaseSetup : TestDatabaseSetup, new()
     {
+        /// <summary>
+        /// Database setup class
+        /// </summary>
         protected TDatabaseSetup DbSetup { get; private set; }
 
         /// <summary>

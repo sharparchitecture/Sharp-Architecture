@@ -1,0 +1,97 @@
+﻿namespace Suteki.TardisBank.Tests.Suteki.TardisBank.Data.NHibernateMaps
+{
+    using System;
+    using System.ComponentModel;
+    using System.IO;
+    using System.Reflection;
+    using Domain;
+    using NHibernate;
+    using NHibernate.Cfg;
+    using NHibernate.Tool.hbm2ddl;
+
+    using SharpArch.NHibernate;
+    
+    using global::Suteki.TardisBank.Infrastructure.NHibernateMaps;
+    using Xunit;
+
+
+    /// <summary>
+    /// Provides a means to verify that the target database is in compliance with all mappings.
+    /// Taken from http://ayende.com/Blog/archive/2006/08/09/NHibernateMappingCreatingSanityChecks.aspx.
+    /// 
+    /// If this is failing, the error will likely inform you that there is a missing table or column
+    /// which needs to be added to your database.
+    /// </summary>
+    [Trait("Category", "DatabaseTests")]
+    [Trait("Category", "IntegrationTests")]
+    public class MappingIntegrationTests: IDisposable
+    {
+        Configuration _configuration;
+        ISessionFactory _sessionFactory;
+        ISession _session;
+
+        public MappingIntegrationTests()
+        {
+            //string[] mappingAssemblies = TestDatabaseInitializer.GetMappingAssemblies(TestContext.CurrentContext.TestDirectory);
+            var nhibernateConfigPath = new Uri(CalculatePath("../../../../Solutions/Suteki.TardisBank.Web.Mvc/NHibernate.config")).LocalPath;
+            this._configuration = new NHibernateSessionFactoryBuilder()
+                .AddMappingAssemblies(new []{ typeof(Child).Assembly })
+                .UseAutoPersistenceModel(new AutoPersistenceModelGenerator().Generate())
+                .UseConfigFile(nhibernateConfigPath)
+                .BuildConfiguration();
+            _sessionFactory = _configuration.BuildSessionFactory();
+            _session = _sessionFactory.OpenSession();
+        }
+
+
+        [Fact]
+        public void CanConfirmDatabaseMatchesMappings()
+        {
+            var allClassMetadata = _sessionFactory.GetAllClassMetadata();
+
+            foreach (var entry in allClassMetadata)
+            {
+                _session.CreateCriteria(entry.Value.MappedClass)
+                     .SetMaxResults(0).List();
+            }
+        }
+
+        /// <summary>
+        /// Generates and outputs the database schema SQL to the console
+        /// </summary>
+        [Fact]
+        public void CanGenerateDatabaseSchema()
+        {
+            using (TextWriter stringWriter = new StreamWriter(CalculatePath("../../../../Database/UnitTestGeneratedSchema.sql")))
+            {
+                new SchemaExport(this._configuration).Execute(true, false, false, _session.Connection, stringWriter);
+            }
+        }
+
+        /// <summary>
+        /// Creates/Updates database schema, this runs on database configured in 
+        /// Mvc project and is marked as Explicit because it changes the database.
+        /// </summary>
+        [Fact(Skip = "it changes the database structure")]
+       public void CanCreateDatabase()
+        {
+            new SchemaExport(this._configuration).Execute(false, true, false);
+        }
+
+        /// <summary>
+        /// Calculates path based on test assembly folder
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <returns></returns>
+        static string CalculatePath(string path)
+        {
+            return Path.Combine(".", path);
+        }
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            _sessionFactory?.Dispose();
+        }
+    }
+}

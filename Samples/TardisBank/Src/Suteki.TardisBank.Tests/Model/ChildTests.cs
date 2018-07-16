@@ -1,0 +1,74 @@
+namespace Suteki.TardisBank.Tests.Model
+{
+    using System;
+    using Domain;
+    using FluentAssertions;
+    using SharpArch.NHibernate;
+    using SharpArch.Testing.Xunit.NHibernate;
+    using Xunit;
+
+
+    public class ChildTests : TransientDatabaseTests<TransientDatabaseSetup>
+    {
+        readonly LinqRepository<Child> _childRepository;
+        int _childId;
+        int _parentId;
+
+        /// <inheritdoc />
+        public ChildTests(TransientDatabaseSetup dbSetup) 
+            : base(dbSetup)
+        {
+            _childRepository = new LinqRepository<Child>(TransactionManager);
+        }
+
+        protected override void LoadTestData()
+        {
+            var parent = new Parent("Mike Hadlow", "mike@yahoo.com", "yyy");
+            Session.Save(parent);
+
+            _parentId = parent.Id;
+
+            var child = parent.CreateChild("Leo", "leohadlow", "xxx");
+            Session.Save(child);
+            FlushSessionAndEvict(child);
+            FlushSessionAndEvict(parent);
+            _childId = child.Id;
+        }
+
+        [Fact]
+        public void Should_be_able_to_add_schedule_to_account()
+        {
+            var childToTestOn = _childRepository.Get(_childId);
+            childToTestOn.Should().NotBeNull();
+
+            childToTestOn.Account.AddPaymentSchedule(DateTime.UtcNow, Interval.Week, 10, "Weekly pocket money");
+            FlushSessionAndEvict(childToTestOn);
+
+            var child = _childRepository.Get(_childId);
+            child.Should().NotBeNull();
+            child.Account.PaymentSchedules[0].Id.Should().BePositive("schedule was not persisted");
+        }
+
+        [Fact]
+        public void Should_be_able_to_add_transaction_to_account()
+        {
+            var childToTestOn = _childRepository.Get(_childId);
+            childToTestOn.ReceivePayment(10, "Reward");
+            FlushSessionAndEvict(childToTestOn);
+
+            var child = _childRepository.Get(_childId);
+            child.Account.Transactions[0].Id.Should().BePositive();
+        }
+
+        [Fact]
+        public void Should_be_able_to_create_and_retrieve_a_child()
+        {
+            var child = _childRepository.Get(_childId);
+            child.Name.Should().Be("Leo");
+            child.UserName.Should().Be(@"leohadlow");
+            child.ParentId.Should().Be(_parentId);
+            child.Password.Should().Be("xxx");
+            child.Account.Should().NotBeNull();
+        }
+    }
+}

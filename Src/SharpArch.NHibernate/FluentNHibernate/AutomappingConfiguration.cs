@@ -2,9 +2,10 @@ namespace SharpArch.NHibernate.FluentNHibernate
 {
     using System;
     using System.Linq;
-    using global::FluentNHibernate;
+    using Domain.DomainModel;
     using global::FluentNHibernate.Automapping;
-    using SharpArch.Domain.DomainModel;
+    using JetBrains.Annotations;
+
 
     /// <summary>
     ///     Applies custom mapping conventions to S#Arch entities.
@@ -27,6 +28,7 @@ namespace SharpArch.NHibernate.FluentNHibernate
     /// <seealso cref="DefaultAutomappingConfiguration" />
     /// <seealso cref="IEntityWithTypedId{TId}" />
     /// <seealso cref="ValueObject" />
+    [PublicAPI]
     public class AutomappingConfiguration : DefaultAutomappingConfiguration
     {
         /// <summary>
@@ -36,27 +38,26 @@ namespace SharpArch.NHibernate.FluentNHibernate
         {
             return !type.IsNested && type.GetInterfaces().Any(x =>
                 x.IsGenericType &&
-                    x.GetGenericTypeDefinition() == typeof(IEntityWithTypedId<>));
+                x.GetGenericTypeDefinition() == typeof(IEntityWithTypedId<>));
         }
 
         /// <summary>
-        ///     Determines whether the specified type is component (value object).
+        ///     Marks all <see cref="ValueObject" /> descendants as components.
+        ///     See https://martinfowler.com/eaaCatalog/valueObject.html
         /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns></returns>
         public override bool IsComponent(Type type)
         {
             return typeof(ValueObject).IsAssignableFrom(type);
         }
 
         /// <summary>
-        ///     Determines whether the specified member is identifier.
+        ///     Marks all abstract descendants of <see cref="Entity" /> and <see cref="EntityWithTypedId{TId}" />
+        ///     as Layer Supertype.
+        ///     See http://martinfowler.com/eaaCatalog/layerSupertype.html
         /// </summary>
-        /// <param name="member">The member.</param>
-        /// <returns></returns>
-        public override bool IsId(Member member)
+        public override bool AbstractClassIsLayerSupertype(Type type)
         {
-            return member.Name == "Id";
+            return type == typeof(EntityWithTypedId<>) || type == typeof(Entity);
         }
     }
 }

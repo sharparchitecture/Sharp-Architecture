@@ -1,0 +1,12 @@
+# Suppress: EC112
+root=true
+
+[{**/tests/**,**/*.Tests/**}.cs]
+resharper_consider_using_configure_await_highlighting=do_not_show
+resharper_event_exception_not_documented_highlighting=do_not_show
+resharper_exception_not_documented_highlighting=do_not_show
+resharper_exception_not_documented_optional_highlighting=do_not_show
+resharper_heap_view_boxing_allocation=do_not_show
+resharper_heap_view_object_allocation_evident_highlighting=do_not_show
+resharper_private_field_can_be_converted_to_local_variable_highlighting=do_not_show
+resharper_possible_null_reference_exception_highlighting=do_not_show

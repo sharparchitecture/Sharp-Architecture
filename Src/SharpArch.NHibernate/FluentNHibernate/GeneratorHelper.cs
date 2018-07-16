@@ -1,10 +1,10 @@
 ﻿namespace SharpArch.NHibernate.FluentNHibernate
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using JetBrains.Annotations;
+
 
     /// <summary>
     ///     An optional helper class used to view the mapping file generated from a fluent nhibernate class mapper
@@ -15,19 +15,19 @@
     [PublicAPI]
     public class GeneratorHelper
     {
-        private const string GeneratorInterface = nameof(IMapGenerator);
+        const string GeneratorInterface = nameof(IMapGenerator);
 
         /// <summary>
-        /// Scans assembly for <c>IMapGenerator</c> implementers.
+        ///     Scans assembly for <c>IMapGenerator</c> implementers.
         /// </summary>
         /// <returns></returns>
-        public static IList<IMapGenerator> GetMapGenerators()
+        public static IMapGenerator[] GetMapGenerators()
         {
             var assembly = Assembly.GetAssembly(typeof(IMapGenerator));
 
             return (from type in assembly.GetTypes()
-                    where null != type.GetInterface(GeneratorInterface)
-                    select Activator.CreateInstance(type)).OfType<IMapGenerator>().ToList();
+                where null != type.GetInterface(GeneratorInterface)
+                select Activator.CreateInstance(type)).OfType<IMapGenerator>().ToArray();
         }
     }
 }

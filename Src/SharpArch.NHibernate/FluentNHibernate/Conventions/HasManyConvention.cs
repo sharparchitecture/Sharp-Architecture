@@ -2,6 +2,8 @@ namespace SharpArch.NHibernate.FluentNHibernate.Conventions
 {
     using global::FluentNHibernate.Conventions;
     using global::FluentNHibernate.Conventions.Instances;
+    using JetBrains.Annotations;
+
 
     /// <summary>
     ///     One-to-many convention.
@@ -29,6 +31,7 @@ namespace SharpArch.NHibernate.FluentNHibernate.Conventions
     ///     </list>
     /// </remarks>
     /// <seealso cref="IHasManyConvention" />
+    [PublicAPI]
     public class HasManyConvention : IHasManyConvention
     {
         /// <summary>

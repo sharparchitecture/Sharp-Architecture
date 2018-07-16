@@ -21,6 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing", "SharpA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1F1FEDCB-8D3B-4157-A74D-D365BCF2CD07}"
 	ProjectSection(SolutionItems) = preProject
+		..\appveyor.yml = ..\appveyor.yml
 		..\build.cake = ..\build.cake
 	EndProjectSection
 EndProject
@@ -29,6 +30,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.Xunit.NHibernate", "SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj", "{96F50E09-433E-45DA-988E-E4B2E8BE238C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.XunitTests.NHibernate", "Tests\SharpArch.XunitTests.NHibernate\SharpArch.XunitTests.NHibernate.csproj", "{63DA7C82-5552-48A0-8331-96603E9CD635}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{B14B222C-AD24-45BC-BBE1-6B41A67C2BC0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SutekiBank", "SutekiBank", "{EE43FC52-B8E0-4B50-88A0-8BE72841786F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,6 +91,7 @@ Global
 		{D9AF4843-E81B-4E91-84A7-A2326346D1BA} = {1E0FC93D-9540-42B7-B639-5F7E0ABC4B75}
 		{96F50E09-433E-45DA-988E-E4B2E8BE238C} = {B33554BD-5B88-4BB2-96E0-9FD2F47FBA07}
 		{63DA7C82-5552-48A0-8331-96603E9CD635} = {1E0FC93D-9540-42B7-B639-5F7E0ABC4B75}
+		{EE43FC52-B8E0-4B50-88A0-8BE72841786F} = {B14B222C-AD24-45BC-BBE1-6B41A67C2BC0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {66570DE6-E62E-4899-9B61-57AF560D7F3B}

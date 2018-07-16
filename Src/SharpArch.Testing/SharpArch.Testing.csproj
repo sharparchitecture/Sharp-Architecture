@@ -1,20 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
-    <SignAssembly>False</SignAssembly>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <ProjectFileName>SharpArch.Testing</ProjectFileName>
   </PropertyGroup>
 
   <PropertyGroup>
-    <ProjectFileName>SharpArch.Testing</ProjectFileName>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <SignAssembly>False</SignAssembly>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>NETSTANDARD</DefineConstants>
   </PropertyGroup>
    
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net462' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <DefineConstants>NETFULL</DefineConstants>
   </PropertyGroup>
 
