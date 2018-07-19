@@ -14,8 +14,8 @@
     <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.108" />
-    <PackageReference Include="xunit" Version="2.4.0-rc.2.build4045" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0-rc.2.build4045" />
+    <PackageReference Include="xunit" Version="2.4.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.4.0-beta.1.build3958" />
   </ItemGroup>
 

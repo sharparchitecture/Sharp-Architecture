@@ -125,6 +125,7 @@ namespace SharpArch.NHibernate
             return Session.LoadAsync<T>(id, cancellationToken);
         }
 
+        /// <inheritdoc />
         public Task<T> LoadAsync(
             TId id, Enums.LockMode lockMode,
             CancellationToken cancellationToken = default(CancellationToken))

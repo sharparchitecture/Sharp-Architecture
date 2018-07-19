@@ -37,7 +37,7 @@
    
   <ItemGroup Label="Common references">
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
-    <PackageReference Include="xunit.core" Version="2.4.0-rc.2.build4045" />
+    <PackageReference Include="xunit.core" Version="2.4.0" />
   </ItemGroup>
 
 </Project>

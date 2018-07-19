@@ -39,7 +39,7 @@
     <PackageReference Include="FluentNHibernate" Version="2.1.2" />
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
     <PackageReference Include="NHibernate" Version="5.1.3" />
-    <PackageReference Include="xUnit" Version="2.4.0-rc.2.build4045" />
+    <PackageReference Include="xUnit" Version="2.4.0" />
   </ItemGroup>
    
   <ItemGroup>

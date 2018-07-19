@@ -15,8 +15,7 @@ namespace Suteki.TardisBank.Tests.Model
         int _userId;
         Mock<IMediator> _mediator;
 
-        /// <inheritdoc />
-        public MessageTests(TestDatabaseSetup dbSetup) : base(dbSetup)
+        public MessageTests(TransientDatabaseSetup dbSetup) : base(dbSetup)
         {
             _mediator = new Mock<IMediator>();
         }

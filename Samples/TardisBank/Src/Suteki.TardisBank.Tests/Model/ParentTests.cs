@@ -1,10 +1,8 @@
-
 namespace Suteki.TardisBank.Tests.Model
 {
     using Domain;
     using FluentAssertions;
     using SharpArch.NHibernate;
-    using SharpArch.Testing.NHibernate;
     using SharpArch.Testing.Xunit.NHibernate;
     using Xunit;
 
@@ -12,6 +10,11 @@ namespace Suteki.TardisBank.Tests.Model
     public class ParentTests : TransientDatabaseTests<TransientDatabaseSetup>
     {
         int _parentId;
+
+        public ParentTests(TransientDatabaseSetup dbSetup)
+            : base(dbSetup)
+        {
+        }
 
         protected override void LoadTestData()
         {
@@ -33,7 +36,6 @@ namespace Suteki.TardisBank.Tests.Model
             savedParent.CreateChild("jez", "jez123", "passw0rd3");
             FlushSessionAndEvict(savedParent);
 
-
             Parent parent = linqRepository.Get(_parentId);
             parent.Children.Count.Should().Be(3);
 
@@ -51,11 +53,5 @@ namespace Suteki.TardisBank.Tests.Model
             parent.UserName.Should().Be("mike@yahoo.com");
             parent.Children.Should().NotBeNull();
         }
-
-        /// <inheritdoc />
-        public ParentTests(TestDatabaseSetup dbSetup) : base(dbSetup)
-        {
-        }
     }
 }
-

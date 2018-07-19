@@ -3,15 +3,14 @@ namespace Suteki.TardisBank.Tests.Model
     using System.Linq;
     using Domain;
     using FluentAssertions;
-    using SharpArch.Testing.NHibernate;
     using SharpArch.Testing.Xunit.NHibernate;
     using Xunit;
 
 
     public class UserTests : TransientDatabaseTests<TransientDatabaseSetup>
     {
-        /// <inheritdoc />
-        public UserTests(TestDatabaseSetup dbSetup) : base(dbSetup)
+        public UserTests(TransientDatabaseSetup dbSetup)
+            : base(dbSetup)
         {
         }
 
@@ -42,7 +41,6 @@ namespace Suteki.TardisBank.Tests.Model
             users.Length.Should().Be(5);
 
             users[0].Should().BeOfType<Parent>();
-//                GetType().Name.Should().Be("Parent");
             users[1].GetType().Name.Should().Be("Child");
             users[2].GetType().Name.Should().Be("Child");
             users[3].GetType().Name.Should().Be("Parent");
