@@ -59,7 +59,7 @@
                         .SetMaxResults(1);
 
                 AppendSignaturePropertyCriteriaTo(criteria, entity);
-                var doesDuplicateExist = criteria.List().Any();
+                var doesDuplicateExist = criteria.List().Count > 0;
                 return doesDuplicateExist;
             }
             finally {

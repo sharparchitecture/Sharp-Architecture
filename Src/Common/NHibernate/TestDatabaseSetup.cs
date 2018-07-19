@@ -64,7 +64,6 @@
             _configuration = null;
         }
 
-
         /// <summary>
         ///     Generates auto-persistence model.
         /// </summary>
@@ -76,7 +75,9 @@
         ///     This method will load and scan assemblies for <see cref="IAutoPersistenceModelGenerator" />.
         ///     Only first generated model is returned.
         /// </remarks>
-        [CLSCompliant(false)]
+        /// <exception cref="ArgumentNullException"><paramref name="assemblies"/> is <see langword="null"/></exception>
+        /// <exception cref="InvalidOperationException">Only one implementation of <see cref="IAutoPersistenceModelGenerator"/> is allowed.</exception>
+        /// <exception cref="TargetInvocationException">Unable to instantiate AutoPersistenceModelGenerator.</exception>
         public static AutoPersistenceModel GenerateAutoPersistenceModel([NotNull] Assembly[] assemblies)
         {
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));

@@ -22,11 +22,11 @@ namespace SharpArch.NHibernate
     /// </summary>
     [PublicAPI]
     public class NHibernateRepositoryWithTypedId<T, TId> : INHibernateRepositoryWithTypedId<T, TId>,
-        IAsynNHibernatecRepositoryWithTypedId<T, TId>
+        IAsyncNHibernateRepositoryWithTypedId<T, TId>
 
     {
         /// <summary>
-        ///     Gets NHiernate session.
+        ///     Gets NHibernate session.
         /// </summary>
         protected ISession Session => TransactionManager.Session;
 
@@ -41,7 +41,6 @@ namespace SharpArch.NHibernate
         ///     Initializes a new instance of the <see cref="NHibernateRepositoryWithTypedId{T, TId}" /> class.
         /// </summary>
         /// <param name="transactionManager">The transaction manager.</param>
-        /// <param name="session">The session.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
         public NHibernateRepositoryWithTypedId(
             [NotNull] INHibernateTransactionManager transactionManager)
@@ -49,6 +48,7 @@ namespace SharpArch.NHibernate
             TransactionManager = transactionManager ?? throw new ArgumentNullException(nameof(transactionManager));
         }
 
+        /// <inheritdoc />
         public Task<IList<T>> FindAllAsync(
             IReadOnlyDictionary<string, object> propertyValuePairs,
             CancellationToken cancellationToken = default(CancellationToken))

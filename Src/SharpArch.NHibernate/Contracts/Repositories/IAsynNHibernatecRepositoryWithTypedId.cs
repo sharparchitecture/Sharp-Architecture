@@ -1,5 +1,6 @@
 namespace SharpArch.NHibernate.Contracts.Repositories
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
@@ -16,13 +17,15 @@ namespace SharpArch.NHibernate.Contracts.Repositories
     /// <typeparam name="TId">Entity identifier type.</typeparam>
     /// <seealso cref="SharpArch.Domain.PersistenceSupport.IRepositoryWithTypedId{T, TId}" />
     [PublicAPI]
-    public interface IAsynNHibernatecRepositoryWithTypedId<T, in TId> : IAsyncRepositoryWithTypedId<T, TId>
+    public interface IAsyncNHibernateRepositoryWithTypedId<T, in TId> : IAsyncRepositoryWithTypedId<T, TId>
     {
         /// <summary>
         ///     Looks for zero or more instances using the properties provided.
         ///     The key of the collection should be the property name and the value should be
         ///     the value of the property to filter by.
         /// </summary>
+        /// <exception cref="ArgumentNullException"><paramref name="propertyValuePairs"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentException">No properties specified.</exception>
         Task<IList<T>> FindAllAsync(
             IReadOnlyDictionary<string, object> propertyValuePairs, CancellationToken cancellationToken = default(CancellationToken));
 
