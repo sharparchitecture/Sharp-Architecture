@@ -289,3 +289,4 @@ Artefacts/Documentation/build/
 /DropsErrorOutput.xml
 /DropsTestOutput.xml
 /Src/Common/AssemblyVersion.cs
+/Docker/mssql-data

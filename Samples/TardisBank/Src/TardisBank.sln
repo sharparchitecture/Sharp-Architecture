@@ -14,6 +14,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharpArch", "SharpArch", "{B514E7EC-7D43-4DD8-97A9-FD520ECB3B7D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TardisBank", "TardisBank", "{6D3106CE-B30A-4DC6-88A4-EE7E09370F48}"
+	ProjectSection(SolutionItems) = preProject
+		Suteki.TardisBank.Web.Mvc\NHibernate.config = Suteki.TardisBank.Web.Mvc\NHibernate.config
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{FCDFE7DD-5575-47CA-B4C0-5D02EBA4A4A1}"
 EndProject

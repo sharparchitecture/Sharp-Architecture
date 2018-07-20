@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using Domain;
+    using Helpers;
     using Infrastructure.NHibernateMaps;
     using NHibernate;
     using NHibernate.Cfg;
@@ -27,8 +28,7 @@
 
         public MappingIntegrationTests()
         {
-            //string[] mappingAssemblies = TestDatabaseInitializer.GetMappingAssemblies(TestContext.CurrentContext.TestDirectory);
-            var nhibernateConfigPath = CalculatePath("../../../../Solutions/Suteki.TardisBank.Web.Mvc/NHibernate.config");
+            var nhibernateConfigPath = CalculatePath("../../../../Suteki.TardisBank.Web.Mvc/NHibernate.config");
             _configuration = new NHibernateSessionFactoryBuilder()
                 .AddMappingAssemblies(new[] {typeof(Child).Assembly})
                 .UseAutoPersistenceModel(new AutoPersistenceModelGenerator().Generate())
@@ -70,7 +70,7 @@
         ///     Creates/Updates database schema, this runs on database configured in
         ///     Mvc project and is marked as Explicit because it changes the database.
         /// </summary>
-        [Fact(Skip = "it changes the database structure")]
+        [RunnableInDebugOnly]
         public void CanCreateDatabase()
         {
             new SchemaExport(_configuration).Execute(false, true, false);
@@ -82,7 +82,7 @@
         [Fact]
         public void CanGenerateDatabaseSchema()
         {
-            using (TextWriter stringWriter = new StreamWriter(CalculatePath("../../../../Database/UnitTestGeneratedSchema.sql")))
+            using (TextWriter stringWriter = new StreamWriter(CalculatePath("../../../../../Database/UnitTestGeneratedSchema.sql")))
             {
                 new SchemaExport(_configuration).Execute(true, false, false, _session.Connection, stringWriter);
             }
