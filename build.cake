@@ -49,8 +49,10 @@ var nugetPackages = new [] {
     "SharpArch.NHibernate",
     "SharpArch.RavenDb",
     "SharpArch.Testing",
-    "SharpArch.Web.AspNetCore",
-    "SharpArch.Testing.NUnit"
+    "SharpArch.Testing.NUnit",
+    "SharpArch.Testing.Xunit",
+    "SharpArch.Testing.Xunit.NHibernate",
+    "SharpArch.Web.AspNetCore"
 };
 
 // Calculate version

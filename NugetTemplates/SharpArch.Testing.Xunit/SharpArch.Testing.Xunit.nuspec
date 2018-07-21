@@ -1,25 +1,26 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>SharpArch.Web.AspNetCore</id>
+    <id>SharpArch.Testing.Xunit</id>
     <version>$(SemanticVersion)</version>
     <authors>Sharp Architecture Dev Team</authors>
     <owners>Sharp Architecture Dev Team</owners>
     <licenseUrl>https://github.com/sharparchitecture/Sharp-Architecture/blob/master/License.txt</licenseUrl>
     <iconUrl>https://github.com/sharparchitecture/Sharp-Architecture/raw/master/Artefacts/Documentation/Logo_100x100.png</iconUrl>
-    <projectUrl>http://www.sharparchitecture.net/</projectUrl>
+    <projectUrl>http://sharparchitecture.github.io/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Provides AspNet.Core MVC extensions.</description>
+    <description>Provides base classes to help with testing applications written with Sharp Architecture using xUnit.</description>
     <summary>Architectural foundation for building maintainable applications with Domain Driven Design patterns and practices</summary>
     <language>en-US</language>
     <releaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/release/$(SemanticVersion)</releaseNotes>
     <tags>sharp-architecture</tags>
     <dependencies>
-      <group targetFramework="netstandard2.0">
-        <dependency id="SharpArch.Domain" version="[$(SemanticVersion),$(NextMajorRelease))" />
-        <dependency id="Microsoft.AspNetCore.Mvc.Abstractions" version="[2.1.0,3.0.0)" />
-        <dependency id="Microsoft.AspNetCore.Mvc.Core" version="[2.1.0,3.0.0)" />
-      </group>
+      <dependency id="SharpArch.Domain" version="[$(SemanticVersion),$(NextMajorRelease))" />
+      <dependency id="SharpArch.Testing" version="[$(SemanticVersion),$(NextMajorRelease))" />
+      <dependency id="xunit.core" version="[2.4.0,3.0.0)" />
     </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.ServiceModel" targetFramework="net462" />
+    </frameworkAssemblies>
   </metadata>
 </package>
