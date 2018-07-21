@@ -276,7 +276,7 @@ Task("InspectCode")
 
         InspectCode(solutionFile, new InspectCodeSettings() {
             OutputFile = codeInspectionsOutputFile,
-            Profile = $"{solutionFile}.DotSettings",
+            Profile = "SharpArch.AutoLoad.DotSettings",
             CachesHome = "./.ReSharperCaches",
             SolutionWideAnalysis = true
         });
