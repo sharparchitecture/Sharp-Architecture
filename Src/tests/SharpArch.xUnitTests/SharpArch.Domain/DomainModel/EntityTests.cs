@@ -1,14 +1,3 @@
-// ReSharper disable PublicMembersMustHaveComments
-// ReSharper disable ClassWithVirtualMembersNeverInherited.Local
-// ReSharper disable UnusedMember.Local
-// ReSharper disable HeapView.ObjectAllocation.Evident
-// ReSharper disable HeapView.BoxingAllocation
-// ReSharper disable InternalMembersMustHaveComments
-
-// ReSharper disable MissingAnnotation
-
-// ReSharper disable ExceptionNotDocumentedOptional
-
 namespace Tests.SharpArch.Domain.DomainModel
 {
     using System.IO;
@@ -18,42 +7,9 @@ namespace Tests.SharpArch.Domain.DomainModel
     using Newtonsoft.Json;
     using Xunit;
 
+
     public class EntityTests
     {
-        public EntityTests()
-        {
-            _obj = new MockEntityObjectWithDefaultId {
-                FirstName = "FName1",
-                LastName = "LName1",
-                Email = @"testus...@mail.com"
-            };
-            _sameObj = new MockEntityObjectWithDefaultId {
-                FirstName = "FName1",
-                LastName = "LName1",
-                Email = @"testus...@mail.com"
-            };
-            _diffObj = new MockEntityObjectWithDefaultId {
-                FirstName = "FName2",
-                LastName = "LName2",
-                Email = @"testuse...@mail.com"
-            };
-            _objWithId = new MockEntityObjectWithSetId {
-                FirstName = "FName1",
-                LastName = "LName1",
-                Email = @"testus...@mail.com"
-            };
-            _sameObjWithId = new MockEntityObjectWithSetId {
-                FirstName = "FName1",
-                LastName = "LName1",
-                Email = @"testus...@mail.com"
-            };
-            _diffObjWithId = new MockEntityObjectWithSetId {
-                FirstName = "FName2",
-                LastName = "LName2",
-                Email = @"testuse...@mail.com"
-            };
-        }
-
         readonly MockEntityObjectWithDefaultId _diffObj;
 
         readonly MockEntityObjectWithSetId _diffObjWithId;
@@ -66,6 +22,47 @@ namespace Tests.SharpArch.Domain.DomainModel
 
         readonly MockEntityObjectWithSetId _sameObjWithId;
 
+        public EntityTests()
+        {
+            _obj = new MockEntityObjectWithDefaultId
+            {
+                FirstName = "FName1",
+                LastName = "LName1",
+                Email = @"testus...@mail.com"
+            };
+            _sameObj = new MockEntityObjectWithDefaultId
+            {
+                FirstName = "FName1",
+                LastName = "LName1",
+                Email = @"testus...@mail.com"
+            };
+            _diffObj = new MockEntityObjectWithDefaultId
+            {
+                FirstName = "FName2",
+                LastName = "LName2",
+                Email = @"testuse...@mail.com"
+            };
+            _objWithId = new MockEntityObjectWithSetId
+            {
+                FirstName = "FName1",
+                LastName = "LName1",
+                Email = @"testus...@mail.com"
+            };
+            _sameObjWithId = new MockEntityObjectWithSetId
+            {
+                FirstName = "FName1",
+                LastName = "LName1",
+                Email = @"testus...@mail.com"
+            };
+            _diffObjWithId = new MockEntityObjectWithSetId
+            {
+                FirstName = "FName2",
+                LastName = "LName2",
+                Email = @"testuse...@mail.com"
+            };
+        }
+
+
         public abstract class MockEntityObjectBase<T> : EntityWithTypedId<T>
         {
             public string Email { get; set; }
@@ -77,6 +74,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             public string LastName { get; set; }
         }
 
+
         public class ObjectWithOneDomainSignatureProperty : Entity
         {
             [DomainSignature]
@@ -84,6 +82,7 @@ namespace Tests.SharpArch.Domain.DomainModel
 
             public string Name { get; set; }
         }
+
 
         class AddressBeingDomainSignatureComparable : Entity
         {
@@ -96,6 +95,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             public int ZipCode { get; set; }
         }
 
+
         class InheritedObjectWithExtraDomainSignatureProperty : ObjectWithOneDomainSignatureProperty
         {
             public string Address { get; set; }
@@ -104,8 +104,11 @@ namespace Tests.SharpArch.Domain.DomainModel
             public bool IsLiving { get; set; }
         }
 
+
         class MockEntityObjectBase : MockEntityObjectBase<int>
-        { }
+        {
+        }
+
 
         class MockEntityObjectWithDefaultId : MockEntityObjectBase, IHasAssignedId<int>
         {
@@ -115,6 +118,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             }
         }
 
+
         class MockEntityObjectWithSetId : MockEntityObjectBase<string>, IHasAssignedId<string>
         {
             public void SetAssignedIdTo(string assignedId)
@@ -123,11 +127,16 @@ namespace Tests.SharpArch.Domain.DomainModel
             }
         }
 
+
         class Entity1 : Entity
-        { }
+        {
+        }
+
 
         class Entity2 : Entity
-        { }
+        {
+        }
+
 
         class ObjectWithAllDomainSignatureProperty : Entity
         {
@@ -137,6 +146,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             [DomainSignature]
             public string Name { get; set; }
         }
+
 
         class ObjectWithAssignedId : EntityWithTypedId<string>, IHasAssignedId<string>
         {
@@ -148,6 +158,7 @@ namespace Tests.SharpArch.Domain.DomainModel
                 Id = assignedId;
             }
         }
+
 
         class ObjectWithComplexProperties : Entity
         {
@@ -161,6 +172,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             public PhoneBeingNotDomainObject Phone { get; set; }
         }
 
+
         class ObjectWithIdenticalTypedProperties : Entity
         {
             [DomainSignature]
@@ -170,11 +182,13 @@ namespace Tests.SharpArch.Domain.DomainModel
             public string Name { get; set; }
         }
 
+
         class ObjectWithIntId : Entity
         {
             [DomainSignature]
             public string Name { get; set; }
         }
+
 
         /// <summary>
         ///     This is a nonsense object; i.e., it doesn't make sense to have
@@ -187,12 +201,14 @@ namespace Tests.SharpArch.Domain.DomainModel
             public string Name { get; set; }
         }
 
+
         class PhoneBeingNotDomainObject
         {
             public string Extension { get; set; }
 
             public string PhoneNumber { get; set; }
         }
+
 
         class PhoneBeingNotDomainObjectButWithOverriddenEquals : PhoneBeingNotDomainObject
         {
@@ -208,10 +224,12 @@ namespace Tests.SharpArch.Domain.DomainModel
             }
         }
 
+
         class Contact : Entity
         {
             public virtual string EmailAddress { get; set; }
         }
+
 
         [Fact]
         public void CanCompareDomainObjectsWithAllPropertiesBeingPartOfDomainSignature()
@@ -342,7 +360,8 @@ namespace Tests.SharpArch.Domain.DomainModel
 
             obj1.Equals(obj2).Should().BeTrue();
 
-            obj1.Address = new AddressBeingDomainSignatureComparable {
+            obj1.Address = new AddressBeingDomainSignatureComparable
+            {
                 Address1 = "123 Smith Ln.",
                 Address2 = "Suite 201",
                 ZipCode = 12345
@@ -350,7 +369,8 @@ namespace Tests.SharpArch.Domain.DomainModel
             obj1.Equals(obj2).Should().BeFalse();
 
             // Set the address of the 2nd to be different to the address of the first
-            obj2.Address = new AddressBeingDomainSignatureComparable {
+            obj2.Address = new AddressBeingDomainSignatureComparable
+            {
                 Address1 = "123 Smith Ln.",
 
                 // Address2 isn't marked as being part of the domain signature; 
@@ -503,13 +523,16 @@ namespace Tests.SharpArch.Domain.DomainModel
             var jsonSerializer = new JsonSerializer();
 
             string jsonString;
-            using (var stringWriter = new StringWriter()) {
+            using (var stringWriter = new StringWriter())
+            {
                 jsonSerializer.Serialize(stringWriter, obj);
                 jsonString = stringWriter.ToString();
             }
 
-            using (var stringReader = new StringReader(jsonString)) {
-                using (var jsonReader = new JsonTextReader(stringReader)) {
+            using (var stringReader = new StringReader(jsonString))
+            {
+                using (var jsonReader = new JsonTextReader(stringReader))
+                {
                     var deserialized = jsonSerializer.Deserialize<ObjectWithOneDomainSignatureProperty>(jsonReader);
                     deserialized.Should().BeEquivalentTo(obj);
                 }

@@ -1,7 +1,3 @@
-// ReSharper disable InternalMembersMustHaveComments
-// ReSharper disable UnusedMember.Global
-// ReSharper disable ClassNeverInstantiated.Global
-
 namespace Tests.Helpers
 {
     internal interface ITestService
@@ -10,11 +6,10 @@ namespace Tests.Helpers
     }
 
 
-    class TestService : ITestService
+    internal class TestService : ITestService
     {
         public void Do()
         {
         }
     }
-
 }

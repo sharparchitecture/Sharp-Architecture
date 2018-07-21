@@ -1,7 +1,3 @@
-// ReSharper disable PublicMembersMustHaveComments
-// ReSharper disable HeapView.ObjectAllocation
-// ReSharper disable HeapView.ObjectAllocation.Evident
-
 namespace Tests.SharpArch.NHibernate
 {
     using FluentAssertions;
@@ -12,7 +8,6 @@ namespace Tests.SharpArch.NHibernate
     using Xunit;
 
 
-    // ReSharper disable once TestFileNameWarning
     public class RepositoryTests
     {
         [Fact]

@@ -1,13 +1,4 @@
-﻿// ReSharper disable PublicMembersMustHaveComments
-// ReSharper disable InternalMembersMustHaveComments
-// ReSharper disable HeapView.DelegateAllocation
-// ReSharper disable HeapView.ObjectAllocation.Evident
-// ReSharper disable HeapView.ClosureAllocation
-
-// ReSharper disable HeapView.ObjectAllocation
-
-// ReSharper disable MissingXmlDoc
-namespace Tests.SharpArch.NHibernate
+﻿namespace Tests.SharpArch.NHibernate
 {
     using System;
     using System.Collections.Generic;
@@ -120,7 +111,8 @@ namespace Tests.SharpArch.NHibernate
         public void DoesInitializeFailWhenCachingFileDependencyCannotBeFound()
         {
             Assert.Throws<FileNotFoundException>(
-                () => {
+                () =>
+                {
                     new NHibernateSessionFactoryBuilder()
                         // Random Guid value as dependency file to cause the exception
                         .UseConfigurationCache(new NHibernateConfigurationFileCache(new[] {Guid.NewGuid().ToString()}))
@@ -128,7 +120,6 @@ namespace Tests.SharpArch.NHibernate
                         .BuildConfiguration();
                 });
         }
-
 
         [Fact]
         public void WhenUsingDataAnnotationValidators_ShouldKeepRegisteredPreInsertEventListeners()
@@ -154,30 +145,29 @@ namespace Tests.SharpArch.NHibernate
     }
 
 
-    class InMemoryCache : INHibernateConfigurationCache
+    internal class InMemoryCache : INHibernateConfigurationCache
     {
-        MemoryStream memoryStream;
+        MemoryStream _memoryStream;
 
         public InMemoryCache()
         {
-            memoryStream = new MemoryStream();
+            _memoryStream = new MemoryStream();
         }
 
         public Configuration LoadConfiguration(
             string configKey, string configPath,
             IEnumerable<string> mappingAssemblies)
         {
-            if (memoryStream.Length == 0)
-                return null;
+            if (_memoryStream.Length == 0) return null;
 
-            memoryStream.Position = 0;
-            return FileCache.Load<Configuration>(memoryStream);
+            _memoryStream.Position = 0;
+            return FileCache.Load<Configuration>(_memoryStream);
         }
 
         public void SaveConfiguration(string configKey, Configuration config)
         {
-            memoryStream.SetLength(0);
-            FileCache.Save(memoryStream, config);
+            _memoryStream.SetLength(0);
+            FileCache.Save(_memoryStream, config);
         }
     }
 }

@@ -1,12 +1,4 @@
-﻿// ReSharper disable InternalMembersMustHaveComments
-// ReSharper disable HeapView.ObjectAllocation.Evident
-// ReSharper disable HeapView.ClosureAllocation
-// ReSharper disable HeapView.ObjectAllocation
-// ReSharper disable HeapView.DelegateAllocation
-
-// ReSharper disable HeapView.ObjectAllocation.Possible
-
-namespace Tests.SharpArch.Domain.DataAnnotationsValidator
+﻿namespace Tests.SharpArch.Domain.DataAnnotationsValidator
 {
     using System;
     using System.Collections.Generic;
@@ -22,6 +14,8 @@ namespace Tests.SharpArch.Domain.DataAnnotationsValidator
 
     public class HasUniqueObjectSignatureValidatorTests
     {
+        readonly Mock<IServiceProvider> _serviceProviderMock;
+
         public HasUniqueObjectSignatureValidatorTests()
         {
             _serviceProviderMock = new Mock<IServiceProvider>();
@@ -29,12 +23,11 @@ namespace Tests.SharpArch.Domain.DataAnnotationsValidator
                 .Returns(new DuplicateCheckerStub());
         }
 
-        readonly Mock<IServiceProvider> _serviceProviderMock;
-
         ValidationContext ValidationContextFor(object instance)
         {
             return new ValidationContext(instance, _serviceProviderMock.Object, null);
         }
+
 
         [HasUniqueDomainSignature]
         class Contractor : Entity
@@ -43,17 +36,17 @@ namespace Tests.SharpArch.Domain.DataAnnotationsValidator
             public string Name { get; set; }
         }
 
+
         class DuplicateCheckerStub : IEntityDuplicateChecker
         {
-            public bool DoesDuplicateExistWithTypedIdOf<IdT>(IEntityWithTypedId<IdT> entity)
+            public bool DoesDuplicateExistWithTypedIdOf<TId>(IEntityWithTypedId<TId> entity)
             {
-                Trace.Assert(entity != null);
-
-                switch (entity) {
+                switch (entity)
+                {
                     case Contractor contractor:
                         return !string.IsNullOrEmpty(contractor.Name) && string.Equals(contractor.Name, @"codai", StringComparison.OrdinalIgnoreCase);
                     case User user:
-                        return !string.IsNullOrEmpty(user.SSN) && user.SSN == "123-12-1234";
+                        return !string.IsNullOrEmpty(user.Ssn) && user.Ssn == "123-12-1234";
                     case ObjectWithGuidId objectWithGuidId:
                         return !string.IsNullOrEmpty(objectWithGuidId.Name) &&
                             string.Equals(objectWithGuidId.Name, @"codai", StringComparison.OrdinalIgnoreCase);
@@ -64,12 +57,14 @@ namespace Tests.SharpArch.Domain.DataAnnotationsValidator
             }
         }
 
+
         [HasUniqueDomainSignatureWithGuidId]
         class ObjectWithGuidId : EntityWithTypedId<Guid>
         {
             [DomainSignature]
             public string Name { get; set; }
         }
+
 
         [HasUniqueDomainSignature]
         class ObjectWithStringIdAndValidatorForIntId : EntityWithTypedId<string>
@@ -78,12 +73,14 @@ namespace Tests.SharpArch.Domain.DataAnnotationsValidator
             public string Name { get; set; }
         }
 
+
         [HasUniqueDomainSignatureWithStringId]
         class User : EntityWithTypedId<string>
         {
             [DomainSignature]
-            public string SSN { get; set; }
+            public string Ssn { get; set; }
         }
+
 
         [Fact]
         public void CanVerifyThatDuplicateExistsDuringValidationProcess()
@@ -113,7 +110,7 @@ namespace Tests.SharpArch.Domain.DataAnnotationsValidator
         [Fact]
         public void CanVerifyThatDuplicateExistsOfEntityWithStringIdDuringValidationProcess()
         {
-            var user = new User {SSN = "123-12-1234"};
+            var user = new User {Ssn = "123-12-1234"};
             user.IsValid(ValidationContextFor(user)).Should().BeFalse();
         }
 

@@ -1,30 +1,28 @@
-﻿// ReSharper disable MissingAnnotation
-// ReSharper disable ExceptionNotDocumented
-
-// ReSharper disable MissingXmlDoc
-
-namespace Tests.SharpArch.NHibernate
+﻿namespace Tests.SharpArch.NHibernate
 {
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Reflection;
+    using Domain;
     using global::SharpArch.Domain.PersistenceSupport;
     using global::SharpArch.NHibernate;
     using global::SharpArch.Testing.NHibernate;
-    using global::SharpArch.Testing.xUnit.NHibernate;
+    using global::SharpArch.Testing.Xunit.NHibernate;
+    using Mappings;
     using Moq;
-    using Tests.SharpArch.Domain;
-    using Tests.SharpArch.NHibernate.Mappings;
 
 
     public class DomainSignatureDbSetup : TestDatabaseSetup
     {
-        public DomainSignatureDbSetup() : base(Assembly.GetExecutingAssembly().CodeBase,
-            new[] {
-                typeof(ObjectWithGuidId).Assembly, 
-                typeof(TestsPersistenceModelGenerator).Assembly
-            })
-        { }
+        public DomainSignatureDbSetup()
+            : base(Assembly.GetExecutingAssembly().CodeBase,
+                new[]
+                {
+                    typeof(ObjectWithGuidId).Assembly,
+                    typeof(TestsPersistenceModelGenerator).Assembly
+                })
+        {
+        }
     }
 
 
@@ -33,7 +31,8 @@ namespace Tests.SharpArch.NHibernate
         protected Mock<IServiceProvider> ServiceProviderMock;
         protected ValidationContext ValidationContext;
 
-        public HasUniqueDomainSignatureTestsBase() : base(new DomainSignatureDbSetup())
+        public HasUniqueDomainSignatureTestsBase()
+            : base(new DomainSignatureDbSetup())
         {
             ServiceProviderMock = new Mock<IServiceProvider>();
             ServiceProviderMock.Setup(sp => sp.GetService(typeof(IEntityDuplicateChecker)))

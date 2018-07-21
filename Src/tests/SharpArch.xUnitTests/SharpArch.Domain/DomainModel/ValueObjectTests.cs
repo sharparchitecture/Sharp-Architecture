@@ -1,9 +1,3 @@
-// ReSharper disable PublicMembersMustHaveComments
-// ReSharper disable HeapView.ClosureAllocation
-// ReSharper disable HeapView.ObjectAllocation.Evident
-// ReSharper disable HeapView.BoxingAllocation
-
-// ReSharper disable HeapView.DelegateAllocation
 namespace Tests.SharpArch.Domain.DomainModel
 {
     using System;
@@ -22,12 +16,14 @@ namespace Tests.SharpArch.Domain.DomainModel
             public string Name { get; set; }
         }
 
+
         public class DummyValueType : ValueObject
         {
             public int Id { get; set; }
 
             public string Name { get; set; }
         }
+
 
         /// <summary>
         ///     This is a nonsense object; i.e., it doesn't make sense to have
@@ -38,6 +34,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             [DomainSignature]
             public string Name { get; set; }
         }
+
 
         [Fact]
         public void CannotHaveValueObjectWithDomainSignatureProperties()
@@ -50,14 +47,14 @@ namespace Tests.SharpArch.Domain.DomainModel
         [Fact]
         public void Equality_DifferentReferences_SameValues_True()
         {
-            var valueobj1 = new DummyValueType {Id = 1, Name = "Luis"};
-            var valueobj2 = new DummyValueType {Id = 1, Name = "Luis"};
-            valueobj1.Should().NotBeSameAs(valueobj2);
-            valueobj1.Equals(valueobj2).Should().BeTrue();
-            (valueobj1 == valueobj2).Should().BeTrue();
+            var valueObj1 = new DummyValueType {Id = 1, Name = "Luis"};
+            var valueObj2 = new DummyValueType {Id = 1, Name = "Luis"};
+            valueObj1.Should().NotBeSameAs(valueObj2);
+            valueObj1.Equals(valueObj2).Should().BeTrue();
+            (valueObj1 == valueObj2).Should().BeTrue();
 
-            valueobj2.Name = "Billy";
-            (valueobj1 == valueobj2).Should().BeFalse();
+            valueObj2.Name = "Billy";
+            (valueObj1 == valueObj2).Should().BeFalse();
         }
 
         [Fact]

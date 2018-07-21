@@ -1,12 +1,13 @@
 namespace Tests.SharpArch.NHibernate.Mappings
 {
     using System;
+    using Domain;
     using FluentNHibernate.Automapping;
     using FluentNHibernate.Conventions;
     using global::SharpArch.Domain.DomainModel;
     using global::SharpArch.NHibernate.FluentNHibernate;
     using global::SharpArch.NHibernate.FluentNHibernate.Conventions;
-    using Tests.SharpArch.Domain;
+
 
     /// <summary>
     ///     Generates the auto-mapping for test entities.
@@ -30,7 +31,8 @@ namespace Tests.SharpArch.NHibernate.Mappings
 
         static Action<IConventionFinder> GetConventions()
         {
-            return c => {
+            return c =>
+            {
                 c.Add<PrimaryKeyConvention>();
                 c.Add<CustomForeignKeyConvention>();
                 c.Add<HasManyConvention>();

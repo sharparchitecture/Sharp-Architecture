@@ -1,4 +1,4 @@
-﻿// ReSharper disable ExceptionNotDocumented
+﻿
 #if NETFULL
 namespace Tests.SharpArch.Domain
 {

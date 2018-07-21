@@ -1,8 +1,3 @@
-// ReSharper disable PublicMembersMustHaveComments
-// ReSharper disable HeapView.ObjectAllocation.Evident
-// ReSharper disable HeapView.ObjectAllocation
-// ReSharper disable InternalMembersMustHaveComments
-
 namespace Tests.SharpArch.Domain.DomainModel
 {
     using System.Collections.Generic;
@@ -16,31 +11,35 @@ namespace Tests.SharpArch.Domain.DomainModel
 
     public class BaseObjectEqualityComparerTests
     {
-        private class ConcreteBaseObject : BaseObject
+        class ConcreteBaseObject : BaseObject
         {
             public string Name { get; set; }
 
             protected override PropertyInfo[] GetTypeSpecificSignatureProperties()
             {
-                return this.GetType().GetProperties();
+                return GetType().GetProperties();
             }
         }
 
-        private class ConcreteEntityWithDomainSignatureProperties : Entity
+
+        class ConcreteEntityWithDomainSignatureProperties : Entity
         {
             [DomainSignature]
             public string Name { get; set; }
         }
 
-        private class ConcreteEntityWithNoDomainSignatureProperties : Entity
+
+        class ConcreteEntityWithNoDomainSignatureProperties : Entity
         {
             public string Name { get; set; }
         }
 
-        private class ConcreteValueObject : ValueObject
+
+        class ConcreteValueObject : ValueObject
         {
             public string Name { get; set; }
         }
+
 
         [Fact]
         public void CanBeUsedByLinqSetOperatorsSuchAsIntersect()
@@ -156,4 +155,3 @@ namespace Tests.SharpArch.Domain.DomainModel
         }
     }
 }
-

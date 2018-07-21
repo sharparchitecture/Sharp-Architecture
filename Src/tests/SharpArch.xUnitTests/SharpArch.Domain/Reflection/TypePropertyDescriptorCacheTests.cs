@@ -8,12 +8,12 @@ namespace Tests.SharpArch.Domain.Reflection
 
     public class TypePropertyDescriptorCacheTests
     {
+        readonly TypePropertyDescriptorCache _cache;
+
         public TypePropertyDescriptorCacheTests()
         {
             _cache = new TypePropertyDescriptorCache();
         }
-
-        readonly TypePropertyDescriptorCache _cache;
 
         [Fact]
         public void Clear_Should_ClearTheCache()
