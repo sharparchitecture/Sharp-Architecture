@@ -15,7 +15,7 @@
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
-   
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <DefineConstants>NETFULL;NET461</DefineConstants>
   </PropertyGroup>
@@ -25,17 +25,18 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
 
-   
+
   <ItemGroup>
     <Compile Include="..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
     <Compile Include="..\Common\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
-   
+
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63102-01" PrivateAssets="All" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
     <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />

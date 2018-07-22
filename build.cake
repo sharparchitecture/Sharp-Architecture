@@ -61,6 +61,7 @@ var nugetVersion = semVersion.NuGetVersion;
 var buildVersion = semVersion.FullBuildMetaData;
 var informationalVersion = semVersion.InformationalVersion;
 var nextMajorRelease = $"{semVersion.Major+1}.0.0";
+var commitHash = semVersion.Sha;
 
 // Artifacts
 var artifactsDir = "./Drops";
@@ -76,6 +77,7 @@ var nugetTemplatesDir = "./NugetTemplates";
 var nugetTempDir = artifactsDir + "/Packages";
 var samplesDir = "./Samples";
 var tardisBankSampleDir = samplesDir + "/TardisBank";
+
 // SETUP / TEARDOWN
 
 Setup((context) =>
@@ -307,6 +309,7 @@ Task("CreateNugetPackages")
         // update templates
         ReplaceTextInFiles(nugetTempDir+"/**/*.nuspec", "$(SemanticVersion)", nugetVersion);
         ReplaceTextInFiles(nugetTempDir+"/**/*.nuspec", "$(NextMajorRelease)", nextMajorRelease);
+        ReplaceTextInFiles(nugetTempDir+"/**/*.nuspec", "$(CommitSHA)", commitHash);
 
         Func<string, string, string> removeBasePath = (path, basePath) => {
             var endOfBase = path.IndexOf(basePath);

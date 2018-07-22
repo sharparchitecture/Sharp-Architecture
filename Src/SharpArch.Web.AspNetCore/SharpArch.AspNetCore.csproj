@@ -1,39 +1,38 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <SignAssembly>False</SignAssembly>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <ProjectFileName>SharpArch.AspNetCore</ProjectFileName>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\$(TargetFramework)\$(ProjectFileName).xml</DocumentationFile>
-    <DebugType>pdbonly</DebugType>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <SignAssembly>False</SignAssembly>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(ProjectFileName).xml</DocumentationFile>
     <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\$(TargetFramework)\$(ProjectFileName).xml</DocumentationFile>
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>True</DebugSymbols>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DebugType>full</DebugType>
   </PropertyGroup>
 
-   
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+
   <ItemGroup>
     <Compile Include="..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
     <Compile Include="..\Common\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
-   
+
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.1.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63102-01" PrivateAssets="All" />
   </ItemGroup>
-   
+
   <ItemGroup>
     <ProjectReference Include="..\SharpArch.Domain\SharpArch.Domain.csproj" />
   </ItemGroup>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>SharpArch.Testing.Xunit</id>
+    <id>SharpArch.Testing.Xunit.NHibernate</id>
     <version>$(SemanticVersion)</version>
     <authors>Sharp Architecture Dev Team</authors>
     <owners>Sharp Architecture Dev Team</owners>
@@ -13,7 +13,8 @@
     <summary>Architectural foundation for building maintainable applications with Domain Driven Design patterns and practices</summary>
     <language>en-US</language>
     <releaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/release/$(SemanticVersion)</releaseNotes>
-    <tags>sharp-architecture</tags>
+    <tags>sharp-architecture sharp-arch testing xunit nhibernate db-testing</tags>
+    <repository type="git" url="https://github.com/sharparchitecture/Sharp-Architecture.git" commit="$(CommitSHA)" />
     <dependencies>
       <dependency id="SharpArch.Domain" version="[$(SemanticVersion),$(NextMajorRelease))" />
       <dependency id="SharpArch.NHibernate" version="[$(SemanticVersion),$(NextMajorRelease))" />
