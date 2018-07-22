@@ -74,7 +74,8 @@ var solutionFile = srcDir + "/SharpArch.sln";
 var nunitTestResults = artifactsDir + "/Nunit3TestResults.xml";
 var nugetTemplatesDir = "./NugetTemplates";
 var nugetTempDir = artifactsDir + "/Packages";
-
+var samplesDir = "./Samples";
+var tardisBankSampleDir = samplesDir + "/TardisBank";
 // SETUP / TEARDOWN
 
 Setup((context) =>
@@ -124,6 +125,7 @@ Task("Restore")
     .Does(() =>
     {
         DotNetCoreRestore(srcDir);
+        DotNetCoreRestore(tardisBankSampleDir+"/Src");
     });
 
 
@@ -139,6 +141,15 @@ Task("Build")
         });
     });
 
+Task("BuildSamples")
+    .IsDependentOn("Build")
+    .Does(() =>
+    {
+        DotNetCoreBuild(tardisBankSampleDir + "/Src", new DotNetCoreBuildSettings{
+            NoRestore = true,
+            Configuration = buildConfig
+        });
+    });
 
 Task("RunNunitTests")
     .Does(() =>
@@ -347,6 +358,7 @@ Task("Default")
     .IsDependentOn("RunUnitTests")
     .IsDependentOn("InspectCode")
     .IsDependentOn("CreateNugetPackages")
+    .IsDependentOn("BuildSamples")
     .Does(
         () => {}
     );

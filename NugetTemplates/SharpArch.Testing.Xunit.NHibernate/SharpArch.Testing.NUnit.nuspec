@@ -16,6 +16,7 @@
     <tags>sharp-architecture</tags>
     <dependencies>
       <dependency id="SharpArch.Domain" version="[$(SemanticVersion),$(NextMajorRelease))" />
+      <dependency id="SharpArch.NHibernate" version="[$(SemanticVersion),$(NextMajorRelease))" />
       <dependency id="SharpArch.Testing" version="[$(SemanticVersion),$(NextMajorRelease))" />
       <dependency id="xunit" version="[2.4.0,3.0.0)" />
     </dependencies>
