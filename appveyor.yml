@@ -19,8 +19,11 @@ cache:
   - c:\work\sharp-arch\.ResharperCaches
   - c:\tmp\cake\tools -> appveor.yml
 
+install:
+  - cmd: dotnet --info
+  
 build_script:
-# skip BuildSamples; for now..
+# skip BuildSamples for now..
   - ps: ./build.ps1
 
 test: off

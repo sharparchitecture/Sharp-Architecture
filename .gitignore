@@ -288,3 +288,5 @@ Artefacts/Documentation/build/
 /ResharperCaches
 /DropsErrorOutput.xml
 /DropsTestOutput.xml
+/Src/Common/AssemblyVersion.cs
+/Docker/mssql-data
