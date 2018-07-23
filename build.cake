@@ -193,9 +193,9 @@ Task("RunNunitTests")
 Task("RunXunitTests")
     .Does((ctx) =>
     {
-
         var testProjects = GetFiles($"{testsRootDir}/SharpArch.xUnit*/**/*.csproj");
         bool success = true;
+        bool isDebugConfigurationRequested = string.Equals(buildConfig, "Debug", StringComparison.OrdinalIgnoreCase);
 
         foreach (var testProj in testProjects) {
             try
@@ -213,13 +213,25 @@ Task("RunXunitTests")
                 .ExcludeByFile("*/*Designer.cs");
 
                 var testOutputAbs = MakeAbsolute(File($"{artifactsDir}/xunitTests-{projectFilename}.xml"));
-                // todo: Detect NetCore framework version
+
+                var xunitArgs = isDebugConfigurationRequested
+                    ? $"-xml {testOutputAbs} -c {buildConfig} --no-build")
+                    : $"-xml {testOutputAbs} -c Debug");
+
+                // run open cover for debug build configuration
                 OpenCover(
                     tool => tool.DotNetCoreTool(projectPath.ToString(),
                         "xunit",
-                        $"-xml {testOutputAbs} -c {buildConfig} --no-build "),
+                        $"-xml {testOutputAbs} -c {buildConfig}"),
                     testCoverageOutputFile,
                     openCoverSettings);
+                    
+                // run tests again if Release mode was requested
+                if (!isDebugConfigurationRequested) {
+                    DotNetCoreTool(projectPath.ToString(),
+                        "xunit",
+                        $"-xml {testOutputAbs} -c {buildConfig}");
+                }
             }
             catch (Exception ex)
             {
