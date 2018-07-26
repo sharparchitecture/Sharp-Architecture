@@ -16,6 +16,10 @@
   </PropertyGroup>
    
   <ItemGroup>
+    <Compile Include="..\SharpArch.XunitTests\SharpArch.Domain\TestEntities.cs" Link="TestEntities.cs" />
+  </ItemGroup>
+   
+  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.4.1" />
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
