@@ -37,6 +37,9 @@ var local = BuildSystem.IsLocalBuild;
 var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
 var isRepository = StringComparer.OrdinalIgnoreCase.Equals("SharpArchitecture/Sharp-Architecture", AppVeyor.Environment.Repository.Name);
 
+var isDebugBuild = string.Equals(buildConfig, "Debug", StringComparison.OrdinalIgnoreCase);
+var isReleaseBuild = string.Equals(buildConfig, "Release", StringComparison.OrdinalIgnoreCase);
+
 var isDevelopBranch = StringComparer.OrdinalIgnoreCase.Equals("develop", AppVeyor.Environment.Repository.Branch);
 var isReleaseBranch = StringComparer.OrdinalIgnoreCase.Equals("master", AppVeyor.Environment.Repository.Branch);
 var isTagged = AppVeyor.Environment.Repository.Tag.IsTag;
@@ -55,7 +58,7 @@ var nugetPackages = new [] {
     "SharpArch.Web.AspNetCore"
 };
 
-// Calculate version
+// Calculate version and commit hash
 GitVersion semVersion = GitVersion();
 var nugetVersion = semVersion.NuGetVersion;
 var buildVersion = semVersion.FullBuildMetaData;
@@ -127,7 +130,7 @@ Task("Restore")
     .Does(() =>
     {
         DotNetCoreRestore(srcDir);
-        DotNetCoreRestore(tardisBankSampleDir+"/Src");
+        DotNetCoreRestore(tardisBankSampleDir + "/Src");
     });
 
 
@@ -137,6 +140,15 @@ Task("Build")
     .IsDependentOn("Restore")
     .Does(() =>
     {
+        if (isReleaseBuild) {
+            Information("Running {0} build for code coverage", "Debug");
+            // need Debug build for code coverage
+            DotNetCoreBuild(srcDir, new DotNetCoreBuildSettings {
+                NoRestore = true,
+                Configuration = "Debug",
+            });
+        }
+        Information("Running {0} build for code coverage", buildConfig);
         DotNetCoreBuild(srcDir, new DotNetCoreBuildSettings {
             NoRestore = true,
             Configuration = buildConfig,
@@ -154,11 +166,12 @@ Task("BuildSamples")
     });
 
 Task("RunNunitTests")
-    .Does(() =>
+    .IsDependentOn("Build")
+    .Does(ctx =>
     {
-        var testAssemblies = GetFiles($"{testsRootDir}/SharpArch.Tests/bin/{buildConfig}/net462/SharpArch.Tests.dll")
-            .Union(GetFiles($"{testsRootDir}/SharpArch.Tests.NHibernate/bin/{buildConfig}/net462/SharpArch.Tests.NHibernate.dll"))
-            ;
+        // Run coverage for Debug build
+        var testAssemblies = 
+            GetFiles($"{testsRootDir}/SharpArch.Tests.NHibernate/bin/Debug/**/SharpArch.Tests.NHibernate.dll");
         foreach (var item in testAssemblies)
         {
             Information("NUnit test assembly: {0}", item);
@@ -186,6 +199,13 @@ Task("RunNunitTests")
             .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.xUnit*]*")
             .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
             .ExcludeByFile("*/*Designer.cs"));
+            
+        // run test for Release build
+        if (isReleaseBuild) {
+            testAssemblies = 
+                GetFiles($"{testsRootDir}/SharpArch.Tests.NHibernate/bin/Release/**/SharpArch.Tests.NHibernate.dll");
+            testAction(ctx);
+        }
     });
 
 
@@ -195,7 +215,6 @@ Task("RunXunitTests")
     {
         var testProjects = GetFiles($"{testsRootDir}/SharpArch.xUnit*/**/*.csproj");
         bool success = true;
-        bool isDebugConfigurationRequested = string.Equals(buildConfig, "Debug", StringComparison.OrdinalIgnoreCase);
 
         foreach (var testProj in testProjects) {
             try
@@ -214,23 +233,19 @@ Task("RunXunitTests")
 
                 var testOutputAbs = MakeAbsolute(File($"{artifactsDir}/xunitTests-{projectFilename}.xml"));
 
-                var xunitArgs = isDebugConfigurationRequested
-                    ? $"-xml {testOutputAbs} -c {buildConfig} --no-build")
-                    : $"-xml {testOutputAbs} -c Debug");
-
                 // run open cover for debug build configuration
                 OpenCover(
                     tool => tool.DotNetCoreTool(projectPath.ToString(),
                         "xunit",
-                        $"-xml {testOutputAbs} -c {buildConfig}"),
+                        $"-xml {testOutputAbs} -c Debug --no-build"),
                     testCoverageOutputFile,
                     openCoverSettings);
                     
                 // run tests again if Release mode was requested
-                if (!isDebugConfigurationRequested) {
+                if (isReleaseBuild) {
                     DotNetCoreTool(projectPath.ToString(),
                         "xunit",
-                        $"-xml {testOutputAbs} -c {buildConfig}");
+                        $"-xml {testOutputAbs} -c Release --no-build");
                 }
             }
             catch (Exception ex)
