@@ -80,6 +80,7 @@ var nugetTemplatesDir = "./NugetTemplates";
 var nugetTempDir = artifactsDir + "/Packages";
 var samplesDir = "./Samples";
 var tardisBankSampleDir = samplesDir + "/TardisBank";
+var nugetExe = "./tools/nuget.exe";
 
 // SETUP / TEARDOWN
 
@@ -88,6 +89,10 @@ Setup((context) =>
     Information("Building SharpArchitecture, version {0} (isTagged: {1}, isLocal: {2})...", nugetVersion, isTagged, local);
     CreateDirectory(artifactsDir);
     CleanDirectory(artifactsDir);
+    if (!FileExists(nugetExe)) {
+        Information("Downloading Nuget.exe ...");
+        DownloadFile("https://dist.nuget.org/win-x86-commandline/latest/nuget.exe", nugetExe);
+    }
 });
 
 Teardown((context) =>
@@ -360,7 +365,7 @@ Task("CreateNugetPackages")
                 CopyFile(srcFile, dstFile);
             };
 
-            var exitCode = StartProcess("nuget.exe", new ProcessSettings {
+            var exitCode = StartProcess(nugetExe, new ProcessSettings {
                 WorkingDirectory = $"{nugetTempDir}/{projectName}",
                 Arguments = "pack -OutputDirectory .."
             });
