@@ -20,7 +20,7 @@ cache:
   - c:\tmp\cake\tools -> appveor.yml
 
 install:
-  - cmd: dotnet --info
+  - cmd: nuget
   
 build_script:
 # skip BuildSamples for now..
