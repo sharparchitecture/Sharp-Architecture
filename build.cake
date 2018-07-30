@@ -175,7 +175,7 @@ Task("RunNunitTests")
     .Does(ctx =>
     {
         // Run coverage for Debug build
-        var testAssemblies = 
+        var testAssemblies =
             GetFiles($"{testsRootDir}/SharpArch.Tests.NHibernate/bin/Debug/net462/SharpArch.Tests.NHibernate.dll");
         foreach (var item in testAssemblies)
         {
@@ -204,10 +204,10 @@ Task("RunNunitTests")
             .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.xUnit*]*")
             .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
             .ExcludeByFile("*/*Designer.cs"));
-            
+
         // run test for Release build
         if (isReleaseBuild) {
-            testAssemblies = 
+            testAssemblies =
                 GetFiles($"{testsRootDir}/SharpArch.Tests.NHibernate/bin/Release/net462/SharpArch.Tests.NHibernate.dll");
             testAction(ctx);
         }
@@ -243,7 +243,7 @@ Task("RunXunitTests")
             ),
             testCoverageOutputFile,
             openCoverSettings);
-            
+
         // run tests again if Release mode was requested
         if (isReleaseBuild) {
             Information("Running Release mode tests for {0}", projectFilename.ToString());
@@ -257,7 +257,7 @@ Task("RunXunitTests")
         }
     })
     .DeferOnError();
-    
+
 Task("CleanPreviousTestResults")
     .Does(() =>
     {
