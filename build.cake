@@ -211,51 +211,48 @@ Task("RunNunitTests")
 
 
 Task("RunXunitTests")
-    .Does((ctx) =>
-    {
-        var testProjects = GetFiles($"{testsRootDir}/SharpArch.xUnit*/**/*.csproj");
-        bool success = true;
-
-        foreach (var testProj in testProjects) {
-            try
-            {
-                var projectPath = testProj.GetDirectory();
-                var projectFilename = testProj.GetFilenameWithoutExtension();
-                var openCoverSettings = new OpenCoverSettings {
-                    OldStyle = true,
-                    ReturnTargetCodeOffset = 0,
-                    ArgumentCustomization = args => args.Append("-mergeoutput"),
-                    WorkingDirectory = projectPath,
-                }
-                .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.xUnit*]*")
-                .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
-                .ExcludeByFile("*/*Designer.cs");
-
-                var testOutputAbs = MakeAbsolute(File($"{artifactsDir}/xunitTests-{projectFilename}.xml"));
-
-                // run open cover for debug build configuration
-                OpenCover(
-                    tool => tool.DotNetCoreTool(projectPath.ToString(),
-                        "xunit",
-                        $"-xml {testOutputAbs} -c Debug --no-build"),
-                    testCoverageOutputFile,
-                    openCoverSettings);
-                    
-                // run tests again if Release mode was requested
-                if (isReleaseBuild) {
-                    DotNetCoreTool(projectPath.ToString(),
-                        "xunit",
-                        $"-xml {testOutputAbs} -c Release --no-build");
-                }
-            }
-            catch (Exception ex)
-            {
-                Error("Error running tests", ex);
-                success = false;
-            }
+    .DoesForEach(GetFiles($"{testsRootDir}/SharpArch.xUnit*/**/*.csproj"), (testProj) => {
+        var projectPath = testProj.GetDirectory();
+        var projectFilename = testProj.GetFilenameWithoutExtension();
+        Information("Calculating code coverage for {0} ...", projectFilename);
+        var openCoverSettings = new OpenCoverSettings {
+            OldStyle = true,
+            ReturnTargetCodeOffset = 0,
+            ArgumentCustomization = args => args.Append("-mergeoutput"),
+            WorkingDirectory = projectPath,
         }
-    });
+        .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.xUnit*]*")
+        .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
+        .ExcludeByFile("*/*Designer.cs");
 
+        var testOutputAbs = MakeAbsolute(File($"{artifactsDir}/xunitTests-{projectFilename}.xml"));
+
+        // run open cover for debug build configuration
+        OpenCover(
+            tool => tool.DotNetCoreTool(projectPath.ToString(),
+                "xunit",
+                new ProcessArgumentBuilder()
+                    .AppendSwitchQuoted("-xml", testOutputAbs.FullPath)
+                    .AppendSwitch("--configuration", "Debug")
+                    .Append("--no-build")
+            ),
+            testCoverageOutputFile,
+            openCoverSettings);
+            
+        // run tests again if Release mode was requested
+        if (isReleaseBuild) {
+            Information("Running Release mode tests for {0}", projectFilename.ToString());
+            DotNetCoreTool(testProj.FullPath,
+                "xunit",
+                new ProcessArgumentBuilder()
+                    .AppendSwitchQuoted("-xml", testOutputAbs.FullPath)
+                    .AppendSwitch("--configuration", "Release")
+                    .Append("--no-build")
+            );
+        }
+    })
+    .DeferOnError();
+    
 Task("CleanPreviousTestResults")
     .Does(() =>
     {
@@ -278,8 +275,8 @@ Task("UploadTestResults")
     .WithCriteria(() => !local)
     .Does(() => {
         CoverallsIo(testCoverageOutputFile);
-        //Information("Uploading nUnit result: {0}", nunitTestResults);
-        //UploadFile("https://ci.appveyor.com/api/testresults/nunit3/"+appVeyorJobId, nunitTestResults);
+        Information("Uploading nUnit result: {0}", nunitTestResults);
+        UploadFile("https://ci.appveyor.com/api/testresults/nunit3/"+appVeyorJobId, nunitTestResults);
         foreach(var xunitResult in GetFiles($"{artifactsDir}/xunitTests-*.xml"))
         {
             Information("Uploading xUnit results: {0}", xunitResult);
@@ -291,7 +288,7 @@ Task("UploadTestResults")
 Task("RunUnitTests")
     .IsDependentOn("Build")
     .IsDependentOn("CleanPreviousTestResults")
-    //.IsDependentOn("RunNunitTests")
+    .IsDependentOn("RunNunitTests")
     .IsDependentOn("RunXunitTests")
     .IsDependentOn("GenerateCoverageReport")
     .IsDependentOn("UploadTestResults")
