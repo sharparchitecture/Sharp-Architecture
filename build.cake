@@ -171,7 +171,7 @@ Task("RunNunitTests")
     {
         // Run coverage for Debug build
         var testAssemblies = 
-            GetFiles($"{testsRootDir}/SharpArch.Tests.NHibernate/bin/Debug/**/SharpArch.Tests.NHibernate.dll");
+            GetFiles($"{testsRootDir}/SharpArch.Tests.NHibernate/bin/Debug/net462/SharpArch.Tests.NHibernate.dll");
         foreach (var item in testAssemblies)
         {
             Information("NUnit test assembly: {0}", item);
@@ -203,7 +203,7 @@ Task("RunNunitTests")
         // run test for Release build
         if (isReleaseBuild) {
             testAssemblies = 
-                GetFiles($"{testsRootDir}/SharpArch.Tests.NHibernate/bin/Release/**/SharpArch.Tests.NHibernate.dll");
+                GetFiles($"{testsRootDir}/SharpArch.Tests.NHibernate/bin/Release/net462/SharpArch.Tests.NHibernate.dll");
             testAction(ctx);
         }
     });
