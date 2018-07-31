@@ -1,13 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
-    <SignAssembly>False</SignAssembly>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <ProjectFileName>SharpArch.RavenDb</ProjectFileName>
   </PropertyGroup>
 
   <PropertyGroup>
-    <ProjectFileName>SharpArch.Domain</ProjectFileName>
+    <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
+    <SignAssembly>False</SignAssembly>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(ProjectFileName).xml</DocumentationFile>
+    <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
@@ -18,16 +20,12 @@
     <DefineConstants>NETFULL;NET462</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\$(TargetFramework)\$(ProjectFileName).xml</DocumentationFile>
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>True</DebugSymbols>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DebugType>full</DebugType>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\$(TargetFramework)\$(ProjectFileName).xml</DocumentationFile>
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>True</DebugSymbols>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>portable</DebugType>
   </PropertyGroup>
 
    
@@ -42,6 +40,7 @@
   
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63102-01" PrivateAssets="All" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="RavenDb.Client" Version="4.0.5" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />

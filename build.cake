@@ -37,6 +37,9 @@ var local = BuildSystem.IsLocalBuild;
 var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
 var isRepository = StringComparer.OrdinalIgnoreCase.Equals("SharpArchitecture/Sharp-Architecture", AppVeyor.Environment.Repository.Name);
 
+var isDebugBuild = string.Equals(buildConfig, "Debug", StringComparison.OrdinalIgnoreCase);
+var isReleaseBuild = string.Equals(buildConfig, "Release", StringComparison.OrdinalIgnoreCase);
+
 var isDevelopBranch = StringComparer.OrdinalIgnoreCase.Equals("develop", AppVeyor.Environment.Repository.Branch);
 var isReleaseBranch = StringComparer.OrdinalIgnoreCase.Equals("master", AppVeyor.Environment.Repository.Branch);
 var isTagged = AppVeyor.Environment.Repository.Tag.IsTag;
@@ -55,12 +58,13 @@ var nugetPackages = new [] {
     "SharpArch.Web.AspNetCore"
 };
 
-// Calculate version
+// Calculate version and commit hash
 GitVersion semVersion = GitVersion();
 var nugetVersion = semVersion.NuGetVersion;
 var buildVersion = semVersion.FullBuildMetaData;
 var informationalVersion = semVersion.InformationalVersion;
 var nextMajorRelease = $"{semVersion.Major+1}.0.0";
+var commitHash = semVersion.Sha;
 
 // Artifacts
 var artifactsDir = "./Drops";
@@ -76,6 +80,8 @@ var nugetTemplatesDir = "./NugetTemplates";
 var nugetTempDir = artifactsDir + "/Packages";
 var samplesDir = "./Samples";
 var tardisBankSampleDir = samplesDir + "/TardisBank";
+var nugetExe = "./tools/nuget.exe";
+
 // SETUP / TEARDOWN
 
 Setup((context) =>
@@ -83,6 +89,10 @@ Setup((context) =>
     Information("Building SharpArchitecture, version {0} (isTagged: {1}, isLocal: {2})...", nugetVersion, isTagged, local);
     CreateDirectory(artifactsDir);
     CleanDirectory(artifactsDir);
+    if (!FileExists(nugetExe)) {
+        Information("Downloading Nuget.exe ...");
+        DownloadFile("https://dist.nuget.org/win-x86-commandline/latest/nuget.exe", nugetExe);
+    }
 });
 
 Teardown((context) =>
@@ -125,7 +135,7 @@ Task("Restore")
     .Does(() =>
     {
         DotNetCoreRestore(srcDir);
-        DotNetCoreRestore(tardisBankSampleDir+"/Src");
+        DotNetCoreRestore(tardisBankSampleDir + "/Src");
     });
 
 
@@ -135,6 +145,15 @@ Task("Build")
     .IsDependentOn("Restore")
     .Does(() =>
     {
+        if (isReleaseBuild) {
+            Information("Running {0} build for code coverage", "Debug");
+            // need Debug build for code coverage
+            DotNetCoreBuild(srcDir, new DotNetCoreBuildSettings {
+                NoRestore = true,
+                Configuration = "Debug",
+            });
+        }
+        Information("Running {0} build for code coverage", buildConfig);
         DotNetCoreBuild(srcDir, new DotNetCoreBuildSettings {
             NoRestore = true,
             Configuration = buildConfig,
@@ -152,11 +171,12 @@ Task("BuildSamples")
     });
 
 Task("RunNunitTests")
-    .Does(() =>
+    .IsDependentOn("Build")
+    .Does(ctx =>
     {
-        var testAssemblies = GetFiles($"{testsRootDir}/SharpArch.Tests/bin/{buildConfig}/net462/SharpArch.Tests.dll")
-            .Union(GetFiles($"{testsRootDir}/SharpArch.Tests.NHibernate/bin/{buildConfig}/net462/SharpArch.Tests.NHibernate.dll"))
-            ;
+        // Run coverage for Debug build
+        var testAssemblies =
+            GetFiles($"{testsRootDir}/SharpArch.Tests.NHibernate/bin/Debug/net462/SharpArch.Tests.NHibernate.dll");
         foreach (var item in testAssemblies)
         {
             Information("NUnit test assembly: {0}", item);
@@ -184,48 +204,59 @@ Task("RunNunitTests")
             .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.xUnit*]*")
             .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
             .ExcludeByFile("*/*Designer.cs"));
+
+        // run test for Release build
+        if (isReleaseBuild) {
+            testAssemblies =
+                GetFiles($"{testsRootDir}/SharpArch.Tests.NHibernate/bin/Release/net462/SharpArch.Tests.NHibernate.dll");
+            testAction(ctx);
+        }
     });
 
 
 
 Task("RunXunitTests")
-    .Does((ctx) =>
-    {
-
-        var testProjects = GetFiles($"{testsRootDir}/SharpArch.xUnit*/**/*.csproj");
-        bool success = true;
-
-        foreach (var testProj in testProjects) {
-            try
-            {
-                var projectPath = testProj.GetDirectory();
-                var projectFilename = testProj.GetFilenameWithoutExtension();
-                var openCoverSettings = new OpenCoverSettings {
-                    OldStyle = true,
-                    ReturnTargetCodeOffset = 0,
-                    ArgumentCustomization = args => args.Append("-mergeoutput"),
-                    WorkingDirectory = projectPath,
-                }
-                .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.xUnit*]*")
-                .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
-                .ExcludeByFile("*/*Designer.cs");
-
-                var testOutputAbs = MakeAbsolute(File($"{artifactsDir}/xunitTests-{projectFilename}.xml"));
-                // todo: Detect NetCore framework version
-                OpenCover(
-                    tool => tool.DotNetCoreTool(projectPath.ToString(),
-                        "xunit",
-                        $"-xml {testOutputAbs} -c {buildConfig} --no-build "),
-                    testCoverageOutputFile,
-                    openCoverSettings);
-            }
-            catch (Exception ex)
-            {
-                Error("Error running tests", ex);
-                success = false;
-            }
+    .DoesForEach(GetFiles($"{testsRootDir}/SharpArch.xUnit*/**/*.csproj"), (testProj) => {
+        var projectPath = testProj.GetDirectory();
+        var projectFilename = testProj.GetFilenameWithoutExtension();
+        Information("Calculating code coverage for {0} ...", projectFilename);
+        var openCoverSettings = new OpenCoverSettings {
+            OldStyle = true,
+            ReturnTargetCodeOffset = 0,
+            ArgumentCustomization = args => args.Append("-mergeoutput"),
+            WorkingDirectory = projectPath,
         }
-    });
+        .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.xUnit*]*")
+        .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
+        .ExcludeByFile("*/*Designer.cs");
+
+        var testOutputAbs = MakeAbsolute(File($"{artifactsDir}/xunitTests-{projectFilename}.xml"));
+
+        // run open cover for debug build configuration
+        OpenCover(
+            tool => tool.DotNetCoreTool(projectPath.ToString(),
+                "xunit",
+                new ProcessArgumentBuilder()
+                    .AppendSwitchQuoted("-xml", testOutputAbs.FullPath)
+                    .AppendSwitch("--configuration", "Debug")
+                    .Append("--no-build")
+            ),
+            testCoverageOutputFile,
+            openCoverSettings);
+
+        // run tests again if Release mode was requested
+        if (isReleaseBuild) {
+            Information("Running Release mode tests for {0}", projectFilename.ToString());
+            DotNetCoreTool(testProj.FullPath,
+                "xunit",
+                new ProcessArgumentBuilder()
+                    .AppendSwitchQuoted("-xml", testOutputAbs.FullPath)
+                    .AppendSwitch("--configuration", "Release")
+                    .Append("--no-build")
+            );
+        }
+    })
+    .DeferOnError();
 
 Task("CleanPreviousTestResults")
     .Does(() =>
@@ -249,8 +280,8 @@ Task("UploadTestResults")
     .WithCriteria(() => !local)
     .Does(() => {
         CoverallsIo(testCoverageOutputFile);
-        //Information("Uploading nUnit result: {0}", nunitTestResults);
-        //UploadFile("https://ci.appveyor.com/api/testresults/nunit3/"+appVeyorJobId, nunitTestResults);
+        Information("Uploading nUnit result: {0}", nunitTestResults);
+        UploadFile("https://ci.appveyor.com/api/testresults/nunit3/"+appVeyorJobId, nunitTestResults);
         foreach(var xunitResult in GetFiles($"{artifactsDir}/xunitTests-*.xml"))
         {
             Information("Uploading xUnit results: {0}", xunitResult);
@@ -262,7 +293,7 @@ Task("UploadTestResults")
 Task("RunUnitTests")
     .IsDependentOn("Build")
     .IsDependentOn("CleanPreviousTestResults")
-    //.IsDependentOn("RunNunitTests")
+    .IsDependentOn("RunNunitTests")
     .IsDependentOn("RunXunitTests")
     .IsDependentOn("GenerateCoverageReport")
     .IsDependentOn("UploadTestResults")
@@ -307,6 +338,7 @@ Task("CreateNugetPackages")
         // update templates
         ReplaceTextInFiles(nugetTempDir+"/**/*.nuspec", "$(SemanticVersion)", nugetVersion);
         ReplaceTextInFiles(nugetTempDir+"/**/*.nuspec", "$(NextMajorRelease)", nextMajorRelease);
+        ReplaceTextInFiles(nugetTempDir+"/**/*.nuspec", "$(CommitSHA)", commitHash);
 
         Func<string, string, string> removeBasePath = (path, basePath) => {
             var endOfBase = path.IndexOf(basePath);
@@ -333,7 +365,7 @@ Task("CreateNugetPackages")
                 CopyFile(srcFile, dstFile);
             };
 
-            var exitCode = StartProcess("nuget.exe", new ProcessSettings {
+            var exitCode = StartProcess(nugetExe, new ProcessSettings {
                 WorkingDirectory = $"{nugetTempDir}/{projectName}",
                 Arguments = "pack -OutputDirectory .."
             });

@@ -3,31 +3,28 @@ clone_folder: c:\work\sharp-arch
 
 pull_requests:
   do_not_increment_build_number: true
-  
+
 nuget:
   disable_publish_on_pr: true
-  
+
 os: Visual Studio 2017
-  
+
 environment:
   coveralls_repo_token:
     secure: FgZlD1O2ilcGB6nF7cIgNcF6f8wWJk//ish6EG800QfuMd0y3BQWUXkl9u7TB4yG
   appveyor_cache_entry_zip_args: -t7z -m0=lzma -mx=5 -ms=on
   CAKE_SETTINGS_SKIPVERIFICATION: true
-    
+
 cache:
   - c:\work\sharp-arch\.ResharperCaches
   - c:\tmp\cake\tools -> appveor.yml
 
-install:
-  - cmd: dotnet --info
-  
 build_script:
 # skip BuildSamples for now..
   - ps: ./build.ps1
 
 test: off
-  
+
 artifacts:
   - path: Drops/Packages/*.nupkg
     name: Nugets
@@ -41,7 +38,7 @@ deploy:
     api_key:
       secure: QzSLSnRAnpTRqWWhDzHNkHJP6RCd5pwWMv0myf88h0OCk0TTPJdhflsDql3kAlip
     on:
-      branch: 
+      branch:
         - develop
         - /release\/v.*/
         - /releases.*/

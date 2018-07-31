@@ -1,30 +1,31 @@
-﻿// ReSharper disable MissingAnnotation
-// ReSharper disable ExceptionNotDocumented
-
-namespace Tests.SharpArch.NHibernate
+﻿namespace Tests.SharpArch.NHibernate
 {
     using System;
     using System.ComponentModel.DataAnnotations;
     using global::SharpArch.Domain.PersistenceSupport;
     using global::SharpArch.NHibernate;
+    using global::SharpArch.Testing.NHibernate;
     using global::SharpArch.Testing.NUnit.NHibernate;
+    using Mappings;
     using Moq;
     using NUnit.Framework;
-    using Tests.SharpArch.NHibernate.Mappings;
 
 
-    class HasUniqueDomainSignatureTestsBase : RepositoryTestsBase
+    internal class HasUniqueDomainSignatureTestsBase : RepositoryTestsBase
     {
         protected Mock<IServiceProvider> ServiceProviderMock;
         protected ValidationContext ValidationContext;
 
-        public HasUniqueDomainSignatureTestsBase() : base(new TestDatabaseInitializer(
-            TestContext.CurrentContext.TestDirectory, typeof(TestsPersistenceModelGenerator).Assembly
-        ))
-        { }
+        public HasUniqueDomainSignatureTestsBase()
+            : base(new TestDatabaseSetup(
+                TestContext.CurrentContext.TestDirectory, new[] {typeof(TestsPersistenceModelGenerator).Assembly}
+            ))
+        {
+        }
 
         protected override void LoadTestData()
-        { }
+        {
+        }
 
         [SetUp]
         protected override void SetUp()
