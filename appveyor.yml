@@ -21,7 +21,7 @@ cache:
 
 build_script:
 # skip BuildSamples for now..
-  - ps: ./build.ps1
+  - ps: ./build.ps1 -verbosity diagnostic
 
 test: off
 
