@@ -305,6 +305,7 @@ Task("RunUnitTests")
 Task("InspectCode")
     .Does(() => {
         DupFinder(solutionFile, new DupFinderSettings {
+            CachesHome = "./tmp/DupFinderCaches",
             DiscardCost = 70,
             DiscardFieldsName = false,
             DiscardLiterals = false,
@@ -312,6 +313,11 @@ Task("InspectCode")
             ShowStats = true,
             ShowText = true,
             OutputFile = duplicateFinderOutputFile,
+            ExcludePattern = new string [] {
+                "../Docker/**/*",
+                "Tests/**/*",
+                "Sampes/**/*"
+            }
         });
         ReSharperReports(
             duplicateFinderOutputFile,
@@ -321,7 +327,7 @@ Task("InspectCode")
         InspectCode(solutionFile, new InspectCodeSettings() {
             OutputFile = codeInspectionsOutputFile,
             Profile = "SharpArch.AutoLoad.DotSettings",
-            CachesHome = "./.ReSharperCaches",
+            CachesHome = "./tmp/ReSharperCaches",
             SolutionWideAnalysis = true
         });
         ReSharperReports(
