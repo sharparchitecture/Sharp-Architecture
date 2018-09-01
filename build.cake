@@ -315,6 +315,7 @@ Task("InspectCode")
             OutputFile = duplicateFinderOutputFile,
             ExcludePattern = new string [] {
                 "../Docker/**/*",
+                "Solution Items/**/*",
                 "Tests/**/*",
                 "Sampes/**/*"
             }
