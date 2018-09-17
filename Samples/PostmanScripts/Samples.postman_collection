@@ -1,0 +1,69 @@
+{
+	"info": {
+		"_postman_id": "ace5c2e3-c477-4f92-99f2-758e4b72a577",
+		"name": "WebApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ActionLevelOverride",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{WebApiHost}}/api/overrides/local",
+					"host": [
+						"{{WebApiHost}}"
+					],
+					"path": [
+						"api",
+						"overrides",
+						"local"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ControllerLevelOverride",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{WebApiHost}}/api/overrides/controller",
+					"host": [
+						"{{WebApiHost}}"
+					],
+					"path": [
+						"api",
+						"overrides",
+						"controller"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Global default attribute",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{WebApiHost}}/api/global/default",
+					"host": [
+						"{{WebApiHost}}"
+					],
+					"path": [
+						"api",
+						"global",
+						"default"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
