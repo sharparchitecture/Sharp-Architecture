@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using SharpArch.AspNetCore;
 using SharpArch.WebApi.Filters;
+using SharpArch.WebApi.Stubs;
 
 namespace SharpArch.WebApi
 {
@@ -26,7 +27,7 @@ namespace SharpArch.WebApi
             // Add framework services.
             services.AddMvcCore(options =>
                 {
-                    options.Filters.Add<HandleTransactionFilter>();
+                    options.Filters.Add(new HandleTransactionFilter());
                     options.Filters.Add(new TransactionAttribute(IsolationLevel.Chaos));
                 })
                 .AddDataAnnotations()
@@ -37,7 +38,6 @@ namespace SharpArch.WebApi
                 })
                 .AddFormatterMappings()
                 .AddJsonFormatters()
-                .AddXmlSerializerFormatters()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddMemoryCache();
@@ -52,6 +52,9 @@ namespace SharpArch.WebApi
         public void ConfigureContainer(ContainerBuilder builder)
         {
             // register dependencies 
+            builder.RegisterType<TransactionManagerStub>()
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
         }
     }
 }

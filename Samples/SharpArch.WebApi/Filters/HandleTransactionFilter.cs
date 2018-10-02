@@ -2,8 +2,10 @@
 using System.Collections.Immutable;
 using System.Threading;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using SharpArch.AspNetCore;
+using SharpArch.Domain.PersistenceSupport;
 
 namespace SharpArch.WebApi.Filters
 {
@@ -40,12 +42,32 @@ namespace SharpArch.WebApi.Filters
                 }
             }
             Log.Information("Policy {@policy}", transactionAttribute);
+
+            if (transactionAttribute != null)
+            {
+
+                var tm = context.HttpContext.RequestServices.GetRequiredService<ITransactionManager>();
+                    context.HttpContext.Items["transaction-manager"] = tm;
+                    tm.BeginTransaction(transactionAttribute.IsolationLevel);
+            }
+
             base.OnActionExecuting(context);
         }
 
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             base.OnActionExecuted(context);
+
+            var attr = _attributeCache[context.ActionDescriptor.Id];
+            if (attr != null)
+            {
+                var transactionManager = (ITransactionManager)context.HttpContext.Items["transaction-manager"];
+
+                if (context.Exception != null || context.ModelState.IsValid==false && attr.RollbackOnModelValidationError)
+                    transactionManager.RollbackTransaction();
+                else
+                    transactionManager.CommitTransaction();
+            }
         }
 
     }
