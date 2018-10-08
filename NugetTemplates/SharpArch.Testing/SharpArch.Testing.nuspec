@@ -12,7 +12,7 @@
     <description>Provides base classes and extension methods to help with testing applications written with Sharp Architecture.</description>
     <summary>Architectural foundation for building maintainable applications with Domain Driven Design patterns and practices</summary>
     <language>en-US</language>
-    <releaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/release/$(SemanticVersion)</releaseNotes>
+    <releaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/$(SemanticVersion)</releaseNotes>
     <tags>sharp-architecture testing</tags>
     <repository type="git" url="https://github.com/sharparchitecture/Sharp-Architecture.git" commit="$(CommitSHA)" />
     <dependencies>

@@ -1,8 +1,10 @@
-NHibernate Transaction attribute
+Using Unit of Work with NHibernate
 ================================
 
 TransactionAttribute implements Unit of work pattern for ASP.NET MVC and ASP.NET WebAPI controller.
 
-Please refer to TardisBank sample for details.
+See ::doc:`/../general/unitofwork.rst` 
 
-TODO: update documentation.
+Please refer to Samples/SharpArch.WebAPI for details.
+
+**TODO:** update documentation.

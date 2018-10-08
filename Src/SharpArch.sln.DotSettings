@@ -1,0 +1,8 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/CodeEditing/StackTraceExplorer/WrapLines/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=1F1FEDCB_002D8D3B_002D4157_002DA74D_002DD365BCF2CD07_002Ff_003Acake_002Econfig_002Fl_003A_002E_002E_003Fcake_002Econfig/@EntryIndexedValue"></s:String>
+	<s:Boolean x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=1F1FEDCB_002D8D3B_002D4157_002DA74D_002DD365BCF2CD07_002Ff_003Acake_002Econfig_002Fl_003A_002E_002E_003Fcake_002Econfig/@EntryIndexRemoved">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/DoNotShowVsBulb/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/ReadSettingsFromFileLevel/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/SuppressVsSquiggles/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/ExcludedFiles/FilesAndFoldersToSkip/=1F1FEDCB_002D8D3B_002D4157_002DA74D_002DD365BCF2CD07_002Ff_003Acake_002Econfig_002Fl_003A_002E_002E_003Fcake_002Econfig/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

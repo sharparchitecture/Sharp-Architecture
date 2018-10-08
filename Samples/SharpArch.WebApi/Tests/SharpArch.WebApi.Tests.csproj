@@ -1,16 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.1;net462</TargetFrameworks>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <RootNamespace>Tests</RootNamespace>
+  <PropertyGroup Label="Build">
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <IsPackable>false</IsPackable>
-    <NoWarn>1701;1702;EPS06</NoWarn>
+    
   </PropertyGroup>
 
   <ItemGroup>
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.4.0-beta.1.build3958" />
     <PackageReference Include="FluentAssertions" Version="5.4.2" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.1.1" />
+    <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
     <PackageReference Include="Moq" Version="4.10.0" />
     <PackageReference Include="xunit" Version="2.4.0" />
@@ -18,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SharpArch.Domain\SharpArch.Domain.csproj" />
-    <ProjectReference Include="..\..\SharpArch.Testing\SharpArch.Testing.csproj" />
+    <ProjectReference Include="..\..\..\Src\SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj" />
+    <ProjectReference Include="..\App\SharpArch.WebApi.csproj" />
   </ItemGroup>
 
 </Project>
