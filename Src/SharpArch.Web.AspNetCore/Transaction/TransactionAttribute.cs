@@ -4,14 +4,20 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace SharpArch.AspNetCore
+namespace SharpArch.AspNetCore.Transaction
 {
     //todo: rewrite
     /// <summary>
-    ///     An attribute that implies a transaction per MVC action.
+    ///     An attribute that used to indicate that action must be wrapped in transaction.
     ///     <para>
-    ///         Transaction is either committed or rolled back after action execution is completed. See
-    ///         <see cref="OnActionExecuted" />.
+    ///         Attribute can be applied globally, at controller or at action level.
+    ///     </para>
+    ///     <para>
+    ///         Note: This is marker attribute only, <see cref="UnitOfWorkHandler" /> must be added to filter s
+    ///         collection in order to enable auto-transactions.
+    ///     </para>
+    ///     <para>
+    ///         Transaction is either committed or rolled back after action execution is completed.
     ///         Note: accessing database from the View is considered as a bad practice.
     ///     </para>
     /// </summary>
@@ -41,6 +47,14 @@ namespace SharpArch.AspNetCore
         /// <value>Defaults to <c>ReadCommitted</c>.</value>
         public IsolationLevel IsolationLevel { get; }
 
+        /// <summary>
+        ///     Constructor.
+        /// </summary>
+        /// <param name="isolationLevel">Transaction isolation level.</param>
+        /// <param name="rollbackOnModelValidationError">
+        ///     indicates that transaction should be rolled back in case of
+        ///     model validation error.
+        /// </param>
         public TransactionAttribute(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, bool rollbackOnModelValidationError = true)
         {
             IsolationLevel = isolationLevel;

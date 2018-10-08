@@ -10,8 +10,8 @@ leaders. Many have been personally involved with helping to shape S#arp
 Architecture's current form including and in no paticular order: Alec
 Whittington, Chris Richards, Seif Attar, Jon George, Howard van Rooijen,
 Billy McCafferty, Frank Laub, Kyle "the coding hillbilly" Baley, Simone
-Busoli, Jay Oliver, Lee Carter, Luis Abreu, James Gregory, and Martin
-Hornagold ... along with many others who have asked WTF at all the right
+Busoli, Jay Oliver, Lee Carter, Luis Abreu, James Gregory, Vitaliy Kryvosheiev
+and Martin Hornagold ... along with many others who have asked WTF at all the right
 times. A special thanks to Roy Bradley who was brave crazy enough to
 commission Billy to develop the first version 0.1. Finally, none of this
 would have been possible and/or applicable without the tireless, unpaid

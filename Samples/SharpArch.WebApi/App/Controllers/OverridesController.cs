@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
-using SharpArch.AspNetCore;
+using SharpArch.AspNetCore.Transaction;
 
 namespace SharpArch.WebApi.Controllers
 {
@@ -12,6 +12,10 @@ namespace SharpArch.WebApi.Controllers
     {
         private static readonly ILogger Log = Serilog.Log.ForContext<OverridesController>();
 
+        /// <summary>
+        ///     Action-level override.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("local")]
         [Transaction(IsolationLevel.ReadUncommitted)]
         public ActionResult<string> LocalOverride()
@@ -20,23 +24,18 @@ namespace SharpArch.WebApi.Controllers
             return "ok";
         }
 
+        [HttpGet("invalid-model")]
+        public ActionResult InvalidModel()
+        {
+            ModelState.AddModelError("*", "Forced validation error.");
+            Log.Information("invalid model");
+            return BadRequest("forced model validation error");
+        }
+
         [HttpGet("controller")]
         public ActionResult<string> ControllerLevel()
         {
             Log.Information("controller-level");
-            return "ok";
-        }
-    }
-
-
-    [Route("api/[controller]")]
-    [ApiController]
-    public class GlobalController : ControllerBase
-    {
-        [HttpGet("default")]
-        public ActionResult<string> Default()
-        {
-            Log.Information("default");
             return "ok";
         }
     }

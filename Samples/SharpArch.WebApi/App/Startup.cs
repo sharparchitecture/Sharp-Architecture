@@ -2,12 +2,12 @@
 using System.Globalization;
 using Autofac;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using SharpArch.AspNetCore;
-using SharpArch.WebApi.Filters;
+using SharpArch.AspNetCore.Transaction;
 using SharpArch.WebApi.Stubs;
 
 namespace SharpArch.WebApi
@@ -27,8 +27,8 @@ namespace SharpArch.WebApi
             // Add framework services.
             services.AddMvcCore(options =>
                 {
-                    options.Filters.Add(new HandleTransactionFilter());
-                    options.Filters.Add(new TransactionAttribute(IsolationLevel.Chaos));
+                    options.Filters.Add(new UnitOfWorkHandler());
+                    options.Filters.Add(new TransactionAttribute(isolationLevel: IsolationLevel.Chaos));
                 })
                 .AddDataAnnotations()
                 .AddJsonOptions(options =>
@@ -55,6 +55,9 @@ namespace SharpArch.WebApi
             builder.RegisterType<TransactionManagerStub>()
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
+            builder.RegisterType<HttpContextAccessor>()
+                .As<IHttpContextAccessor>()
+                .SingleInstance();
         }
     }
 }
