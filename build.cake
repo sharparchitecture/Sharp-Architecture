@@ -1,14 +1,11 @@
 // ADDINS
 #addin "Cake.FileHelpers"
 #addin "Cake.Coveralls"
-#addin "Cake.PinNuGetDependency"
-#addin "Cake.Incubator"
-#addin "Cake.Issues"
 #addin "Cake.Issues.InspectCode"
 #addin "Cake.ReSharperReports"
 #addin nuget:?package=Cake.AppVeyor
-#addin nuget:?package=Refit&version=3.0.0
-#addin nuget:?package=Newtonsoft.Json&version=9.0.1
+#addin nuget:?package=Refit
+#addin nuget:?package=Newtonsoft.Json
 
 // TOOLS
 #tool "GitReleaseManager"
@@ -68,6 +65,7 @@ var commitHash = semVersion.Sha;
 
 // Artifacts
 var artifactsDir = "./Drops";
+var artifactsDirAbsolutePath = MakeAbsolute(Directory(artifactsDir));
 var testCoverageOutputFile = artifactsDir + "/OpenCover.xml";
 var codeInspectionsOutputFile = artifactsDir + "/Inspections/CodeInspections.xml";
 var duplicateFinderOutputFile = artifactsDir + "/Inspections/CodeDuplicates.xml";
@@ -75,7 +73,7 @@ var codeCoverageReportDir = artifactsDir + "/CodeCoverageReport";
 var srcDir = "./Src";
 var testsRootDir = srcDir + "/Tests";
 var solutionFile = srcDir + "/SharpArch.sln";
-var nunitTestResults = artifactsDir + "/Nunit3TestResults.xml";
+var nunitTestResults = artifactsDir + "/NUnit3TestResults.xml";
 var nugetTemplatesDir = "./NugetTemplates";
 var nugetTempDir = artifactsDir + "/Packages";
 var samplesDir = "./Samples";
@@ -140,6 +138,11 @@ Task("Restore")
 
 
 Task("Build")
+    .IsDependentOn("BuildLibrary")
+    .IsDependentOn("BuildSamples")
+    .Does(() => { });
+
+Task("BuildLibrary")
     .IsDependentOn("SetVersion")
     .IsDependentOn("UpdateAppVeyorBuildNumber")
     .IsDependentOn("Restore")
@@ -161,11 +164,17 @@ Task("Build")
     });
 
 Task("BuildSamples")
-    .IsDependentOn("Build")
+    .IsDependentOn("UpdateAppVeyorBuildNumber")
+    .IsDependentOn("Restore")
     .Does(() =>
     {
+        if (isReleaseBuild) {
+            Information("Running {0} build for code coverage", "Debug");
+            DotNetCoreBuild(tardisBankSampleDir + "/Src", new DotNetCoreBuildSettings{
+                Configuration = "Debug"
+            });
+        }
         DotNetCoreBuild(tardisBankSampleDir + "/Src", new DotNetCoreBuildSettings{
-            NoRestore = true,
             Configuration = buildConfig
         });
     });
@@ -214,9 +223,10 @@ Task("RunNunitTests")
     });
 
 
-
 Task("RunXunitTests")
-    .DoesForEach(GetFiles($"{testsRootDir}/SharpArch.xUnit*/**/*.csproj"), (testProj) => {
+    .DoesForEach(GetFiles($"{testsRootDir}/SharpArch.xUnit*/**/*.csproj")
+        .Union(GetFiles($"{samplesDir}/**/**/*.Tests.csproj")), 
+    (testProj) => {
         var projectPath = testProj.GetDirectory();
         var projectFilename = testProj.GetFilenameWithoutExtension();
         Information("Calculating code coverage for {0} ...", projectFilename);
@@ -230,15 +240,15 @@ Task("RunXunitTests")
         .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
         .ExcludeByFile("*/*Designer.cs");
 
-        var testOutputAbs = MakeAbsolute(File($"{artifactsDir}/xunitTests-{projectFilename}.xml"));
-
         // run open cover for debug build configuration
         OpenCover(
             tool => tool.DotNetCoreTool(projectPath.ToString(),
-                "xunit",
+                "test",
                 new ProcessArgumentBuilder()
-                    .AppendSwitchQuoted("-xml", testOutputAbs.FullPath)
                     .AppendSwitch("--configuration", "Debug")
+                    .AppendSwitch("--filter", "Category!=IntegrationTests")
+                    .AppendSwitch("--results-directory", artifactsDirAbsolutePath.FullPath)
+                    .AppendSwitch("--logger", $"trx;LogFileName={projectFilename}.trx")
                     .Append("--no-build")
             ),
             testCoverageOutputFile,
@@ -248,22 +258,25 @@ Task("RunXunitTests")
         if (isReleaseBuild) {
             Information("Running Release mode tests for {0}", projectFilename.ToString());
             DotNetCoreTool(testProj.FullPath,
-                "xunit",
+                "test",
                 new ProcessArgumentBuilder()
-                    .AppendSwitchQuoted("-xml", testOutputAbs.FullPath)
                     .AppendSwitch("--configuration", "Release")
+                    .AppendSwitch("--filter", "Category!=IntegrationTests")
+                    .AppendSwitch("--results-directory", artifactsDirAbsolutePath.FullPath)
+                    .AppendSwitch("--logger", $"trx;LogFileName={projectFilename}.trx")
                     .Append("--no-build")
             );
         }
     })
     .DeferOnError();
 
+
 Task("CleanPreviousTestResults")
     .Does(() =>
     {
         if (FileExists(testCoverageOutputFile))
             DeleteFile(testCoverageOutputFile);
-        DeleteFiles(artifactsDir + "/xunitTests-*.xml");
+        DeleteFiles(artifactsDir + "/*.trx");
         if (DirectoryExists(codeCoverageReportDir))
             DeleteDirectory(codeCoverageReportDir, recursive: true);
     });
@@ -276,19 +289,6 @@ Task("GenerateCoverageReport")
     });
 
 
-Task("UploadTestResults")
-    .WithCriteria(() => !local)
-    .Does(() => {
-        CoverallsIo(testCoverageOutputFile);
-        Information("Uploading nUnit result: {0}", nunitTestResults);
-        UploadFile("https://ci.appveyor.com/api/testresults/nunit3/"+appVeyorJobId, nunitTestResults);
-        foreach(var xunitResult in GetFiles($"{artifactsDir}/xunitTests-*.xml"))
-        {
-            Information("Uploading xUnit results: {0}", xunitResult);
-            UploadFile("https://ci.appveyor.com/api/testresults/xunit/"+appVeyorJobId, xunitResult);
-        }
-    });
-
 
 Task("RunUnitTests")
     .IsDependentOn("Build")
@@ -296,9 +296,23 @@ Task("RunUnitTests")
     .IsDependentOn("RunNunitTests")
     .IsDependentOn("RunXunitTests")
     .IsDependentOn("GenerateCoverageReport")
-    .IsDependentOn("UploadTestResults")
     .Does(() =>
     {
+        Information("Done RunUnitTests");
+    })
+    .Finally(() => {
+        if (!local) {
+            CoverallsIo(testCoverageOutputFile);
+
+            var nunitRes = MakeAbsolute(File(nunitTestResults));
+            Information("Uploading nUnit result: {0}", nunitRes.FullPath);
+            UploadFile("https://ci.appveyor.com/api/testresults/nunit3/" + appVeyorJobId, nunitRes.FullPath);
+            foreach(var xunitResult in GetFiles($"{artifactsDir}/*.trx"))
+            {
+                Information("Uploading xUnit results: {0}", xunitResult);
+                UploadFile("https://ci.appveyor.com/api/testresults/mstest/" + appVeyorJobId, xunitResult);
+            }
+        }
     });
 
 
@@ -317,7 +331,7 @@ Task("InspectCode")
                 "../Docker/**/*",
                 "Solution Items/**/*",
                 "Tests/**/*",
-                "Sampes/**/*"
+                "Samples/**/*"
             }
         });
         ReSharperReports(
@@ -394,10 +408,10 @@ Task("PublishNugetPackages")
 Task("Default")
     .IsDependentOn("UpdateAppVeyorBuildNumber")
     .IsDependentOn("Build")
+    .IsDependentOn("BuildSamples")
     .IsDependentOn("RunUnitTests")
     .IsDependentOn("InspectCode")
     .IsDependentOn("CreateNugetPackages")
-    .IsDependentOn("BuildSamples")
     .Does(
         () => {}
     );
