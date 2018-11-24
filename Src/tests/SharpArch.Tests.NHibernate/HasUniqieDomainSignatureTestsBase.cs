@@ -14,7 +14,6 @@
     internal class HasUniqueDomainSignatureTestsBase : RepositoryTestsBase
     {
         protected Mock<IServiceProvider> ServiceProviderMock;
-        protected ValidationContext ValidationContext;
 
         public HasUniqueDomainSignatureTestsBase()
             : base(new TestDatabaseSetup(

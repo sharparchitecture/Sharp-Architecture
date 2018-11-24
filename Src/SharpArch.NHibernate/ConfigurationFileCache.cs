@@ -10,7 +10,6 @@
     using JetBrains.Annotations;
 #if NETSTANDARD
     using global::FluentNHibernate.Infrastructure;
-
 #endif
 
 
@@ -115,9 +114,8 @@
         /// <summary>
         ///     Load object from the stream.
         /// </summary>
-        /// <typeparam name="T">Type of the object.</typeparam>
         /// <param name="stream">The stream.</param>
-        /// <returns></returns>
+        /// <returns><see cref="Configuration"/> instance.</returns>
         /// <exception cref="SerializationException">
         ///     The <paramref name="stream" /> supports seeking, but its length is 0.
         ///     -or-The target type is a <see cref="T:System.Decimal" />, but the value is out of range of the
