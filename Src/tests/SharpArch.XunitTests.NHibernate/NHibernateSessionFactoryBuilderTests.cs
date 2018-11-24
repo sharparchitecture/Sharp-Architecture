@@ -7,7 +7,6 @@
     using FluentAssertions;
     using FluentNHibernate.Cfg.Db;
     using global::NHibernate.Cfg;
-    using global::SharpArch.Domain;
     using global::SharpArch.NHibernate;
     using Xunit;
 
@@ -46,7 +45,6 @@
             configuration.BuildSessionFactory();
         }
 
-#if NETFULL
         [Fact]
         public void CanInitializeWithConfigFileAndConfigurationFileCache()
         {
@@ -78,7 +76,6 @@
 
             config.Properties["connection.connection_string"].Should().Be("updated-connection");
         }
-#endif
 
         [Fact]
         public void CanInitializeWithPersistenceConfigurerAndConfigFile()
@@ -145,7 +142,7 @@
     }
 
 
-    internal class InMemoryCache : INHibernateConfigurationCache
+    class InMemoryCache : INHibernateConfigurationCache
     {
         MemoryStream _memoryStream;
 
@@ -161,13 +158,13 @@
             if (_memoryStream.Length == 0) return null;
 
             _memoryStream.Position = 0;
-            return FileCache.Load<Configuration>(_memoryStream);
+            return ConfigurationFileCache.Load(_memoryStream);
         }
 
         public void SaveConfiguration(string configKey, Configuration config)
         {
             _memoryStream.SetLength(0);
-            FileCache.Save(_memoryStream, config);
+            ConfigurationFileCache.Save(_memoryStream, config);
         }
     }
 }

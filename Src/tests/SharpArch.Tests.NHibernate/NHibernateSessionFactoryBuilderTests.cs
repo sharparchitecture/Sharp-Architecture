@@ -1,12 +1,4 @@
-﻿// ReSharper disable PublicMembersMustHaveComments
-// ReSharper disable InternalMembersMustHaveComments
-// ReSharper disable HeapView.DelegateAllocation
-// ReSharper disable HeapView.ObjectAllocation.Evident
-// ReSharper disable HeapView.ClosureAllocation
-
-// ReSharper disable HeapView.ObjectAllocation
-
-namespace Tests.SharpArch.NHibernate
+﻿namespace Tests.SharpArch.NHibernate
 {
     using System;
     using System.Collections.Generic;
@@ -14,15 +6,14 @@ namespace Tests.SharpArch.NHibernate
     using FluentAssertions;
     using FluentNHibernate.Cfg.Db;
     using global::NHibernate.Cfg;
-    using global::SharpArch.Domain;
     using global::SharpArch.NHibernate;
     using NUnit.Framework;
 
 
     [TestFixture]
-    internal class NHibernateSessionFactoryBuilderTests
+    class NHibernateSessionFactoryBuilderTests
     {
-        private static string GetConfigFullName()
+        static string GetConfigFullName()
         {
             const string defaultConfigFile = "sqlite-nhibernate-config.xml";
             return Path.Combine(TestContext.CurrentContext.TestDirectory, defaultConfigFile);
@@ -32,7 +23,11 @@ namespace Tests.SharpArch.NHibernate
         public void CanExposeConfiguration()
         {
             var exposeCalled = false;
-            Action<Configuration> configure = c => { exposeCalled = true; };
+
+            void configure(Configuration c)
+            {
+                exposeCalled = true;
+            }
 
             new NHibernateSessionFactoryBuilder()
                 .UseConfigFile(GetConfigFullName())
@@ -55,7 +50,7 @@ namespace Tests.SharpArch.NHibernate
         }
 
         [Test]
-        [Ignore("FileCache needs to be implemented on .Net Standard")]
+        [Ignore("ConfigurationFileCache needs to be implemented on .Net Standard")]
         public void CanInitializeWithConfigFileAndConfigurationFileCache()
         {
             Configuration configuration = new NHibernateSessionFactoryBuilder()
@@ -111,7 +106,6 @@ namespace Tests.SharpArch.NHibernate
         }
 
         [Test]
-        [Ignore("Implement Config serialization")]
         public void ShouldPersistExposedConfigurationChanges()
         {
             var cache = new InMemoryCache();
@@ -156,28 +150,28 @@ namespace Tests.SharpArch.NHibernate
 
     class InMemoryCache : INHibernateConfigurationCache
     {
-        MemoryStream memoryStream;
+        MemoryStream _memoryStream;
 
         public InMemoryCache()
         {
-            memoryStream = new MemoryStream();
+            _memoryStream = new MemoryStream();
         }
 
         public Configuration LoadConfiguration(
             string configKey, string configPath,
             IEnumerable<string> mappingAssemblies)
         {
-            if (memoryStream.Length == 0)
+            if (_memoryStream.Length == 0)
                 return null;
 
-            memoryStream.Position = 0;
-            return FileCache.Load<Configuration>(memoryStream);
+            _memoryStream.Position = 0;
+            return ConfigurationFileCache.Load(_memoryStream);
         }
 
         public void SaveConfiguration(string configKey, Configuration config)
         {
-            memoryStream.SetLength(0);
-            FileCache.Save(memoryStream, config);
+            _memoryStream.SetLength(0);
+            ConfigurationFileCache.Save(_memoryStream, config);
         }
     }
 }

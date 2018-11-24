@@ -1,58 +1,59 @@
-﻿namespace SharpArch.Domain
+﻿namespace SharpArch.NHibernate
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Runtime.Serialization;
-    using System.Security;
-    using JetBrains.Annotations;
-
-#if NETFULL
-    using System.Diagnostics;
     using System.Runtime.Serialization.Formatters.Binary;
+    using System.Security;
+    using global::NHibernate.Cfg;
+    using JetBrains.Annotations;
+#if NETSTANDARD
+    using global::FluentNHibernate.Infrastructure;
+
 #endif
+
 
     /// <summary>
     ///     Provides file cache helper methods.
     /// </summary>
-    [PublicAPI]
-    public static class FileCache
+    static class ConfigurationFileCache
     {
         /// <summary>
-        ///     Deserializes a data file into an object of type {T}.
+        ///     Loads NHibernate configuration from file.
         /// </summary>
-        /// <typeparam name="T">Type of object to deserialize and return.</typeparam>
         /// <param name="path">Full path to file containing serialized data.</param>
-        /// <returns>If object is successfully deserialized, the object of type {T}, otherwise null.</returns>
+        /// <returns><see cref="Configuration"/> instance, or <c>null</c> in case of deserialization error.</returns>
         /// <exception cref="ArgumentNullException">Thrown if the path parameter is null or empty.</exception>
-        public static T RetrieveFromCache<T>(string path) where T : class
+        public static Configuration RetrieveFromCache(string path)
         {
-            if (string.IsNullOrEmpty(path)) {
+            if (string.IsNullOrEmpty(path))
+            {
                 throw new ArgumentNullException(nameof(path));
             }
-#if NETFULL
-            try {
-                using (FileStream file = File.Open(path, FileMode.Open)) {
-                    return Load<T>(file);
+
+            try
+            {
+                using (FileStream file = File.Open(path, FileMode.Open))
+                {
+                    return Load(file);
                 }
             }
             // ReSharper disable once CatchAllClause
-            catch (Exception ex) {
-                Debug.WriteLine(ex, "FileCache");
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex, "ConfigurationFileCache");
                 // Return null if the object can't be deserialized
                 return null;
             }
-#else
-            return null;
-#endif
         }
 
         /// <summary>
-        ///     Serializes the given object of type {T} to a file at the given path.
+        ///     Serializes NHibernate configuration to a file at the given path.
         /// </summary>
-        /// <typeparam name="T">Type of object to serialize.</typeparam>
-        /// <param name="obj">Object to serialize and store in a file.</param>
+        /// <param name="configuration">NHibernate configuration instance.</param>
         /// <param name="path">Full path of file to store the serialized data.</param>
-        /// <exception cref="ArgumentNullException">Thrown if obj or path parameters are null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if configuration or path parameters are null.</exception>
         /// <exception cref="ArgumentException">
         ///     <paramref name="path" /> is a zero-length string, contains only white space, or
         ///     contains one or more invalid characters.
@@ -74,36 +75,40 @@
         /// </exception>
         /// <exception cref="SecurityException">The caller does not have the required permission. </exception>
         /// <exception cref="SerializationException">
-        ///     An error has occurred during serialization, such as if an object in the <paramref name="obj" /> parameter is not
+        ///     An error has occurred during serialization, such as if an object in the <paramref name="configuration" /> parameter is not
         ///     marked as serializable.
         /// </exception>
-        public static void StoreInCache<T>([NotNull] T obj, [NotNull] string path) where T : class
+        public static void StoreInCache([NotNull] Configuration configuration, [NotNull] string path)
         {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (string.IsNullOrEmpty(path)) throw new ArgumentException("Path is null or empty.", nameof(path));
-#if NETFULL
-            using (FileStream file = File.Open(path, FileMode.Create)) {
-                Save(file, obj);
+            using (FileStream file = File.Open(path, FileMode.Create))
+            {
+                Save(file, configuration);
             }
-#endif
         }
 
         /// <summary>
         ///     Saves object to stream in BinaryFormat.
         /// </summary>
-        /// <typeparam name="T">Type of the object.</typeparam>
         /// <param name="stream">The stream.</param>
-        /// <param name="obj">The object.</param>
+        /// <param name="configuration">Configuration.</param>
         /// <exception cref="SerializationException">
-        ///     An error has occurred during serialization, such as if an object in the <paramref name="obj" /> parameter is not
+        ///     An error has occurred during serialization, such as if an object in the <paramref name="configuration" /> parameter is not
         ///     marked as serializable.
         /// </exception>
         /// <exception cref="SecurityException">The caller does not have the required permission. </exception>
-        internal static void Save<T>([NotNull] Stream stream, T obj) where T : class
+        internal static void Save([NotNull] Stream stream, Configuration configuration)
+        {
+            CreateFormatter().Serialize(stream, configuration);
+        }
+
+        static BinaryFormatter CreateFormatter()
         {
 #if NETSTANDARD
+            return new BinaryFormatter(new NetStandardSerialization.SurrogateSelector(), new StreamingContext());
 #else
-            new BinaryFormatter().Serialize(stream, obj);
+            return new BinaryFormatter();
 #endif
         }
 
@@ -119,13 +124,9 @@
         ///     <see cref="T:System.Decimal" /> type.
         /// </exception>
         /// <exception cref="SecurityException">The caller does not have the required permission. </exception>
-        internal static T Load<T>([NotNull] Stream stream) where T : class
+        internal static Configuration Load([NotNull] Stream stream)
         {
-#if NETSTANDARD
-            return null;
-#else
-            return new BinaryFormatter().Deserialize(stream) as T;
-#endif
+            return CreateFormatter().Deserialize(stream) as Configuration;
         }
     }
 }

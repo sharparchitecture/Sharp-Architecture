@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -9,7 +10,7 @@
     using global::NHibernate.Cfg;
     using global::NHibernate.UserTypes;
     using JetBrains.Annotations;
-    using SharpArch.Domain;
+
 
     /// <summary>
     /// File cache implementation of INHibernateConfigurationCache.  Saves and loads a
@@ -72,7 +73,7 @@
 
             if (IsCachedConfigCurrent(cachePath))
             {
-                return FileCache.RetrieveFromCache<Configuration>(cachePath);
+                return ConfigurationFileCache.RetrieveFromCache(cachePath);
             }
 
             return null;
@@ -85,9 +86,16 @@
         /// <param name="config">Configuration object to save.</param>
         public void SaveConfiguration(string configKey, Configuration config)
         {
-            string cachePath = CachedConfigPath(configKey);
-            FileCache.StoreInCache<Configuration>(config, cachePath);
-            File.SetLastWriteTime(cachePath, GetMaxDependencyTime());
+            try
+            {
+                string cachePath = CachedConfigPath(configKey);
+                ConfigurationFileCache.StoreInCache(config, cachePath);
+                File.SetLastWriteTime(cachePath, GetMaxDependencyTime());
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceWarning("Error saving NHibernate configuration to '{0}': {1}", configKey, ex);
+            }
         }
 
         #endregion
