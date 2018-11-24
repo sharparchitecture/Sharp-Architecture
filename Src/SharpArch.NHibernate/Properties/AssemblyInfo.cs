@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -11,3 +12,5 @@ using System.Runtime.InteropServices;
 [assembly: Guid("2f9aa218-343d-47a5-9e10-5067a8ee5e9f")]
 [assembly: CLSCompliant(true)]
 
+[assembly: InternalsVisibleTo("SharpArch.Tests.NHibernate")]
+[assembly: InternalsVisibleTo("SharpArch.XunitTests.NHibernate")]

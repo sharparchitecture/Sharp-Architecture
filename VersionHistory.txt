@@ -9,24 +9,24 @@ BREAKING CHANGES:
 * SharpArch.NHibernate: NHibernateRepository.FindAll() now accepts IReadOnlyDictionary<> instead of IDictionary<>.
 * SharpArch.Testing.NUnit renamed to SharpArch.Testing.NUnit.NHibernate:
   * ISession.FlushAndEvict moved to SharpArch.NHibernate;
-* FileCache is no-op in NetStandard: 
-  * Binary serialization does not work for Type objects, see https://github.com/dotnet/corefx/issues/23213
-  * Considering to refactor to ISessionCache to support file and distributed caches (e.g. Redis)
+* Removed class SharpArch.Domain.FileCache;
+  * Binary serialization does not work for Type objects, see https://github.com/dotnet/corefx/issues/23213 - using FluentNHibernate for serialization
+  * TODO: introduce ISessionCache to support file and distributed caches (e.g. Redis)
 
 NEW MODULES
 * SharpArch.Testing.Xunit.NHibernate - xUnit test helper for NHibernate;
-  * TransitentDatabaseTests (RepositoryTestsBase) - base class for tests on transient database (in-memory SQLite database which is created 
+  * TransitentDatabaseTests (RepositoryTestsBase) - base class for tests on transient database (in-memory SQLite database which is created
     and initialized for every test);
   * LiveDatabaseTests (DatabaseRepositoryTests) - run tests using shared database, every test runs in separate transaction, which is rolled back
     after test execution completes.
-  
+
 ========================
 S#arp 4.0
 ========================
- 
+
 SharpArch.Web.Http.Castle
  * [BREAKING] WindsorControllerExtensions renamed to WindsorHttpExtensions.
- * [BREAKING] WindsorPropertyInjectionKernelExtensions replaced with internal SharpArch.Castle.Extensions.WindsorPropertyInjectionExtensions 
+ * [BREAKING] WindsorPropertyInjectionKernelExtensions replaced with internal SharpArch.Castle.Extensions.WindsorPropertyInjectionExtensions
    (shared with SharpArch.Web.Mvc).
 
 SharpArch.Web.Mvc
@@ -34,7 +34,7 @@ SharpArch.Web.Mvc
  * [BREAKING] TransactionAttribute will commit Transaction in OnActionExecuted, not in OnResultExecuted().
    Recommended approach to access database in Controller, not View.
 
-   
+
 SharpArch.Testing.NUnit
  * RepositoryTestsHelper refactored to TestDatabaseInitializer.
 
@@ -45,19 +45,19 @@ BREAKING CHANGES:
  * NHibernateSession replaced with ISession constructor injection.
  * #145 Removed Design by Contract, TestSyntaxHelpers and CommonServiceLocator code and deoendencies.
 
- 
+
 FIXES:
  * #54 - NHibernate event listeners registered through xml gets removed.
 
- 
+
 NEW FEATURES:
  * ASP.NET MVC Filter property injection with Castle.
  * WebAPI Filter property injection (for singleton dependencies only).
 
- 
+
 SAMPLES:
  * Samples are now part of main repository;
- 
+
 
 INTERNALS:
  * Builds moved to Appveyour;
@@ -172,7 +172,7 @@ New and exciting in this release:
 * Added NHibernateValidatorClientProvider and NHibernateValidatorProvider (thanks Igor)
 * Added Parameter to rollback transaction when ModelState is invalid (thanks Inventti)
 * Updated model binder to deal correctly with binding empty string to GUID Id types
-* Updated the WcfSessionStorage class to automatically fall back to either a default (SimpleSessionStorage) or a session storage implementation of choice 
+* Updated the WcfSessionStorage class to automatically fall back to either a default (SimpleSessionStorage) or a session storage implementation of choice
   whenever OperationContext.Current is null. This enables usage of NHibernate sessions in WCF host applications outside of WCF Operation methods without hassle.
   whenever OperationContext.Current is null. This enables usage of NHibernate sessions in WCF host applications outside of WCF Operation methods without hassle.
 
@@ -313,11 +313,11 @@ Upgrading to S#arp Architecture 1.5 RTM from 1.0 RTM requires a few steps to acc
             </dependentAssembly>
         </assemblyBinding>
     </runtime>
-#) Areas:  	If you currently use areas, you will need to add an AreaRegistration file. The naming convention is <Area Name>AreaRegistration. To see an example file please go here: 
+#) Areas:  	If you currently use areas, you will need to add an AreaRegistration file. The naming convention is <Area Name>AreaRegistration. To see an example file please go here:
 			http://github.com/codai/Sharp-Architecture/tree/master/src/NorthwindSample/app/Northwind.Web.Controllers/Organization/OrganizationAreaRegistration.cs
-		   
+
 			You will need to convert your YourProject.Web.Controllers/RouteRegistrar.cs to use normal MVC 2 Map Routes. If my existing file looks as such:
-		   
+
 			using System.Web.Mvc;
 			using System.Web.Routing;
 			using SharpArch.Web.Areas;
@@ -352,9 +352,9 @@ Upgrading to S#arp Architecture 1.5 RTM from 1.0 RTM requires a few steps to acc
 					}
 				}
 			}
-			
+
 			It would look like this after my conversion:
-			
+
 			using System.Web.Mvc;
 			using System.Web.Routing;
 			using SharpArch.Web.Areas;
@@ -370,7 +370,7 @@ Upgrading to S#arp Architecture 1.5 RTM from 1.0 RTM requires a few steps to acc
 						routes.IgnoreRoute("{*xsd}", new { xsd = @"(.*/)?.xsd(/.*)?" });
 						routes.IgnoreRoute("{*css}", new { css = @"(.*/)?.css(/.*)?" });
 
-						
+
 						routes.MapRoute(null, "Fax/Refax/{faxNumber}/{id}/{message}", new { controller="Fax", action="Refax", faxNumber = "", id = UrlParameter.Optional, message = "" });
 						routes.MapRoute("ScheduleGrid", "Schedule/Show/{encId}/{departmentId}", new { controller = "Schedule", action = "Show", encId=UrlParameter.Optional, departmentId=UrlParameter.Optional });
 						routes.MapRoute("SchedulePopUp", "Schedule/PopUp/{encId}/{departmentId}", new { controller = "Schedule", action = "PopUp", encId = UrlParameter.Optional, departmentId = UrlParameter.Optional });
@@ -378,13 +378,13 @@ Upgrading to S#arp Architecture 1.5 RTM from 1.0 RTM requires a few steps to acc
 					}
 				}
 			}
-			
+
 -------
 
 Change Log
 
 Due to the amount of changes that occured with the conversion to MVC 2, an accurate record was not kept. This upgrade should be considered as volatile when upgrading a previous version. In most cases, there will be no issues,
-while others with large customized projects could encounter issues. 
+while others with large customized projects could encounter issues.
 
 ==================================================
 S#arp Architecture 1.0 Q3 2009 for Visual Studio 2008
@@ -546,7 +546,7 @@ Upgrading to S#arp Architecture 1.0 RTM from RC 2 requires a few steps to accomm
 #) NHibernate:  Within YourProject.Tests.YourProject.Data.NHibernateMaps.MappingIntegrationTests.cs, modify CanConfirmDatabaseMatchesMappings() to reflect the following:
     [Test]
     public void CanConfirmDatabaseMatchesMappings() {
-        IDictionary<string, IClassMetadata> allClassMetadata = 
+        IDictionary<string, IClassMetadata> allClassMetadata =
             NHibernateSession.SessionFactory.GetAllClassMetadata();
 
         foreach (KeyValuePair<string, IClassMetadata> entry in allClassMetadata) {
@@ -729,7 +729,7 @@ Upgrading to S#arp Architecture RC 2 from Beta (steps also reflected in the Nort
 	container.RegisterControllersByArea(typeof(HomeController).Assembly);
    to:
 	container.RegisterControllers(typeof(HomeController).Assembly);
-#) Within YourProject.Web/Global.asax.cs, modify the Init() to reflect the locking mechanism shown within 
+#) Within YourProject.Web/Global.asax.cs, modify the Init() to reflect the locking mechanism shown within
 #) Within YourProject.Tests/App.config, update the nunit assembly redirect to go to version 2.4.8.0
 #) Change calls to EntityIdSetter<>.SetIdOf() to EntityIdSetter.SetIdOf<>()
 #) Update your Site.master to provide an overwritable title and to account for a known bug in MVC RC 1, described at http://haacked.com/archive/2009/01/27/controls-collection-cannot-be-modified-issue-with-asp.net-mvc-rc1.aspx
@@ -768,7 +768,7 @@ CrudScaffolding Generator:
 	- Dropped GenerateGeneralCodeBehindAndDesignerForViewPage() and all calls to it
 	- Dropped all calls to GeneralCodeBehindTemplate and GeneralDesignerTemplate
 * Added /EntityScaffoldingDetails.tt to have a more expressive and complete means of generating entities
-* Replaced all use of namespaceHierarchy, domainObjectName, properties, and artifactsToGenerate with instance of entityScaffoldingDetails; e.g., 
+* Replaced all use of namespaceHierarchy, domainObjectName, properties, and artifactsToGenerate with instance of entityScaffoldingDetails; e.g.,
 	- Replaced parameter set "domainObjectName, properties, namespaceHierarchy" with "entityScaffoldingDetails"
 	- Replaced "domainObjectName" with "entityScaffoldingDetails.EntityName"
 	- Replaced "namespaceHierarchy" with "entityScaffoldingDetails.NamespaceHierarchy"
@@ -903,19 +903,19 @@ Northwind Solution
 * Modified solution structure to reflect the following
    /MyProject - Contains MyProject.sln
       /app - Contains the core project layers.
-         /MyProject.Core 
-         /MyProject.Data 
+         /MyProject.Core
+         /MyProject.Data
          /MyProject.Web
-         /MyProject.Web.Controllers 
-      /lib - Contains the solution items for the deployable application. 
-      /db - Contains database schema information; e.g., the result of scaffolding and/or NHibernate's schema export. 
-      /docs - Project documents. 
-      /logs - Output location for log files. 
-      /tests 
-         /MyProject.Tests 
-      /tools 
-         /build - Empty folder for housing build related stuff. 
-         /lib - Contains the solution items for the tests project and all other non-deployable assemblies. 
+         /MyProject.Web.Controllers
+      /lib - Contains the solution items for the deployable application.
+      /db - Contains database schema information; e.g., the result of scaffolding and/or NHibernate's schema export.
+      /docs - Project documents.
+      /logs - Output location for log files.
+      /tests
+         /MyProject.Tests
+      /tools
+         /build - Empty folder for housing build related stuff.
+         /lib - Contains the solution items for the tests project and all other non-deployable assemblies.
          /CrudScaffolding - Customizable CRUD, scaffolding generation code.
 * Modified solution to accommodate controller/view "areas"; the change were numerous and should be reviewed within the patch associated with http://code.google.com/p/sharp-architecture/issues/detail?id=27
 * Moved all employee related artifacts (controller, domain, views, etc.) under a namespace of "Organization" to show how areas are used
@@ -960,7 +960,7 @@ Northwind.Web
 * Added a reference to Microsoft.Practices.ServiceLocation.dll
 * Default.aspx.cs:  Modified RewritePath to pass in false for the rebasePath parameter
 * Global.asax.cs: Added CommonServiceLocator support and removed implementation of IContainerAccessor (use CSL instead)
-* Northwind.Web.csproj:  Removed "{603c0e0b-db56-11dc- 
+* Northwind.Web.csproj:  Removed "{603c0e0b-db56-11dc-
 be95-000d561079b0};" from top to remove dependency on ASP.NET MVC being installed
 * web.config:  Changed relative path to log4net output file to reflect new solution structure; e.g., <file value="../../logs/Northwind.Web.log"/>
 * /CastleWindsor/CastleExtensions.cs:  Added extension to find interfaces for custom repositories
@@ -996,7 +996,7 @@ Assembly Dependencies:
 
 -------
 
-Changes to /src:  
+Changes to /src:
 
 ** Search for "BREAKING CHANGE" below to find each of the breaking changes **
 
