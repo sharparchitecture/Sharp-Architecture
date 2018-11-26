@@ -46,6 +46,7 @@ var appVeyorJobId = AppVeyor.Environment.JobId;
 // Nuget packages to build
 var nugetPackages = new [] {
     "SharpArch.Domain",
+    "SharpArch.Infrastructure",
     "SharpArch.NHibernate",
     "SharpArch.RavenDb",
     "SharpArch.Testing",
