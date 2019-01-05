@@ -5,7 +5,7 @@
     using global::NHibernate.Cfg;
     using global::NUnit.Framework;
     using JetBrains.Annotations;
-    using SharpArch.Testing.NHibernate;
+    using Testing.NHibernate;
 
 
     /// <summary>
@@ -40,14 +40,9 @@
     [PublicAPI]
     public abstract class DatabaseRepositoryTestsBase
     {
-        DatabaseRepositoryTestsBase()
-        { }
-
-        protected DatabaseRepositoryTestsBase([NotNull] TestDatabaseSetup initializer)
-        {
-            Initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));
-        }
-
+        /// <summary>
+        ///     Database initializer instance.
+        /// </summary>
         protected TestDatabaseSetup Initializer { get; private set; }
 
         /// <summary>
@@ -55,14 +50,22 @@
         /// </summary>
         protected ISession Session { get; private set; }
 
+        private DatabaseRepositoryTestsBase()
+        {
+        }
+
+        protected DatabaseRepositoryTestsBase([NotNull] TestDatabaseSetup initializer)
+        {
+            Initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));
+        }
+
         /// <summary>
         ///     Creates NHibernate <see cref="ISessionFactory" />.
         /// </summary>
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            if (Initializer == null)
-                throw new InvalidOperationException($"{nameof(Initializer)} is not set.");
+            if (Initializer == null) throw new InvalidOperationException($"{nameof(Initializer)} is not set.");
             UpdateConfiguration(Initializer.GetConfiguration());
         }
 
@@ -71,7 +74,8 @@
         /// </summary>
         /// <param name="configuration"></param>
         protected virtual void UpdateConfiguration([NotNull] Configuration configuration)
-        { }
+        {
+        }
 
         /// <summary>
         ///     Creates new <see cref="ISession" />.
@@ -79,12 +83,10 @@
         [SetUp]
         public virtual void SetUp()
         {
-            if (Initializer == null)
-                throw new InvalidOperationException($"{nameof(Initializer)} is not set.");
+            if (Initializer == null) throw new InvalidOperationException($"{nameof(Initializer)} is not set.");
             Session = Initializer.GetSessionFactory().OpenSession();
             Session.BeginTransaction();
         }
-
 
         /// <summary>
         ///     Rollbacks active transaction and closes <see cref="ISession" />.
@@ -92,9 +94,9 @@
         [TearDown]
         public virtual void TearDown()
         {
-            if (Session != null) {
-                if (Session.Transaction.IsActive)
-                    Session.Transaction.Rollback();
+            if (Session != null)
+            {
+                if (Session.Transaction.IsActive) Session.Transaction.Rollback();
                 Session.Dispose();
                 Session = null;
             }

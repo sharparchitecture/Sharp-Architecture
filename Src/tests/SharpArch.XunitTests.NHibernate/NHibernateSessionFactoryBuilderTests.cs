@@ -15,11 +15,13 @@
     public class NHibernateSessionFactoryBuilderTests : IDisposable
     {
         private readonly string _tempFileName;
+        private DependencyList _dependencyList;
 
         /// <inheritdoc />
         public NHibernateSessionFactoryBuilderTests()
         {
             _tempFileName = "SharpArch.Tests." + Guid.NewGuid().ToString("D") + ".tmp";
+            _dependencyList = DependencyList.WithBasePathOfAssembly(Assembly.GetExecutingAssembly());
         }
 
         /// <inheritdoc />
@@ -36,7 +38,7 @@
             }
         }
 
-        private static string GetConfigFullName()
+        private string GetConfigFullName()
         {
             const string defaultConfigFile = "sqlite-nhibernate-config.xml";
             return Path.Combine(DependencyList.GetAssemblyCodeBasePath(Assembly.GetExecutingAssembly()), defaultConfigFile);

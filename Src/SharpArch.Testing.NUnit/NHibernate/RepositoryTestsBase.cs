@@ -5,7 +5,7 @@
     using global::NUnit.Framework;
     using JetBrains.Annotations;
     using SharpArch.NHibernate;
-    using SharpArch.Testing.NHibernate;
+    using Testing.NHibernate;
 
 
     /// <summary>
@@ -22,13 +22,24 @@
         /// </summary>
         protected TransactionManager TransactionManager { get; private set; }
 
+        /// <summary>
+        ///     Database initializer.
+        /// </summary>
         protected TestDatabaseSetup DbInitializer { get; private set; }
 
+        /// <summary>
+        ///     Current NHibernate session.
+        /// </summary>
         protected ISession Session => TransactionManager.Session;
 
-        RepositoryTestsBase()
-        { }
+        private RepositoryTestsBase()
+        {
+        }
 
+        /// <summary>
+        /// Initializes database tests fixture.
+        /// </summary>
+        /// <param name="dbInitializer">Database initializer instance.</param>
         protected RepositoryTestsBase([NotNull] TestDatabaseSetup dbInitializer)
         {
             DbInitializer = dbInitializer ?? throw new ArgumentNullException(nameof(dbInitializer));

@@ -54,7 +54,7 @@
         /// <remarks>
         ///     <para>
         ///         For entities with automatically generated IDs, such as identity,
-        ///         <see cref="SaveOrUpdate" />  may be called when saving or updating an entity.
+        ///         <see cref="SaveOrUpdateAsync(T, CancellationToken)" />  may be called when saving or updating an entity.
         ///     </para>
         ///     <para>
         ///         Updating also allows you to commit changes to a detached object.

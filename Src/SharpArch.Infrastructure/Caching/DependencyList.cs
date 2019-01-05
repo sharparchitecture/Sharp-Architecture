@@ -13,12 +13,32 @@
     /// </summary>
     public class DependencyList
     {
-        private string _basePath;
         private readonly List<string> _fileDependencies = new List<string>(16);
 
-        /// <inheritdoc />
-        public DependencyList(string basePath = null)
+        private readonly IFileSystem _fileSystem;
+        private string _basePath;
+        
+        public static DependencyList WithPathPrefix([NotNull] string basePath, IFileSystem fileSystem = null)
         {
+            if (string.IsNullOrEmpty(basePath)) throw new ArgumentException("Value cannot be null or empty.", nameof(basePath));
+            return new DependencyList(fileSystem ?? new FileSystem(), basePath);
+        }
+
+        public static DependencyList WithBasePathOfAssembly([NotNull] Assembly assembly, IFileSystem fileSystem = null)
+        {
+            if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+            return WithPathPrefix(GetAssemblyCodeBasePath(assembly), fileSystem);
+        }
+
+        /// <summary>
+        ///     Constructor.
+        /// </summary>
+        /// <param name="fileSystem">Custom file system.</param>
+        /// <param name="basePath">Base directory to use for file path resolution.</param>
+        public DependencyList([NotNull] IFileSystem fileSystem, [NotNull] string basePath)
+        {
+            if (string.IsNullOrEmpty(basePath)) throw new ArgumentException("Value cannot be null or empty.", nameof(basePath));
+            _fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
             _basePath = basePath;
         }
 
@@ -36,7 +56,8 @@
 
         public DependencyList AddAssembly(Assembly assembly)
         {
-            if (assembly.IsDynamic) throw new InvalidOperationException($"Cannot get location for dynamically created assembly '{assembly.GetName().Name}'");
+            if (assembly.IsDynamic)
+                throw new InvalidOperationException($"Cannot get location for dynamically created assembly '{assembly.GetName().Name}'");
             _fileDependencies.Add(assembly.Location);
             return this;
         }
@@ -44,14 +65,10 @@
         public DependencyList AddAssemblies([NotNull] IEnumerable<Assembly> assemblies)
         {
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
-            foreach (var assembly in assemblies)
-            {
-                AddAssembly(assembly);
-            }
+            foreach (var assembly in assemblies) AddAssembly(assembly);
 
             return this;
         }
-
 
         /// <summary>
         ///     Adds file to dependency list.
@@ -75,10 +92,7 @@
         public DependencyList AddFiles([NotNull] IEnumerable<string> files)
         {
             if (files == null) throw new ArgumentNullException(nameof(files));
-            foreach (var fileName in files)
-            {
-                AddFile(fileName);
-            }
+            foreach (var fileName in files) AddFile(fileName);
 
             return this;
         }
@@ -98,8 +112,8 @@
         public static string GetAssemblyCodeBasePath([NotNull] Assembly assembly)
         {
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
-            UriBuilder uri = new UriBuilder(assembly.CodeBase);
-            string uriPath = Uri.UnescapeDataString(uri.Path);
+            var uri = new UriBuilder(assembly.CodeBase);
+            var uriPath = Uri.UnescapeDataString(uri.Path);
             return Path.GetDirectoryName(uriPath);
         }
 
@@ -116,33 +130,23 @@
         /// <exception cref="FileNotFoundException">Thrown if the file is not found.</exception>
         private string FindFile(string path)
         {
-            if (File.Exists(path))
-            {
-                return path;
-            }
-
             var codeLocation = GetCodeBasePath();
 
-            string codePath = Path.IsPathRooted(path)
+            // add base path to relative path
+            var codePath = Path.IsPathRooted(path)
                 ? path
                 : Path.Combine(codeLocation, path);
+            if (_fileSystem.FileExists(codePath)) return codePath;
 
-            if (File.Exists(codePath))
-            {
-                return codePath;
-            }
+            // try with .dll extension added
+            var dllPath = path.IndexOf(".dll", StringComparison.InvariantCultureIgnoreCase) == -1 
+                ? path + ".dll" 
+                : path;
+            if (_fileSystem.FileExists(dllPath)) return dllPath;
 
-            string dllPath = path.IndexOf(".dll", StringComparison.InvariantCultureIgnoreCase) == -1 ? path.Trim() + ".dll" : path.Trim();
-            if (File.Exists(dllPath))
-            {
-                return dllPath;
-            }
-
-            string codeDllPath = Path.Combine(codeLocation, dllPath);
-            if (File.Exists(codeDllPath))
-            {
-                return codeDllPath;
-            }
+            // try with .dll extension and base path
+            var codeDllPath = Path.Combine(codeLocation, dllPath);
+            if (_fileSystem.FileExists(codeDllPath)) return codeDllPath;
 
             throw new FileNotFoundException("Unable to find file.", path);
         }
@@ -164,7 +168,7 @@
         {
             return _fileDependencies.Count == 0
                 ? (DateTime?) null
-                : _fileDependencies.Distinct().Select(fn => File.GetLastWriteTimeUtc(fn)).Max();
+                : _fileDependencies.Distinct().Select(fn => _fileSystem.GetLastWriteTimeUtc(fn)).Max();
         }
     }
 }

@@ -83,54 +83,46 @@
             }
         }
 
+        /// <summary>
+        ///     Reads serialized configuration from cache.
+        /// </summary>
+        /// <returns>Configuration as byte array or <c>null</c> if configuration is not available in cache.</returns>
+        /// <remarks>
+        ///     Exception thrown by this method will be handled by <see cref="NHibernateConfigurationCacheBase" />.
+        /// </remarks>
+        [CanBeNull]
         protected abstract byte[] GetCachedConfiguration();
 
+        /// <summary>
+        ///     Returns modification of the configuration (most recent file modification date).
+        ///     This timestamp is used to compare local configuration files against cached configuration.
+        /// </summary>
+        /// <returns>Timestamp is UTC or <c>null</c> if cached configuration is not available.</returns>
         protected abstract DateTime? GetCachedTimestampUtc();
 
+        /// <summary>
+        ///     Stores serialized configuration in cache.
+        /// </summary>
+        /// <param name="data">Serialized configuration.</param>
+        /// <param name="timestampUtc">Timestamp of configuration.</param>
         protected abstract void SaveConfiguration(byte[] data, DateTime timestampUtc);
 
-        protected BinaryFormatter CreateSerializer()
+        /// <summary>
+        ///     Creates binary serializer for NHibernate configuration.
+        /// </summary>
+        /// <returns>
+        ///     <see cref="BinaryFormatter" />
+        /// </returns>
+        /// <remarks>
+        ///     Override this method to provide custom serializers for NHibernate configuration classes.
+        /// </remarks>
+        protected virtual BinaryFormatter CreateSerializer()
         {
 #if NETSTANDARD
             return new BinaryFormatter(new NetStandardSerialization.SurrogateSelector(), new StreamingContext());
 #else
             return new BinaryFormatter();
 #endif
-        }
-    }
-
-
-    public class NHibernateConfigurationFileCache : NHibernateConfigurationCacheBase
-    {
-        private string _fileName;
-
-        /// <inheritdoc />
-        public NHibernateConfigurationFileCache([NotNull] string sessionName, [NotNull] string fileName)
-            : base(sessionName)
-        {
-            if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(fileName));
-            _fileName = Path.Combine(Path.GetTempPath(), fileName);
-        }
-
-        /// <inheritdoc />
-        protected override byte[] GetCachedConfiguration()
-        {
-            return File.Exists(_fileName)
-                ? File.ReadAllBytes(_fileName)
-                : null;
-        }
-
-        /// <inheritdoc />
-        protected override DateTime? GetCachedTimestampUtc()
-        {
-            return File.Exists(_fileName) ? File.GetLastWriteTimeUtc(_fileName) : (DateTime?) null;
-        }
-
-        /// <inheritdoc />
-        protected override void SaveConfiguration(byte[] data, DateTime timestampUtc)
-        {
-            File.WriteAllBytes(_fileName, data);
-            File.SetLastWriteTimeUtc(_fileName, timestampUtc);
         }
     }
 }

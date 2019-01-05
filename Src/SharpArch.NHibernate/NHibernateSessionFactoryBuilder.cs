@@ -36,6 +36,7 @@
         public static readonly string DefaultConfigurationName = "nhibernate.current_session";
 
         private readonly List<Assembly> _mappingAssemblies;
+        private List<string> _additionalDependencies;
 
         private AutoPersistenceModel _autoPersistenceModel;
         private string _configFile;
@@ -45,7 +46,6 @@
         private IPersistenceConfigurer _persistenceConfigurer;
         private IDictionary<string, string> _properties;
         private bool _useDataAnnotationValidators;
-        private List<string> _additionalDependencies;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="NHibernateSessionFactoryBuilder" /> class.
@@ -71,11 +71,15 @@
         /// <summary>
         ///     Builds NHibernate configuration.
         /// </summary>
+        /// <param name="basePath">
+        ///     Base directory to use for loading additional files.
+        ///     If <c>null</c> base folder of the current assembly is used.
+        /// </param>
         /// <remarks>
         ///     <para>
-        ///         Any changes made to configuration object <b>will not be persisted</b> in configuration cache.
+        ///         Any changes made to configuration object after this point <b>will not be persisted</b> in configuration cache.
         ///         This can be useful to make dynamic changes to configuration or in case changes cannot be serialized
-        ///         (e.g. event listeners are not marked with <see cref="SerializableAttribute" />.
+        ///         (e.g. event listeners are not marked with <see cref="System.SerializableAttribute" />.
         ///     </para>
         ///     <para>
         ///         To make persistent changes use <seealso cref="ExposeConfiguration" />.
@@ -83,12 +87,15 @@
         /// </remarks>
         /// <exception cref="InvalidOperationException">No dependencies were specified</exception>
         [NotNull]
-        public Configuration BuildConfiguration()
+        public Configuration BuildConfiguration(string basePath = null)
         {
-            var dependencyList = new DependencyList()
+            var dependencyList = basePath == null
+                ? DependencyList.WithBasePathOfAssembly(Assembly.GetExecutingAssembly())
+                : DependencyList.WithPathPrefix(basePath);
+            dependencyList
                 .AddAssemblies(_mappingAssemblies);
-            if (!string.IsNullOrEmpty(_configFile)) 
-                dependencyList.AddFile(_configFile);
+
+            if (!string.IsNullOrEmpty(_configFile)) dependencyList.AddFile(_configFile);
             dependencyList.AddFiles(_additionalDependencies);
 
             var timestamp = dependencyList.GetLastModificationTime();
@@ -156,9 +163,9 @@
         }
 
         /// <summary>
-        /// Add generic file dependency.
-        /// Used with session cache to add dependency which is not used to configure session
-        /// (e.g. application configuration, shared library, etc...)
+        ///     Add generic file dependency.
+        ///     Used with session cache to add dependency which is not used to configure session
+        ///     (e.g. application configuration, shared library, etc...)
         /// </summary>
         /// <param name="fileName">File name</param>
         /// <returns></returns>
