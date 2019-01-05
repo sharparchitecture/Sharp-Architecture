@@ -237,7 +237,7 @@ Task("RunXunitTests")
             ArgumentCustomization = args => args.Append("-mergeoutput").Append("-hideskipped:File;Filter;Attribute"),
             WorkingDirectory = projectPath,
         }
-        .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.Xunit*]*")
+        .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.Xunit*]* -[SharpArch.Infrastructure]SharpArch.Infrastructure.Logging.*")
         .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
         .ExcludeByFile("*/*Designer.cs");
 
