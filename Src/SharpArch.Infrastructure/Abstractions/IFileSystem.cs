@@ -9,13 +9,6 @@
     public interface IFileSystem
     {
         /// <summary>
-        ///     Returns directory information for path string.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        string GetDirectoryName(string path);
-
-        /// <summary>
         ///     Determines whether specified file exists.
         /// </summary>
         /// <param name="path"></param>

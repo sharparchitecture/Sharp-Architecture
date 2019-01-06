@@ -10,16 +10,6 @@
     public class FileSystem : IFileSystem
     {
         /// <summary>
-        ///     Returns directory information for path string.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public string GetDirectoryName(string path)
-        {
-            return Path.GetDirectoryName(path);
-        }
-
-        /// <summary>
         ///     Determines whether specified file exists.
         /// </summary>
         /// <param name="path"></param>

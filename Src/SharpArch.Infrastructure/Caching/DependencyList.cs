@@ -11,6 +11,7 @@
 
     /// <summary>
     ///     Resolves and collects file dependencies.
+    ///     Use <see cref="GetLastModificationTime"/> to get latest modification timestamp of dependency list.
     /// </summary>
     public class DependencyList
     {
@@ -55,6 +56,12 @@
             return AddAssembly(assembly);
         }
 
+        /// <summary>
+        /// Adds assembly to dependency list.
+        /// </summary>
+        /// <param name="assembly">Assembly</param>
+        /// <exception cref="InvalidOperationException">Assembly is dynamically generated.</exception>
+        /// <returns>Self</returns>
         public DependencyList AddAssembly(Assembly assembly)
         {
             if (assembly.IsDynamic)
@@ -63,6 +70,12 @@
             return this;
         }
 
+        /// <summary>
+        /// Adds multiple assemblies to dependency list.
+        /// </summary>
+        /// <param name="assemblies">List of assemblies.</param>
+        /// <exception cref="InvalidOperationException">Assembly list contains dynamically generated assembly.</exception>
+        /// <returns>Self</returns>
         public DependencyList AddAssemblies([NotNull] IEnumerable<Assembly> assemblies)
         {
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));

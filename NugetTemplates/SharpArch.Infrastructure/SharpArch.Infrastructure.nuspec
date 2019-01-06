@@ -16,11 +16,8 @@
     <tags>sharp-architecture sharp-arch infrastructure</tags>
     <repository type="git" url="https://github.com/sharparchitecture/Sharp-Architecture.git" commit="$(CommitSHA)" />
     <dependencies>
-      <group targetFramework="net461">
-        <dependency id="Microsoft.CSharp" version="[4.5.0,5.0.0)" />
-      </group>
       <group targetFramework="netstandard2.0">
-        <dependency id="Microsoft.CSharp" version="[4.5.0,5.0.0)" />
+        <dependency id="System.ComponentModel.Annotations" version="[4.5.0,5.0.0)" />
       </group>
     </dependencies>
     <frameworkAssemblies>

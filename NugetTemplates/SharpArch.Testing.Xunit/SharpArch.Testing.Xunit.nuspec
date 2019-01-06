@@ -18,7 +18,7 @@
     <dependencies>
       <dependency id="SharpArch.Domain" version="[$(SemanticVersion),$(NextMajorRelease))" />
       <dependency id="SharpArch.Testing" version="[$(SemanticVersion),$(NextMajorRelease))" />
-      <dependency id="xunit.core" version="[2.4.0,3.0.0)" />
+      <dependency id="xunit.core" version="[2.4.1,3.0.0)" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.ServiceModel" targetFramework="net462" />

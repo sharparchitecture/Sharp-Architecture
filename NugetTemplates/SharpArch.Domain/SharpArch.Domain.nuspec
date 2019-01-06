@@ -17,7 +17,7 @@
     <repository type="git" url="https://github.com/sharparchitecture/Sharp-Architecture.git" commit="$(CommitSHA)" />
     <dependencies>
       <group targetFramework="net461">
-        <dependency id="Newtonsoft.Json" version="[11.0.1,12.0.0)" />
+        <dependency id="Newtonsoft.Json" version="[11.0.1,13.0.0)" />
       </group>
       <group targetFramework="netstandard2.0">
         <dependency id="Newtonsoft.Json" version="[11.0.2,12.0)" />
