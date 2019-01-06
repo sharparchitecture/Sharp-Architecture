@@ -9,6 +9,7 @@
     using global::NHibernate;
     using global::NHibernate.Cfg;
     using global::NHibernate.Tool.hbm2ddl;
+    using Infrastructure.Caching;
     using JetBrains.Annotations;
     using SharpArch.NHibernate;
     using SharpArch.NHibernate.FluentNHibernate;
@@ -48,7 +49,7 @@
         /// <param name="mappingAssemblies"></param>
         /// <exception cref="ArgumentNullException"><paramref name="baseAssembly"/> or <paramref name="mappingAssemblies"/> is <c>null</c>.</exception>
         public TestDatabaseSetup([NotNull] Assembly baseAssembly, [NotNull] Assembly[] mappingAssemblies)
-            :this(NHibernateConfigurationFileCache.GetAssemblyCodeBasePath(baseAssembly),
+            :this(DependencyList.GetAssemblyCodeBasePath(baseAssembly),
                 mappingAssemblies)
         {
         }

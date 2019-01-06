@@ -7,16 +7,40 @@
     using FluentNHibernate.Cfg.Db;
     using global::NHibernate.Cfg;
     using global::SharpArch.NHibernate;
+    using JetBrains.Annotations;
     using NUnit.Framework;
 
 
     [TestFixture]
     class NHibernateSessionFactoryBuilderTests
     {
+        private string _tempFileName;
+
         static string GetConfigFullName()
         {
             const string defaultConfigFile = "sqlite-nhibernate-config.xml";
             return Path.Combine(TestContext.CurrentContext.TestDirectory, defaultConfigFile);
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            _tempFileName = "SharpArch.Tests." + Guid.NewGuid().ToString("D") + ".tmp";
+
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            try
+            {
+                if (File.Exists(_tempFileName)) File.Delete(_tempFileName);
+            }
+            // ReSharper disable once CatchAllClause
+            catch
+            {
+                // ignored
+            }
         }
 
         [Test]
@@ -50,11 +74,11 @@
         }
 
         [Test]
-        [Ignore("ConfigurationFileCache needs to be implemented on .Net Standard")]
         public void CanInitializeWithConfigFileAndConfigurationFileCache()
         {
             Configuration configuration = new NHibernateSessionFactoryBuilder()
-                .UseConfigurationCache(new NHibernateConfigurationFileCache(new[] {"SharpArch.NHibernate"}))
+                .UseConfigurationCache(new NHibernateConfigurationFileCache("default", _tempFileName))
+                .WithFileDependency("SharpArch.NHibernate")
                 .UseConfigFile(GetConfigFullName())
                 .BuildConfiguration();
 
@@ -85,6 +109,7 @@
                 SQLiteConfiguration.Standard.ConnectionString(c => c.Is("Data Source=:memory:;Version=3;New=True;"));
 
             Configuration configuration = new NHibernateSessionFactoryBuilder()
+                .WithFileDependency("SharpArch.NHibernate")
                 .UsePersistenceConfigurer(persistenceConfigurer)
                 .BuildConfiguration();
 
@@ -99,7 +124,8 @@
                 () => {
                     new NHibernateSessionFactoryBuilder()
                         // Random Guid value as dependency file to cause the exception
-                        .UseConfigurationCache(new NHibernateConfigurationFileCache(new[] {Guid.NewGuid().ToString()}))
+                        .UseConfigurationCache(new NHibernateConfigurationFileCache("default", _tempFileName))
+                        .WithFileDependency(Guid.NewGuid().ToString("D"))
                         .UseConfigFile(GetConfigFullName())
                         .BuildConfiguration();
                 });
@@ -108,7 +134,7 @@
         [Test]
         public void ShouldPersistExposedConfigurationChanges()
         {
-            var cache = new InMemoryCache();
+            var cache = new InMemoryCache("default");
 
             new NHibernateSessionFactoryBuilder()
                 .UseConfigFile(GetConfigFullName())
@@ -148,30 +174,28 @@
     }
 
 
-    class InMemoryCache : INHibernateConfigurationCache
+    class InMemoryCache : NHibernateConfigurationCacheBase
     {
-        MemoryStream _memoryStream;
+        private DateTime? _timestamp;
+        private byte[] _data;
 
-        public InMemoryCache()
+        /// <inheritdoc />
+        public InMemoryCache([NotNull] string sessionName)
+            : base(sessionName)
         {
-            _memoryStream = new MemoryStream();
         }
 
-        public Configuration LoadConfiguration(
-            string configKey, string configPath,
-            IEnumerable<string> mappingAssemblies)
-        {
-            if (_memoryStream.Length == 0)
-                return null;
+        /// <inheritdoc />
+        protected override byte[] GetCachedConfiguration() => _data;
 
-            _memoryStream.Position = 0;
-            return ConfigurationFileCache.Load(_memoryStream);
-        }
+        /// <inheritdoc />
+        protected override DateTime? GetCachedTimestampUtc() => _timestamp;
 
-        public void SaveConfiguration(string configKey, Configuration config)
+        /// <inheritdoc />
+        protected override void SaveConfiguration(byte[] data, DateTime timestampUtc)
         {
-            _memoryStream.SetLength(0);
-            ConfigurationFileCache.Save(_memoryStream, config);
+            _data = data;
+            _timestamp = timestampUtc;
         }
     }
 }

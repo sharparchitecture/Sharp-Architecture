@@ -50,6 +50,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.WebApi", "..\Samp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.WebApi.Tests", "..\Samples\SharpArch.WebApi\Tests\SharpArch.WebApi.Tests.csproj", "{5F00E8C7-9473-48EE-806A-2AB2E6898292}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Infrastructure", "SharpArch.Infrastructure\SharpArch.Infrastructure.csproj", "{6E6D8E13-510C-4042-B6EC-1C8DE70CEA72}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,10 @@ Global
 		{5F00E8C7-9473-48EE-806A-2AB2E6898292}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F00E8C7-9473-48EE-806A-2AB2E6898292}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F00E8C7-9473-48EE-806A-2AB2E6898292}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E6D8E13-510C-4042-B6EC-1C8DE70CEA72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E6D8E13-510C-4042-B6EC-1C8DE70CEA72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E6D8E13-510C-4042-B6EC-1C8DE70CEA72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E6D8E13-510C-4042-B6EC-1C8DE70CEA72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -123,6 +129,7 @@ Global
 		{B67ED282-68EA-46AD-996E-3C687DB9A7FB} = {AE33464B-23DE-40DE-94A7-2A236A738F9B}
 		{9B03C0EB-34B3-4837-9F79-D10FCCC8D298} = {B67ED282-68EA-46AD-996E-3C687DB9A7FB}
 		{5F00E8C7-9473-48EE-806A-2AB2E6898292} = {B67ED282-68EA-46AD-996E-3C687DB9A7FB}
+		{6E6D8E13-510C-4042-B6EC-1C8DE70CEA72} = {B33554BD-5B88-4BB2-96E0-9FD2F47FBA07}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {66570DE6-E62E-4899-9B61-57AF560D7F3B}

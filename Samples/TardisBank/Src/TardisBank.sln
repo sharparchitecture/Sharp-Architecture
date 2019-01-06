@@ -38,6 +38,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Web.AspNetCore", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.Xunit", "..\..\..\Src\SharpArch.Testing.Xunit\SharpArch.Testing.Xunit.csproj", "{CDF31748-EA55-4C67-B571-160F432E592C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Infrastructure", "..\..\..\Src\SharpArch.Infrastructure\SharpArch.Infrastructure.csproj", "{45A30CE8-6DBD-4AFB-82C2-E5BD96BB9D4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -192,6 +194,18 @@ Global
 		{CDF31748-EA55-4C67-B571-160F432E592C}.Release|x64.Build.0 = Release|Any CPU
 		{CDF31748-EA55-4C67-B571-160F432E592C}.Release|x86.ActiveCfg = Release|Any CPU
 		{CDF31748-EA55-4C67-B571-160F432E592C}.Release|x86.Build.0 = Release|Any CPU
+		{45A30CE8-6DBD-4AFB-82C2-E5BD96BB9D4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45A30CE8-6DBD-4AFB-82C2-E5BD96BB9D4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45A30CE8-6DBD-4AFB-82C2-E5BD96BB9D4A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{45A30CE8-6DBD-4AFB-82C2-E5BD96BB9D4A}.Debug|x64.Build.0 = Debug|Any CPU
+		{45A30CE8-6DBD-4AFB-82C2-E5BD96BB9D4A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{45A30CE8-6DBD-4AFB-82C2-E5BD96BB9D4A}.Debug|x86.Build.0 = Debug|Any CPU
+		{45A30CE8-6DBD-4AFB-82C2-E5BD96BB9D4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45A30CE8-6DBD-4AFB-82C2-E5BD96BB9D4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45A30CE8-6DBD-4AFB-82C2-E5BD96BB9D4A}.Release|x64.ActiveCfg = Release|Any CPU
+		{45A30CE8-6DBD-4AFB-82C2-E5BD96BB9D4A}.Release|x64.Build.0 = Release|Any CPU
+		{45A30CE8-6DBD-4AFB-82C2-E5BD96BB9D4A}.Release|x86.ActiveCfg = Release|Any CPU
+		{45A30CE8-6DBD-4AFB-82C2-E5BD96BB9D4A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -211,6 +225,7 @@ Global
 		{D3C2CC0C-050A-4D7B-830A-8A4849C4E0A0} = {B514E7EC-7D43-4DD8-97A9-FD520ECB3B7D}
 		{F47EC00C-58C9-4E8A-BB80-CDB2C492DBF6} = {B514E7EC-7D43-4DD8-97A9-FD520ECB3B7D}
 		{CDF31748-EA55-4C67-B571-160F432E592C} = {B514E7EC-7D43-4DD8-97A9-FD520ECB3B7D}
+		{45A30CE8-6DBD-4AFB-82C2-E5BD96BB9D4A} = {B514E7EC-7D43-4DD8-97A9-FD520ECB3B7D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BB1F64E9-9827-4B3E-AC78-5D56782B8A7D}

@@ -1,23 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <ProjectFileName>SharpArch.Testing.NUnit</ProjectFileName>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <SignAssembly>False</SignAssembly>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(ProjectFileName).xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
     <DebugSymbols>True</DebugSymbols>
+    <NoWarn>CS1591;CS1572;CS1573</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <DefineConstants>NETSTANDARD</DefineConstants>
+    <DefineConstants>NETSTANDARD;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net462' ">
-    <DefineConstants>NETFULL</DefineConstants>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net461' ">
+    <DefineConstants>NETFULL;NET461</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -28,23 +25,23 @@
     <DebugType>portable</DebugType>
   </PropertyGroup>
 
-
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);LIBLOG_EXCLUDE_CODE_COVERAGE</DefineConstants>
+  </PropertyGroup>
+  
   <ItemGroup>
     <Compile Include="..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
     <Compile Include="..\Common\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
-    <Compile Include="..\Common\NHibernate\TestDatabaseSetup.cs" Link="NHibernate\TestDatabaseSetup.cs" />
   </ItemGroup>
 
-  <ItemGroup Label="Common references">
+  <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
+    <PackageReference Include="LibLog" Version="5.0.5">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63102-01" PrivateAssets="All" />
-    <PackageReference Include="NUnit" Version="3.11.0" />
   </ItemGroup>
 
-  <ItemGroup Label="Common project references">
-    <ProjectReference Include="..\SharpArch.Domain\SharpArch.Domain.csproj" />
-    <ProjectReference Include="..\SharpArch.Testing\SharpArch.Testing.csproj" />
-    <ProjectReference Include="..\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
-  </ItemGroup>
 
 </Project>

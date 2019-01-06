@@ -46,6 +46,7 @@ var appVeyorJobId = AppVeyor.Environment.JobId;
 // Nuget packages to build
 var nugetPackages = new [] {
     "SharpArch.Domain",
+    "SharpArch.Infrastructure",
     "SharpArch.NHibernate",
     "SharpArch.RavenDb",
     "SharpArch.Testing",
@@ -208,9 +209,9 @@ Task("RunNunitTests")
             testCoverageOutputFile,
             new OpenCoverSettings {
                 ReturnTargetCodeOffset = 0,
-                ArgumentCustomization = args => args.Append("-mergeoutput")
+                ArgumentCustomization = args => args.Append("-mergeoutput").Append("-hideskipped:File;Filter;Attribute"),
             }
-            .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.xUnit*]*")
+            .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.Xunit*]* -[SharpArch.Infrastructure]SharpArch.Infrastructure.Logging.*")
             .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
             .ExcludeByFile("*/*Designer.cs"));
 
@@ -233,10 +234,10 @@ Task("RunXunitTests")
         var openCoverSettings = new OpenCoverSettings {
             OldStyle = true,
             ReturnTargetCodeOffset = 0,
-            ArgumentCustomization = args => args.Append("-mergeoutput"),
+            ArgumentCustomization = args => args.Append("-mergeoutput").Append("-hideskipped:File;Filter;Attribute"),
             WorkingDirectory = projectPath,
         }
-        .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.xUnit*]*")
+        .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.Xunit*]* -[SharpArch.Infrastructure]SharpArch.Infrastructure.Logging.*")
         .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
         .ExcludeByFile("*/*Designer.cs");
 
