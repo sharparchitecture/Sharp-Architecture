@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Src\SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.xUnit.NHibernate.csproj" />
+    <ProjectReference Include="..\..\..\..\Src\SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj" />
     <ProjectReference Include="..\..\..\..\Src\SharpArch.Testing.Xunit\SharpArch.Testing.Xunit.csproj" />
     <ProjectReference Include="..\Suteki.TardisBank.Domain\Suteki.TardisBank.Domain.csproj" />
     <ProjectReference Include="..\Suteki.TardisBank.Infrastructure\Suteki.TardisBank.Infrastructure.csproj" />

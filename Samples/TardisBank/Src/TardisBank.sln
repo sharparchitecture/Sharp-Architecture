@@ -32,7 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing", "..\..\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.NUnit", "..\..\..\Src\SharpArch.Testing.NUnit\SharpArch.Testing.NUnit.csproj", "{909E7A8C-A76A-4203-A79C-C07202C9A409}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.xUnit.NHibernate", "..\..\..\Src\SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.xUnit.NHibernate.csproj", "{D3C2CC0C-050A-4D7B-830A-8A4849C4E0A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.Xunit.NHibernate", "..\..\..\Src\SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj", "{D3C2CC0C-050A-4D7B-830A-8A4849C4E0A0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Web.AspNetCore", "..\..\..\Src\SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj", "{F47EC00C-58C9-4E8A-BB80-CDB2C492DBF6}"
 EndProject
