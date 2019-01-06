@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using FluentAssertions;
+    using global::SharpArch.Infrastructure.Abstractions;
     using global::SharpArch.Infrastructure.Caching;
     using Moq;
     using Xunit;

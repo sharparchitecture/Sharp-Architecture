@@ -1,4 +1,4 @@
-﻿namespace SharpArch.Infrastructure.Caching
+﻿namespace SharpArch.Infrastructure.Abstractions
 {
     using System;
     using System.IO;

@@ -1,26 +1,29 @@
-﻿namespace SharpArch.Infrastructure.Caching
+﻿namespace SharpArch.Infrastructure.Abstractions
 {
     using System;
 
 
+    /// <summary>
+    ///     File system abstraction.
+    /// </summary>
     public interface IFileSystem
     {
         /// <summary>
-        /// Returns directory information for path string.
+        ///     Returns directory information for path string.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
         string GetDirectoryName(string path);
 
         /// <summary>
-        /// Determines whether specified file exists.
+        ///     Determines whether specified file exists.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
         bool FileExists(string path);
 
         /// <summary>
-        /// Returns time when file or directory was last written to.
+        ///     Returns time when file or directory was last written to.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
