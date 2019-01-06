@@ -28,7 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.XunitTests", "tests\SharpArch.XunitTests\SharpArch.XunitTests.csproj", "{D9AF4843-E81B-4E91-84A7-A2326346D1BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.XunitTests", "Tests\SharpArch.XunitTests\SharpArch.XunitTests.csproj", "{D9AF4843-E81B-4E91-84A7-A2326346D1BA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.Xunit.NHibernate", "SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj", "{96F50E09-433E-45DA-988E-E4B2E8BE238C}"
 EndProject
