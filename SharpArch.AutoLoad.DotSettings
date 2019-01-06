@@ -410,6 +410,7 @@ FluentAssertions.AssertionExtensions.Should($EXPR$).NotBeNull()&#xD;
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=configurer/@EntryIndexedValue">True</s:Boolean>
 	
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=sqlite/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Tardis/@EntryIndexedValue">True</s:Boolean>
 	
 	
 	</wpf:ResourceDictionary>
