@@ -7,7 +7,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <SignAssembly>False</SignAssembly>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(ProjectFileName).xml</DocumentationFile>
     <DebugSymbols>True</DebugSymbols>
   </PropertyGroup>
@@ -27,12 +26,6 @@
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <DebugType>portable</DebugType>
   </PropertyGroup>
-
-   
-  <ItemGroup>
-    <Compile Include="..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
-    <Compile Include="..\Common\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
-  </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
     <Reference Include="System.Transactions" />

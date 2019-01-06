@@ -98,16 +98,6 @@ Teardown((context) =>
     // Executed AFTER the last task.
 });
 
-Task("SetVersion")
-    .Does(() =>
-    {
-        CreateAssemblyInfo("./Src/Common/AssemblyVersion.cs", new AssemblyInfoSettings{
-            FileVersion = semVersion.MajorMinorPatch,
-            InformationalVersion = semVersion.InformationalVersion,
-            Version = semVersion.MajorMinorPatch
-        });
-    });
-
 
 Task("UpdateAppVeyorBuildNumber")
     .WithCriteria(() => AppVeyor.IsRunningOnAppVeyor)
@@ -143,7 +133,6 @@ Task("Build")
     .Does(() => { });
 
 Task("BuildLibrary")
-    .IsDependentOn("SetVersion")
     .IsDependentOn("UpdateAppVeyorBuildNumber")
     .IsDependentOn("Restore")
     .Does(() =>
