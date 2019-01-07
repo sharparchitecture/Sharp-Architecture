@@ -6,14 +6,6 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>Tests.SharpArch.NHibernate</RootNamespace>
   </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
-    <DefineConstants>NETSTANDARD;NETSTANDARD2_0</DefineConstants>
-  </PropertyGroup>
-   
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net462' ">
-    <DefineConstants>NETFULL;NET462</DefineConstants>
-  </PropertyGroup>
    
   <ItemGroup>
     <Compile Include="..\SharpArch.XunitTests\SharpArch.Domain\TestEntities.cs" Link="TestEntities.cs" />
