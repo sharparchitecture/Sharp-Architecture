@@ -118,11 +118,7 @@
         /// </remarks>
         protected virtual BinaryFormatter CreateSerializer()
         {
-#if NETSTANDARD
             return new BinaryFormatter(new NetStandardSerialization.SurrogateSelector(), new StreamingContext());
-#else
-            return new BinaryFormatter();
-#endif
         }
     }
 }

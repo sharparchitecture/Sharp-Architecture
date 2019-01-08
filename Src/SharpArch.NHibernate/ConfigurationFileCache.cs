@@ -8,9 +8,8 @@
     using System.Security;
     using global::NHibernate.Cfg;
     using JetBrains.Annotations;
-#if NETSTANDARD
     using global::FluentNHibernate.Infrastructure;
-#endif
+
 
 
     /// <summary>
@@ -104,11 +103,7 @@
 
         static BinaryFormatter CreateFormatter()
         {
-#if NETSTANDARD
             return new BinaryFormatter(new NetStandardSerialization.SurrogateSelector(), new StreamingContext());
-#else
-            return new BinaryFormatter();
-#endif
         }
 
         /// <summary>

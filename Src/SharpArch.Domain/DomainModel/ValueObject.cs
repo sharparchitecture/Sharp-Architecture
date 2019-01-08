@@ -83,13 +83,8 @@
         /// </exception>
         protected override PropertyInfo[] GetTypeSpecificSignatureProperties()
         {
-#if NETSTANDARD14
-            var hasDomainSignature =
-this.GetType().GetProperties().Any(p => p.IsDefined(typeof(DomainSignatureAttribute), true));
-#else
-            bool hasDomainSignature =
-                GetType().GetProperties().Any(p => Attribute.IsDefined(p, typeof(DomainSignatureAttribute), true));
-#endif
+            var hasDomainSignature = this.GetType().GetProperties().Any(p => p.IsDefined(typeof(DomainSignatureAttribute), true));
+
 
             if (hasDomainSignature) {
                 string message = "Properties were found within " + GetType() +
