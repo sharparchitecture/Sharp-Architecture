@@ -1,26 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <ProjectFileName>SharpArch.Testing</ProjectFileName>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <SignAssembly>False</SignAssembly>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(ProjectFileName).xml</DocumentationFile>
-    <DebugSymbols>True</DebugSymbols>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DebugType>portable</DebugType>
-  </PropertyGroup>
-
-
   <ItemGroup>
     <Compile Include="..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
     <Compile Include="..\Common\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />

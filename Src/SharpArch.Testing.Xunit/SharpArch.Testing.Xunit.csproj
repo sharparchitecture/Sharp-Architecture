@@ -1,26 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <ProjectFileName>SharpArch.Testing.Xunit</ProjectFileName>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <SignAssembly>False</SignAssembly>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(ProjectFileName).xml</DocumentationFile>
-    <DebugSymbols>True</DebugSymbols>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DebugType>portable</DebugType>
-  </PropertyGroup>
-
-
   <ItemGroup>
     <Compile Include="..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
     <Compile Include="..\Common\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
@@ -28,7 +7,7 @@
    
   <ItemGroup Label="Common references">
     <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63102-01" PrivateAssets="All" />
     <PackageReference Include="xunit.core" Version="2.4.1" />
   </ItemGroup>
 

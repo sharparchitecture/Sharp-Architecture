@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup Label="Build">
-    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <RootNamespace>Tests.SharpArch.NHibernate</RootNamespace>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
