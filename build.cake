@@ -282,7 +282,8 @@ Task("InspectCode")
                 "../Docker/**/*",
                 "Solution Items/**/*",
                 "Tests/**/*",
-                "Samples/**/*"
+                "Samples/**/*",
+                "**/LibLog/**/*"
             }
         });
         ReSharperReports(
