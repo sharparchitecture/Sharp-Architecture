@@ -84,6 +84,7 @@ var nugetExe = "./tools/nuget.exe";
 
 Setup((context) =>
 {
+    DotNetCoreBuildServerShutdown();
     Information("Building SharpArchitecture, version {0} (isTagged: {1}, isLocal: {2})...", nugetVersion, isTagged, local);
     CreateDirectory(artifactsDir);
     CleanDirectory(artifactsDir);
