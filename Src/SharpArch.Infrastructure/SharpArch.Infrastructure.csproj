@@ -7,6 +7,11 @@
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);LIBLOG_EXCLUDE_CODE_COVERAGE</DefineConstants>
   </PropertyGroup>
+
+  <PropertyGroup Label="Pack">
+    <Description>Provides infrastrucure components for Sharp Architecture application.</Description>
+    <PackageTags>$(PackageTags);infrastructure;logging</PackageTags>
+  </PropertyGroup>
   
   <ItemGroup>
     <Compile Include="..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />

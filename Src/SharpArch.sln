@@ -47,7 +47,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{AE33
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApi", "WebApi", "{B67ED282-68EA-46AD-996E-3C687DB9A7FB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.WebApi", "..\Samples\SharpArch.WebApi\App\SharpArch.WebApi.csproj", "{9B03C0EB-34B3-4837-9F79-D10FCCC8D298}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.WebApi.Sample", "..\Samples\SharpArch.WebApi\App\SharpArch.WebApi.Sample.csproj", "{9B03C0EB-34B3-4837-9F79-D10FCCC8D298}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.WebApi.Tests", "..\Samples\SharpArch.WebApi\Tests\SharpArch.WebApi.Tests.csproj", "{5F00E8C7-9473-48EE-806A-2AB2E6898292}"
 EndProject

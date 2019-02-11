@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup Label="Build">
-    <Product>S#Architecture</Product>
+    <Product>Sharp Architecture</Product>
     <Authors>Sharp Architecture Dev Team</Authors>
-    
+
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <SignAssembly>False</SignAssembly>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -31,11 +31,6 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageTags>sharp-architecture;sharp-arch</PackageTags>
 
-    <!-- todo: uncomment/remove
-    <RepositoryUrl>https://github.com/sharparchitecture/Sharp-Architecture.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    -->
-
     <!-- SourceLink Config, Microsoft.SourceLink.GitHub reference is required -->
     <PublishRepositoryUrl>True</PublishRepositoryUrl>
   </PropertyGroup>
@@ -44,5 +39,9 @@
     <IsTestProject>True</IsTestProject>
     <IsPackable>False</IsPackable>
   </PropertyGroup>
-  
+
+  <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Sample))' == true">
+    <IsPackable>False</IsPackable>
+  </PropertyGroup>
+
 </Project>

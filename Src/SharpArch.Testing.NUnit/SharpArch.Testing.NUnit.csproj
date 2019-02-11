@@ -6,6 +6,12 @@
     <Compile Include="..\Common\NHibernate\TestDatabaseSetup.cs" Link="NHibernate\TestDatabaseSetup.cs" />
   </ItemGroup>
 
+  <PropertyGroup Label="Pack">
+    <Description>Provides base classes to help with testing applications written with Sharp Architecture and NHibernate. 
+ This is legacy package, for future development xUnit is recommended.</Description>
+    <PackageTags>$(PackageTags);testing;nunit</PackageTags>
+  </PropertyGroup>
+
   <ItemGroup Label="Common references">
     <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All" />

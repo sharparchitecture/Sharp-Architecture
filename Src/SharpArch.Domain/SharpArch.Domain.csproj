@@ -5,9 +5,9 @@
     <Compile Include="..\Common\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
 
-  <PropertyGroup>
+  <PropertyGroup Label="Pack">
     <Description>Provides the core interfaces and classes needed by a Sharp Architecture application. It is persistence ignorant and would be used with other packages that provide persistance support.</Description>
-    
+    <PackageTags>$(PackageTags);domain</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

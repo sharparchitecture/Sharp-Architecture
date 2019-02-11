@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Src\SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj" />
-    <ProjectReference Include="..\App\SharpArch.WebApi.csproj" />
+    <ProjectReference Include="..\App\SharpArch.WebApi.Sample.csproj" />
   </ItemGroup>
 
 </Project>
