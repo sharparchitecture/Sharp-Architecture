@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
     <RootNamespace>Tests</RootNamespace>
     <IsPackable>false</IsPackable>
     <NoWarn>1701;1702;EPS06</NoWarn>

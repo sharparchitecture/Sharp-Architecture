@@ -1,10 +1,14 @@
 <Project>
   <PropertyGroup Label="Build">
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <SignAssembly>false</SignAssembly>
+    <Product>S#Architecture</Product>
+    <Authors>Sharp Architecture Dev Team</Authors>
+    
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <SignAssembly>False</SignAssembly>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <DebugSymbols>true</DebugSymbols>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -12,7 +16,33 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DebugType>portable</DebugType>
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == false">
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    <IsPackable>True</IsPackable>
+    <PackageIconUrl>https://github.com/sharparchitecture/Sharp-Architecture/raw/master/Artefacts/Documentation/Logo_100x100.png</PackageIconUrl>
+    <PackageProjectUrl>http://sharparchitecture.github.io/</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/$(SemanticVersion)</PackageReleaseNotes>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageTags>sharp-architecture;sharp-arch</PackageTags>
+
+    <!-- todo: uncomment/remove
+    <RepositoryUrl>https://github.com/sharparchitecture/Sharp-Architecture.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    -->
+
+    <!-- SourceLink Config, Microsoft.SourceLink.GitHub reference is required -->
+    <PublishRepositoryUrl>True</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == true">
+    <IsTestProject>True</IsTestProject>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
   
 </Project>

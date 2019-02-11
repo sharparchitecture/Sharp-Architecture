@@ -1,6 +1,21 @@
 # Suppress: EC112
 root=true
 
+[*]
+trim_trailing_whitespace = true
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+
+[*.{config,xml,js,json,html,css,sql,csproj,props,yml}]
+indent_size = 2
+
+[*.sh]
+end_of_line = lf
+
+[*.{cmd, bat}]
+end_of_line = crlf
+
 [{**/tests/**,**/Tests/**,**/*.Tests/**}.cs]
 resharper_class_never_instantiated_global_highlighting=do_not_show
 resharper_consider_using_configure_await_highlighting=do_not_show

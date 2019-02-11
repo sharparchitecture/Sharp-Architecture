@@ -304,6 +304,26 @@ Task("InspectCode")
     });
 
 
+/**
+
+Task("Pack")
+    .IsDependentOn("Build")
+    .WithCriteria<BuildParameters>((context,data) => data.ShouldPublish)
+    .Does<BuildParameters>(data =>
+{
+    var settings = new DotNetCorePackSettings{
+        NoRestore = true,
+        NoBuild = true,
+        OutputDirectory = data.Paths.Directories.Artifacts,
+        Configuration = data.Configuration,
+        MSBuildSettings = new DotNetCoreMSBuildSettings().WithProperty("Version", data.Version.Version)
+    };
+    DotNetCorePack(data.Paths.Directories.Solution.FullPath, settings);
+});
+
+
+**/
+
 Task("CreateNugetPackages")
     .Does(() => {
         // copy templates to temp folder
