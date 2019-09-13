@@ -9,12 +9,13 @@
   <PropertyGroup Label="Pack">
     <Description>Provides base classes to help with testing applications written with Sharp Architecture using xUnit.</Description>
     <PackageTags>$(PackageTags);testing;xunit;db-testing;nhibernate</PackageTags>
+<IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All" />
-    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.core" Version="2.4.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,5 +24,8 @@
     <ProjectReference Include="..\SharpArch.Testing\SharpArch.Testing.csproj" />
   </ItemGroup>
 
+  <PropertyGroup> <!-- override xunit setting -->
+    <IsTestProject>false</IsTestProject>
+  </PropertyGroup>
 
 </Project>

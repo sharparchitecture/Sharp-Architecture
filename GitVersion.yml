@@ -1,4 +1,11 @@
-branches: {}
+# assembly-file-versioning-scheme: MajorMinorPatch
+branches:
+  release:
+    mode: ContinuousDeployment
+    tag: rc
+  develop:
+    mode: ContinuousDeployment
+    tag: alpha
 ignore:
   sha: []
-tag-prefix: '[vV]'
+

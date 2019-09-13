@@ -1,4 +1,5 @@
-<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <ItemGroup>
     <Compile Include="..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
     <Compile Include="..\Common\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
@@ -14,4 +15,9 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All" />
     <PackageReference Include="xunit.core" Version="2.4.1" />
   </ItemGroup>
+
+  <PropertyGroup> <!-- override xunit setting -->
+    <IsTestProject>false</IsTestProject>
+  </PropertyGroup>
+
 </Project>

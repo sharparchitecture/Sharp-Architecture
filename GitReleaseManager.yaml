@@ -10,15 +10,16 @@ create:
 #   perform-regex-removal: true | false
 #   regex-text: '### Where to get it(\r\n)*You can .*\)'
 #   multiline-regex: true | false
-# issue-labels-include:
-# - Bug
-# - Duplicate
-# - Enhancement
-# - Feature
-# - Help Wanted
-# - Improvement
-# - Invalid
-# - Question
-# - WontFix
-# issue-labels-exclude:
-# - Internal Refactoring
+issue-labels-include:
+- bug
+- duplicate
+- enhancement
+- feature
+- help-wanted
+- improvement
+- invalid
+- question
+- wontfix
+- build
+issue-labels-exclude:
+- internal-refactoring

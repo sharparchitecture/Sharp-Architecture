@@ -1,21 +1,18 @@
 // ADDINS
-#addin "Cake.FileHelpers"
-#addin "Cake.Coveralls"
-#addin "Cake.Issues"
-#addin "Cake.Issues.InspectCode"
-#addin "Cake.ReSharperReports"
-#addin nuget:?package=Cake.AppVeyor
-#addin nuget:?package=Refit
-#addin nuget:?package=Newtonsoft.Json
+#addin nuget:?package=Cake.Coveralls&version=0.10.0
+#addin nuget:?package=Cake.FileHelpers&version=3.2.1
+#addin nuget:?package=Cake.Incubator&version=5.1.0
+#addin nuget:?package=Cake.Issues&version=0.7.1
+#addin nuget:?package=Cake.AppVeyor&version=4.0.0
+#addin nuget:?package=Cake.ReSharperReports&version=0.11.1
 
 // TOOLS
-#tool "GitReleaseManager"
-#tool "GitVersion.CommandLine"
-#tool "coveralls.io"
-#tool "OpenCover"
-#tool "ReportGenerator"
-#tool "nuget:?package=JetBrains.ReSharper.CommandLineTools"
-#tool "nuget:?package=ReSharperReports"
+#tool nuget:?package=GitReleaseManager&version=0.8.0
+#tool nuget:?package=GitVersion.CommandLine&version=5.0.1
+#tool nuget:?package=coveralls.io&version=1.4.2
+#tool nuget:?package=OpenCover&version=4.7.922
+#tool nuget:?package=ReportGenerator&version=4.2.17
+#tool nuget:?package=JetBrains.ReSharper.CommandLineTools&version=2019.2.2
 
 // ARGUMENTS
 var target = Argument("target", "Default");
@@ -30,31 +27,25 @@ if (string.IsNullOrEmpty(buildConfig)) {
 }
 
 // Build configuration
+
+var repoOwner = "sharparchitecture";
+var repoName = "Sharp-Architecture";
+
 var local = BuildSystem.IsLocalBuild;
 var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
-var isRepository = StringComparer.OrdinalIgnoreCase.Equals("SharpArchitecture/Sharp-Architecture", AppVeyor.Environment.Repository.Name);
+var isRepository = StringComparer.OrdinalIgnoreCase.Equals($"{repoOwner}/{repoName}", AppVeyor.Environment.Repository.Name);
 
 var isDebugBuild = string.Equals(buildConfig, "Debug", StringComparison.OrdinalIgnoreCase);
 var isReleaseBuild = string.Equals(buildConfig, "Release", StringComparison.OrdinalIgnoreCase);
 
 var isDevelopBranch = StringComparer.OrdinalIgnoreCase.Equals("develop", AppVeyor.Environment.Repository.Branch);
-var isReleaseBranch = StringComparer.OrdinalIgnoreCase.Equals("master", AppVeyor.Environment.Repository.Branch);
+var isReleaseBranch = AppVeyor.Environment.Repository.Branch.IndexOf("releases/", StringComparison.OrdinalIgnoreCase) >= 0
+    || AppVeyor.Environment.Repository.Branch.IndexOf("hotfixes/", StringComparison.OrdinalIgnoreCase) >= 0;
+
 var isTagged = AppVeyor.Environment.Repository.Tag.IsTag;
 var appVeyorJobId = AppVeyor.Environment.JobId;
 
 // Solution settings
-// Nuget packages to build
-var nugetPackages = new [] {
-    "SharpArch.Domain",
-    "SharpArch.Infrastructure",
-    "SharpArch.NHibernate",
-    "SharpArch.RavenDb",
-    "SharpArch.Testing",
-    "SharpArch.Testing.NUnit",
-    "SharpArch.Testing.Xunit",
-    "SharpArch.Testing.Xunit.NHibernate",
-    "SharpArch.Web.AspNetCore"
-};
 
 // Calculate version and commit hash
 GitVersion semVersion = GitVersion();
@@ -63,35 +54,48 @@ var buildVersion = semVersion.FullBuildMetaData;
 var informationalVersion = semVersion.InformationalVersion;
 var nextMajorRelease = $"{semVersion.Major+1}.0.0";
 var commitHash = semVersion.Sha;
+var milestone = semVersion.MajorMinorPatch;
 
 // Artifacts
 var artifactsDir = "./Drops";
 var artifactsDirAbsolutePath = MakeAbsolute(Directory(artifactsDir));
+
 var testCoverageOutputFile = artifactsDir + "/OpenCover.xml";
+var codeCoverageReportDir = artifactsDir + "/CodeCoverageReport";
 var codeInspectionsOutputFile = artifactsDir + "/Inspections/CodeInspections.xml";
 var duplicateFinderOutputFile = artifactsDir + "/Inspections/CodeDuplicates.xml";
-var codeCoverageReportDir = artifactsDir + "/CodeCoverageReport";
+
+var packagesDir = artifactsDir + "/packages";
 var srcDir = "./Src";
-var testsRootDir = srcDir + "/Tests";
+var testsRootDir = srcDir + "/tests";
 var solutionFile = srcDir + "/SharpArch.sln";
-var nugetTemplatesDir = "./NugetTemplates";
-var nugetTempDir = artifactsDir + "/Packages";
 var samplesDir = "./Samples";
-var tardisBankSampleDir = samplesDir + "/TardisBank";
-var nugetExe = "./tools/nuget.exe";
+var coverageFilter="+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.Xunit*]* -[SharpArch.Infrastructure]SharpArch.Infrastructure.Logging.*";
+
+Credentials githubCredentials = null;
+
+public class Credentials {
+    public string UserName { get; set; }
+    public string Password { get; set; }
+
+    public Credentials(string userName, string password) {
+        UserName = userName;
+        Password = password;
+    }
+}
+
 
 // SETUP / TEARDOWN
 
 Setup((context) =>
 {
-    DotNetCoreBuildServerShutdown();
-    Information("Building SharpArchitecture, version {0} (isTagged: {1}, isLocal: {2})...", nugetVersion, isTagged, local);
+    Information("Building version {0} (tagged: {1}, local: {2}, release branch: {3})...", nugetVersion, isTagged, local, isReleaseBranch);
     CreateDirectory(artifactsDir);
     CleanDirectory(artifactsDir);
-    if (!FileExists(nugetExe)) {
-        Information("Downloading Nuget.exe ...");
-        DownloadFile("https://dist.nuget.org/win-x86-commandline/latest/nuget.exe", nugetExe);
-    }
+    githubCredentials = new Credentials(
+      context.EnvironmentVariable("GITHUB_USER"),
+      context.EnvironmentVariable("GITHUB_PASSWORD")
+    );
 });
 
 Teardown((context) =>
@@ -102,7 +106,7 @@ Teardown((context) =>
 Task("SetVersion")
     .Does(() =>
     {
-        CreateAssemblyInfo("./Src/Common/AssemblyVersion.cs", new AssemblyInfoSettings{
+        CreateAssemblyInfo($"{srcDir}/Common/AssemblyVersion.cs", new AssemblyInfoSettings{
             FileVersion = semVersion.MajorMinorPatch,
             InformationalVersion = semVersion.InformationalVersion,
             Version = semVersion.MajorMinorPatch
@@ -112,21 +116,11 @@ Task("SetVersion")
 
 Task("UpdateAppVeyorBuildNumber")
     .WithCriteria(() => AppVeyor.IsRunningOnAppVeyor)
+    .ContinueOnError()
     .Does(() =>
     {
         AppVeyor.UpdateBuildVersion(buildVersion);
 
-    }).ReportError(exception =>
-    {
-        // When a build starts, the initial identifier is an auto-incremented value supplied by AppVeyor.
-        // As part of the build script, this version in AppVeyor is changed to be the version obtained from
-        // GitVersion. This identifier is purely cosmetic and is used by the core team to correlate a build
-        // with the pull-request. In some circumstances, such as restarting a failed/cancelled build the
-        // identifier in AppVeyor will be already updated and default behaviour is to throw an
-        // exception/cancel the build when in fact it is safe to swallow.
-        // See https://github.com/reactiveui/ReactiveUI/issues/1262
-
-        Warning("Build with version {0} already exists.", buildVersion);
     });
 
 
@@ -134,14 +128,124 @@ Task("Restore")
     .Does(() =>
     {
         DotNetCoreRestore(srcDir);
-        DotNetCoreRestore(tardisBankSampleDir + "/Src");
+    });
+
+Task("InspectCode")
+    .Does(() => {
+        DupFinder(solutionFile, new DupFinderSettings {
+            CachesHome = "./tmp/DupFinderCaches",
+            DiscardCost = 70,
+            DiscardFieldsName = false,
+            DiscardLiterals = false,
+            NormalizeTypes = true,
+            ShowStats = true,
+            ShowText = true,
+            OutputFile = duplicateFinderOutputFile,
+            ExcludePattern = new string [] {
+                "../Docker/**/*",
+                "Solution Items/**/*",
+                "Tests/**/*",
+                "Samples/**/*"
+            }
+        });
+        ReSharperReports(
+            duplicateFinderOutputFile,
+            System.IO.Path.ChangeExtension(duplicateFinderOutputFile, "html")
+        );
+
+        InspectCode(solutionFile, new InspectCodeSettings() {
+            OutputFile = codeInspectionsOutputFile,
+            Profile = "SharpArch.AutoLoad.DotSettings",
+            CachesHome = "./tmp/ReSharperCaches",
+            SolutionWideAnalysis = true
+        });
+        ReSharperReports(
+            codeInspectionsOutputFile,
+            System.IO.Path.ChangeExtension(codeInspectionsOutputFile, "html")
+        );
+    });
+
+Task("RunXunitTests")
+    .DoesForEach(GetFiles($"{srcDir}/*.sln"), 
+    (testProj) => {
+        var projectPath = testProj.GetDirectory();
+        var projectFilename = testProj.GetFilenameWithoutExtension();
+        Information("Calculating code coverage for {0} ...", projectFilename);
+
+        var openCoverSettings = new OpenCoverSettings {
+            OldStyle = true,
+            ReturnTargetCodeOffset = 0,
+            ArgumentCustomization = args => args.Append("-mergeoutput").Append("-hideskipped:File;Filter;Attribute"),
+            WorkingDirectory = projectPath,
+        }
+        .WithFilter(coverageFilter)
+        .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
+        .ExcludeByFile("*/*Designer.cs");
+
+        Func<string,ProcessArgumentBuilder> buildProcessArgs = (buildCfg) => {
+				var pb = new ProcessArgumentBuilder()
+                    .AppendSwitch("--configuration", buildCfg)
+                    .AppendSwitch("--filter", "Category!=IntegrationTests")
+                    .AppendSwitch("--results-directory", artifactsDirAbsolutePath.FullPath)
+                    .Append("--no-build");
+				if (!local) {
+					pb.AppendSwitch("--test-adapter-path", ".")
+						.AppendSwitch("--logger", $"AppVeyor");
+				} else {
+                     pb.AppendSwitch("--logger", $"trx;LogFileName={projectFilename}.trx");
+                }
+				return pb;
+			};
+
+        // run open cover for debug build configuration
+        OpenCover(
+            tool => tool.DotNetCoreTool(projectPath.ToString(),
+                "test",
+                buildProcessArgs("Debug")
+            ),
+            testCoverageOutputFile,
+            openCoverSettings);
+
+        // run tests again if Release mode was requested
+        if (isReleaseBuild) {
+            Information("Running Release mode tests for {0}", projectFilename.ToString());
+            DotNetCoreTool(testProj.FullPath,
+                "test",
+                buildProcessArgs("Release")
+            );
+        }
+    })
+    .DeferOnError();
+
+Task("CleanPreviousTestResults")
+    .Does(() =>
+    {
+        if (FileExists(testCoverageOutputFile))
+            DeleteFile(testCoverageOutputFile);
+        DeleteFiles(artifactsDir + "/*.trx");
+        if (DirectoryExists(codeCoverageReportDir))
+            DeleteDirectory(codeCoverageReportDir, recursive: true);
+    });
+
+Task("GenerateCoverageReport")
+    .WithCriteria(() => local)
+    .Does(() =>
+    {
+        ReportGenerator(testCoverageOutputFile, codeCoverageReportDir);
     });
 
 
-Task("Build")
+Task("RunUnitTests")
     .IsDependentOn("BuildLibrary")
-    .IsDependentOn("BuildSamples")
-    .Does(() => { });
+    .IsDependentOn("CleanPreviousTestResults")
+    .IsDependentOn("RunXunitTests")
+    .IsDependentOn("GenerateCoverageReport")
+    .Does(() =>
+    {
+        Information("Done Test");
+    });
+
+
 
 Task("BuildLibrary")
     .IsDependentOn("SetVersion")
@@ -164,226 +268,62 @@ Task("BuildLibrary")
         });
     });
 
-Task("BuildSamples")
-    .IsDependentOn("UpdateAppVeyorBuildNumber")
-    .IsDependentOn("Restore")
-    .Does(() =>
-    {
-        if (isReleaseBuild) {
-            Information("Running {0} build for code coverage", "Debug");
-            DotNetCoreBuild(tardisBankSampleDir + "/Src", new DotNetCoreBuildSettings{
-                Configuration = "Debug"
-            });
-        }
-        DotNetCoreBuild(tardisBankSampleDir + "/Src", new DotNetCoreBuildSettings{
-            Configuration = buildConfig
-        });
-    });
 
-Task("RunUnitTests")
-    .DoesForEach(GetFiles($"{testsRootDir}/**/*.csproj")
-        .Union(GetFiles($"{samplesDir}/**/**/*.Tests.csproj")), 
-    (testProj) => {
-        var projectPath = testProj.GetDirectory();
-        var projectFilename = testProj.GetFilenameWithoutExtension();
-        Information("Calculating code coverage for {0} ...", projectFilename);
-
-        var openCoverSettings = new OpenCoverSettings {
-            OldStyle = true,
-            ReturnTargetCodeOffset = 0,
-            ArgumentCustomization = args => args.Append("-mergeoutput").Append("-hideskipped:File;Filter;Attribute"),
-            WorkingDirectory = projectPath,
-        }
-        .WithFilter("+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.Xunit*]* -[SharpArch.Infrastructure]SharpArch.Infrastructure.Logging.*")
-        .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
-        .ExcludeByFile("*/*Designer.cs");
-
-        Func<string,ProcessArgumentBuilder> buildProcessArgs = (buildCfg) =>
-            new ProcessArgumentBuilder()
-                    .AppendSwitch("--configuration", buildCfg)
-                    .AppendSwitch("--filter", "Category!=IntegrationTests")
-                    .AppendSwitch("--results-directory", artifactsDirAbsolutePath.FullPath)
-                    .AppendSwitch("--logger", $"trx;LogFileName={projectFilename}.trx")
-                    .Append("--no-build");
-
-        // run open cover for debug build configuration
-        OpenCover(
-            tool => tool.DotNetCoreTool(projectPath.ToString(),
-                "test",
-                buildProcessArgs("Debug")
-            ),
-            testCoverageOutputFile,
-            openCoverSettings);
-
-        // run tests again if Release mode was requested
-        if (isReleaseBuild) {
-            Information("Running Release mode tests for {0}", projectFilename.ToString());
-            DotNetCoreTool(testProj.FullPath,
-                "test",
-                buildProcessArgs("Release")
-            );
-        }
-    })
-    .DeferOnError();
-
-
-Task("CleanPreviousTestResults")
-    .Does(() =>
-    {
-        if (FileExists(testCoverageOutputFile))
-            DeleteFile(testCoverageOutputFile);
-        DeleteFiles(artifactsDir + "/*.trx");
-        if (DirectoryExists(codeCoverageReportDir))
-            DeleteDirectory(codeCoverageReportDir, recursive: true);
-    });
-
-Task("GenerateCoverageReport")
-    .WithCriteria(() => local)
-    .Does(() =>
-    {
-        ReportGenerator(testCoverageOutputFile, codeCoverageReportDir);
-    });
-
-
-Task("Test")
-    .IsDependentOn("Build")
-    .IsDependentOn("CleanPreviousTestResults")
-    .IsDependentOn("RunUnitTests")
-    .IsDependentOn("GenerateCoverageReport")
-    .Does(() =>
-    {
-        Information("Done Test");
-    })
-    .Finally(() => {
-        if (!local) {
-            CoverallsIo(testCoverageOutputFile);
-
-            foreach(var trxFile in GetFiles($"{artifactsDir}/*.trx"))
-            {
-                Information("Uploading unit-test results: {0}", trxFile);
-                UploadFile("https://ci.appveyor.com/api/testresults/mstest/" + appVeyorJobId, trxFile);
-            }
-        }
-    });
-
-
-Task("InspectCode")
-    .Does(() => {
-        DupFinder(solutionFile, new DupFinderSettings {
-            CachesHome = "./tmp/DupFinderCaches",
-            DiscardCost = 70,
-            DiscardFieldsName = false,
-            DiscardLiterals = false,
-            NormalizeTypes = true,
-            ShowStats = true,
-            ShowText = true,
-            OutputFile = duplicateFinderOutputFile,
-            ExcludePattern = new string [] {
-                "../Docker/**/*",
-                "Solution Items/**/*",
-                "Tests/**/*",
-                "Samples/**/*",
-                "**/LibLog/**/*"
-            }
-        });
-        ReSharperReports(
-            duplicateFinderOutputFile,
-            System.IO.Path.ChangeExtension(duplicateFinderOutputFile, "html")
-        );
-
-        InspectCode(solutionFile, new InspectCodeSettings() {
-            OutputFile = codeInspectionsOutputFile,
-            Profile = "SharpArch.AutoLoad.DotSettings",
-            CachesHome = "./tmp/ReSharperCaches",
-            SolutionWideAnalysis = true
-        });
-        ReSharperReports(
-            codeInspectionsOutputFile,
-            System.IO.Path.ChangeExtension(codeInspectionsOutputFile, "html")
-        );
-    });
-
-
-/**
-
-Task("Pack")
-    .IsDependentOn("Build")
-    .WithCriteria<BuildParameters>((context,data) => data.ShouldPublish)
-    .Does<BuildParameters>(data =>
-{
-    var settings = new DotNetCorePackSettings{
-        NoRestore = true,
-        NoBuild = true,
-        OutputDirectory = data.Paths.Directories.Artifacts,
-        Configuration = data.Configuration,
-        MSBuildSettings = new DotNetCoreMSBuildSettings().WithProperty("Version", data.Version.Version)
-    };
-    DotNetCorePack(data.Paths.Directories.Solution.FullPath, settings);
-});
-
-
-**/
 
 Task("CreateNugetPackages")
     .Does(() => {
-        // copy templates to temp folder
-        CopyDirectory(nugetTemplatesDir, nugetTempDir);
-        // update templates
-        ReplaceTextInFiles(nugetTempDir+"/**/*.nuspec", "$(SemanticVersion)", nugetVersion);
-        ReplaceTextInFiles(nugetTempDir+"/**/*.nuspec", "$(NextMajorRelease)", nextMajorRelease);
-        ReplaceTextInFiles(nugetTempDir+"/**/*.nuspec", "$(CommitSHA)", commitHash);
-
-        Func<string, string, string> removeBasePath = (path, basePath) => {
-            var endOfBase = path.IndexOf(basePath);
-            if (endOfBase < 0)
-                return path; // base not found
-            endOfBase += basePath.Length;
-            return path.Substring(endOfBase);
-        };
-
         Action<string> buildPackage = (string projectName) => {
-            Information("Creating package {0}", projectName);
-            var files = GetFiles($"{srcDir}/{projectName}/bin/Release/**/{projectName}.*");
-            var filePathes = files.Where(f=> !f.FullPath.EndsWith(".deps.json", StringComparison.OrdinalIgnoreCase))
-                .Select(filePath => removeBasePath(filePath.FullPath, $"{projectName}/bin/Release/"));
+          //var projectFileName = $"{srcDir}/{projectName}/{projectName}.csproj";
+          var projectFileName=projectName;
+          Information("Pack {0}", projectFileName);
 
-            // create folders
-            foreach(var frameworkLib in filePathes.Select(fp => new FilePath(fp).GetDirectory().FullPath).Distinct()) {
-                CreateDirectory($"{nugetTempDir}/{projectName}/lib/{frameworkLib}");
-            };
-
-            foreach (var file in filePathes) {
-                var srcFile = $"{srcDir}/{projectName}/bin/Release/{file}";
-                var dstFile = $"{nugetTempDir}/{projectName}/lib/{file}";
-                CopyFile(srcFile, dstFile);
-            };
-
-            var exitCode = StartProcess(nugetExe, new ProcessSettings {
-                WorkingDirectory = $"{nugetTempDir}/{projectName}",
-                Arguments = "pack -OutputDirectory .."
+          DotNetCorePack(projectFileName, new DotNetCorePackSettings {
+              Configuration = buildConfig,
+              OutputDirectory = packagesDir,
+              NoBuild = true,
+              NoRestore = true,
+              ArgumentCustomization = args => args.Append($"-p:Version={nugetVersion}")
             });
-            if (exitCode != 0)
-                throw new Exception($"Build package {projectName} failed with code {1}.");
         };
 
-        foreach(var projectName in nugetPackages) {
+          if (isTagged) {
+            var releaseNotes = $"https://github.com/{repoOwner}/{repoName}/releases/tag/{milestone}";
+            Information("Updating ReleaseNotes Link: {0}", releaseNotes);
+            XmlPoke($"{srcDir}/Directory.Build.props",
+              "/Project/PropertyGroup[@Label=\"Package\"]/PackageReleaseNotes",
+              releaseNotes
+            );
+          }
+
+        foreach(var projectName in new[] {$"{solutionFile}"}) {
             buildPackage(projectName);
         };
     });
 
-Task("PublishNugetPackages")
-    .IsDependentOn("CreateNugetPackages")
+Task("CreateRelease")
+    .WithCriteria(() => isRepository && isReleaseBranch && !isPullRequest)
     .Does(() => {
+        GitReleaseManagerCreate(githubCredentials.UserName, githubCredentials.Password, repoOwner, repoName,
+            new GitReleaseManagerCreateSettings {
+              Milestone = milestone,
+              TargetCommitish = "master"
+        });
+    });
 
+Task("CloseMilestone")
+    .WithCriteria(() => isRepository && isTagged && !isPullRequest)
+    .Does(() => {
+        GitReleaseManagerClose(githubCredentials.UserName, githubCredentials.Password, repoOwner, repoName, milestone);
     });
 
 Task("Default")
     .IsDependentOn("UpdateAppVeyorBuildNumber")
-    .IsDependentOn("Build")
-    .IsDependentOn("BuildSamples")
-    .IsDependentOn("Test")
-    .IsDependentOn("InspectCode")
+    .IsDependentOn("BuildLibrary")
+    .IsDependentOn("RunUnitTests")
+    //.IsDependentOn("InspectCode") todo: fix
     .IsDependentOn("CreateNugetPackages")
+    .IsDependentOn("CreateRelease")
+    .IsDependentOn("CloseMilestone")
     .Does(
         () => {}
     );

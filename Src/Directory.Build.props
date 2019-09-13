@@ -1,14 +1,16 @@
-<Project>
+﻿<Project>
   <PropertyGroup Label="Build">
     <Product>Sharp Architecture</Product>
     <Authors>Sharp Architecture Dev Team</Authors>
 
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <SignAssembly>False</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <DebugSymbols>True</DebugSymbols>
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
+    
+    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -19,29 +21,32 @@
     <Optimize>True</Optimize>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == false">
+  <PropertyGroup Label="Package" Condition="'$(MSBuildProjectName.Contains(Tests))' == false">
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
     <IsPackable>True</IsPackable>
     <PackageIconUrl>https://github.com/sharparchitecture/Sharp-Architecture/raw/master/Artefacts/Documentation/Logo_100x100.png</PackageIconUrl>
     <PackageProjectUrl>http://sharparchitecture.github.io/</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/$(SemanticVersion)</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/5.0.0</PackageReleaseNotes>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageTags>sharp-architecture;sharp-arch</PackageTags>
+  </PropertyGroup>
 
-    <!-- SourceLink Config, Microsoft.SourceLink.GitHub reference is required -->
-    <PublishRepositoryUrl>True</PublishRepositoryUrl>
+  <PropertyGroup Label="SourceLink">
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == true">
-    <IsTestProject>True</IsTestProject>
-    <IsPackable>False</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Sample))' == true">
-    <IsPackable>False</IsPackable>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
 </Project>
