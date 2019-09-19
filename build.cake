@@ -320,7 +320,7 @@ Task("Default")
     .IsDependentOn("UpdateAppVeyorBuildNumber")
     .IsDependentOn("BuildLibrary")
     .IsDependentOn("RunUnitTests")
-    //.IsDependentOn("InspectCode") todo: fix
+    .IsDependentOn("InspectCode")
     .IsDependentOn("CreateNugetPackages")
     .IsDependentOn("CreateRelease")
     .IsDependentOn("CloseMilestone")
