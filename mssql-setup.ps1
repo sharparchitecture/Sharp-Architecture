@@ -31,4 +31,5 @@ Set-Service SQLBrowser -StartupType Manual
 Start-Service SQLBrowser
 Start-Service "MSSQL`$$instanceName"
 
-sqlcmd -S TardisBank -U sa -P Password12! -i ./Docker/create_database.sql
+sqlcmd -S TardisBank -U sa -P Password12! -Q "CREATE DATABASE TardisBank"
+
