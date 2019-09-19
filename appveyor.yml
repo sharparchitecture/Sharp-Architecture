@@ -11,7 +11,7 @@ image:
   - Visual Studio 2019
 
 services:
-  - mssql
+  - mssql2017
 
 
 environment:
@@ -33,7 +33,7 @@ install:
   - ps: ./mssql-setup.ps1
 
 build_script:
-  - ps: ./build.ps1 -verbosity diagnostic
+  - ps: ./build.ps1
 
 test: off
 
