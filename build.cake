@@ -12,7 +12,7 @@
 #tool nuget:?package=coveralls.io&version=1.4.2
 #tool nuget:?package=OpenCover&version=4.7.922
 #tool nuget:?package=ReportGenerator&version=4.2.17
-#tool nuget:?package=JetBrains.ReSharper.CommandLineTools&version=2019.2.2
+//#tool nuget:?package=JetBrains.ReSharper.CommandLineTools&version=2018.3.4
 
 // ARGUMENTS
 var target = Argument("target", "Default");
@@ -320,7 +320,7 @@ Task("Default")
     .IsDependentOn("UpdateAppVeyorBuildNumber")
     .IsDependentOn("BuildLibrary")
     .IsDependentOn("RunUnitTests")
-    .IsDependentOn("InspectCode")
+//    .IsDependentOn("InspectCode")
     .IsDependentOn("CreateNugetPackages")
     .IsDependentOn("CreateRelease")
     .IsDependentOn("CloseMilestone")

@@ -43,10 +43,12 @@
   <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == true">
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);0618;1591</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Sample))' == true">
     <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
 </Project>
