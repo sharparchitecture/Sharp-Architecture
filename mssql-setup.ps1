@@ -1,6 +1,5 @@
-# Enable names pipes and set alias to (local)
-
-https://www.appveyor.com/docs/services-databases/#enabling-tcpip-named-pipes-and-setting-instance-alias
+# Enable names pipes and set alias to TardisBank
+# reference: https://www.appveyor.com/docs/services-databases/#enabling-tcpip-named-pipes-and-setting-instance-alias
 
 [reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.Smo") | Out-Null
 [reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.SqlWmiManagement") | Out-Null
