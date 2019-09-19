@@ -1,1 +1,1 @@
-docker.exe run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=MyStrong(!!)Password' -p 2433:1433 -d -v./mssql-data:/var/opt/mssql/data microsoft/mssql-server-linux:latest
+docker.exe run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Password12!' -p 2433:1433 -d -v./mssql-data:/var/opt/mssql/data mcr.microsoft.com/mssql/server:2017-latest-ubuntu

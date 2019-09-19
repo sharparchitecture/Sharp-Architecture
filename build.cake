@@ -166,7 +166,7 @@ Task("InspectCode")
     });
 
 Task("RunXunitTests")
-    .DoesForEach(GetFiles($"{srcDir}/*.sln"), 
+    .DoesForEach(GetFiles(solutionFile).Union(GetFiles($"{samplesDir}/**/*.sln")), 
     (testProj) => {
         var projectPath = testProj.GetDirectory();
         var projectFilename = testProj.GetFilenameWithoutExtension();

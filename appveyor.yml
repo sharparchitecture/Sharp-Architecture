@@ -7,7 +7,12 @@ pull_requests:
 nuget:
   disable_publish_on_pr: true
 
-os: Visual Studio 2017
+image:
+  - Visual Studio 2019
+
+services:
+  - mssql
+
 
 environment:
   coveralls_repo_token:
@@ -25,6 +30,7 @@ cache:
 
 install:
   - ps: ./dotnet-install.ps1  -Version 2.2.100 -InstallDir "C:\Program Files\dotnet"
+  - ps: ./mssql-setup.ps1
 
 build_script:
   - ps: ./build.ps1 -verbosity diagnostic
