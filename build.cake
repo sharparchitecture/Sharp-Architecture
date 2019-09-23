@@ -167,6 +167,7 @@ Task("InspectCode")
         );
     });
 
+
 Task("RunXunitTests")
     .DoesForEach(GetFiles(solutionFile).Union(GetFiles($"{samplesDir}/**/*.sln")), 
     (testProj) => {
@@ -219,6 +220,7 @@ Task("RunXunitTests")
     })
     .DeferOnError();
 
+
 Task("CleanPreviousTestResults")
     .Does(() =>
     {
@@ -229,6 +231,7 @@ Task("CleanPreviousTestResults")
             DeleteDirectory(codeCoverageReportDir, recursive: true);
     });
 
+
 Task("GenerateCoverageReport")
     .WithCriteria(() => local)
     .Does(() =>
@@ -238,46 +241,26 @@ Task("GenerateCoverageReport")
 
 
 Task("RunUnitTests")
-    .IsDependentOn("BuildLibrary")
-    .IsDependentOn("BuildSamples")
+    .IsDependentOn("Build")
     .IsDependentOn("CleanPreviousTestResults")
     .IsDependentOn("RunXunitTests")
     .IsDependentOn("GenerateCoverageReport")
     .Does(() =>
     {
         Information("Done Test");
-    });
-
-
-Task("BuildLibrary")
-    .IsDependentOn("SetVersion")
-    .IsDependentOn("UpdateAppVeyorBuildNumber")
-    .IsDependentOn("Restore")
-    .Does(() =>
-    {
-        if (isReleaseBuild) {
-            Information("Running {0} build for code coverage", "Debug");
-            // need Debug build for code coverage
-            DotNetCoreBuild(srcDir, new DotNetCoreBuildSettings {
-                NoRestore = true,
-                Configuration = "Debug",
-            });
+    })
+    .Finally(() => {
+        if (!local) {
+            CoverallsIo(testCoverageOutputFile);
         }
-        Information("Running {0} build", buildConfig);
-        DotNetCoreBuild(srcDir, new DotNetCoreBuildSettings {
-            NoRestore = true,
-            Configuration = buildConfig,
-        });
     });
 
 
-
-
-Task("BuildSamples")
+Task("Build")
     .IsDependentOn("SetVersion")
     .IsDependentOn("UpdateAppVeyorBuildNumber")
     .IsDependentOn("Restore")
-    .DoesForEach(GetFiles($"{samplesDir}/**/*.sln"), 
+    .DoesForEach(GetFiles($"{srcDir}/**/*.sln").Union(GetFiles($"{samplesDir}/**/*.sln")), 
         (solutionFile) => {
             var slnPath = solutionFile.GetDirectory().FullPath;
             var sln = solutionFile.GetFilenameWithoutExtension();
@@ -295,7 +278,6 @@ Task("BuildSamples")
                 Configuration = buildConfig,
             });
         });
-
 
 
 Task("CreateNugetPackages")
@@ -327,6 +309,7 @@ Task("CreateNugetPackages")
         };
     });
 
+
 Task("CreateRelease")
     .WithCriteria(() => isRepository && isReleaseBranch && !isPullRequest)
     .Does(() => {
@@ -337,16 +320,17 @@ Task("CreateRelease")
         });
     });
 
+
 Task("CloseMilestone")
     .WithCriteria(() => isRepository && isTagged && !isPullRequest)
     .Does(() => {
         GitReleaseManagerClose(githubCredentials.UserName, githubCredentials.Password, repoOwner, repoName, milestone);
     });
 
+
 Task("Default")
     .IsDependentOn("UpdateAppVeyorBuildNumber")
-    .IsDependentOn("BuildLibrary")
-    .IsDependentOn("BuildSamples")
+    .IsDependentOn("Build")
     .IsDependentOn("RunUnitTests")
 //    .IsDependentOn("InspectCode")
     .IsDependentOn("CreateNugetPackages")

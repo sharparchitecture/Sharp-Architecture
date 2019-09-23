@@ -18,7 +18,7 @@ environment:
   coveralls_repo_token:
     secure: FgZlD1O2ilcGB6nF7cIgNcF6f8wWJk//ish6EG800QfuMd0y3BQWUXkl9u7TB4yG
   appveyor_cache_entry_zip_args: -t7z -m0=lzma -mx=5 -ms=on
-  CAKE_PATH_TOOLS: c:\tmp\cake\tools\
+  CAKE_PATHS_TOOLS: c:\tmp\cake\tools\
   CAKE_SETTINGS_SKIPVERIFICATION: true
   CAKE_SETTINGS_SKIPPACKAGEVERSIONCHECK: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
