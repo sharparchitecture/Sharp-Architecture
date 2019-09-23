@@ -34,8 +34,8 @@ cache:
   - c:\tmp\cake\tools -> appveor.yml
 
 install:
-  - ps: ./dotnet-install.ps1  -Version 2.2.100 -InstallDir "C:\Program Files\dotnet"
-  - ps: ./mssql-setup.ps1
+  - ps: ./tools/dotnet-install.ps1  -Version 2.2.100 -InstallDir "C:\Program Files\dotnet"
+  - ps: ./tools/mssql-setup.ps1
 
 build_script:
   - ps: ./build.ps1
