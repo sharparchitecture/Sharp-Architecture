@@ -4,7 +4,7 @@ NHibernate HiLo Generator
 Why use HiLo
 ------------
 
-HiLo idnentity generatos allows NHibernate to generate identity values to map child objects to their parent without having to hit the database as opposed to using the native identity generation causes nhibernate to hit the database on every save, which affects performance and running of batch statements.
+HiLo identity generators allow NHibernate to generate identity values to map child objects to their parent without having to hit the database as opposed to using the native identity generation causes nhibernate to hit the database on every save, which affects performance and running of batch statements.
 
 For more information on generator behaviours refer to `this <http://fabiomaulo.blogspot.co.uk/2009/02/nh210-generators-behavior-explained.html>`_ blog post by Fabio Maulo.
 
