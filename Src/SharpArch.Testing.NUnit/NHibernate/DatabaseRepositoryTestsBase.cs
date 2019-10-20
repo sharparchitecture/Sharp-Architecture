@@ -50,10 +50,14 @@
         /// </summary>
         protected ISession Session { get; private set; }
 
-        private DatabaseRepositoryTestsBase()
+        DatabaseRepositoryTestsBase()
         {
         }
 
+        /// <summary>
+        ///     Constructor.
+        /// </summary>
+        /// <param name="initializer"></param>
         protected DatabaseRepositoryTestsBase([NotNull] TestDatabaseSetup initializer)
         {
             Initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));

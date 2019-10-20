@@ -14,9 +14,14 @@
     using SharpArch.NHibernate;
     using SharpArch.NHibernate.FluentNHibernate;
 
+
     /// <summary>
     ///     Performs NHibernate and database initialization.
     /// </summary>
+    /// <remarks>
+    ///     By default it looks for file <see cref="NHibernateSessionFactoryBuilder.DefaultNHibernateConfigFileName" />
+    ///     to load configuration, if you prefer fluent configuration, override <see cref="Customize" /> method.
+    /// </remarks>
     [PublicAPI]
     public class TestDatabaseSetup : IDisposable
     {
@@ -24,8 +29,6 @@
         readonly Assembly[] _mappingAssemblies;
         Configuration _configuration;
         ISessionFactory _sessionFactory;
-        static readonly char[] _assemblySeparator = {','};
-
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="TestDatabaseSetup" /> class.
@@ -34,7 +37,10 @@
         /// <param name="mappingAssemblies">
         ///     List of assemblies containing NHibernate mapping files and persistence model generator.
         /// </param>
-        /// <exception cref="ArgumentNullException"><paramref name="basePath"/> or <paramref name="mappingAssemblies"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="basePath" /> or <paramref name="mappingAssemblies" /> is
+        ///     <c>null</c>.
+        /// </exception>
         public TestDatabaseSetup([NotNull] string basePath, [NotNull] Assembly[] mappingAssemblies)
         {
             _basePath = basePath ?? throw new ArgumentNullException(nameof(basePath));
@@ -42,19 +48,23 @@
             _mappingAssemblies = mappingAssemblies.Distinct().ToArray();
         }
 
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="TestDatabaseSetup" /> class.
         /// </summary>
-        /// <param name="baseAssembly">Assembly to use to determine configuration folder. Typically is it assembly containing tests.</param>
+        /// <param name="baseAssembly">
+        ///     Assembly to use to determine configuration folder. Typically is it assembly containing
+        ///     tests.
+        /// </param>
         /// <param name="mappingAssemblies"></param>
-        /// <exception cref="ArgumentNullException"><paramref name="baseAssembly"/> or <paramref name="mappingAssemblies"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="baseAssembly" /> or <paramref name="mappingAssemblies" /> is
+        ///     <c>null</c>.
+        /// </exception>
         public TestDatabaseSetup([NotNull] Assembly baseAssembly, [NotNull] Assembly[] mappingAssemblies)
-            :this(DependencyList.GetAssemblyCodeBasePath(baseAssembly),
+            : this(DependencyList.GetAssemblyCodeBasePath(baseAssembly),
                 mappingAssemblies)
         {
         }
-
 
         /// <summary>
         ///     Disposes SessionFactory.
@@ -77,8 +87,11 @@
         ///     This method will load and scan assemblies for <see cref="IAutoPersistenceModelGenerator" />.
         ///     Only first generated model is returned.
         /// </remarks>
-        /// <exception cref="ArgumentNullException"><paramref name="assemblies"/> is <see langword="null"/></exception>
-        /// <exception cref="InvalidOperationException">Only one implementation of <see cref="IAutoPersistenceModelGenerator"/> is allowed.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="assemblies" /> is <see langword="null" /></exception>
+        /// <exception cref="InvalidOperationException">
+        ///     Only one implementation of <see cref="IAutoPersistenceModelGenerator" /> is
+        ///     allowed.
+        /// </exception>
         /// <exception cref="TargetInvocationException">Unable to instantiate AutoPersistenceModelGenerator.</exception>
         public static AutoPersistenceModel GenerateAutoPersistenceModel([NotNull] Assembly[] assemblies)
         {
@@ -89,23 +102,26 @@
                 .ToArray();
             if (persistenceGeneratorTypes.Length > 1)
                 throw new InvalidOperationException($"Found multiple classes implementing {nameof(IAutoPersistenceModelGenerator)}. " +
-                    "Only one persistence model generator is supported.") {
-                    Data = {
-                        [nameof(IAutoPersistenceModelGenerator)+"s"] = persistenceGeneratorTypes,
+                    "Only one persistence model generator is supported.")
+                {
+                    Data =
+                    {
+                        [nameof(IAutoPersistenceModelGenerator) + "s"] = persistenceGeneratorTypes,
                         ["Assemblies"] = assemblies
                     }
                 };
             if (persistenceGeneratorTypes.Length == 0)
                 throw new InvalidOperationException($"No classes implementing {nameof(IAutoPersistenceModelGenerator)} were found. " +
-                    $"{nameof(TestDatabaseSetup)} requires persistence model generator to create test database.") {
-                    Data = {
+                    $"{nameof(TestDatabaseSetup)} requires persistence model generator to create test database.")
+                {
+                    Data =
+                    {
                         ["Assemblies"] = assemblies
                     }
                 };
             var generator = (IAutoPersistenceModelGenerator) Activator.CreateInstance(persistenceGeneratorTypes[0]);
             return generator.Generate();
         }
-
 
         /// <summary>
         ///     Returns NHibernate <see cref="Configuration" />.
@@ -114,8 +130,7 @@
         [NotNull]
         public Configuration GetConfiguration()
         {
-            if (_configuration != null)
-                return _configuration;
+            if (_configuration != null) return _configuration;
 
             var autoPersistenceModel = GenerateAutoPersistenceModel(_mappingAssemblies);
 
@@ -125,16 +140,27 @@
 
             var defaultConfigFilePath =
                 Path.Combine(_basePath, NHibernateSessionFactoryBuilder.DefaultNHibernateConfigFileName);
-            if (File.Exists(defaultConfigFilePath)) {
+            if (File.Exists(defaultConfigFilePath))
+            {
                 Debug.WriteLine(
                     $"Found default configuration file {NHibernateSessionFactoryBuilder.DefaultNHibernateConfigFileName} in output folder. Loading configuration from '{defaultConfigFilePath}'.");
                 builder.UseConfigFile(defaultConfigFilePath);
             }
 
+            Customize(builder);
             _configuration = builder.BuildConfiguration();
             return _configuration;
         }
 
+        /// <summary>
+        ///     Override this method to customize NHibernate configuration.
+        /// </summary>
+        /// <param name="builder">
+        ///     <see cref="NHibernateSessionFactoryBuilder" />
+        /// </param>
+        protected virtual void Customize(NHibernateSessionFactoryBuilder builder)
+        {
+        }
 
         /// <summary>
         ///     Returns NHibernate <see cref="ISessionFactory" />.
@@ -143,12 +169,10 @@
         [NotNull]
         public ISessionFactory GetSessionFactory()
         {
-            if (_sessionFactory != null)
-                return _sessionFactory;
+            if (_sessionFactory != null) return _sessionFactory;
             _sessionFactory = GetConfiguration().BuildSessionFactory();
             return _sessionFactory;
         }
-
 
         /// <summary>
         ///     Creates new NHibernate session and initializes database structure.
@@ -190,7 +214,7 @@
         /// </summary>
         /// <param name="assemblyPath"></param>
         /// <returns></returns>
-        private static Assembly TryLoadAssembly(string assemblyPath)
+        static Assembly TryLoadAssembly(string assemblyPath)
         {
             return Assembly.LoadFrom(assemblyPath);
         }
@@ -204,8 +228,7 @@
         {
             assemblyName = assemblyName.Trim();
             const string dllExtension = ".dll";
-            if (!assemblyName.EndsWith(dllExtension, StringComparison.OrdinalIgnoreCase))
-                assemblyName = string.Concat(assemblyName, dllExtension);
+            if (!assemblyName.EndsWith(dllExtension, StringComparison.OrdinalIgnoreCase)) assemblyName = string.Concat(assemblyName, dllExtension);
 
             return assemblyName;
         }
