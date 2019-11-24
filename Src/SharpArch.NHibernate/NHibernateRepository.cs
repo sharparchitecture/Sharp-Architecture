@@ -11,7 +11,7 @@
     ///     <see cref="NHibernateRepositoryWithTypedId{T, IdT}" />.
     /// </summary>
     [PublicAPI]
-    public class NHibernateRepository<T> : NHibernateRepositoryWithTypedId<T, int>, INHibernateRepository<T>
+    public class NHibernateRepository<T> : NHibernateRepositoryWithTypedId<T, int>
         where T : class
     {
         /// <summary>

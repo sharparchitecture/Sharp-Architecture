@@ -1,11 +1,13 @@
-﻿using System;
-using JetBrains.Annotations;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
-using SharpArch.Domain.PersistenceSupport;
-
-namespace SharpArch.AspNetCore.Transaction
+﻿namespace SharpArch.Web.AspNetCore.Transaction
 {
+    using System;
+    using System.Threading.Tasks;
+    using Domain.PersistenceSupport;
+    using JetBrains.Annotations;
+    using Microsoft.AspNetCore.Mvc.Filters;
+    using Microsoft.Extensions.DependencyInjection;
+
+
     /// <summary>
     ///     Wraps controller actions marked with <see cref="TransactionAttribute" /> into transaction.
     /// </summary>
@@ -13,40 +15,34 @@ namespace SharpArch.AspNetCore.Transaction
     ///     <see cref="ITransactionManager" /> must be registered in IoC in order for this to work.
     /// </remarks>
     [PublicAPI]
-    public class UnitOfWorkHandler : ApplyTransactionFilterBase
+    public class UnitOfWorkHandler : ApplyTransactionFilterBase, IAsyncActionFilter
     {
-        /// <summary>
-        ///     HttpContext key for Transaction Manger.
-        /// </summary>
-        private const string TransactionManagerKey = "SharpArch.AspNetCore.UnitOfWork.TransactionManager";
-
         /// <inheritdoc />
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var transactionAttribute = GetTransactionAttribute(context);
+            ITransactionManager transactionManager = null;
+            IDisposable transaction = null;
             if (transactionAttribute != null)
             {
-                var tm = context.HttpContext.RequestServices.GetRequiredService<ITransactionManager>();
-                context.HttpContext.Items[TransactionManagerKey] = tm;
-                tm.BeginTransaction(transactionAttribute.IsolationLevel);
+                transactionManager = context.HttpContext.RequestServices.GetRequiredService<ITransactionManager>();
+                transaction = transactionManager.BeginTransaction(transactionAttribute.IsolationLevel);
             }
-        }
 
-        /// <inheritdoc />
-        public override void OnActionExecuted(ActionExecutedContext context)
-        {
-            var transactionAttribute = GetTransactionAttribute(context);
-            if (transactionAttribute != null)
+            var executedContext = await next().ConfigureAwait(false);
+
+            if (transaction != null)
             {
-                var transactionManager = (ITransactionManager) context.HttpContext.Items[TransactionManagerKey];
-                if (transactionManager == null)
-                    throw new InvalidOperationException(nameof(ITransactionManager) +
-                        " was not found in HttpContext. Please contact SharpArch dev team.");
-
-                if (context.Exception != null || transactionAttribute.RollbackOnModelValidationError && context.ModelState.IsValid == false)
-                    transactionManager.RollbackTransaction();
+                if (executedContext.Exception != null || transactionAttribute.RollbackOnModelValidationError && context.ModelState.IsValid == false)
+                {
+                    // don't use cancellation token to ensure transaction is rolled back on error
+                    await transactionManager.RollbackTransactionAsync().ConfigureAwait(false);
+                }
                 else
-                    transactionManager.CommitTransaction();
+                {
+                    await transactionManager.CommitTransactionAsync(context.HttpContext.RequestAborted).ConfigureAwait(false);
+                }
+                transaction.Dispose();
             }
         }
     }

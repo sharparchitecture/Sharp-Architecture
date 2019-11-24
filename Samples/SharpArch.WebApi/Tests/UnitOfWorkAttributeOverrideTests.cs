@@ -5,12 +5,14 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JetBrains.Annotations;
-using SharpArch.WebApi.Stubs;
 using SharpArch.WebApi.Tests.Setup;
 using Xunit;
 
 namespace SharpArch.WebApi.Tests
 {
+    using Sample.Stubs;
+
+
     public class UnitOfWorkAttributeOverrideTests : IClassFixture<TestServerSetup>
     {
         private readonly TestServerSetup _setup;

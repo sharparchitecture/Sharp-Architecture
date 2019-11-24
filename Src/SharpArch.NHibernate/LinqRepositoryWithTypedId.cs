@@ -1,9 +1,12 @@
 namespace SharpArch.NHibernate
 {
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Domain.PersistenceSupport;
+    using Domain.Specifications;
+    using global::NHibernate.Linq;
     using JetBrains.Annotations;
-    using SharpArch.Domain.PersistenceSupport;
-    using SharpArch.Domain.Specifications;
 
 
     /// <summary>
@@ -21,8 +24,22 @@ namespace SharpArch.NHibernate
         ///     Initializes a new instance of the <see cref="LinqRepositoryWithTypedId{T, TId}" /> class.
         /// </summary>
         /// <param name="transactionManager">The transaction manager.</param>
-        public LinqRepositoryWithTypedId(INHibernateTransactionManager transactionManager) : base(transactionManager)
-        { }
+        public LinqRepositoryWithTypedId(INHibernateTransactionManager transactionManager)
+            : base(transactionManager)
+        {
+        }
+
+        /// <inheritdoc />
+        public Task<T> FindOneAsync(TId id, CancellationToken cancellationToken = default)
+        {
+            return Session.GetAsync<T>(id, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<T> FindOneAsync(ILinqSpecification<T> specification, CancellationToken cancellationToken = default)
+        {
+            return specification.SatisfyingElementsFrom(Session.Query<T>()).SingleOrDefaultAsync(cancellationToken);
+        }
 
         /// <inheritdoc />
         public IQueryable<T> FindAll()
@@ -34,18 +51,6 @@ namespace SharpArch.NHibernate
         public IQueryable<T> FindAll(ILinqSpecification<T> specification)
         {
             return specification.SatisfyingElementsFrom(Session.Query<T>());
-        }
-
-        /// <inheritdoc />
-        public T FindOne(TId id)
-        {
-            return Session.Get<T>(id);
-        }
-
-        /// <inheritdoc />
-        public T FindOne(ILinqSpecification<T> specification)
-        {
-            return specification.SatisfyingElementsFrom(Session.Query<T>()).SingleOrDefault();
         }
     }
 }

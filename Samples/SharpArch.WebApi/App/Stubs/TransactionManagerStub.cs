@@ -1,52 +1,60 @@
-﻿using System;
-using System.Data;
-using JetBrains.Annotations;
-using Microsoft.AspNetCore.Http;
-using Serilog;
-using SharpArch.Domain.PersistenceSupport;
-
-namespace SharpArch.WebApi.Stubs
+﻿namespace SharpArch.WebApi.Sample.Stubs
 {
+    using System;
+    using System.Data;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Domain.PersistenceSupport;
+    using JetBrains.Annotations;
+    using Microsoft.AspNetCore.Http;
+    using Serilog;
+
+
     public class TransactionManagerStub : ITransactionManager, IDisposable
     {
         public const string TransactionIsolationLevel = "x-transaction-isolation-level";
         public const string TransactionState = "x-transaction-result";
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private TransactionWrapper _transaction;
-        private static readonly ILogger Log = Serilog.Log.ForContext<TransactionManagerStub>();
+        static readonly ILogger Log = Serilog.Log.ForContext<TransactionManagerStub>();
+        readonly IHttpContextAccessor _httpContextAccessor;
+        TransactionWrapper _transaction;
 
         public TransactionManagerStub([NotNull] IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
 
-        public IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        public void Dispose()
         {
-            if (_transaction == null)
-                _transaction = new TransactionWrapper(isolationLevel);
-            return _transaction;
+            _transaction?.Dispose();
         }
 
-        public void CommitTransaction()
+        public IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        {
+            return _transaction
+                ?? (_transaction = new TransactionWrapper(isolationLevel));
+        }
+
+        public Task CommitTransactionAsync(CancellationToken cancellationToken)
         {
             _httpContextAccessor.HttpContext.Response.Headers.Add(TransactionIsolationLevel, _transaction.IsolationLevel.ToString());
             _httpContextAccessor.HttpContext.Response.Headers.Add(TransactionState, "committed");
             _transaction?.Commit();
+            return Task.CompletedTask;
         }
 
-        public void RollbackTransaction()
+        public Task RollbackTransactionAsync(CancellationToken cancellationToken)
         {
             _httpContextAccessor.HttpContext.Response.Headers.Add(TransactionIsolationLevel, _transaction.IsolationLevel.ToString());
             _httpContextAccessor.HttpContext.Response.Headers.Add(TransactionState, "rolled-back");
             _transaction?.Dispose();
+            return Task.CompletedTask;
         }
 
 
-        private class TransactionWrapper : IDisposable
+        class TransactionWrapper : IDisposable
         {
+            static readonly ILogger _log = Serilog.Log.ForContext<TransactionWrapper>();
             public IsolationLevel IsolationLevel { get; }
-
-            private static readonly ILogger _log = Serilog.Log.ForContext<TransactionWrapper>();
 
             public TransactionWrapper(IsolationLevel isolationLevel)
             {
@@ -67,12 +75,6 @@ namespace SharpArch.WebApi.Stubs
             {
                 _log.Information("Rolled back {isolationLevel}", IsolationLevel);
             }
-        }
-
-
-        public void Dispose()
-        {
-            _transaction?.Dispose();
         }
     }
 }

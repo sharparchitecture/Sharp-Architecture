@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Serilog;
-
-namespace SharpArch.WebApi.Controllers
+﻿namespace SharpArch.WebApi.Sample.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Serilog;
+
+
     [Route("api/[controller]")]
     [ApiController]
     public class GlobalController : ControllerBase

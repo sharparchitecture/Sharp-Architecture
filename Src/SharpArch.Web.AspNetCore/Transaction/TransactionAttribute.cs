@@ -1,11 +1,12 @@
-using System;
-using System.Data;
-using JetBrains.Annotations;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-
-namespace SharpArch.AspNetCore.Transaction
+namespace SharpArch.Web.AspNetCore.Transaction
 {
+    using System;
+    using System.Data;
+    using JetBrains.Annotations;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Filters;
+
+
     //todo: rewrite
     /// <summary>
     ///     An attribute that used to indicate that action must be wrapped in transaction.

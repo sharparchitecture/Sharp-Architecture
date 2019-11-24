@@ -1,10 +1,11 @@
-﻿using System.Data;
-using Microsoft.AspNetCore.Mvc;
-using Serilog;
-using SharpArch.AspNetCore.Transaction;
-
-namespace SharpArch.WebApi.Controllers
+﻿namespace SharpArch.WebApi.Sample.Controllers
 {
+    using System.Data;
+    using Microsoft.AspNetCore.Mvc;
+    using Serilog;
+    using Web.AspNetCore.Transaction;
+
+
     [Route("api/[controller]")]
     [ApiController]
     [Transaction(IsolationLevel.ReadCommitted)]
