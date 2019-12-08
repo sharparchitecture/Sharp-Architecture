@@ -1,6 +1,8 @@
 ﻿namespace SharpArch.WebApi.Sample.Controllers
 {
+    using System;
     using System.Data;
+    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Serilog;
     using Web.AspNetCore.Transaction;
@@ -38,6 +40,13 @@
         {
             Log.Information("controller-level");
             return "ok";
+        }
+
+        [HttpGet("throw")]
+        public async Task<ActionResult> Throw()
+        {
+            await Task.Delay(5).ConfigureAwait(false);
+            throw new InvalidOperationException("throw");
         }
     }
 }

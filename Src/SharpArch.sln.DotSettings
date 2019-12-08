@@ -5,4 +5,5 @@
 	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/DoNotShowVsBulb/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/ReadSettingsFromFileLevel/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/SuppressVsSquiggles/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeStyle/Naming/CSharpNaming/ApplyAutoDetectedRules/@EntryValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/ExcludedFiles/FilesAndFoldersToSkip/=1F1FEDCB_002D8D3B_002D4157_002DA74D_002DD365BCF2CD07_002Ff_003Acake_002Econfig_002Fl_003A_002E_002E_003Fcake_002Econfig/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

@@ -15,7 +15,7 @@
     ///     <see cref="ITransactionManager" /> must be registered in IoC in order for this to work.
     /// </remarks>
     [PublicAPI]
-    public class UnitOfWorkHandler : ApplyTransactionFilterBase, IAsyncActionFilter
+    public class AutoTransactionHandler : ApplyTransactionFilterBase, IAsyncActionFilter
     {
         /// <inheritdoc />
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -33,16 +33,19 @@
 
             if (transaction != null)
             {
-                if (executedContext.Exception != null || transactionAttribute.RollbackOnModelValidationError && context.ModelState.IsValid == false)
+                using (transaction)
                 {
-                    // don't use cancellation token to ensure transaction is rolled back on error
-                    await transactionManager.RollbackTransactionAsync().ConfigureAwait(false);
+                    if (executedContext.Exception != null ||
+                        transactionAttribute.RollbackOnModelValidationError && context.ModelState.IsValid == false)
+                    {
+                        // don't use cancellation token to ensure transaction is rolled back on error
+                        await transactionManager.RollbackTransactionAsync().ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await transactionManager.CommitTransactionAsync(context.HttpContext.RequestAborted).ConfigureAwait(false);
+                    }
                 }
-                else
-                {
-                    await transactionManager.CommitTransactionAsync(context.HttpContext.RequestAborted).ConfigureAwait(false);
-                }
-                transaction.Dispose();
             }
         }
     }

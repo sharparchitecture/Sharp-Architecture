@@ -28,7 +28,7 @@
             // Add framework services.
             services.AddMvcCore(options =>
                 {
-                    options.Filters.Add(new UnitOfWorkHandler());
+                    options.Filters.Add(new AutoTransactionHandler());
                     options.Filters.Add(new TransactionAttribute(isolationLevel: IsolationLevel.Chaos));
                 })
                 .AddDataAnnotations()

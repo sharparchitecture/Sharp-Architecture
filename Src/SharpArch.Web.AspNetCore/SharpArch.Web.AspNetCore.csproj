@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SharpArch.Domain\SharpArch.Domain.csproj" />
+    <ProjectReference Include="..\SharpArch.Infrastructure\SharpArch.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
