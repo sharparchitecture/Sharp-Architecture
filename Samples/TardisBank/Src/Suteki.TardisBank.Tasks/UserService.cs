@@ -2,29 +2,19 @@ namespace Suteki.TardisBank.Tasks
 {
     using System;
     using System.Linq;
-
+    using System.Threading;
+    using System.Threading.Tasks;
     using SharpArch.Domain.PersistenceSupport;
 
     using Domain;
+    using NHibernate.Linq;
 
-    public interface IUserService
-    {
-        User CurrentUser { get; }
-        User GetUser(int userId);
-        User GetUserByUserName(string userName);
-        User GetUserByActivationKey(string activationKey);
-        void SaveUser(User user);
-        void DeleteUser(int userId);
-        
-        bool AreNullOrNotRelated(Parent parent, Child child);
-        bool IsNotChildOfCurrentUser(Child child);
-    }
 
     public class UserService : IUserService
     {
         readonly IHttpContextService _context;
 
-        private readonly ILinqRepository<Parent> _parentRepository;
+        readonly ILinqRepository<Parent> _parentRepository;
 
         readonly ILinqRepository<User> _userRepository;
 
@@ -35,49 +25,46 @@ namespace Suteki.TardisBank.Tasks
             _userRepository = userRepository;
         }
 
-        public User CurrentUser
+        public Task<User> GetCurrentUser(CancellationToken cancellationToken)
         {
-            get 
-            {
-                if (!_context.UserIsAuthenticated) return null;
+            if (!_context.UserIsAuthenticated) return Task.FromResult<User>(null);
 
-                return GetUserByUserName(_context.UserName);
-            }
+            return GetUserByUserName(_context.UserName, cancellationToken);
         }
 
-        public User GetUser(int userId)
+        public Task<User> GetUser(int userId, CancellationToken cancellationToken)
         {
-            return _userRepository.FindOne(userId);
+            return _userRepository.FindOneAsync(userId, cancellationToken);
         }
 
-        public User GetUserByUserName(string userName)
+        public Task<User> GetUserByUserName(string userName, CancellationToken cancellationToken)
         {
             if (userName == null)
             {
                 throw new ArgumentNullException(nameof(userName));
             }
 
-            return _userRepository.FindAll().FirstOrDefault(u => u.UserName == userName);
+            return _userRepository.FindAll().Where(u => u.UserName == userName).FirstOrDefaultAsync(cancellationToken);
         }
 
-        public User GetUserByActivationKey(string activationKey)
+        public async Task<User> GetUserByActivationKey(string activationKey, CancellationToken cancellationToken)
         {
             if (activationKey == null)
             {
                 throw new ArgumentNullException(nameof(activationKey));
             }
 
-            return _parentRepository.FindAll().SingleOrDefault(x => x.ActivationKey == activationKey);            
+            var res = await _parentRepository.FindAll().Where(x => x.ActivationKey == activationKey).SingleOrDefaultAsync(cancellationToken)
+                .ConfigureAwait(false);
+            return res;
         }
 
-        public void SaveUser(User user)
+        public Task SaveUser(User user, CancellationToken cancellationToken)
         {
             if (user == null)
-            {
                 throw new ArgumentNullException(nameof(user));
-            }
-            
-            _userRepository.Save(user);
+
+            return _userRepository.SaveAsync(user, cancellationToken);
         }
 
         public bool AreNullOrNotRelated(Parent parent, Child child)
@@ -92,15 +79,15 @@ namespace Suteki.TardisBank.Tasks
             return false;
         }
 
-        public bool IsNotChildOfCurrentUser(Child child)
+        public async Task<bool> IsNotChildOfCurrentUser(Child child, CancellationToken cancellationToken)
         {
-            var parent = CurrentUser as Parent;
+            var parent = (await GetCurrentUser(cancellationToken).ConfigureAwait(false)) as Parent;
             return (child == null) || (parent == null) || (!parent.HasChild(child));
         }
 
-        public void DeleteUser(int userId)
+        public Task DeleteUser(int userId, CancellationToken cancellationToken)
         {
-            _userRepository.Delete(userId);
+            return _userRepository.DeleteAsync(userId, cancellationToken);
         }
     }
 }
