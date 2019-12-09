@@ -53,6 +53,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Infrastructure", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.Xunit", "SharpArch.Testing.Xunit\SharpArch.Testing.Xunit.csproj", "{AC2D2B51-4919-42E0-857C-9A88040EFBA7}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.RavenDb", "SharpArch.RavenDb\SharpArch.RavenDb.csproj", "{17A1F67B-1F41-47EA-A7EE-9D3C678B0864}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,10 @@ Global
 		{AC2D2B51-4919-42E0-857C-9A88040EFBA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC2D2B51-4919-42E0-857C-9A88040EFBA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC2D2B51-4919-42E0-857C-9A88040EFBA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17A1F67B-1F41-47EA-A7EE-9D3C678B0864}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17A1F67B-1F41-47EA-A7EE-9D3C678B0864}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17A1F67B-1F41-47EA-A7EE-9D3C678B0864}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17A1F67B-1F41-47EA-A7EE-9D3C678B0864}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,6 +137,7 @@ Global
 		{5F00E8C7-9473-48EE-806A-2AB2E6898292} = {B67ED282-68EA-46AD-996E-3C687DB9A7FB}
 		{6E6D8E13-510C-4042-B6EC-1C8DE70CEA72} = {B33554BD-5B88-4BB2-96E0-9FD2F47FBA07}
 		{AC2D2B51-4919-42E0-857C-9A88040EFBA7} = {B33554BD-5B88-4BB2-96E0-9FD2F47FBA07}
+		{17A1F67B-1F41-47EA-A7EE-9D3C678B0864} = {B33554BD-5B88-4BB2-96E0-9FD2F47FBA07}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {66570DE6-E62E-4899-9B61-57AF560D7F3B}

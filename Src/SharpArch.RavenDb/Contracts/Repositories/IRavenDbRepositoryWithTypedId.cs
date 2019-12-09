@@ -2,6 +2,7 @@ namespace SharpArch.RavenDb.Contracts.Repositories
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
     using Domain.PersistenceSupport;
@@ -15,7 +16,6 @@ namespace SharpArch.RavenDb.Contracts.Repositories
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TIdT">The type of the identifier t.</typeparam>
     /// <seealso cref="SharpArch.Domain.PersistenceSupport.IAsyncRepositoryWithTypedId{T, TIdT}" />
-    /// Todo: Consider replacing lambda with expression tree.
     [PublicAPI]
     public interface IRavenDbRepositoryWithTypedId<T, in TIdT> : IAsyncRepositoryWithTypedId<T, TIdT>
         where T : class
@@ -31,7 +31,7 @@ namespace SharpArch.RavenDb.Contracts.Repositories
         /// <param name="where">The criteria.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Documents</returns>
-        Task<IEnumerable<T>> FindAllAsync(Func<T, bool> where, CancellationToken cancellationToken = default);
+        Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> where, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Finds single document satisfying given criteria.
@@ -40,7 +40,7 @@ namespace SharpArch.RavenDb.Contracts.Repositories
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The document</returns>
         /// <exception cref="InvalidOperationException">If more than one document found.</exception>
-        Task<T> FindOneAsync(Func<T, bool> where, CancellationToken cancellationToken = default);
+        Task<T> FindOneAsync(Expression<Func<T, bool>> where, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Finds the first document satisfying given criteria.
@@ -49,7 +49,7 @@ namespace SharpArch.RavenDb.Contracts.Repositories
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The document.</returns>
         /// <exception cref="InvalidOperationException">If no documents found.</exception>
-        Task<T> FirstAsync(Func<T, bool> where, CancellationToken cancellationToken = default);
+        Task<T> FirstAsync(Expression<Func<T, bool>> where, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Loads all documents with given IDs.

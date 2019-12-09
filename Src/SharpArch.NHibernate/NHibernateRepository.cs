@@ -1,7 +1,6 @@
 ﻿namespace SharpArch.NHibernate
 {
     using JetBrains.Annotations;
-    using SharpArch.NHibernate.Contracts.Repositories;
 
 
     /// <summary>

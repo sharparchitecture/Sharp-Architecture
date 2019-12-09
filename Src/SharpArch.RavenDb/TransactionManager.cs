@@ -41,7 +41,7 @@ namespace SharpArch.RavenDb
         /// <remarks>
         ///     TransactionManager will single TransactionScope, subsequent call to <see cref="BeginTransaction" /> will return
         ///     same scope
-        ///     until <see cref="CommitTransaction" /> or <see cref="RollbackTransaction" /> is called.
+        ///     until <see cref="CommitTransactionAsync" /> or <see cref="RollbackTransactionAsync" /> is called.
         /// </remarks>
         /// <returns>The transaction instance.</returns>
         public IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)

@@ -24,7 +24,6 @@
         }
 
         /// <inheritdoc />
-        [NotNull]
         public ISession Session { get; }
 
         /// <inheritdoc />
