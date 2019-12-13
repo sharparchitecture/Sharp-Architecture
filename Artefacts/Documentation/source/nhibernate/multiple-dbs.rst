@@ -1,12 +1,48 @@
 Multiple Databases
 ==================
 
-Version 4
+Version 6
 -----------
+
+Design
+~~~~~~
+
+Main components:
+1. SessionFactory - responsible for configuration and instantiaction of the session (database connection).
+   Singleton.
+2. Session storage - responsible for keeping track of existing sessions, can request new session from the factory.
+
+.. code-clock C#
+  interface ISharpArchSessionFactory<TSession>
+  {
+    // Create new session.
+    TSession CreateSession(string key);
+  }
+
+  class NHibernateSessionFactory : ISharpArchSessionFactory<NHibernate.ISession>
+  {
+    void AddConfiguration(string key, NHibernateSessionFactoryBuilder sessionFactoryBuilder) {}
+    ISession CreateSession(string key) {}
+  }
+
+  interface ISharpArchSessionStore<TSession>
+  {
+    TSession GetOrCreateFor<TEntity>();
+    TSession GetOrCreate(string key);
+    IEnumerable<TSession> GetAllExisting();
+    TSession GetExisting(string key);
+    TSession GetExistingFor<TEntity>();
+  }
+
+
+  class NHibernate
+
+Version 4
+---------
 
 .. note::
 
-  Due to refactoring of NHibernate session management S#arch v4.0 does not support multiple databases. 
+  Due to refactoring of NHibernate session management S#arch v4.0 does not support multiple databases.
 
 
 This feature will be added in 4.1.
@@ -32,8 +68,8 @@ E.g.,
 
 .. code-block: C#
 
-    NHibernateSession.AddConfiguration(Northwind.Infrastructure.DataGlobals.OTHER_DB_FACTORY_KEY, 
-      new string[] { Server.MapPath("~/bin/Northwind.Data.dll") }, 
+    NHibernateSession.AddConfiguration(Northwind.Infrastructure.DataGlobals.OTHER_DB_FACTORY_KEY,
+      new string[] { Server.MapPath("~/bin/Northwind.Data.dll") },
       new AutoPersistenceModelGenerator().Generate(),
       Server.MapPath("~/NHibernateForOtherDb.config"), null, null, null);
 
@@ -78,7 +114,7 @@ repository interface just defined; e.g.,
     namespace Northwind.Infrastructure
     {
         [SessionFactory(DataGlobals.OTHER_DB_FACTORY_KEY)]
-        public class VillageRepository : 
+        public class VillageRepository :
             Repository<Village>, IVillageRepository { }
     }
 
