@@ -1,6 +1,7 @@
 namespace Suteki.TardisBank.Tests.Model
 {
     using System;
+    using System.Threading.Tasks;
     using Domain;
     using FluentAssertions;
     using SharpArch.NHibernate;
@@ -36,34 +37,34 @@ namespace Suteki.TardisBank.Tests.Model
         }
 
         [Fact]
-        public void Should_be_able_to_add_schedule_to_account()
+        public async Task Should_be_able_to_add_schedule_to_account()
         {
-            var childToTestOn = _childRepository.Get(_childId);
+            var childToTestOn = await _childRepository.GetAsync(_childId);
             childToTestOn.Should().NotBeNull();
 
             childToTestOn.Account.AddPaymentSchedule(DateTime.UtcNow, Interval.Week, 10, "Weekly pocket money");
             FlushSessionAndEvict(childToTestOn);
 
-            var child = _childRepository.Get(_childId);
+            var child = await _childRepository.GetAsync(_childId);
             child.Should().NotBeNull();
             child.Account.PaymentSchedules[0].Id.Should().BePositive("schedule was not persisted");
         }
 
         [Fact]
-        public void Should_be_able_to_add_transaction_to_account()
+        public async Task Should_be_able_to_add_transaction_to_account()
         {
-            var childToTestOn = _childRepository.Get(_childId);
+            var childToTestOn = await _childRepository.GetAsync(_childId);
             childToTestOn.ReceivePayment(10, "Reward");
             FlushSessionAndEvict(childToTestOn);
 
-            var child = _childRepository.Get(_childId);
+            var child = await _childRepository.GetAsync(_childId);
             child.Account.Transactions[0].Id.Should().BePositive();
         }
 
         [Fact]
-        public void Should_be_able_to_create_and_retrieve_a_child()
+        public async Task Should_be_able_to_create_and_retrieve_a_child()
         {
-            var child = _childRepository.Get(_childId);
+            var child = await _childRepository.GetAsync(_childId);
             child.Name.Should().Be("Leo");
             child.UserName.Should().Be(@"leohadlow");
             child.ParentId.Should().Be(_parentId);

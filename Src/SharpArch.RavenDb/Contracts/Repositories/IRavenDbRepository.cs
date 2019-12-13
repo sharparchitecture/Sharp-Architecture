@@ -1,15 +1,14 @@
 namespace SharpArch.RavenDb.Contracts.Repositories
 {
     using JetBrains.Annotations;
-    using SharpArch.Domain.PersistenceSupport;
 
     /// <summary>
     /// RavenDB repository for documents with primary key of type <see cref="int"/>.
     /// </summary>
     /// <typeparam name="T">The document type.</typeparam>
-    /// <seealso cref="SharpArch.Domain.PersistenceSupport.IRepository{T}" />
+    /// <seealso cref="SharpArch.Domain.PersistenceSupport.IAsyncRepository{T}" />
     [PublicAPI]
-    public interface IRavenDbRepository<T> : IRavenDbRepositoryWithTypedId<T, int>, IRepository<T>
+    public interface IRavenDbRepository<T> : IRavenDbRepositoryWithTypedId<T, int>
         where T : class
     {
     }

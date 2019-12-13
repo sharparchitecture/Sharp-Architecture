@@ -1,10 +1,12 @@
-﻿using System;
-using System.Net.Http;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-
-namespace SharpArch.WebApi.Tests.Setup
+﻿namespace SharpArch.WebApi.Tests.Setup
 {
+    using System;
+    using System.Net.Http;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.TestHost;
+    using Sample;
+
+
     public class TestServerSetup : IDisposable
     {
         public HttpClient Client { get; }

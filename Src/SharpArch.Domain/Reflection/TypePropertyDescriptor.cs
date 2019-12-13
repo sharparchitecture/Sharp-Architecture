@@ -11,7 +11,7 @@ namespace SharpArch.Domain.Reflection
     [PublicAPI]
     public class TypePropertyDescriptor : IEquatable<TypePropertyDescriptor>
     {
-        private static readonly PropertyInfo[] emptyArray = new PropertyInfo[0];
+        private static readonly PropertyInfo[] emptyArray = Array.Empty<PropertyInfo>();
         private readonly Type ownerType;
 
         /// <summary>

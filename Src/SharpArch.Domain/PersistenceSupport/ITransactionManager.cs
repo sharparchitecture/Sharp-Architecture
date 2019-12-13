@@ -2,6 +2,8 @@
 {
     using System;
     using System.Data;
+    using System.Threading;
+    using System.Threading.Tasks;
     using JetBrains.Annotations;
 
 
@@ -13,7 +15,7 @@
     /// <remarks>
     ///     Note that outside of <see cref="T:IDbContext.CommitChanges" />, you shouldn't have to
     ///     invoke this object very often. If you're using on of the the <c>TransactionAttribute</c>
-    ///     atrributes provided by SharpArch on your controller actions, then the transaction
+    ///     attributes provided by SharpArch on your controller actions, then the transaction
     ///     opening/committing will be taken care of for you.
     /// </remarks>
     [PublicAPI]
@@ -29,11 +31,11 @@
         /// <summary>
         ///     Commits the transaction, saving all changes.
         /// </summary>
-        void CommitTransaction();
+        Task CommitTransactionAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Rolls the transaction back, discarding any changes.
         /// </summary>
-        void RollbackTransaction();
+        Task RollbackTransactionAsync(CancellationToken cancellationToken = default);
     }
 }

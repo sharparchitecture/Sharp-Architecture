@@ -1,16 +1,16 @@
-﻿using System;
-using System.IO;
-using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Serilog;
-using Serilog.Events;
-using Serilog.Exceptions;
-using Serilog.Formatting.Json;
-using Serilog.Sinks.SystemConsole.Themes;
-
-namespace SharpArch.WebApi
+﻿namespace SharpArch.WebApi.Sample
 {
+    using System;
+    using System.IO;
+    using Autofac.Extensions.DependencyInjection;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using Serilog;
+    using Serilog.Events;
+    using Serilog.Exceptions;
+    using Serilog.Formatting.Json;
+    using Serilog.Sinks.SystemConsole.Themes;
+
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Program
     {

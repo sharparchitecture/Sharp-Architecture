@@ -27,8 +27,9 @@ namespace SharpArch.Domain.Specifications
         public virtual IQueryable<T> SatisfyingElementsFrom(IQueryable<T> candidates)
         {
             if (candidates == null) throw new ArgumentNullException(nameof(candidates));
-            if (MatchingCriteria != null) {
-                return candidates.Where(MatchingCriteria).AsQueryable();
+            if (MatchingCriteria != null)
+            {
+                return candidates.Where(MatchingCriteria);
             }
 
             return candidates;

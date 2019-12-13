@@ -1,17 +1,18 @@
-﻿using System.Data;
-using System.Globalization;
-using Autofac;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using SharpArch.AspNetCore.Transaction;
-using SharpArch.WebApi.Stubs;
-
-namespace SharpArch.WebApi
+﻿namespace SharpArch.WebApi.Sample
 {
+    using System.Data;
+    using System.Globalization;
+    using Autofac;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Newtonsoft.Json;
+    using Stubs;
+    using Web.AspNetCore.Transaction;
+
+
     public class Startup
     {
         public IConfiguration Configuration { get; }
@@ -27,7 +28,7 @@ namespace SharpArch.WebApi
             // Add framework services.
             services.AddMvcCore(options =>
                 {
-                    options.Filters.Add(new UnitOfWorkHandler());
+                    options.Filters.Add(new AutoTransactionHandler());
                     options.Filters.Add(new TransactionAttribute(isolationLevel: IsolationLevel.Chaos));
                 })
                 .AddDataAnnotations()

@@ -23,7 +23,6 @@ namespace SharpArch.Domain.Specifications
         /// <summary>
         ///     Gets the matching criteria.
         /// </summary>
-        [CanBeNull]
         public override Expression<Func<T, bool>> MatchingCriteria { get; }
     }
 }

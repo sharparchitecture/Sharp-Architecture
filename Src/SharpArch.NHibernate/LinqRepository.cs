@@ -1,7 +1,7 @@
 ﻿namespace SharpArch.NHibernate
 {
+    using Domain.PersistenceSupport;
     using JetBrains.Annotations;
-    using SharpArch.Domain.PersistenceSupport;
 
 
     /// <summary>
@@ -18,7 +18,9 @@
         ///     Initializes a new instance of the <see cref="LinqRepository{T}" /> class.
         /// </summary>
         /// <param name="transactionManager">The transaction manager.</param>
-        public LinqRepository(INHibernateTransactionManager transactionManager) : base(transactionManager)
-        { }
+        public LinqRepository(INHibernateTransactionManager transactionManager)
+            : base(transactionManager)
+        {
+        }
     }
 }

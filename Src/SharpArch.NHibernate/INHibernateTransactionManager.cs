@@ -1,13 +1,15 @@
 ﻿namespace SharpArch.NHibernate
 {
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Domain.PersistenceSupport;
     using global::NHibernate;
-    using SharpArch.Domain.PersistenceSupport;
 
 
     /// <summary>
     ///     NHibernate transaction support.
     /// </summary>
-    public interface INHibernateTransactionManager : ITransactionManager, IAsyncTransactionManager
+    public interface INHibernateTransactionManager : ITransactionManager
     {
         /// <summary>
         ///     Returns NHibernate session.
@@ -17,6 +19,6 @@
         /// <summary>
         ///     Flushes everything that has been changed since the last commit.
         /// </summary>
-        void FlushChanges();
+        Task FlushChangesAsync(CancellationToken cancellationToken = default);
     }
 }

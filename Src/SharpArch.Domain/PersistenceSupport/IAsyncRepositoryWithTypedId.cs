@@ -69,7 +69,7 @@
         Task<T> SaveOrUpdateAsync([NotNull] T entity, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        ///     Dissasociates the entity with the ORM so that changes made to it are not automatically
+        ///     Disassociates the entity with the ORM so that changes made to it are not automatically
         ///     saved to the database.
         /// </summary>
         /// <remarks>
