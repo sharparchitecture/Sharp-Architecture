@@ -66,6 +66,11 @@ json:
 	@echo
 	@echo "Build finished; now you can process the JSON files."
 
+markdown:
+	$(SPHINXBUILD) -b markdown $(ALLSPHINXOPTS) $(BUILDDIR)/markdown
+	@echo
+	@echo "Build finished; now you can process the JSON files."
+
 htmlhelp:
 	$(SPHINXBUILD) -b htmlhelp $(ALLSPHINXOPTS) $(BUILDDIR)/htmlhelp
 	@echo
