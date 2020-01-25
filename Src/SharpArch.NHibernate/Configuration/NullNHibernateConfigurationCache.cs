@@ -1,9 +1,7 @@
-﻿namespace SharpArch.NHibernate
+﻿using System;
+
+namespace SharpArch.NHibernate.Configuration
 {
-    using System;
-    using global::NHibernate.Cfg;
-
-
     /// <summary>
     ///     Null Object for configuration cache.
     /// </summary>
@@ -19,13 +17,13 @@
         }
 
         /// <inheritdoc />
-        public Configuration TryLoad(DateTime localConfigurationTimestampUtc)
+        public global::NHibernate.Cfg.Configuration TryLoad(DateTime localConfigurationTimestampUtc)
         {
             return null;
         }
 
         /// <inheritdoc />
-        public void Save(Configuration configuration, DateTime timestampUtc)
+        public void Save(global::NHibernate.Cfg.Configuration configuration, DateTime timestampUtc)
         {
         }
     }

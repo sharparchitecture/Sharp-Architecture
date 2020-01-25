@@ -1,4 +1,6 @@
-﻿namespace Tests.SharpArch.NHibernate
+﻿using SharpArch.NHibernate.Impl;
+
+namespace Tests.SharpArch.NHibernate
 {
     using System.Threading.Tasks;
     using Domain;

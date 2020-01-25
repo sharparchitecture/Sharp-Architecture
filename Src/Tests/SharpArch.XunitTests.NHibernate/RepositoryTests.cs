@@ -1,3 +1,5 @@
+using SharpArch.NHibernate.Impl;
+
 namespace Tests.SharpArch.NHibernate
 {
     using FluentAssertions;

@@ -1,20 +1,19 @@
-namespace SharpArch.NHibernate
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
+using NHibernate.Linq;
+using SharpArch.Domain.PersistenceSupport;
+using SharpArch.Domain.Specifications;
+
+namespace SharpArch.NHibernate.Impl
 {
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Domain.PersistenceSupport;
-    using Domain.Specifications;
-    using global::NHibernate.Linq;
-    using JetBrains.Annotations;
-
-
     /// <summary>
     ///     LINQ extensions to NHibernate repository.
     /// </summary>
     /// <typeparam name="T">Entity type.</typeparam>
     /// <typeparam name="TId">The type of the identifier.</typeparam>
-    /// <seealso cref="SharpArch.NHibernate.NHibernateRepositoryWithTypedId{T, TId}" />
+    /// <seealso cref="NHibernateRepositoryWithTypedId{T,TId}" />
     /// <seealso cref="SharpArch.Domain.PersistenceSupport.ILinqRepositoryWithTypedId{T, TId}" />
     [PublicAPI]
     public class LinqRepositoryWithTypedId<T, TId> : NHibernateRepositoryWithTypedId<T, TId>, ILinqRepositoryWithTypedId<T, TId>

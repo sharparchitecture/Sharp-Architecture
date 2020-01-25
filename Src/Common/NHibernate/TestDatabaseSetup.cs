@@ -1,4 +1,6 @@
-﻿namespace SharpArch.Testing.NHibernate
+﻿using SharpArch.NHibernate.Configuration;
+
+namespace SharpArch.Testing.NHibernate
 {
     using System;
     using System.Diagnostics;

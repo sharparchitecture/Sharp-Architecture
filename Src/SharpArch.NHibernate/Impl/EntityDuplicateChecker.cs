@@ -1,15 +1,14 @@
-﻿namespace SharpArch.NHibernate
-{
-    using System;
-    using System.Linq;
-    using System.Reflection;
-    using global::NHibernate;
-    using global::NHibernate.Criterion;
-    using global::NHibernate.Util;
-    using JetBrains.Annotations;
-    using SharpArch.Domain.DomainModel;
-    using SharpArch.Domain.PersistenceSupport;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using JetBrains.Annotations;
+using NHibernate;
+using NHibernate.Criterion;
+using SharpArch.Domain.DomainModel;
+using SharpArch.Domain.PersistenceSupport;
 
+namespace SharpArch.NHibernate.Impl
+{
     /// <summary>
     ///     Checks if entity with the same domain signature already exists in the database.
     /// </summary>

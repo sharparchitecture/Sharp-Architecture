@@ -1,10 +1,9 @@
-﻿namespace SharpArch.NHibernate
+﻿using System;
+using System.IO;
+using JetBrains.Annotations;
+
+namespace SharpArch.NHibernate.Configuration
 {
-    using System;
-    using System.IO;
-    using JetBrains.Annotations;
-
-
     /// <summary>
     ///     File-based NHibernate configuration cache.
     /// </summary>

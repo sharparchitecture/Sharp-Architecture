@@ -1,9 +1,8 @@
-﻿namespace SharpArch.NHibernate
+﻿using JetBrains.Annotations;
+using SharpArch.Domain.PersistenceSupport;
+
+namespace SharpArch.NHibernate.Impl
 {
-    using Domain.PersistenceSupport;
-    using JetBrains.Annotations;
-
-
     /// <summary>
     ///     LINQ extensions to NHibernate repository.
     /// </summary>

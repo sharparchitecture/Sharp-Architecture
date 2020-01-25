@@ -1,4 +1,6 @@
-﻿namespace SharpArch.Testing.NUnit.NHibernate
+﻿using SharpArch.NHibernate.Impl;
+
+namespace SharpArch.Testing.NUnit.NHibernate
 {
     using System;
     using global::NHibernate;

@@ -1,16 +1,15 @@
-﻿namespace SharpArch.NHibernate
+﻿using System;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using FluentNHibernate.Infrastructure;
+using JetBrains.Annotations;
+using NHibernate.Cfg;
+using NHibernate.UserTypes;
+using SharpArch.Infrastructure.Logging;
+
+namespace SharpArch.NHibernate.Configuration
 {
-    using System;
-    using System.IO;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
-    using global::FluentNHibernate.Infrastructure;
-    using global::NHibernate.Cfg;
-    using global::NHibernate.UserTypes;
-    using Infrastructure.Logging;
-    using JetBrains.Annotations;
-
-
     /// <summary>
     ///     File cache implementation of INHibernateConfigurationCache.  Saves and loads a
     ///     serialized version of <see cref="Configuration" /> to a temporary file location.
@@ -33,7 +32,7 @@
         }
 
         /// <inheritdoc />
-        public Configuration TryLoad(DateTime localConfigurationTimestampUtc)
+        public global::NHibernate.Cfg.Configuration TryLoad(DateTime localConfigurationTimestampUtc)
         {
             try
             {
@@ -46,7 +45,7 @@
                         using (var ms = new MemoryStream(cachedConfig, false))
                         {
                             Log.InfoFormat("Using cached configuration for {session}", _sessionName);
-                            return (Configuration) CreateSerializer().Deserialize(ms);
+                            return (global::NHibernate.Cfg.Configuration) CreateSerializer().Deserialize(ms);
                         }
                     }
                 }
@@ -64,7 +63,7 @@
         }
 
         /// <inheritdoc />
-        public void Save(Configuration configuration, DateTime timestampUtc)
+        public void Save(global::NHibernate.Cfg.Configuration configuration, DateTime timestampUtc)
         {
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
             if (timestampUtc == DateTime.MinValue) throw new ArgumentException("Invalid date", nameof(timestampUtc));

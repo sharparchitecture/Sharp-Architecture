@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <RootNamespace>Tests</RootNamespace>
-    <NoWarn>$(NoWarn);1701;1702;EPS06</NoWarn>
+    <NoWarn>$(NoWarn);EPS06</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,4 +1,6 @@
-﻿namespace Tests.SharpArch.NHibernate
+﻿using SharpArch.NHibernate.Configuration;
+
+namespace Tests.SharpArch.NHibernate
 {
     using System.Collections.Generic;
     using System.Reflection;

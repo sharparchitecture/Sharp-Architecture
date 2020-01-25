@@ -1,38 +1,32 @@
-﻿namespace SharpArch.NHibernate
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Reflection;
+using FluentNHibernate.Automapping;
+using FluentNHibernate.Cfg;
+using FluentNHibernate.Cfg.Db;
+using JetBrains.Annotations;
+using NHibernate;
+using SharpArch.Infrastructure.Caching;
+using SharpArch.NHibernate.NHibernateValidator;
+
+namespace SharpArch.NHibernate.Configuration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.IO;
-    using System.Reflection;
-    using global::FluentNHibernate.Automapping;
-    using global::FluentNHibernate.Cfg;
-    using global::FluentNHibernate.Cfg.Db;
-    using global::NHibernate;
-    using global::NHibernate.Cfg;
-    using Infrastructure.Caching;
-    using JetBrains.Annotations;
-    using NHibernateValidator;
-
-
     /// <summary>
     ///     Creates NHibernate SessionFactory <see cref="ISessionFactory" />
     /// </summary>
     /// <remarks>
     ///     Transient object, session factory must be registered as singleton in DI Container.
     /// </remarks>
+    /// <threadsafety static="false" instance="false" />
     [PublicAPI]
-    public class NHibernateSessionFactoryBuilder
+    public class NHibernateSessionFactoryBuilder : INHibernateSessionFactoryBuilder
     {
         /// <summary>
         ///     Default configuration file name.
         /// </summary>
         public const string DefaultNHibernateConfigFileName = @"hibernate.cfg.xml";
-
-        /// <summary>
-        ///     Default NHibernate session factory key.
-        /// </summary>
-        public static readonly string DefaultConfigurationName = "nhibernate.current_session";
 
         readonly List<Assembly> _mappingAssemblies;
         List<string> _additionalDependencies;
@@ -40,10 +34,12 @@
         AutoPersistenceModel _autoPersistenceModel;
         string _configFile;
 
-        INHibernateConfigurationCache _configurationCache;
-        Action<Configuration> _exposeConfiguration;
+        [NotNull] INHibernateConfigurationCache _configurationCache;
+        Action<global::NHibernate.Cfg.Configuration> _exposeConfiguration;
         IPersistenceConfigurer _persistenceConfigurer;
         IDictionary<string, string> _properties;
+        global::NHibernate.Cfg.Configuration _cachedConfiguration;
+
         bool _useDataAnnotationValidators;
         Action<CacheSettingsBuilder> _cacheSettingsBuilder;
 
@@ -61,6 +57,7 @@
         ///     Creates the session factory.
         /// </summary>
         /// <returns> NHibernate session factory <see cref="ISessionFactory" />.</returns>
+        /// <exception cref="T:System.InvalidOperationException">No dependencies were specified</exception>
         [NotNull]
         public ISessionFactory BuildSessionFactory()
         {
@@ -85,31 +82,43 @@
         ///         To make persistent changes use <seealso cref="ExposeConfiguration" />.
         ///     </para>
         /// </remarks>
-        /// <exception cref="InvalidOperationException">No dependencies were specified</exception>
+        /// <exception cref="InvalidOperationException">No dependencies were specified for configuration cache using
+        /// <see cref="AddMappingAssemblies"/>, <see cref="UseConfigFile(string)"/> or <see cref="WithFileDependency(string)"/>.
+        /// </exception>
         [NotNull]
-        public Configuration BuildConfiguration(string basePath = null)
+        public global::NHibernate.Cfg.Configuration BuildConfiguration(string basePath = null)
         {
-            var dependencyList = basePath == null
-                ? DependencyList.WithBasePathOfAssembly(Assembly.GetExecutingAssembly())
-                : DependencyList.WithPathPrefix(basePath);
-            dependencyList
-                .AddAssemblies(_mappingAssemblies);
+            if (_cachedConfiguration != null) return _cachedConfiguration;
 
-            if (!string.IsNullOrEmpty(_configFile)) dependencyList.AddFile(_configFile);
-            dependencyList.AddFiles(_additionalDependencies);
+            global::NHibernate.Cfg.Configuration configuration = null;
+            DateTime? timestamp = null;
+            if (_configurationCache != NullNHibernateConfigurationCache.Null)
+            {
+                var dependencyList = basePath == null
+                    ? DependencyList.WithBasePathOfAssembly(Assembly.GetExecutingAssembly())
+                    : DependencyList.WithPathPrefix(basePath);
+                dependencyList
+                    .AddAssemblies(_mappingAssemblies);
 
-            var timestamp = dependencyList.GetLastModificationTime();
-            if (timestamp == null) throw new InvalidOperationException("No dependencies were specified");
+                if (!string.IsNullOrEmpty(_configFile)) dependencyList.AddFile(_configFile);
+                dependencyList.AddFiles(_additionalDependencies);
 
-            var configuration = _configurationCache.TryLoad(timestamp.Value);
+                timestamp = dependencyList.GetLastModificationTime();
+                if (timestamp == null) throw new InvalidOperationException($"No dependencies for configuration cache were specified. "+
+                    $"Use {nameof(AddMappingAssemblies)}(), {nameof(UseConfigFile)}() or {nameof(WithFileDependency)}() to specify dependencies.");
+
+                configuration = _configurationCache.TryLoad(timestamp.Value);
+            }
 
             if (configuration == null)
             {
                 configuration = LoadExternalConfiguration();
                 configuration = ApplyCustomSettings(configuration);
-                _configurationCache.Save(configuration, timestamp.Value);
+                if (_configurationCache != NullNHibernateConfigurationCache.Null && timestamp.HasValue)
+                    _configurationCache.Save(configuration, timestamp.Value);
             }
 
+            _cachedConfiguration = configuration;
             return configuration;
         }
 
@@ -121,7 +130,7 @@
         ///     In case changes must not be persisted in cache, they must be applied after <seealso cref="BuildConfiguration" />.
         /// </remarks>
         [NotNull]
-        public NHibernateSessionFactoryBuilder ExposeConfiguration([NotNull] Action<Configuration> config)
+        public NHibernateSessionFactoryBuilder ExposeConfiguration([NotNull] Action<global::NHibernate.Cfg.Configuration> config)
         {
             _exposeConfiguration = config ?? throw new ArgumentNullException(nameof(config));
             return this;
@@ -282,7 +291,7 @@
             return this;
         }
 
-        Configuration ApplyCustomSettings(Configuration cfg)
+        global::NHibernate.Cfg.Configuration ApplyCustomSettings(global::NHibernate.Cfg.Configuration cfg)
         {
             var fluentConfig = Fluently.Configure(cfg);
             if (_persistenceConfigurer != null)
@@ -317,7 +326,7 @@
             return fluentConfig.BuildConfiguration();
         }
 
-        void AddValidatorsAndExposeConfiguration(Configuration e)
+        void AddValidatorsAndExposeConfiguration(global::NHibernate.Cfg.Configuration e)
         {
             if (_useDataAnnotationValidators)
             {
@@ -336,15 +345,16 @@
         ///     Loads configuration from properties dictionary and from external file if available.
         /// </summary>
         /// <returns></returns>
-        Configuration LoadExternalConfiguration()
+        global::NHibernate.Cfg.Configuration LoadExternalConfiguration()
         {
-            var cfg = new Configuration();
+            var cfg = new global::NHibernate.Cfg.Configuration();
             if (_properties != null && _properties.Count > 0)
             {
                 cfg.AddProperties(_properties);
             }
 
-            if (!string.IsNullOrEmpty(_configFile) && !string.Equals(_configFile, DefaultConfigurationName, StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrEmpty(_configFile)
+                && !string.Equals(_configFile, DefaultNHibernateConfigFileName, StringComparison.OrdinalIgnoreCase))
             {
                 return cfg.Configure(_configFile);
             }

@@ -1,8 +1,7 @@
-﻿namespace SharpArch.NHibernate
+﻿using JetBrains.Annotations;
+
+namespace SharpArch.NHibernate.Impl
 {
-    using JetBrains.Annotations;
-
-
     /// <summary>
     ///     Since nearly all of the domain objects you create will have a type of int Id, this
     ///     most frequently used base NHibernateRepository leverages this assumption.  If you want

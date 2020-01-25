@@ -1,9 +1,9 @@
-namespace SharpArch.NHibernate
-{
-    using System;
-    using global::NHibernate;
-    using JetBrains.Annotations;
+using System;
+using JetBrains.Annotations;
+using NHibernate;
 
+namespace SharpArch.NHibernate.Impl
+{
     /// <summary>
     /// Base class for NHibernate query objects.
     /// </summary>
@@ -17,9 +17,7 @@ namespace SharpArch.NHibernate
         /// <exception cref="System.ArgumentNullException"><paramref name="session"/> is <c>null</c>.</exception>
         protected NHibernateQuery([NotNull] ISession session)
         {
-            if (session == null) throw new ArgumentNullException(nameof(session));
-
-            this.Session = session;
+            Session = session ?? throw new ArgumentNullException(nameof(session));
         }
 
         /// <summary>

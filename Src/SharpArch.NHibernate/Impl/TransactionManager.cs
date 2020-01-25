@@ -1,14 +1,14 @@
-﻿namespace SharpArch.NHibernate
-{
-    using System;
-    using System.Data;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
     using Domain.PersistenceSupport;
     using global::NHibernate;
-    using JetBrains.Annotations;
+using JetBrains.Annotations;
+using NHibernate;
 
-
+namespace SharpArch.NHibernate.Impl
+{
     /// <summary>
     ///     Transaction manager for NHibernate.
     /// </summary>

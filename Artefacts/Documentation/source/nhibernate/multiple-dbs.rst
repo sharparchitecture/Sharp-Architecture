@@ -11,8 +11,11 @@ Main components:
 1. SessionFactory - responsible for configuration and instantiaction of the session (database connection).
    Singleton.
 2. Session storage - responsible for keeping track of existing sessions, can request new session from the factory.
+3. Database association is done at entity-level. Default strategy is attribute-based, but it can be customized
+   by implementing `IDatabaseIdentifierProvider`. This is done to prevent sharing same entity class between databases.
+   In case such sharing is required, it can be done using either mapping or common interface or base class.
 
-.. code-clock C#
+.. code-block: C#
   interface ISharpArchSessionFactory<TSession>
   {
     // Create new session.
@@ -35,7 +38,7 @@ Main components:
   }
 
 
-  class NHibernate
+
 
 Version 4
 ---------

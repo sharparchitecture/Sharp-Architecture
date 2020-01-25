@@ -2,6 +2,8 @@
 // ReSharper disable HeapView.ObjectAllocation
 // ReSharper disable HeapView.ObjectAllocation.Evident
 
+using SharpArch.NHibernate.Impl;
+
 namespace Tests.SharpArch.NHibernate
 {
     using FluentAssertions;

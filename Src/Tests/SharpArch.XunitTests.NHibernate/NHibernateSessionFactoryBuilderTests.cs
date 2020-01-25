@@ -1,4 +1,6 @@
-﻿namespace Tests.SharpArch.NHibernate
+﻿using SharpArch.NHibernate.Configuration;
+
+namespace Tests.SharpArch.NHibernate
 {
     using System;
     using System.IO;
@@ -82,6 +84,16 @@
             configuration.Should().NotBeNull();
 
             configuration.BuildSessionFactory();
+        }
+
+        [Fact]
+        public void Should_Reuse_BuiltConfigurationInstance()
+        {
+            var builder = new NHibernateSessionFactoryBuilder()
+                .UseConfigFile(GetConfigFullName());
+
+            var config = builder.BuildConfiguration();
+            builder.BuildConfiguration().Should().BeEquivalentTo(config);
         }
 
         [Fact]
