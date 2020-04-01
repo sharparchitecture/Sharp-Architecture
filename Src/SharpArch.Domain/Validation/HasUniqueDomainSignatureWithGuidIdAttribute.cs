@@ -12,16 +12,18 @@ namespace SharpArch.Domain.Validation
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            return DoValidate<Guid>(value, validationContext);
+            return DoValidate(value, validationContext);
         }
     }
 
+    [PublicAPI]
     [AttributeUsage(AttributeTargets.Class)]
+    [BaseTypeRequired(typeof(IEntityWithTypedId<long>))]
     public sealed class HasUniqueDomainSignatureWithBigIntIdAttribute : HasUniqueDomainSignatureAttributeBase
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            return DoValidate<long>(value, validationContext);
+            return DoValidate(value, validationContext);
         }
     }
 }

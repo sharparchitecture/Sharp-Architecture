@@ -25,7 +25,7 @@ namespace SharpArch.Domain.Validation
         /// </summary>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            return DoValidate<string>(value, validationContext);
+            return DoValidate(value, validationContext);
         }
     }
 }

@@ -39,7 +39,7 @@
 
         class DuplicateCheckerStub : IEntityDuplicateChecker
         {
-            public bool DoesDuplicateExistWithTypedIdOf<TId>(IEntityWithTypedId<TId> entity)
+            public bool DoesDuplicateExistWithTypedIdOf(IEntity entity)
             {
                 switch (entity)
                 {

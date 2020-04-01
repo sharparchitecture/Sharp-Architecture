@@ -13,7 +13,7 @@
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     [PublicAPI]
-    [BaseTypeRequired(typeof(IEntityWithTypedId<int>))]
+    [BaseTypeRequired(typeof(IEntity))]
     public sealed class HasUniqueDomainSignatureAttribute : HasUniqueDomainSignatureAttributeBase
     {
         /// <summary>
@@ -26,7 +26,7 @@
         /// </returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            return DoValidate<int>(value, validationContext);
+            return DoValidate(value, validationContext);
         }
     }
 }
