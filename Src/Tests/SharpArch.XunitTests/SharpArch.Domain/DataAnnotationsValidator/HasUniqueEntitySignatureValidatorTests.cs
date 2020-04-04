@@ -58,7 +58,7 @@
         }
 
 
-        [HasUniqueDomainSignatureWithGuidId]
+        [HasUniqueDomainSignature]
         class ObjectWithGuidId : EntityWithTypedId<Guid>
         {
             [DomainSignature]
@@ -74,7 +74,7 @@
         }
 
 
-        [HasUniqueDomainSignatureWithStringId]
+        [HasUniqueDomainSignature]
         class User : EntityWithTypedId<string>
         {
             [DomainSignature]
@@ -121,12 +121,5 @@
             contractor.IsValid(ValidationContextFor(contractor)).Should().BeTrue();
         }
 
-        [Fact]
-        public void MayNotUseValidatorWithEntityHavingDifferentIdType()
-        {
-            var invalidCombination = new ObjectWithStringIdAndValidatorForIntId {Name = "whatever"};
-            Action validate = () => invalidCombination.ValidationResults(ValidationContextFor(invalidCombination));
-            validate.Should().Throw<InvalidOperationException>();
-        }
     }
 }

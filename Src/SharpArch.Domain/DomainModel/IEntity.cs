@@ -1,5 +1,6 @@
 ﻿namespace SharpArch.Domain.DomainModel
 {
+    using System;
     using System.Reflection;
     using JetBrains.Annotations;
 
@@ -36,5 +37,24 @@
         ///     objects to be lazily loaded.
         /// </remarks>
         bool IsTransient();
+
+        /// <summary>
+        ///     Returns the unproxied type of the current object.
+        /// </summary>
+        /// <remarks>
+        ///     <para>
+        ///         When NHibernate proxies objects, it masks the type of the actual entity object.
+        ///         This wrapper burrows into the proxied object to get its actual type.
+        ///     </para>
+        ///     <para>
+        ///         Although this assumes NHibernate is being used, it doesn't require any NHibernate
+        ///         related dependencies and has no bad side effects if NHibernate isn't being used.
+        ///     </para>
+        ///     <para>
+        ///         Related discussion is at
+        ///         http://groups.google.com/group/sharp-architecture/browse_thread/thread/ddd05f9baede023a ...thanks Jay Oliver!
+        ///     </para>
+        /// </remarks>
+        Type GetTypeUnproxied();
     }
 }

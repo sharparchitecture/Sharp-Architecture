@@ -35,7 +35,6 @@ namespace SharpArch.Domain.Validation
         /// <summary>
         ///     Performs database lookup to ensure domain signature uniqueness.
         /// </summary>
-        /// <typeparam name="TId">The type of the identifier.</typeparam>
         /// <param name="value">The entity.</param>
         /// <param name="validationContext">The validation context.</param>
         /// <returns></returns>
@@ -49,7 +48,7 @@ namespace SharpArch.Domain.Validation
             var entityToValidate = value as IEntity;
             if (entityToValidate == null)
                 throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
-                    "This validator must be used at the class level of an "+nameof(IEntity)+". The type you provided was {0}.",
+                    "This validator must be used at the class level of an " + nameof(IEntity) + ". The type you provided was {0}.",
                     value.GetType()));
 
             var duplicateChecker =

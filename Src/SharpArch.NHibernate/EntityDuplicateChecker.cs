@@ -35,7 +35,6 @@
         /// <summary>
         ///     Provides a behavior specific repository for checking if a duplicate exists of an existing entity.
         /// </summary>
-        /// <typeparam name="TId">Entity Id type.</typeparam>
         /// <param name="entity">The entity.</param>
         /// <returns>
         ///     <c>true</c> if a duplicate exists, <c>false</c> otherwise.
@@ -52,10 +51,11 @@
             // We do NOT want this to flush pending changes as checking for a duplicate should 
             // only compare the object against data that's already in the database
             sessionForEntity.FlushMode = FlushMode.Manual;
-            try {
+            try
+            {
                 var criteria =
                     sessionForEntity.CreateCriteria(entity.GetType())
-                        .Add(Restrictions.Not(Restrictions.Eq("Id", entity.GetId())))
+                        .Add(Restrictions.Not(Restrictions.Eq("id", entity.GetId())))
                         .SetMaxResults(1);
 
                 AppendSignaturePropertyCriteriaTo(criteria, entity);
@@ -72,8 +72,8 @@
         {
             criteria.Add(
                 propertyValue != null
-                    ? Restrictions.Eq(propertyName + ".Id", ((IEntity) propertyValue).GetId())
-                    : Restrictions.IsNull(propertyName + ".Id"));
+                    ? Restrictions.Eq(propertyName + ".id", ((IEntity) propertyValue).GetId())
+                    : Restrictions.IsNull(propertyName + ".id"));
         }
 
         static void AppendStringPropertyCriteriaTo(
