@@ -176,7 +176,7 @@
         ///         http://groups.google.com/group/sharp-architecture/browse_thread/thread/ddd05f9baede023a ...thanks Jay Oliver!
         ///     </para>
         /// </remarks>
-        protected virtual Type GetTypeUnproxied()
+        public virtual Type GetTypeUnproxied()
         {
             return GetType();
         }

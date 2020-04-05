@@ -17,7 +17,7 @@ namespace SharpArch.Domain.Validation
     /// <seealso cref="DomainSignatureAttribute" />
     /// .
     [PublicAPI]
-    [BaseTypeRequired(typeof(IEntityWithTypedId<>))]
+    [BaseTypeRequired(typeof(IEntity))]
     public class HasUniqueDomainSignatureAttributeBase : ValidationAttribute
     {
         /// <summary>
@@ -35,22 +35,21 @@ namespace SharpArch.Domain.Validation
         /// <summary>
         ///     Performs database lookup to ensure domain signature uniqueness.
         /// </summary>
-        /// <typeparam name="TId">The type of the identifier.</typeparam>
         /// <param name="value">The entity.</param>
         /// <param name="validationContext">The validation context.</param>
         /// <returns></returns>
         /// <exception cref="System.InvalidOperationException">
-        ///     <see cref="IEntityDuplicateChecker" />can not be resolvedfrom
+        ///     <see cref="IEntityDuplicateChecker" />can not be resolved from
         ///     <paramref name="validationContext" />.
         /// </exception>
-        protected ValidationResult DoValidate<TId>([NotNull] object value,
+        protected ValidationResult DoValidate([NotNull] object value,
             [NotNull] ValidationContext validationContext)
         {
-            var entityToValidate = value as IEntityWithTypedId<TId>;
+            var entityToValidate = value as IEntity;
             if (entityToValidate == null)
                 throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
-                    "This validator must be used at the class level of an IDomainWithTypedId<{0}>. The type you provided was {1}",
-                    typeof(TId), value.GetType()));
+                    "This validator must be used at the class level of an " + nameof(IEntity) + ". The type you provided was {0}.",
+                    value.GetType()));
 
             var duplicateChecker =
                 (IEntityDuplicateChecker) validationContext.GetService(typeof(IEntityDuplicateChecker));

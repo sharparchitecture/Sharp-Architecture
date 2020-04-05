@@ -14,13 +14,14 @@ namespace SharpArch.Domain.DomainModel
     /// </summary>
     [Serializable]
     [PublicAPI]
-    public abstract class EntityWithTypedId<TId> : ValidatableObject, IEntityWithTypedId<TId>
+    public abstract class EntityWithTypedId<TId> : ValidatableObject, IEntityWithTypedId<TId>, IEntity
+        where TId : IEquatable<TId>
     {
         /// <summary>
         ///     To help ensure hash code uniqueness, a carefully selected random number multiplier
         ///     is used within the calculation.  Goodrich and Tamassia's Data Structures and
         ///     Algorithms in Java asserts that 31, 33, 37, 39 and 41 will produce the fewest number
-        ///     of collissions.  See http://computinglife.wordpress.com/2008/11/20/why-do-hash-functions-use-prime-numbers/
+        ///     of collisions.  See http://computinglife.wordpress.com/2008/11/20/why-do-hash-functions-use-prime-numbers/
         ///     for more information.
         /// </summary>
         private const int HashMultiplier = 31;
@@ -45,6 +46,10 @@ namespace SharpArch.Domain.DomainModel
         [JsonProperty]
         public virtual TId Id { get; protected set; }
 
+        /// <inheritdoc />
+        public virtual object GetId()
+            => Id.Equals(default(TId)) ? (object)null : Id;
+
         /// <summary>
         ///     Returns a value indicating whether the current object is transient.
         /// </summary>
@@ -55,7 +60,8 @@ namespace SharpArch.Domain.DomainModel
         /// </remarks>
         public virtual bool IsTransient()
         {
-            return Id == null || Id.Equals(default(TId));
+            if (!(Id is object)) return true;
+            return Id.Equals(default(TId));
         }
 
         /// <summary>

@@ -35,13 +35,12 @@
         /// <summary>
         ///     Provides a behavior specific repository for checking if a duplicate exists of an existing entity.
         /// </summary>
-        /// <typeparam name="TId">Entity Id type.</typeparam>
         /// <param name="entity">The entity.</param>
         /// <returns>
         ///     <c>true</c> if a duplicate exists, <c>false</c> otherwise.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">entity is null. </exception>
-        public bool DoesDuplicateExistWithTypedIdOf<TId>(IEntityWithTypedId<TId> entity)
+        public bool DoesDuplicateExistWithTypedIdOf(IEntity entity)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
@@ -52,10 +51,11 @@
             // We do NOT want this to flush pending changes as checking for a duplicate should 
             // only compare the object against data that's already in the database
             sessionForEntity.FlushMode = FlushMode.Manual;
-            try {
+            try
+            {
                 var criteria =
                     sessionForEntity.CreateCriteria(entity.GetType())
-                        .Add(Restrictions.Not(Restrictions.Eq("Id", entity.Id)))
+                        .Add(Restrictions.Not(Restrictions.Eq("id", entity.GetId())))
                         .SetMaxResults(1);
 
                 AppendSignaturePropertyCriteriaTo(criteria, entity);
@@ -67,13 +67,13 @@
             }
         }
 
-        static void AppendEntityCriteriaTo<TId>(
+        static void AppendEntityIdCriteriaTo(
             ICriteria criteria, string propertyName, object propertyValue)
         {
             criteria.Add(
                 propertyValue != null
-                    ? Restrictions.Eq(propertyName + ".Id", ((IEntityWithTypedId<TId>) propertyValue).Id)
-                    : Restrictions.IsNull(propertyName + ".Id"));
+                    ? Restrictions.Eq(propertyName + ".id", ((IEntity) propertyValue).GetId())
+                    : Restrictions.IsNull(propertyName + ".id"));
         }
 
         static void AppendStringPropertyCriteriaTo(
@@ -121,7 +121,7 @@
                     : Restrictions.IsNull(propertyName));
         }
 
-        static void AppendSignaturePropertyCriteriaTo<TId>(ICriteria criteria, IEntityWithTypedId<TId> entity)
+        static void AppendSignaturePropertyCriteriaTo(ICriteria criteria, IEntity entity)
         {
             foreach (var signatureProperty in entity.GetSignatureProperties()) {
                 var propertyType = signatureProperty.PropertyType;
@@ -130,7 +130,7 @@
 
                 if (propertyType.GetInterfaces().Any(
                     x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEntityWithTypedId<>))) {
-                    AppendEntityCriteriaTo<TId>(criteria, propertyName, propertyValue);
+                    AppendEntityIdCriteriaTo(criteria, propertyName, propertyValue);
                 }
                 else if (typeof(ValueObject).IsAssignableFrom(propertyType)) {
                     AppendValueObjectSignaturePropertyCriteriaTo(criteria, entity.GetType(), propertyName,

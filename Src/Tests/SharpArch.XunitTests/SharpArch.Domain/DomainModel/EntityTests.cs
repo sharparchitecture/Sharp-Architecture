@@ -1,5 +1,6 @@
 namespace Tests.SharpArch.Domain.DomainModel
 {
+    using System;
     using System.IO;
     using FluentAssertions;
     using global::SharpArch.Domain.DomainModel;
@@ -64,6 +65,7 @@ namespace Tests.SharpArch.Domain.DomainModel
 
 
         public abstract class MockEntityObjectBase<T> : EntityWithTypedId<T>
+            where T : IEquatable<T>
         {
             public string Email { get; set; }
 

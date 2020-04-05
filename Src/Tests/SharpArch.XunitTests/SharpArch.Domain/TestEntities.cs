@@ -15,7 +15,7 @@ namespace Tests.SharpArch.Domain
     }
 
 
-    [HasUniqueDomainSignatureWithGuidId]
+    [HasUniqueDomainSignature]
     public class ObjectWithGuidId : EntityWithTypedId<Guid>
     {
         [DomainSignature]
@@ -31,7 +31,7 @@ namespace Tests.SharpArch.Domain
     }
 
 
-    [HasUniqueDomainSignatureWithStringId]
+    [HasUniqueDomainSignature]
     public class User : EntityWithTypedId<string>
     {
         [DomainSignature]

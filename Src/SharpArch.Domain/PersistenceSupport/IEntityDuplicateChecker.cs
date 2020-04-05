@@ -1,5 +1,6 @@
 ﻿namespace SharpArch.Domain.PersistenceSupport
 {
+    using System;
     using JetBrains.Annotations;
     using SharpArch.Domain.DomainModel;
 
@@ -16,6 +17,6 @@
         /// <returns>
         ///     <c>true</c> if a duplicate exists, <c>false</c> otherwise.
         /// </returns>
-        bool DoesDuplicateExistWithTypedIdOf<TId>([NotNull] IEntityWithTypedId<TId> entity);
+        bool DoesDuplicateExistWithTypedIdOf([NotNull] IEntity entity);
     }
 }

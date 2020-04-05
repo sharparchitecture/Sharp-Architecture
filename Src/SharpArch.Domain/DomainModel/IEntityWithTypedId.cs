@@ -1,7 +1,8 @@
 ﻿namespace SharpArch.Domain.DomainModel
 {
-    using System.Reflection;
+    using System;
     using JetBrains.Annotations;
+
 
     /// <summary>
     ///     This serves as a base interface for <see cref="EntityWithTypedId{TId}" /> and
@@ -9,26 +10,11 @@
     /// </summary>
     [PublicAPI]
     public interface IEntityWithTypedId<out TId>
+        where TId : IEquatable<TId>
     {
         /// <summary>
         ///     Gets the ID which uniquely identifies the entity instance within its type's bounds.
         /// </summary>
         TId Id { get; }
-
-        /// <summary>
-        ///     Returns the properties of the current object that make up the object's signature.
-        /// </summary>
-        /// <returns>A collection of <see cref="PropertyInfo" /> instances.</returns>
-        PropertyInfo[] GetSignatureProperties();
-
-        /// <summary>
-        ///     Returns a value indicating whether the current object is transient.
-        /// </summary>
-        /// <remarks>
-        ///     Transient objects are not associated with an item already in storage. For instance,
-        ///     a Customer is transient if its ID is 0.  It's virtual to allow NHibernate-backed
-        ///     objects to be lazily loaded.
-        /// </remarks>
-        bool IsTransient();
     }
 }
