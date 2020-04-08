@@ -24,7 +24,10 @@
             Configuration = configuration;
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        ///     This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
 #if NETCOREAPP3_1
@@ -53,7 +56,7 @@
 #if NETCOREAPP2_1
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
 #elif NETCOREAPP2_2
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
 #endif
                 ;
 #endif
@@ -61,7 +64,10 @@
             services.AddMemoryCache();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        ///     This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app"></param>
         public void Configure(IApplicationBuilder app)
         {
 #if NETCOREAPP3_1
@@ -77,6 +83,11 @@
 #endif
         }
 
+        /// <summary>
+        ///     Configure Autofac container.
+        ///     This method is automatically called by Autofac MVC integration package.
+        /// </summary>
+        /// <param name="builder"></param>
         public void ConfigureContainer(ContainerBuilder builder)
         {
             // register dependencies 

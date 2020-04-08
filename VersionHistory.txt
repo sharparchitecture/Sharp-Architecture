@@ -1,4 +1,14 @@
 ========================
+S#arp 6.0
+========================
+
+BREAKING CHANGES:
+* Removed HasUniqueDomainSignatureWithGuidIdAttribute;
+* Removed HasUniqueDomainSignatureWithStringIdAttribute;
+* Added IEquatable<TId> constraint on IEntityWithTypedId<TId>;
+
+
+========================
 S#arp 5.0
 ========================
 
