@@ -51,6 +51,7 @@
                     options.SerializerSettings.Culture = CultureInfo.InvariantCulture;
                     options.SerializerSettings.Formatting = Formatting.None;
                 })
+                .AddAuthorization()
                 .AddFormatterMappings()
                 .AddJsonFormatters()
 #if NETCOREAPP2_1
