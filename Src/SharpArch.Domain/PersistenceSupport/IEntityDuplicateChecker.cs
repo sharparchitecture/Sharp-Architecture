@@ -11,7 +11,6 @@
     public interface IEntityDuplicateChecker
     {
         /// <summary>Returns a value indicating whether a duplicate of the specified <paramref name="entity" /> exists.</summary>
-        /// <typeparam name="TId">The type of the ID that identifies the entity.</typeparam>
         /// <param name="entity">The entity.</param>
         /// <exception cref="System.ArgumentNullException"><see paramref="entity" /> is null.</exception>
         /// <returns>

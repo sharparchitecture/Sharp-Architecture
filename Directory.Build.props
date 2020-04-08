@@ -3,7 +3,7 @@
     <Product>Sharp Architecture</Product>
     <Authors>Sharp Architecture Dev Team</Authors>
 
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <SignAssembly>false</SignAssembly>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -11,6 +11,11 @@
     <DebugType>portable</DebugType>
 
     <IsTestProject>false</IsTestProject>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Custom targers">
+    <!-- target frameworks for unit-tests and applications -->
+    <AppTargetFrameworks>netcoreapp2.1;netcoreapp2.2;netcoreapp3.1</AppTargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -41,6 +46,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == true">
+    <TargetFrameworks>$(AppTargetFrameworks)</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);0618;1591</NoWarn>

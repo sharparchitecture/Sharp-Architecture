@@ -1,9 +1,16 @@
 ﻿namespace SharpArch.WebApi.Sample
 {
+
+#if NETCOREAPP3_1
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.AspNetCore.Hosting;
+#else
+    using Microsoft.AspNetCore.Hosting;
+#endif
+
     using System;
     using System.IO;
     using Autofac.Extensions.DependencyInjection;
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Serilog;
     using Serilog.Events;
@@ -39,7 +46,7 @@
             return new WebHostBuilder()
                 .UseSerilog((hostingContext, loggerConfiguration) =>
                 {
-                    IHostingEnvironment env = hostingContext.HostingEnvironment;
+                    var env = hostingContext.HostingEnvironment;
                     loggerConfiguration
                         .Enrich.FromLogContext()
                         .Enrich.WithExceptionDetails()
