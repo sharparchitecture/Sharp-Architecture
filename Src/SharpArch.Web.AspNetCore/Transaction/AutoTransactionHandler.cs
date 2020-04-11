@@ -1,8 +1,8 @@
 ﻿namespace SharpArch.Web.AspNetCore.Transaction
 {
-    using System;
     using System.Threading.Tasks;
     using Domain.PersistenceSupport;
+    using Infrastructure.Logging;
     using JetBrains.Annotations;
     using Microsoft.AspNetCore.Mvc.Filters;
     using Microsoft.Extensions.DependencyInjection;
@@ -17,24 +17,32 @@
     [PublicAPI]
     public class AutoTransactionHandler : ApplyTransactionFilterBase, IAsyncActionFilter
     {
+        static readonly ILog _log = LogProvider.For<AutoTransactionHandler>();
+
         /// <inheritdoc />
+        /// <exception cref="T:System.InvalidOperationException"><see cref="ITransactionManager" /> is not registered in container.</exception>
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var transactionAttribute = GetTransactionAttribute(context);
             ITransactionManager transactionManager = null;
-            IDisposable transaction = null;
             if (transactionAttribute != null)
             {
                 transactionManager = context.HttpContext.RequestServices.GetRequiredService<ITransactionManager>();
-                transaction = transactionManager.BeginTransaction(transactionAttribute.IsolationLevel);
+                transactionManager.BeginTransaction(transactionAttribute.IsolationLevel);
             }
 
             var executedContext = await next().ConfigureAwait(false);
 
-            if (transaction != null)
+            if (transactionManager != null)
             {
-                using (transaction)
+                if (transactionManager is ISupportsTransactionStatus tranStatus)
                 {
+                    if (!tranStatus.IsActive)
+                    {
+                        _log.Debug("Transaction is already closed");
+                        return;
+                    }
+
                     if (executedContext.Exception != null ||
                         transactionAttribute.RollbackOnModelValidationError && context.ModelState.IsValid == false)
                     {

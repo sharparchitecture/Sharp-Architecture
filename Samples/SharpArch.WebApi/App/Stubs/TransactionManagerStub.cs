@@ -10,11 +10,11 @@
     using Serilog;
 
 
-    public class TransactionManagerStub : ITransactionManager, IDisposable
+    public class TransactionManagerStub : ITransactionManager, IDisposable, ISupportsTransactionStatus
     {
         public const string TransactionIsolationLevel = "x-transaction-isolation-level";
         public const string TransactionState = "x-transaction-result";
-        static readonly ILogger Log = Serilog.Log.ForContext<TransactionManagerStub>();
+        static readonly ILogger _log = Log.ForContext<TransactionManagerStub>();
         readonly IHttpContextAccessor _httpContextAccessor;
         TransactionWrapper _transaction;
 
@@ -28,10 +28,12 @@
             _transaction?.Dispose();
         }
 
+        /// <inheritdoc />
+        public bool IsActive => true;
+
         public IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
-            return _transaction
-                ?? (_transaction = new TransactionWrapper(isolationLevel));
+            return _transaction ??= new TransactionWrapper(isolationLevel);
         }
 
         public Task CommitTransactionAsync(CancellationToken cancellationToken)
@@ -53,7 +55,7 @@
 
         class TransactionWrapper : IDisposable
         {
-            static readonly ILogger _log = Serilog.Log.ForContext<TransactionWrapper>();
+            static readonly ILogger _log = Log.ForContext<TransactionWrapper>();
             public IsolationLevel IsolationLevel { get; }
 
             public TransactionWrapper(IsolationLevel isolationLevel)

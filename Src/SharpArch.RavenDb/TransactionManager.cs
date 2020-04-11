@@ -19,7 +19,7 @@ namespace SharpArch.RavenDb
     /// </remarks>
     /// <seealso cref="SharpArch.Domain.PersistenceSupport.ITransactionManager" />
     [PublicAPI]
-    public class TransactionManager : ITransactionManager
+    public class TransactionManager : ITransactionManager, ISupportsTransactionStatus
     {
         [NotNull] readonly IAsyncDocumentSession _session;
 
@@ -34,6 +34,9 @@ namespace SharpArch.RavenDb
             _session = session ?? throw new ArgumentNullException(nameof(session));
         }
 
+        /// <inheritdoc />
+        public bool IsActive => _transaction != null;
+
         /// <summary>
         ///     Begins the transaction.
         /// </summary>
@@ -45,20 +48,18 @@ namespace SharpArch.RavenDb
         /// </remarks>
         /// <returns>The transaction instance.</returns>
         public IDisposable BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
-        {
-            return _transaction ??
-                (_transaction = new TransactionScope(TransactionScopeOption.Required,
-                    new TransactionOptions
-                    {
-                        IsolationLevel = MapIsolationLevel(isolationLevel)
-                    }, TransactionScopeAsyncFlowOption.Enabled));
-        }
+            => _transaction ??= new TransactionScope(TransactionScopeOption.Required,
+                new TransactionOptions
+                {
+                    IsolationLevel = MapIsolationLevel(isolationLevel)
+                }, TransactionScopeAsyncFlowOption.Enabled);
 
         /// <inheritdoc />
+        /// <exception cref="T:System.InvalidOperationException">Transaction was not started.</exception>
         public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
         {
             if (_transaction == null)
-                throw new InvalidOperationException("Transaction was not start, make sure there is matching BeginTransaction() call.");
+                throw new InvalidOperationException("Transaction was not started, make sure there is matching BeginTransaction() call.");
             await _session.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             _transaction.Complete();
             ClearTransaction();
