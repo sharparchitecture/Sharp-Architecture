@@ -160,6 +160,10 @@ namespace SharpArch.NHibernate
             => Session.LoadAsync<T>(id, ConvertFrom(lockMode), ct);
 
         /// <inheritdoc />
+        public Task<T> MergeAsync(T entity, CancellationToken cancellationToken = default)
+            => Session.MergeAsync(entity, cancellationToken);
+
+        /// <inheritdoc />
         public virtual async Task<T> UpdateAsync(T entity, CancellationToken ct)
         {
             await Session.UpdateAsync(entity, ct).ConfigureAwait(false);
