@@ -14,8 +14,8 @@
 
     public class NHibernateSessionFactoryBuilderTests : IDisposable
     {
-        private readonly string _tempFileName;
-        private DependencyList _dependencyList;
+        readonly string _tempFileName;
+        DependencyList _dependencyList;
 
         /// <inheritdoc />
         public NHibernateSessionFactoryBuilderTests()
@@ -38,10 +38,24 @@
             }
         }
 
-        private string GetConfigFullName()
+        string GetConfigFullName()
         {
             const string defaultConfigFile = "sqlite-nhibernate-config.xml";
             return Path.Combine(DependencyList.GetAssemblyCodeBasePath(Assembly.GetExecutingAssembly()), defaultConfigFile);
+        }
+
+        [Fact]
+        public void CanConfigureCache()
+        {
+            var configureCacheCalled = false;
+            Action<CacheSettingsBuilder> configureCache = c => { configureCacheCalled = true; };
+
+            new NHibernateSessionFactoryBuilder()
+                .UseConfigFile(GetConfigFullName())
+                .UseCache(configureCache)
+                .BuildConfiguration();
+
+            configureCacheCalled.Should().BeTrue();
         }
 
         [Fact]
@@ -169,10 +183,10 @@
     }
 
 
-    internal class InMemoryCache : NHibernateConfigurationCacheBase
+    class InMemoryCache : NHibernateConfigurationCacheBase
     {
-        private byte[] _data;
-        private DateTime? _timestamp;
+        byte[] _data;
+        DateTime? _timestamp;
 
         /// <inheritdoc />
         public InMemoryCache([NotNull] string sessionName)
@@ -182,15 +196,11 @@
 
         /// <inheritdoc />
         protected override byte[] GetCachedConfiguration()
-        {
-            return _data;
-        }
+            => _data;
 
         /// <inheritdoc />
         protected override DateTime? GetCachedTimestampUtc()
-        {
-            return _timestamp;
-        }
+            => _timestamp;
 
         /// <inheritdoc />
         protected override void SaveConfiguration(byte[] data, DateTime timestampUtc)

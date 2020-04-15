@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.IO;
-    using System.Linq;
     using System.Reflection;
     using global::FluentNHibernate.Automapping;
     using global::FluentNHibernate.Cfg;
@@ -46,6 +45,7 @@
         IPersistenceConfigurer _persistenceConfigurer;
         IDictionary<string, string> _properties;
         bool _useDataAnnotationValidators;
+        Action<CacheSettingsBuilder> _cacheSettingsBuilder;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="NHibernateSessionFactoryBuilder" /> class.
@@ -251,6 +251,17 @@
         }
 
         /// <summary>
+        /// Allows to configure second-level cache.
+        /// </summary>
+        /// <param name="cacheSettingsBuilder">Cache settings configuration. Use <c>null</c> to clear previous setting.</param>
+        [NotNull]
+        public NHibernateSessionFactoryBuilder UseCache([CanBeNull] Action<CacheSettingsBuilder> cacheSettingsBuilder)
+        {
+            _cacheSettingsBuilder = cacheSettingsBuilder;
+            return this;
+        }
+
+        /// <summary>
         ///     Allows to specify custom configuration using <see cref="IPersistenceConfigurer" />.
         /// </summary>
         /// <param name="persistenceConfigurer">The persistence configurer.</param>
@@ -279,6 +290,11 @@
                 fluentConfig.Database(_persistenceConfigurer);
             }
 
+            if (_cacheSettingsBuilder != null)
+            {
+                fluentConfig.Cache(_cacheSettingsBuilder);
+            }
+
             fluentConfig.Mappings(m =>
             {
                 foreach (var mappingAssembly in _mappingAssemblies)
@@ -305,8 +321,9 @@
         {
             if (_useDataAnnotationValidators)
             {
-                e.EventListeners.PreInsertEventListeners = InsertFirst(e.EventListeners.PreInsertEventListeners, new DataAnnotationsEventListener());
-                e.EventListeners.PreUpdateEventListeners = InsertFirst(e.EventListeners.PreUpdateEventListeners, new DataAnnotationsEventListener());
+                var dataAnnotationsEventListener = new DataAnnotationsEventListener();
+                e.EventListeners.PreInsertEventListeners = InsertFirst(e.EventListeners.PreInsertEventListeners, dataAnnotationsEventListener);
+                e.EventListeners.PreUpdateEventListeners = InsertFirst(e.EventListeners.PreUpdateEventListeners, dataAnnotationsEventListener);
             }
 
             if (ShouldExposeConfiguration())
@@ -322,7 +339,7 @@
         Configuration LoadExternalConfiguration()
         {
             var cfg = new Configuration();
-            if (_properties != null && _properties.Any())
+            if (_properties != null && _properties.Count > 0)
             {
                 cfg.AddProperties(_properties);
             }
