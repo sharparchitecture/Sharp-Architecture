@@ -3,6 +3,7 @@ namespace SharpArch.Domain.PersistenceSupport
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using DomainModel;
     using JetBrains.Annotations;
 
 
@@ -19,9 +20,10 @@ namespace SharpArch.Domain.PersistenceSupport
         ///     <paramref name="repository" /> or <paramref name="entity" /> is
         ///     <see langword="null" />.
         /// </exception>
-        public static async Task SaveAndEvictAsync<T, TId>(
-            [NotNull] this IAsyncRepositoryWithTypedId<T, TId> repository, [NotNull] T entity, CancellationToken cancellationToken = default)
-            where T : class
+        public static async Task SaveAndEvictAsync<TEntity, TId>(
+            [NotNull] this IRepository<TEntity, TId> repository, [NotNull] TEntity entity, CancellationToken cancellationToken = default)
+            where TEntity : class, IEntity<TId>
+            where TId : IEquatable<TId>
         {
             if (repository == null) throw new ArgumentNullException(nameof(repository));
             if (entity == null) throw new ArgumentNullException(nameof(entity));

@@ -1,4 +1,13 @@
 ========================
+vNext
+========================
+
+BREAKING:
+* Removed EntityWithTypedId<> replaced with Entity<>, removed old entity class. Fix: replace `Entity` with `Entity<int>`.
+* Renamed IAsyncRepository to IRepository.
+* Added IEquatable<TId> constraint on IEntity<TId>.
+
+========================
 S#arp 6.0
 ========================
 

@@ -1,23 +1,27 @@
-﻿namespace SharpArch.NHibernate
+using JetBrains.Annotations;
+
+namespace SharpArch.NHibernate.Impl
 {
-    using JetBrains.Annotations;
+    using System;
+    using Domain.DomainModel;
 
 
     /// <summary>
-    ///     Since nearly all of the domain objects you create will have a type of int Id, this
-    ///     most frequently used base NHibernateRepository leverages this assumption.  If you want
-    ///     an entity with a type other than int, such as string, then use
-    ///     <see cref="NHibernateRepositoryWithTypedId{T, IdT}" />.
+    ///     NHibernate repository implementation.
     /// </summary>
+    /// <remarks>
+    /// This implementation should be used in simplified, single-database model.
+    /// </remarks>
+    /// <typeparam name="TEntity">Entity type/</typeparam>
+    /// <typeparam name="TId">Entity identifier type.</typeparam>
     [PublicAPI]
-    public class NHibernateRepository<T> : NHibernateRepositoryWithTypedId<T, int>
-        where T : class
+    public class NHibernateRepository<TEntity, TId> : NHibernateRepositoryBase<TEntity, TId>
+        where TEntity : class, IEntity<TId>
+        where TId : IEquatable<TId>
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="NHibernateRepository{T}" /> class.
-        /// </summary>
-        /// <param name="transactionManager">The transaction manager.</param>
-        public NHibernateRepository(INHibernateTransactionManager transactionManager) : base(transactionManager)
-        { }
+        /// <inheritdoc />
+        public NHibernateRepository([NotNull] INHibernateTransactionManager transactionManager) : base(transactionManager)
+        {
+        }
     }
 }

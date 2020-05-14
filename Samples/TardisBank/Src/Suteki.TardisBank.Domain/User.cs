@@ -24,7 +24,7 @@ namespace Suteki.TardisBank.Domain
         public const string Parent = "Parent";
     }
 
-    public abstract class User : Entity
+    public abstract class User : Entity<int>
     {
         public const int MaxMessages = 20;
 

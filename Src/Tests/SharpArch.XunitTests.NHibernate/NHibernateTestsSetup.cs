@@ -13,7 +13,7 @@
     public class NHibernateTestsSetup : TestDatabaseSetup
     {
         public NHibernateTestsSetup()
-            : base(Assembly.GetExecutingAssembly().CodeBase,
+            : base(Assembly.GetExecutingAssembly().Location,
                 new[]
                 {
                     typeof(ObjectWithGuidId).Assembly,

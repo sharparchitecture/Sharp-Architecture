@@ -15,6 +15,7 @@ namespace Suteki.TardisBank.WebApi
     using SharpArch.Domain.PersistenceSupport;
     using SharpArch.NHibernate;
     using SharpArch.NHibernate.Extensions.DependencyInjection;
+    using SharpArch.NHibernate.Impl;
     using SharpArch.Web.AspNetCore.Transaction;
 
 #if NETCOREAPP2_1 || NETCOREAPP2_2
@@ -110,11 +111,11 @@ namespace Suteki.TardisBank.WebApi
                 .SingleInstance();
 
             builder.RegisterAssemblyTypes(typeof(AccountMap).Assembly)
-                .AsClosedTypesOf(typeof(IAsyncRepositoryWithTypedId<,>))
+                .AsClosedTypesOf(typeof(IRepository<,>))
 #if DEBUG
                 .Where(t =>
                 {
-                    var x = t.IsClosedTypeOf(typeof(IAsyncRepositoryWithTypedId<,>));
+                    var x = t.IsClosedTypeOf(typeof(IRepository<,>));
                     _logger.Information("{type}, register: {register}", t, x);
                     return x;
                 })
@@ -122,16 +123,10 @@ namespace Suteki.TardisBank.WebApi
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterGeneric(typeof(NHibernateRepositoryWithTypedId<,>))
+            builder.RegisterGeneric(typeof(NHibernateRepository<,>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-            builder.RegisterGeneric(typeof(NHibernateRepository<>))
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-            builder.RegisterGeneric(typeof(LinqRepositoryWithTypedId<,>))
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-            builder.RegisterGeneric(typeof(LinqRepository<>))
+            builder.RegisterGeneric(typeof(LinqRepository<,>))
                 .AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
         }

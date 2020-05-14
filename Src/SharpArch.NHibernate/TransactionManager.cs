@@ -1,4 +1,4 @@
-﻿namespace SharpArch.NHibernate
+﻿namespace SharpArch.NHibernate.Impl
 {
     using System;
     using System.Data;

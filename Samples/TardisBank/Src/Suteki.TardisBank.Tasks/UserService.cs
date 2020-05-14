@@ -14,11 +14,11 @@ namespace Suteki.TardisBank.Tasks
     {
         readonly IHttpContextService _context;
 
-        readonly ILinqRepository<Parent> _parentRepository;
+        readonly ILinqRepository<Parent, int> _parentRepository;
 
-        readonly ILinqRepository<User> _userRepository;
+        readonly ILinqRepository<User, int> _userRepository;
 
-        public UserService(IHttpContextService context, ILinqRepository<Parent> parentRepository, ILinqRepository<User> userRepository)
+        public UserService(IHttpContextService context, ILinqRepository<Parent, int> parentRepository, ILinqRepository<User, int> userRepository)
         {
             _context = context;
             _parentRepository = parentRepository;

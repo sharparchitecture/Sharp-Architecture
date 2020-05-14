@@ -5,13 +5,14 @@ namespace Suteki.TardisBank.Tests.Model
     using Domain;
     using FluentAssertions;
     using SharpArch.NHibernate;
+    using SharpArch.NHibernate.Impl;
     using SharpArch.Testing.Xunit.NHibernate;
     using Xunit;
 
 
     public class ChildTests : TransientDatabaseTests<TransientDatabaseSetup>
     {
-        readonly LinqRepository<Child> _childRepository;
+        readonly LinqRepository<Child, int> _childRepository;
         int _childId;
         int _parentId;
 
@@ -19,7 +20,7 @@ namespace Suteki.TardisBank.Tests.Model
         public ChildTests(TransientDatabaseSetup dbSetup) 
             : base(dbSetup)
         {
-            _childRepository = new LinqRepository<Child>(TransactionManager);
+            _childRepository = new LinqRepository<Child, int>(TransactionManager);
         }
 
         protected override void LoadTestData()

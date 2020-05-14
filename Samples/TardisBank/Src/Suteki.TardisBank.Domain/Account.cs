@@ -6,7 +6,7 @@ namespace Suteki.TardisBank.Domain
 
     using SharpArch.Domain.DomainModel;
 
-    public class Account : Entity
+    public class Account : Entity<int>
     {
         public const int MaxTransactions = 100;
         public virtual decimal OldTransactionsBalance { get; protected set; }

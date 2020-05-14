@@ -4,7 +4,7 @@ namespace Suteki.TardisBank.Domain
 
     using SharpArch.Domain.DomainModel;
 
-    public class Transaction : Entity
+    public class Transaction : Entity<int>
     {
         public Transaction(string description, decimal amount, Account account)
         {

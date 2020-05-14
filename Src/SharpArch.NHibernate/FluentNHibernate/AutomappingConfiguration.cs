@@ -26,7 +26,7 @@ namespace SharpArch.NHibernate.FluentNHibernate
     ///     </list>
     /// </remarks>
     /// <seealso cref="DefaultAutomappingConfiguration" />
-    /// <seealso cref="IEntityWithTypedId{TId}" />
+    /// <seealso cref="IEntity{TId}" />
     /// <seealso cref="ValueObject" />
     [PublicAPI]
     public class AutomappingConfiguration : DefaultAutomappingConfiguration
@@ -38,7 +38,7 @@ namespace SharpArch.NHibernate.FluentNHibernate
         {
             return !type.IsNested && type.GetInterfaces().Any(x =>
                 x.IsGenericType &&
-                x.GetGenericTypeDefinition() == typeof(IEntityWithTypedId<>));
+                x.GetGenericTypeDefinition() == typeof(IEntity<>));
         }
 
         /// <summary>
@@ -51,13 +51,13 @@ namespace SharpArch.NHibernate.FluentNHibernate
         }
 
         /// <summary>
-        ///     Marks all abstract descendants of <see cref="Entity" /> and <see cref="EntityWithTypedId{TId}" />
+        ///     Marks all abstract descendants of <see cref="Entity" /> and <see cref="Entity{TId}" />
         ///     as Layer Supertype.
         ///     See http://martinfowler.com/eaaCatalog/layerSupertype.html
         /// </summary>
         public override bool AbstractClassIsLayerSupertype(Type type)
         {
-            return type == typeof(EntityWithTypedId<>) || type == typeof(Entity);
+            return type == typeof(Entity<>);
         }
     }
 }

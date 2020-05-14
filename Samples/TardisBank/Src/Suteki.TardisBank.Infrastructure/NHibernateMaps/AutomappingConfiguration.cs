@@ -12,8 +12,7 @@
         /// <inheritdoc />
         public override bool ShouldMap(System.Type type)
         {
-            return type.GetInterfaces().Any(x =>
-                 x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEntityWithTypedId<>));
+            return type.GetInterfaces().Any(x => x == typeof(IEntity));
         }
 
         /// <inheritdoc />
@@ -26,7 +25,7 @@
         /// <inheritdoc />
         public override bool AbstractClassIsLayerSupertype(System.Type type)
         {
-            return type == typeof(EntityWithTypedId<>) || type == typeof(Entity);
+            return type == typeof(Entity<>);
         }
 
     }

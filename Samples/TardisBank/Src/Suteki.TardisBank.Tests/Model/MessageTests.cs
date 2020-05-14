@@ -6,6 +6,7 @@ namespace Suteki.TardisBank.Tests.Model
     using MediatR;
     using Moq;
     using SharpArch.NHibernate;
+    using SharpArch.NHibernate.Impl;
     using SharpArch.Testing.NHibernate;
     using SharpArch.Testing.Xunit.NHibernate;
     using Xunit;
@@ -33,7 +34,7 @@ namespace Suteki.TardisBank.Tests.Model
         [Fact]
         public async Task Should_be_able_to_add_a_message_to_a_user()
         {
-            var parentRepository = new LinqRepository<Parent>(TransactionManager);
+            var parentRepository = new LinqRepository<Parent, int>(TransactionManager);
             User userToTestWith = await parentRepository.GetAsync(_userId);
 
             userToTestWith.SendMessage("some message", _mediator.Object);
