@@ -13,7 +13,7 @@ namespace SharpArch.NHibernate.Impl
     ///     Transaction manager for NHibernate.
     /// </summary>
     [PublicAPI]
-    public class TransactionManager : INHibernateTransactionManager, ISupportsTransactionStatus
+    public class NHibernateTransactionManager : INHibernateTransactionManager, ISupportsTransactionStatus
     {
         private static readonly string NoTransactionAvailable = "No transaction is currently active.";
 
@@ -21,7 +21,7 @@ namespace SharpArch.NHibernate.Impl
         ///     Creates instance of transaction manager.
         /// </summary>
         /// <param name="session"></param>
-        public TransactionManager([NotNull] ISession session)
+        public NHibernateTransactionManager([NotNull] ISession session)
         {
             Session = session ?? throw new ArgumentNullException(nameof(session));
         }

@@ -9,7 +9,6 @@ namespace SharpArch.NHibernate
     using global::FluentNHibernate.Automapping;
     using global::FluentNHibernate.Cfg.Db;
     using global::NHibernate;
-    using global::NHibernate.Cfg;
     using JetBrains.Annotations;
     using NHibernateValidator;
 

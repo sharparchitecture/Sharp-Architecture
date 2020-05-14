@@ -22,7 +22,7 @@ namespace SharpArch.Testing.NUnit.NHibernate
         /// <summary>
         ///     Transaction manager.
         /// </summary>
-        protected TransactionManager TransactionManager { get; private set; }
+        protected NHibernateTransactionManager NHibernateTransactionManager { get; private set; }
 
         /// <summary>
         ///     Database initializer.
@@ -32,7 +32,7 @@ namespace SharpArch.Testing.NUnit.NHibernate
         /// <summary>
         ///     Current NHibernate session.
         /// </summary>
-        protected ISession Session => TransactionManager.Session;
+        protected ISession Session => NHibernateTransactionManager.Session;
 
         private RepositoryTestsBase()
         {
@@ -101,7 +101,7 @@ namespace SharpArch.Testing.NUnit.NHibernate
         [SetUp]
         protected virtual void SetUp()
         {
-            TransactionManager = new TransactionManager(DbInitializer.InitializeSession());
+            NHibernateTransactionManager = new NHibernateTransactionManager(DbInitializer.InitializeSession());
             LoadTestData();
         }
     }

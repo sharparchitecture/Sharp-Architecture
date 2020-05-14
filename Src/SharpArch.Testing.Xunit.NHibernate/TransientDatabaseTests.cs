@@ -28,7 +28,7 @@ namespace SharpArch.Testing.Xunit.NHibernate
         /// <summary>
         ///     Transaction manager.
         /// </summary>
-        protected TransactionManager TransactionManager { get; private set; }
+        protected NHibernateTransactionManager NHibernateTransactionManager { get; private set; }
 
         /// <summary>
         ///     Database initializer.
@@ -38,13 +38,13 @@ namespace SharpArch.Testing.Xunit.NHibernate
         /// <summary>
         ///     Database session.
         /// </summary>
-        protected ISession Session => TransactionManager.Session;
+        protected ISession Session => NHibernateTransactionManager.Session;
 
         /// <inheritdoc />
         protected TransientDatabaseTests(TestDatabaseSetup dbSetup)
         {
             DbSetup = dbSetup;
-            TransactionManager = new TransactionManager(DbSetup.InitializeSession());
+            NHibernateTransactionManager = new NHibernateTransactionManager(DbSetup.InitializeSession());
             // ReSharper disable once VirtualMemberCallInConstructor
             LoadTestData();
         }

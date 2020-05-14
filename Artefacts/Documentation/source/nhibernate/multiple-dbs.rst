@@ -8,7 +8,7 @@ Design
 ~~~~~~
 
 Main components:
-1. SessionFactory - responsible for configuration and instantiaction of the session (database connection).
+1. SessionFactory - responsible for configuration and instantiation of the session (database connection).
    Singleton.
 2. Session storage - responsible for keeping track of existing sessions, can request new session from the factory.
 3. Database association is done at entity-level. Default strategy is attribute-based, but it can be customized

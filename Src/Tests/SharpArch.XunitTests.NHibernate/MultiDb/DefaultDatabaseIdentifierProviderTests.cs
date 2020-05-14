@@ -28,7 +28,7 @@
 
         public class MultipleDatabase_Mode
         {
-            readonly DefaultDatabaseIdentifierProvider _provider = new DefaultDatabaseIdentifierProvider(true);
+            readonly AttributeBasedDatabaseIdentifierProvider _provider = new AttributeBasedDatabaseIdentifierProvider();
 
             [Fact]
             public void Can_Retrieve_DatabaseIdentifier_From_Instance()
@@ -58,7 +58,7 @@
 
         public class SingleDatabase_Mode
         {
-            readonly DefaultDatabaseIdentifierProvider _provider = new DefaultDatabaseIdentifierProvider(false);
+            readonly IDatabaseIdentifierProvider _provider = DefaultDatabaseIdentifierProvider.Instance;
 
             [Fact]
             public void Should_Return_DefaultDatabase_For_Decorated_Instance()

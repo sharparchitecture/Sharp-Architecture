@@ -37,10 +37,10 @@ namespace SharpArch.NHibernate.Impl
         protected INHibernateTransactionManager TransactionManager { get; }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="NHibernateRepositoryWithTypedIdBase{T, TId}" /> class.
+        ///     Initializes a new instance of the <see cref="NHibernateRepositoryBase{TEntity,TId}" /> class.
         /// </summary>
         /// <param name="transactionManager">The transaction manager.</param>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.ArgumentNullException"><paramref name="transactionManager"/> is <c>null</c>.</exception>
         protected NHibernateRepositoryWithTypedIdBase(
             [NotNull] INHibernateTransactionManager transactionManager)
         {

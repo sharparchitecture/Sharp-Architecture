@@ -65,17 +65,17 @@
 
             public void Dispose()
             {
-                _log.Information("Disposed {isolationLevel}", IsolationLevel);
+                _log.Information("Disposed {IsolationLevel}", IsolationLevel);
             }
 
             public void Commit()
             {
-                _log.Information("Committed {isolationLevel}", IsolationLevel);
+                _log.Information("Committed {IsolationLevel}", IsolationLevel);
             }
 
             public void Rollback()
             {
-                _log.Information("Rolled back {isolationLevel}", IsolationLevel);
+                _log.Information("Rolled back {IsolationLevel}", IsolationLevel);
             }
         }
 

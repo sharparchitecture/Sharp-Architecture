@@ -1,22 +1,12 @@
-// ReSharper disable InconsistentLogPropertyNaming
-
-namespace Suteki.TardisBank.WebApi
+﻿namespace MultiDatabase.Sample
 {
     using Autofac;
-    using AutoMapper;
-    using Domain;
-    using Infrastructure.Configuration;
-    using Infrastructure.NHibernateMaps;
+    using Configuration;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Serilog;
-    using SharpArch.Domain.PersistenceSupport;
-    using SharpArch.NHibernate;
-    using SharpArch.NHibernate.Extensions.DependencyInjection;
     using SharpArch.Web.AspNetCore.Transaction;
-
 #if NETCOREAPP2_1 || NETCOREAPP2_2
     using System.Globalization;
     using Microsoft.AspNetCore.Mvc;
@@ -26,8 +16,6 @@ namespace Suteki.TardisBank.WebApi
 
     public class Startup
     {
-        static readonly ILogger _logger = Log.ForContext<Startup>();
-
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
@@ -41,8 +29,12 @@ namespace Suteki.TardisBank.WebApi
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-#if NETCOREAPP3_1 || NET5_0
-            services.AddControllers(options => { options.Filters.Add(new AutoTransactionHandler()); })
+#if NETCOREAPP3_1
+            services.AddControllers(options =>
+                {
+                    options.Filters.Add(new AutoTransactionHandler());
+                    //options.Filters.Add(new TransactionAttribute(isolationLevel: IsolationLevel.Chaos));
+                })
                 .AddNewtonsoftJson();
 
 #else
@@ -50,6 +42,7 @@ namespace Suteki.TardisBank.WebApi
             services.AddMvcCore(options =>
                 {
                     options.Filters.Add(new AutoTransactionHandler());
+                    //options.Filters.Add(new TransactionAttribute(isolationLevel: IsolationLevel.Chaos));
                 })
                 .AddDataAnnotations()
                 .AddJsonOptions(options =>
@@ -68,17 +61,8 @@ namespace Suteki.TardisBank.WebApi
                 ;
 #endif
 
-            services.AddNHibernateWithSingleDatabase(sp =>
-            {
-                return new NHibernateSessionFactoryBuilder()
-                    .AddMappingAssemblies(new[] {typeof(Child).Assembly})
-                    .UseAutoPersistenceModel(new AutoPersistenceModelGenerator().Generate())
-                    .UseConfigFile(@"NHibernate.config");
-            });
-
-            services.AddAutoMapper(typeof(AnnouncementMappingProfile));
-
             services.AddMemoryCache();
+            services.AddDatabase();
         }
 
         /// <summary>
@@ -87,13 +71,16 @@ namespace Suteki.TardisBank.WebApi
         /// <param name="app"></param>
         public void Configure(IApplicationBuilder app)
         {
-#if NETCOREAPP3_1 || NET5_0
+#if NETCOREAPP3_1
             app.UseRouting();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 #else
-            app.UseAuthentication();
             app.UseMvc();
+            app.UseAuthentication();
 #endif
         }
 
@@ -108,32 +95,6 @@ namespace Suteki.TardisBank.WebApi
             builder.RegisterType<HttpContextAccessor>()
                 .As<IHttpContextAccessor>()
                 .SingleInstance();
-
-            builder.RegisterAssemblyTypes(typeof(AccountMap).Assembly)
-                .AsClosedTypesOf(typeof(IAsyncRepositoryWithTypedId<,>))
-#if DEBUG
-                .Where(t =>
-                {
-                    var x = t.IsClosedTypeOf(typeof(IAsyncRepositoryWithTypedId<,>));
-                    _logger.Information("{Type}, register: {Register}", t, x);
-                    return x;
-                })
-#endif
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-
-            builder.RegisterGeneric(typeof(NHibernateRepositoryWithTypedId<,>))
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-            builder.RegisterGeneric(typeof(NHibernateRepository<>))
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-            builder.RegisterGeneric(typeof(LinqRepositoryWithTypedId<,>))
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
-            builder.RegisterGeneric(typeof(LinqRepository<>))
-                .AsImplementedInterfaces()
-                .InstancePerLifetimeScope();
         }
     }
 }

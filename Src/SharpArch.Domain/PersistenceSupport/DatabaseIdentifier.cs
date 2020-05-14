@@ -10,5 +10,11 @@
         /// </summary>
         // ReSharper disable once ConvertToConstant.Global
         public static readonly string Default = "default";
+
+        /// <summary>
+        ///     Parameter name for database identifiers.
+        ///     Used by exception enrichment, etc...
+        /// </summary>
+        public static readonly string ParameterName = "DatabaseIdentifier";
     }
 }

@@ -1,11 +1,19 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using JetBrains.Annotations;
-using NHibernate;
-
-namespace SharpArch.NHibernate.MultiDb
+﻿namespace SharpArch.NHibernate.MultiDb
 {
+    using System;
+    using System.Collections.Concurrent;
+    using System.Threading;
+    using Domain.PersistenceSupport;
+    using global::NHibernate;
+    using global::NHibernate.Cfg;
+    using JetBrains.Annotations;
+
+
+    public interface INHibernateSessionFactoryRegistryBuilder
+    {
+        void Add(string databaseIdentifier, INHibernateSessionFactoryBuilder sessionFactoryBuilder);
+    }
+
     /// <summary>
     ///     Contains registered NHibernate Factories.
     ///     <para>
@@ -32,10 +40,8 @@ namespace SharpArch.NHibernate.MultiDb
     ///     </list>
     /// </remarks>
     /// <threadsafety static="true" instance="true" />
-    public class SessionFactoryRegistry : IDisposable, ISessionFactoryRegistry
+    public class NHibernateSessionFactoryRegistry : IDisposable, ISessionFactoryRegistry, INHibernateSessionFactoryRegistryBuilder
     {
-        public static readonly string DefaultdatabaseIdentifier = "default";
-
         readonly ConcurrentDictionary<string, Container> _sessionFactoryBuilders =
             new ConcurrentDictionary<string, Container>(4, 16, StringComparer.Ordinal);
 
@@ -43,34 +49,41 @@ namespace SharpArch.NHibernate.MultiDb
         public void Dispose()
         {
             foreach (var container in _sessionFactoryBuilders.Values)
-            {
-                if (container.SessionFactory.IsValueCreated) container.SessionFactory.Value.Dispose();
-            }
+                if (container.SessionFactory.IsValueCreated)
+                    container.SessionFactory.Value.Dispose();
         }
 
-        public void Add([NotNull] string databaseIdentifier, [NotNull] INHibernateSessionFactoryBuilder sessionFactoryBuilder)
+        /// <inheritdoc />
+        public void Add(string databaseIdentifier, INHibernateSessionFactoryBuilder sessionFactoryBuilder)
         {
-            if (string.IsNullOrWhiteSpace(databaseIdentifier)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(databaseIdentifier));
+            if (string.IsNullOrWhiteSpace(databaseIdentifier))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(databaseIdentifier));
             if (sessionFactoryBuilder == null) throw new ArgumentNullException(nameof(sessionFactoryBuilder));
 
             AddLazyFactory(databaseIdentifier, new Container(sessionFactoryBuilder));
         }
 
-        public ISessionFactory GetSessionFactory([NotNull] string databaseIdentifier)
+        /// <inheritdoc />
+        public ISessionFactory GetSessionFactory(string databaseIdentifier)
             => GetLazyFactory(databaseIdentifier).SessionFactory.Value;
 
-        public global::NHibernate.Cfg.Configuration GetConfiguration(string databaseIdentifier)
+        /// <inheritdoc />
+        public Configuration GetConfiguration(string databaseIdentifier)
             => GetLazyFactory(databaseIdentifier).Configuration.Value;
 
+        /// <inheritdoc />
         public bool Contains(string databaseIdentifier)
         {
-            if (string.IsNullOrWhiteSpace(databaseIdentifier)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(databaseIdentifier));
+            if (string.IsNullOrWhiteSpace(databaseIdentifier))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(databaseIdentifier));
             return _sessionFactoryBuilders.ContainsKey(databaseIdentifier);
         }
 
+        /// <inheritdoc />
         public bool IsSessionFactoryCreated(string databaseIdentifier)
         {
-            if (string.IsNullOrWhiteSpace(databaseIdentifier)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(databaseIdentifier));
+            if (string.IsNullOrWhiteSpace(databaseIdentifier))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(databaseIdentifier));
             return GetLazyFactory(databaseIdentifier).SessionFactory.IsValueCreated;
         }
 
@@ -79,18 +92,19 @@ namespace SharpArch.NHibernate.MultiDb
             if (!_sessionFactoryBuilders.TryAdd(databaseIdentifier, container))
                 throw new InvalidOperationException($"SessionFactory with databaseIdentifier '{databaseIdentifier}' already registered.")
                 {
-                    Data = {["SessiondatabaseIdentifier"] = databaseIdentifier}
+                    Data = {[DatabaseIdentifier.ParameterName] = databaseIdentifier}
                 };
         }
 
         Container GetLazyFactory(string databaseIdentifier)
         {
-            if (string.IsNullOrWhiteSpace(databaseIdentifier)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(databaseIdentifier));
+            if (string.IsNullOrWhiteSpace(databaseIdentifier))
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(databaseIdentifier));
 
             if (!_sessionFactoryBuilders.TryGetValue(databaseIdentifier, out var lazyFactory))
                 throw new InvalidOperationException($"SessionFactory with databaseIdentifier '{databaseIdentifier}' was not registered.")
                 {
-                    Data = {["SessiondatabaseIdentifier"] = databaseIdentifier}
+                    Data = {[DatabaseIdentifier.ParameterName] = databaseIdentifier}
                 };
             return lazyFactory;
         }
@@ -98,13 +112,13 @@ namespace SharpArch.NHibernate.MultiDb
 
         class Container
         {
-            public Lazy<global::NHibernate.Cfg.Configuration> Configuration { get; }
+            public Lazy<Configuration> Configuration { get; }
 
             public Lazy<ISessionFactory> SessionFactory { get; }
 
-            public Container(INHibernateSessionFactoryBuilder factoryBuilder)
+            public Container([NotNull] NHibernate.INHibernateSessionFactoryBuilder factoryBuilder)
             {
-                Configuration = new Lazy<global::NHibernate.Cfg.Configuration>(() => factoryBuilder.BuildConfiguration(), LazyThreadSafetyMode.ExecutionAndPublication);
+                Configuration = new Lazy<Configuration>(() => factoryBuilder.BuildConfiguration(), LazyThreadSafetyMode.ExecutionAndPublication);
                 SessionFactory = new Lazy<ISessionFactory>(
                     () =>
                     {

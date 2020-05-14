@@ -1,11 +1,29 @@
-﻿using JetBrains.Annotations;
-using NHibernate;
-
-namespace SharpArch.NHibernate.MultiDb
+﻿namespace SharpArch.NHibernate.MultiDb
 {
-    public interface ISessionRegistry
+    using Domain.PersistenceSupport;
+    using global::NHibernate;
+    using JetBrains.Annotations;
+
+
+    /// <summary>
+    ///     Keeps track of Sessions.
+    /// </summary>
+    [PublicAPI]
+    public interface INHibernateSessionRegistry : ISessionRegistry
     {
-        INHibernateTransactionManager GetTransactionManager([NotNull] string databaseIdentifier);
+        /// <summary>
+        ///     Returns <see cref="INHibernateTransactionManager" /> for given database.
+        /// </summary>
+        /// <param name="databaseIdentifier"></param>
+        /// <returns></returns>
+        INHibernateTransactionManager GetNHibernateTransactionManager([NotNull] string databaseIdentifier);
+
+        /// <summary>
+        ///     Creates new <see cref="IStatelessSession" />.
+        /// </summary>
+        /// <param name="databaseIdentifier">Database identifier.</param>
+        /// <returns>New instance of <see cref="IStatelessSession" /></returns>
+        /// <remarks>Stateless sessions are not tracked by SessionRegistry and it is client's responsibility to dispose them.</remarks>
         IStatelessSession CreateStatelessSession([NotNull] string databaseIdentifier);
     }
 }
