@@ -28,7 +28,7 @@
 
         public MappingIntegrationTests()
         {
-            var nhibernateConfigPath = CalculatePath("../../../../Suteki.TardisBank.Web.Mvc/NHibernate.config");
+            var nhibernateConfigPath = CalculatePath("../../../../Suteki.TardisBank.WebApi/NHibernate.config");
             _configuration = new NHibernateSessionFactoryBuilder()
                 .AddMappingAssemblies(new[] {typeof(Child).Assembly})
                 .UseAutoPersistenceModel(new AutoPersistenceModelGenerator().Generate())

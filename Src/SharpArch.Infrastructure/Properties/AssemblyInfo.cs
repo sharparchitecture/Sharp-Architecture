@@ -2,6 +2,7 @@
 
 [assembly: InternalsVisibleTo("SharpArch.Domain")]
 [assembly: InternalsVisibleTo("SharpArch.NHibernate")]
+[assembly: InternalsVisibleTo("SharpArch.NHibernate.Extensions.DependencyInjection")]
 [assembly: InternalsVisibleTo("SharpArch.RavenDb")]
 [assembly: InternalsVisibleTo("SharpArch.Web.AspNetCore")]
 [assembly: InternalsVisibleTo("SharpArch.WebApi")]

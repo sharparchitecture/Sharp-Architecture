@@ -7,6 +7,10 @@ BREAKING CHANGES:
 * Removed HasUniqueDomainSignatureWithStringIdAttribute;
 * Added IEquatable<TId> constraint on IEntityWithTypedId<TId>;
 
+NEW FEATURES:
+* SharpArch.NHibernate.DependencyInjection package;
+* ASP.NET 3 / NetStandard2.1 support;
+
 
 ========================
 S#arp 5.0

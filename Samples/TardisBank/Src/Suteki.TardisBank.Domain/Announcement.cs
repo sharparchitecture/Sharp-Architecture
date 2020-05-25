@@ -2,8 +2,10 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.Diagnostics;
     using SharpArch.Domain.DomainModel;
 
+    [DebuggerDisplay("{Id}: {Title}")]
     public class Announcement: Entity
     {
         public virtual DateTime Date { get; set; }
