@@ -6,7 +6,6 @@
     using Domain;
     using Helpers;
     using Infrastructure.NHibernateMaps;
-    using Microsoft.Win32;
     using NHibernate;
     using NHibernate.Cfg;
     using NHibernate.Tool.hbm2ddl;
@@ -36,27 +35,11 @@
                 .AddMappingAssemblies(new[] {typeof(Child).Assembly})
                 .UseAutoPersistenceModel(new AutoPersistenceModelGenerator().Generate())
                 .UseConfigFile(nhibernateConfigPath)
-                .ExposeConfiguration(MapAlias)
                 .BuildConfiguration();
             _sessionFactory = _configuration.BuildSessionFactory();
             _session = _sessionFactory.OpenSession();
         }
 
-        static void MapAlias(Configuration config)
-        {
-            const string connectionString = "connection.connection_string";
-            var builder = new SqlConnectionStringBuilder(config.GetProperty(connectionString));
-
-            var key = Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE") == "x86"
-                ? @"HKEY_LOCAL_MACHINE\SOFTWARE\ Microsoft\MSSQLServer\Client\ConnectTo"
-                : @"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\MSSQLServer\Client\ConnectTo";
-
-            var newSource = (string)Registry.GetValue(key, builder.DataSource, null);
-            if (newSource != null)
-                builder.DataSource = newSource.Substring(newSource.IndexOf(',') + 1);
-
-            config.SetProperty(connectionString, builder.ConnectionString);
-        }
 
         /// <inheritdoc />
         public void Dispose()
