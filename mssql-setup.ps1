@@ -15,15 +15,23 @@ $Tcp = $wmi.GetSmoObject($uri)
 $Tcp.IsEnabled = $true
 $Tcp.alter()
 
-# Enable named pipes
+# Disable named pipes
 $uri = "ManagedComputer[@Name='$serverName']/ ServerInstance[@Name='$instanceName']/ServerProtocol[@Name='Np']"
 $Np = $wmi.GetSmoObject($uri)
 $Np.IsEnabled = $true
 $Np.Alter()
 
-# Set Alias
+# Set Alias (64 bit)
 New-Item HKLM:\SOFTWARE\Microsoft\MSSQLServer\Client -Name ConnectTo | Out-Null
 Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\MSSQLServer\Client\ConnectTo -Name 'TardisBank' -Value "DBMSSOCN,$serverName\$instanceName" | Out-Null
+
+# Set Alias (32 bit)
+New-Item HKLM:\SOFTWARE\WOW6432Node\Microsoft\MSSQLServer\Client -Name ConnectTo | Out-Null
+Set-ItemProperty -Path HKLM:\SOFTWARE\WOW6432Node\Microsoft\MSSQLServer\Client\ConnectTo -Name 'TardisBank' -Value "DBMSSOCN,$serverName\$instanceName" | Out-Null
+
+$configPath=".\Samples\TardisBank\Src\Suteki.TardisBank.WebApi\NHibernate.config"
+
+((Get-Content -path $configPath -Raw) -replace 'Data Source=localhost,2433',"Data Source=$serverName\$instanceName") | Set-Content -Path $configPath
 
 # Start services
 Set-Service SQLBrowser -StartupType Manual

@@ -11,7 +11,7 @@
         public void Apply(IIdentityInstance instance)
         {
             instance.Column(instance.EntityType.Name + "Id");
-            instance.GeneratedBy.HiLo("1001");
+            instance.GeneratedBy.HiLo("10");
         }
     }
 }

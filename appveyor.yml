@@ -31,7 +31,7 @@ environment:
 cache:
 #  - c:\work\sharp-arch\tmp\ResharperCaches
 #  - c:\work\sharp-arch\tmp\DupFinderCaches
-  - c:\tmp\cake\tools -> appveor.yml
+  - c:\tmp\cake\tools -> appveyor.yml
 
 install:
   - ps: ./dotnet-install.ps1  -Version 2.2.100 -InstallDir "C:\Program Files\dotnet"

@@ -1,6 +1,7 @@
 ﻿namespace Suteki.TardisBank.Tests.Suteki.TardisBank.Data.NHibernateMaps
 {
     using System;
+    using System.Data.SqlClient;
     using System.IO;
     using Domain;
     using Helpers;
@@ -10,6 +11,7 @@
     using NHibernate.Tool.hbm2ddl;
     using SharpArch.NHibernate;
     using Xunit;
+    using Environment = System.Environment;
 
 
     /// <summary>
@@ -28,7 +30,7 @@
 
         public MappingIntegrationTests()
         {
-            var nhibernateConfigPath = CalculatePath("../../../../Suteki.TardisBank.Web.Mvc/NHibernate.config");
+            var nhibernateConfigPath = CalculatePath("../../../../Suteki.TardisBank.WebApi/NHibernate.config");
             _configuration = new NHibernateSessionFactoryBuilder()
                 .AddMappingAssemblies(new[] {typeof(Child).Assembly})
                 .UseAutoPersistenceModel(new AutoPersistenceModelGenerator().Generate())
@@ -37,6 +39,7 @@
             _sessionFactory = _configuration.BuildSessionFactory();
             _session = _sessionFactory.OpenSession();
         }
+
 
         /// <inheritdoc />
         public void Dispose()

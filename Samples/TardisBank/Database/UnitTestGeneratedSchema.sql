@@ -53,8 +53,8 @@ alter table Parents  drop constraint FK_Parents_Join_Users
 
     create table Announcements (
         AnnouncementId INT not null,
+       Date date null,
        LastModifiedUtc DATETIME2 null,
-       Date DATETIME2 null,
        Title NVARCHAR(255) null,
        Content NVARCHAR(255) null,
        primary key (AnnouncementId)
