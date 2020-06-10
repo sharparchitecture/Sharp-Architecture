@@ -21,9 +21,13 @@ $Np = $wmi.GetSmoObject($uri)
 $Np.IsEnabled = $true
 $Np.Alter()
 
-# Set Alias
+# Set Alias (64 bit)
 New-Item HKLM:\SOFTWARE\Microsoft\MSSQLServer\Client -Name ConnectTo | Out-Null
 Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\MSSQLServer\Client\ConnectTo -Name 'TardisBank' -Value "DBMSSOCN,$serverName\$instanceName" | Out-Null
+
+# Set Alias (32 bit)
+New-Item HKLM:\SOFTWARE\WOW6432Node\Microsoft\MSSQLServer\Client - Name ConnectTo | Out-Null
+Set-ItemProperty -Path HKLM:\SOFTWARE\WOW6432Node\Microsoft\MSSQLServer\Client\ConnectTo -Name 'TardisBank' -Value "DBMSSOCN,$serverName\$instanceName" | Out-Null
 
 # Start services
 Set-Service SQLBrowser -StartupType Manual
