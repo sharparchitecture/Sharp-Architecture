@@ -61,3 +61,6 @@ issue-labels-alias:
   - name: sample
     header: Sample
     plural: Samples
+  - name: documentation
+    header: Documentation updated
+    plural: Documentation updates
