@@ -3,13 +3,18 @@ S#arp 6.0
 ========================
 
 BREAKING CHANGES:
-* Removed HasUniqueDomainSignatureWithGuidIdAttribute;
-* Removed HasUniqueDomainSignatureWithStringIdAttribute;
-* Added IEquatable<TId> constraint on IEntityWithTypedId<TId>;
+* Removed HasUniqueDomainSignatureWithGuidIdAttribute.
+* Removed HasUniqueDomainSignatureWithStringIdAttribute.
+* Added IEquatable<TId> constraint on IEntityWithTypedId<TId>.
+* Removed synchronous methods from repositories.
 
 NEW FEATURES:
-* SharpArch.NHibernate.DependencyInjection package;
-* ASP.NET 3 / NetStandard2.1 support;
+* SharpArch.NHibernate.DependencyInjection package.
+* Asynchronous Transaction Manager.
+* ASP.NET Core 3 / NetStandard2.1 support.
+
+IMPROVEMENTS:
+* More control over NHibernate configuration.
 
 
 ========================

@@ -33,7 +33,7 @@
     <PackageIconUrl>https://github.com/sharparchitecture/Sharp-Architecture/raw/master/Artefacts/Documentation/Logo_100x100.png</PackageIconUrl>
     <PackageProjectUrl>http://sharparchitecture.github.io/</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/5.0.0</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/6.0.0</PackageReleaseNotes>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
