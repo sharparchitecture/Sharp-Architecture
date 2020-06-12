@@ -8,7 +8,12 @@
   <PropertyGroup Label="Pack">
     <Description>Provides NHibernate persistance support for a Sharp Architecture application, providing NHibernate session managment and initialisation, and implementations of core SharpArch data access interfaces.</Description>
     <PackageTags>$(PackageTags);nhibernate;persistance</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Artefacts\Documentation\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentNHibernate" Version="2.1.2" />

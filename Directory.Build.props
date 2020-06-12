@@ -30,7 +30,7 @@
   <PropertyGroup Label="Package" Condition="'$(MSBuildProjectName.Contains(Tests))' == false">
     <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
     <IsPackable>True</IsPackable>
-    <PackageIconUrl>https://github.com/sharparchitecture/Sharp-Architecture/raw/master/Artefacts/Documentation/Logo_100x100.png</PackageIconUrl>
+    <PackageIconUrl>https://github.com/sharparchitecture/Sharp-Architecture/raw/master/Artefacts/Documentation/icon.png</PackageIconUrl>
     <PackageProjectUrl>http://sharparchitecture.github.io/</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/6.0.0</PackageReleaseNotes>

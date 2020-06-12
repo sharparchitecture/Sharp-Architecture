@@ -8,7 +8,12 @@
   <PropertyGroup Label="Pack">
     <Description>Add NHibernate registration helpers for Microsoft Dependency Injecton.</Description>
     <PackageTags>$(PackageTags);dependency-injection</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Artefacts\Documentation\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" PrivateAssets="All" />

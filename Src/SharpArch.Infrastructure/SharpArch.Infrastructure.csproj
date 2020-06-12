@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <NoWarn>CS1591;CS1572;CS1573</NoWarn>
+    <NoWarn>$(NoWarn);CS1591;CS1572;CS1573</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -11,7 +11,12 @@
   <PropertyGroup Label="Pack">
     <Description>Provides infrastrucure components for Sharp Architecture application.</Description>
     <PackageTags>$(PackageTags);infrastructure;logging</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Artefacts\Documentation\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
   
   <ItemGroup>
     <Compile Include="..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />

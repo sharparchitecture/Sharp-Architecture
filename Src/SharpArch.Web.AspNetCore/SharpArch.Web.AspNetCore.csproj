@@ -13,7 +13,12 @@
   <PropertyGroup Label="Pack">
     <Description>Provides AspNet.Core MVC extensions.</Description>
     <PackageTags>$(PackageTags);aspnet-core;web-api;aspnet-core-mvc</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Artefacts\Documentation\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" PrivateAssets="All" />

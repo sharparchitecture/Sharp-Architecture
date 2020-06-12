@@ -9,8 +9,13 @@
   <PropertyGroup Label="Pack">
     <Description>Provides base classes to help with testing applications written with Sharp Architecture using xUnit.</Description>
     <PackageTags>$(PackageTags);testing;xunit;db-testing;nhibernate</PackageTags>
-<IsTestProject>false</IsTestProject>
+    <IsTestProject>false</IsTestProject>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Artefacts\Documentation\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" PrivateAssets="All" />
