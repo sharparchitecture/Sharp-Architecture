@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup Label="Common references">
-    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" PrivateAssets="All" />
+    <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="xunit.core" Version="2.4.1" />
   </ItemGroup>
