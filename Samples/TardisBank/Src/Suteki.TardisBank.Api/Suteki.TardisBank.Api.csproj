@@ -1,9 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" PrivateAssets="All" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  <ItemGroup Label="Package References (NetStandard 2.0)" Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Package References (NetStandard 2.1)" Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Package References (.NET 5)" Condition=" '$(TargetFramework)' == 'net5' ">
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" PrivateAssets="All" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
 </Project>
