@@ -3,20 +3,20 @@
     <Product>Sharp Architecture</Product>
     <Authors>Sharp Architecture Dev Team</Authors>
 
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net5</TargetFrameworks>
     <SignAssembly>false</SignAssembly>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
 
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
-  <PropertyGroup Label="Custom targers">
+  <PropertyGroup Label="Custom targeTs">
     <!-- target frameworks for unit-tests and applications -->
-    <AppTargetFrameworks>netcoreapp2.1;netcoreapp2.2;netcoreapp3.1</AppTargetFrameworks>
+    <AppTargetFrameworks>netcoreapp2.1;netcoreapp2.2;netcoreapp3.1;net5</AppTargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">

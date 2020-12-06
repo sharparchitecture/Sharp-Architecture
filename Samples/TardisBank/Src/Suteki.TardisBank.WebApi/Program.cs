@@ -10,7 +10,7 @@ namespace Suteki.TardisBank.WebApi
     using Serilog.Exceptions;
     using Serilog.Formatting.Json;
     using Serilog.Sinks.SystemConsole.Themes;
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1 || NET5_0
     using Microsoft.Extensions.Hosting;
 #endif
 

@@ -1,16 +1,16 @@
-﻿namespace SharpArch.WebApi.Sample
+﻿namespace TransactionAttribute.WebApi
 {
 
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1 || NET5_0
     using Microsoft.Extensions.Hosting;
     using Microsoft.AspNetCore.Hosting;
 #else
     using Microsoft.AspNetCore.Hosting;
 #endif
-
     using System;
     using System.IO;
     using Autofac.Extensions.DependencyInjection;
+    using JetBrains.Annotations;
     using Microsoft.Extensions.Configuration;
     using Serilog;
     using Serilog.Events;
@@ -19,9 +19,10 @@
     using Serilog.Sinks.SystemConsole.Themes;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [UsedImplicitly]
     public class Program
     {
-        public static int Main(string[] args)
+        public static int Main([NotNull] string[] args)
         {
             try
             {
@@ -41,6 +42,7 @@
             }
         }
 
+        [NotNull]
         public static IWebHostBuilder CreateHostBuilder()
         {
             return new WebHostBuilder()

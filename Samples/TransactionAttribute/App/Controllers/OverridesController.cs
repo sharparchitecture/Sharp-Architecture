@@ -1,11 +1,11 @@
-﻿namespace SharpArch.WebApi.Sample.Controllers
+﻿namespace TransactionAttribute.WebApi.Controllers
 {
     using System;
     using System.Data;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Serilog;
-    using Web.AspNetCore.Transaction;
+    using SharpArch.Web.AspNetCore.Transaction;
 
 
     [Route("api/[controller]")]

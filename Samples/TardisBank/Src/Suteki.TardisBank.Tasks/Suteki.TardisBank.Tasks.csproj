@@ -2,9 +2,9 @@
 
   <ItemGroup>
     <PackageReference Include="Iesi.Collections" Version="4.0.4" />
-    <PackageReference Include="JetBrains.Annotations" Version="2020.1.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" />
     <PackageReference Include="MediatR" Version="8.0.1" />
-    <PackageReference Include="NHibernate" Version="5.2.7" />
+    <PackageReference Include="NHibernate" Version="5.3.5" />
   </ItemGroup>
 
   <ItemGroup>

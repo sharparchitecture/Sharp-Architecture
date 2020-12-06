@@ -41,7 +41,7 @@ namespace Suteki.TardisBank.WebApi
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1 || NET5_0
             services.AddControllers(options => { options.Filters.Add(new AutoTransactionHandler()); })
                 .AddNewtonsoftJson();
 
@@ -87,7 +87,7 @@ namespace Suteki.TardisBank.WebApi
         /// <param name="app"></param>
         public void Configure(IApplicationBuilder app)
         {
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1 || NET5_0
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

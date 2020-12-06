@@ -1,21 +1,20 @@
-﻿using System;
-using System.Data;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using FluentAssertions;
-using JetBrains.Annotations;
-using SharpArch.WebApi.Tests.Setup;
-using Xunit;
-
-namespace SharpArch.WebApi.Tests
+﻿namespace TransactionAttribute.Tests
 {
-    using Sample.Stubs;
+    using System;
+    using System.Data;
+    using System.Net;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using FluentAssertions;
+    using JetBrains.Annotations;
+    using Setup;
+    using WebApi.Stubs;
+    using Xunit;
 
 
     public class UnitOfWorkAttributeOverrideTests : IClassFixture<TestServerSetup>
     {
-        private readonly TestServerSetup _setup;
+        readonly TestServerSetup _setup;
 
         public UnitOfWorkAttributeOverrideTests([NotNull] TestServerSetup setup)
         {
@@ -43,7 +42,7 @@ namespace SharpArch.WebApi.Tests
             }
         }
 
-        private Task<HttpResponseMessage> GetAsync(string relativePath)
+        Task<HttpResponseMessage> GetAsync(string relativePath)
         {
             return _setup.Client.GetAsync(new Uri(_setup.Client.BaseAddress, relativePath));
         }

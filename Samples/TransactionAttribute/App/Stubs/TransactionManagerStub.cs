@@ -1,13 +1,13 @@
-﻿namespace SharpArch.WebApi.Sample.Stubs
+﻿namespace TransactionAttribute.WebApi.Stubs
 {
     using System;
     using System.Data;
     using System.Threading;
     using System.Threading.Tasks;
-    using Domain.PersistenceSupport;
     using JetBrains.Annotations;
     using Microsoft.AspNetCore.Http;
     using Serilog;
+    using SharpArch.Domain.PersistenceSupport;
 
 
     public class TransactionManagerStub : ITransactionManager, IDisposable, ISupportsTransactionStatus

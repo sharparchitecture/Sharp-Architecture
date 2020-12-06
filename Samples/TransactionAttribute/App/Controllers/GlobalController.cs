@@ -1,4 +1,4 @@
-﻿namespace SharpArch.WebApi.Sample.Controllers
+﻿namespace TransactionAttribute.WebApi.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
     using Serilog;

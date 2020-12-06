@@ -1,18 +1,18 @@
-﻿namespace SharpArch.WebApi.Sample
+﻿namespace TransactionAttribute.WebApi
 {
     using System.Data;
+    using System.Globalization;
     using Autofac;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
-#if NETCOREAPP2_1 || NETCOREAPP2_2
-    using System.Globalization;
     using Microsoft.AspNetCore.Mvc;
-    using Newtonsoft.Json;
-#endif
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Newtonsoft.Json;
+    using SharpArch.Web.AspNetCore.Transaction;
     using Stubs;
-    using Web.AspNetCore.Transaction;
+#if NETCOREAPP2_1 || NETCOREAPP2_2
+#endif
 
 
     public class Startup
@@ -30,7 +30,7 @@
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1 || NET5_0
             services.AddControllers(options =>
                 {
                     options.Filters.Add(new AutoTransactionHandler());
@@ -71,7 +71,7 @@
         /// <param name="app"></param>
         public void Configure(IApplicationBuilder app)
         {
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1 || NET5_0
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
