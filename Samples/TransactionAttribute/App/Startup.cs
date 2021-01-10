@@ -1,17 +1,17 @@
 ﻿namespace TransactionAttribute.WebApi
 {
     using System.Data;
-    using System.Globalization;
     using Autofac;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Newtonsoft.Json;
     using SharpArch.Web.AspNetCore.Transaction;
     using Stubs;
 #if NETCOREAPP2_1 || NETCOREAPP2_2
+    using System.Globalization;
+    using Microsoft.AspNetCore.Mvc;
+    using Newtonsoft.Json;
 #endif
 
 
@@ -36,7 +36,7 @@
                     options.Filters.Add(new AutoTransactionHandler());
                     options.Filters.Add(new TransactionAttribute(isolationLevel: IsolationLevel.Chaos));
                 })
-                .AddNewtonsoftJson();
+                ;
 
 #else
             // Add framework services.

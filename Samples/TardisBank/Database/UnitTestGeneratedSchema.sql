@@ -62,29 +62,29 @@ alter table Parents  drop constraint FK_Parents_Join_Users
 
     create table Messages (
         MessageId INT not null,
+       UserId INT null,
        Date DATETIME2 null,
        Text NVARCHAR(255) null,
        HasBeenRead BIT null,
-       UserId INT null,
        primary key (MessageId)
     )
 
     create table PaymentSchedules (
         PaymentScheduleId INT not null,
+       AccountId INT null,
        NextRun DATETIME2 null,
        Interval NVARCHAR(255) null,
        Amount DECIMAL(19,5) null,
        Description NVARCHAR(255) null,
-       AccountId INT null,
        primary key (PaymentScheduleId)
     )
 
     create table Transactions (
         TransactionId INT not null,
+       AccountId INT null,
        Description NVARCHAR(255) null,
        Amount DECIMAL(19,5) null,
        Date DATETIME2 null,
-       AccountId INT null,
        primary key (TransactionId)
     )
 
@@ -99,8 +99,8 @@ alter table Parents  drop constraint FK_Parents_Join_Users
 
     create table Children (
         UserId INT not null,
-       ParentId INT null,
        AccountId INT null,
+       ParentId INT null,
        primary key (UserId)
     )
 
