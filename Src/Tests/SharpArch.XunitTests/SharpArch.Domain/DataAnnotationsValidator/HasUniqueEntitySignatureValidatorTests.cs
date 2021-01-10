@@ -30,7 +30,7 @@
 
 
         [HasUniqueDomainSignature]
-        class Contractor : Entity
+        class Contractor : Entity<int>
         {
             [DomainSignature]
             public string Name { get; set; }
@@ -59,7 +59,7 @@
 
 
         [HasUniqueDomainSignature]
-        class ObjectWithGuidId : EntityWithTypedId<Guid>
+        class ObjectWithGuidId : Entity<Guid>
         {
             [DomainSignature]
             public string Name { get; set; }
@@ -67,7 +67,7 @@
 
 
         [HasUniqueDomainSignature]
-        class ObjectWithStringIdAndValidatorForIntId : EntityWithTypedId<string>
+        class ObjectWithStringIdAndValidatorForIntId : Entity<string>
         {
             [DomainSignature]
             public string Name { get; set; }
@@ -75,7 +75,7 @@
 
 
         [HasUniqueDomainSignature]
-        class User : EntityWithTypedId<string>
+        class User : Entity<string>
         {
             [DomainSignature]
             public string Ssn { get; set; }

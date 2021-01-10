@@ -10,7 +10,7 @@
     /// <remarks>
     ///     <para>
     ///         This may be used for comparing objects of type <see cref="BaseObject" /> and anything
-    ///         that derives from it, such as <see cref="Entity" /> and <see cref="ValueObject" />.
+    ///         that derives from it, such as <see cref="Entity{TId}" /> and <see cref="ValueObject" />.
     ///     </para>
     ///     <para>
     ///         NOTE: Microsoft decided that set operators such as Intersect, Union and Distinct should

@@ -4,7 +4,7 @@
 
     using SharpArch.Domain.DomainModel;
 
-    public class PaymentSchedule : Entity
+    public class PaymentSchedule : Entity<int>
     {
         public PaymentSchedule(DateTime nextRun, Interval interval, decimal amount, string description, Account account)
         {

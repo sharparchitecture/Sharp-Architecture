@@ -3,6 +3,7 @@
     using System;
     using Domain.PersistenceSupport;
     using global::NHibernate;
+    using Impl;
     using Infrastructure.Logging;
     using JetBrains.Annotations;
     using Microsoft.Extensions.DependencyInjection;
@@ -17,9 +18,8 @@
         static readonly ILog _log = LogProvider.GetLogger("SharpArch.NHibernate.Extensions.DependencyInjection");
 
         /// <summary>
-        ///     Adds NHibernate classes required to support <see cref="NHibernateRepository{T}" />,
-        ///     <see cref="NHibernateRepositoryWithTypedId{T,TId}" />,
-        ///     <see cref="LinqRepository{T}" />  and <see cref="LinqRepositoryWithTypedId{T,TId}" /> instantiation from container.
+        ///     Adds NHibernate classes required to support <see cref="NHibernateRepository{T,TId}" />,
+        ///     <see cref="LinqRepository{T,TId}" /> instantiation from container.
         ///     <para>
         ///         <see cref="ISessionFactory" /> and <see cref="ITransactionManager" /> are registered as Singleton.
         ///     </para>

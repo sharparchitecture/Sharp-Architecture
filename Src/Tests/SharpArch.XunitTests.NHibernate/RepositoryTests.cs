@@ -2,8 +2,10 @@ namespace Tests.SharpArch.NHibernate
 {
     using FluentAssertions;
     using global::NHibernate;
+    using global::SharpArch.Domain.DomainModel;
     using global::SharpArch.Domain.PersistenceSupport;
     using global::SharpArch.NHibernate;
+    using global::SharpArch.NHibernate.Impl;
     using Moq;
     using Xunit;
 
@@ -16,14 +18,14 @@ namespace Tests.SharpArch.NHibernate
             var session = new Mock<ISession>();
             var transactionManager = new Mock<INHibernateTransactionManager>();
             transactionManager.SetupGet(t => t.Session).Returns(session.Object);
-            var concreteRepository = new LinqRepository<MyEntity>(transactionManager.Object);
+            var concreteRepository = new LinqRepository<MyEntity, int>(transactionManager.Object);
 
-            concreteRepository.Should().BeAssignableTo<ILinqRepository<MyEntity>>();
+            concreteRepository.Should().BeAssignableTo<ILinqRepository<MyEntity, int>>();
         }
     }
 
 
-    public class MyEntity
+    public class MyEntity: Entity<int>
     {
         string Name { get; set; }
     }

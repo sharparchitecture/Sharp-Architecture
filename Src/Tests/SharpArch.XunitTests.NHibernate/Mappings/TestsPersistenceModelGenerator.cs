@@ -21,8 +21,7 @@ namespace Tests.SharpArch.NHibernate.Mappings
         public AutoPersistenceModel Generate()
         {
             var mappings = AutoMap.AssemblyOf<Customer>(new AutomappingConfiguration());
-            mappings.IgnoreBase<Entity>();
-            mappings.IgnoreBase(typeof(EntityWithTypedId<>));
+            mappings.IgnoreBase(typeof(Entity<>));
             mappings.Conventions.Setup(GetConventions());
             mappings.UseOverridesFromAssemblyOf<TestsPersistenceModelGenerator>();
 

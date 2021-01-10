@@ -6,9 +6,11 @@ namespace SharpArch.NHibernate
     using System.Threading.Tasks;
     using Contracts.Repositories;
     using Domain;
+    using Domain.DomainModel;
     using Domain.PersistenceSupport;
     using global::NHibernate;
     using global::NHibernate.Criterion;
+    using Impl;
     using JetBrains.Annotations;
 
 
@@ -19,9 +21,16 @@ namespace SharpArch.NHibernate
     ///     <object id="CustomerDao"
     ///         type="SharpArch.Data.NHibernateSupport.GenericDao&lt;CustomerAlias, string>, SharpArch.Data" autowire="byName" />
     /// </summary>
+    /// <remarks>
+    /// Keep constructor protected to enable support of single-database (<see cref="NHibernateRepository{TEntity,TId}"/>)
+    /// and multiple-database
+    /// </remarks>
+    /// <typeparam name="TEntity">Entity type/</typeparam>
+    /// <typeparam name="TId">Entity identifier type.</typeparam>
     [PublicAPI]
-    public class NHibernateRepositoryWithTypedId<T, TId> : IAsyncNHibernateRepositoryWithTypedId<T, TId>
-        where T : class
+    public class NHibernateRepositoryBase<TEntity, TId> : INHibernateRepository<TEntity, TId>
+        where TEntity : class, IEntity<TId>
+        where TId : IEquatable<TId>
     {
         /// <summary>
         ///     Gets NHibernate session.
@@ -36,47 +45,47 @@ namespace SharpArch.NHibernate
         protected INHibernateTransactionManager TransactionManager { get; }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="NHibernateRepositoryWithTypedId{T, TId}" /> class.
+        ///     Initializes a new instance of the <see cref="NHibernateRepositoryBase{TEntity,TId}" /> class.
         /// </summary>
         /// <param name="transactionManager">The transaction manager.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public NHibernateRepositoryWithTypedId(
+        protected NHibernateRepositoryBase(
             [NotNull] INHibernateTransactionManager transactionManager)
         {
             TransactionManager = transactionManager ?? throw new ArgumentNullException(nameof(transactionManager));
         }
 
         /// <inheritdoc />
-        public Task<T> GetAsync(TId id, CancellationToken cancellationToken = default)
-            => Session.GetAsync<T>(id, cancellationToken);
+        public Task<TEntity> GetAsync(TId id, CancellationToken cancellationToken = default)
+            => Session.GetAsync<TEntity>(id, cancellationToken);
 
         /// <inheritdoc />
-        public Task<IList<T>> GetAllAsync(CancellationToken cancellationToken = default)
+        public Task<IList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            ICriteria criteria = Session.CreateCriteria(typeof(T));
-            return criteria.ListAsync<T>(cancellationToken);
+            ICriteria criteria = Session.CreateCriteria(typeof(TEntity));
+            return criteria.ListAsync<TEntity>(cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task<T> SaveAsync(T entity, CancellationToken cancellationToken = default)
+        public async Task<TEntity> SaveAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             await Session.SaveAsync(entity, cancellationToken).ConfigureAwait(false);
             return entity;
         }
 
         /// <inheritdoc />
-        public async Task<T> SaveOrUpdateAsync(T entity, CancellationToken cancellationToken = default)
+        public async Task<TEntity> SaveOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             await Session.SaveOrUpdateAsync(entity, cancellationToken).ConfigureAwait(false);
             return entity;
         }
 
         /// <inheritdoc />
-        public Task EvictAsync(T entity, CancellationToken cancellationToken = default)
+        public Task EvictAsync(TEntity entity, CancellationToken cancellationToken = default)
             => Session.EvictAsync(entity, cancellationToken);
 
         /// <inheritdoc />
-        public Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
+        public Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default)
             => Session.DeleteAsync(entity, cancellationToken);
 
         /// <inheritdoc />
@@ -86,10 +95,10 @@ namespace SharpArch.NHibernate
             if (entity != null) await DeleteAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
-        ITransactionManager IAsyncRepositoryWithTypedId<T, TId>.TransactionManager => TransactionManager;
+        ITransactionManager IRepository<TEntity, TId>.TransactionManager => TransactionManager;
 
         /// <inheritdoc />
-        public virtual Task<IList<T>> FindAllAsync(
+        public virtual Task<IList<TEntity>> FindAllAsync(
             IReadOnlyDictionary<string, object> propertyValuePairs,
             int? maxResults = null,
             CancellationToken cancellationToken = default)
@@ -99,7 +108,7 @@ namespace SharpArch.NHibernate
                 throw new ArgumentException("No properties specified. Please specify at least one property/value pair.",
                     nameof(propertyValuePairs));
 
-            ICriteria criteria = Session.CreateCriteria(typeof(T));
+            ICriteria criteria = Session.CreateCriteria(typeof(TEntity));
             foreach (string key in propertyValuePairs.Keys)
             {
                 criteria.Add(propertyValuePairs[key] != null
@@ -108,14 +117,14 @@ namespace SharpArch.NHibernate
             }
 
             if (maxResults.HasValue) criteria.SetMaxResults(maxResults.Value);
-            return criteria.ListAsync<T>(cancellationToken);
+            return criteria.ListAsync<TEntity>(cancellationToken);
         }
 
         /// <inheritdoc />
-        public Task<IList<T>> FindAllAsync(
-            T exampleInstance, string[] propertiesToExclude, int? maxResults = null, CancellationToken cancellationToken = default)
+        public Task<IList<TEntity>> FindAllAsync(
+            TEntity exampleInstance, string[] propertiesToExclude, int? maxResults = null, CancellationToken cancellationToken = default)
         {
-            ICriteria criteria = Session.CreateCriteria(typeof(T));
+            ICriteria criteria = Session.CreateCriteria(typeof(TEntity));
             Example example = Example.Create(exampleInstance);
 
             foreach (string propertyToExclude in propertiesToExclude) example.ExcludeProperty(propertyToExclude);
@@ -124,20 +133,20 @@ namespace SharpArch.NHibernate
 
             if (maxResults.HasValue) criteria.SetMaxResults(maxResults.Value);
 
-            return criteria.ListAsync<T>(cancellationToken);
+            return criteria.ListAsync<TEntity>(cancellationToken);
         }
 
         /// <inheritdoc />
-        public virtual async Task<T> FindOneAsync(T exampleInstance, CancellationToken ct, params string[] propertiesToExclude)
+        public virtual async Task<TEntity> FindOneAsync(TEntity exampleInstance, CancellationToken ct, params string[] propertiesToExclude)
         {
-            IList<T> foundList = await FindAllAsync(exampleInstance, propertiesToExclude, 2, ct).ConfigureAwait(false);
+            IList<TEntity> foundList = await FindAllAsync(exampleInstance, propertiesToExclude, 2, ct).ConfigureAwait(false);
             if (foundList.Count > 1) throw new NonUniqueResultException(foundList.Count);
 
             return foundList.Count == 1 ? foundList[0] : default;
         }
 
         /// <inheritdoc />
-        public async Task<T> FindOneAsync(
+        public async Task<TEntity> FindOneAsync(
             IReadOnlyDictionary<string, object> propertyValuePairs,
             CancellationToken cancellationToken = default)
         {
@@ -148,23 +157,23 @@ namespace SharpArch.NHibernate
         }
 
         /// <inheritdoc />
-        public virtual Task<T> GetAsync(TId id, Enums.LockMode lockMode, CancellationToken ct)
-            => Session.GetAsync<T>(id, ConvertFrom(lockMode), ct);
+        public virtual Task<TEntity> GetAsync(TId id, Enums.LockMode lockMode, CancellationToken ct)
+            => Session.GetAsync<TEntity>(id, ConvertFrom(lockMode), ct);
 
         /// <inheritdoc />
-        public virtual Task<T> LoadAsync(TId id, CancellationToken ct)
-            => Session.LoadAsync<T>(id, ct);
+        public virtual Task<TEntity> LoadAsync(TId id, CancellationToken ct)
+            => Session.LoadAsync<TEntity>(id, ct);
 
         /// <inheritdoc />
-        public virtual Task<T> LoadAsync(TId id, Enums.LockMode lockMode, CancellationToken ct)
-            => Session.LoadAsync<T>(id, ConvertFrom(lockMode), ct);
+        public virtual Task<TEntity> LoadAsync(TId id, Enums.LockMode lockMode, CancellationToken ct)
+            => Session.LoadAsync<TEntity>(id, ConvertFrom(lockMode), ct);
 
         /// <inheritdoc />
-        public Task<T> MergeAsync(T entity, CancellationToken cancellationToken = default)
+        public Task<TEntity> MergeAsync(TEntity entity, CancellationToken cancellationToken = default)
             => Session.MergeAsync(entity, cancellationToken);
 
         /// <inheritdoc />
-        public virtual async Task<T> UpdateAsync(T entity, CancellationToken ct)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken ct)
         {
             await Session.UpdateAsync(entity, ct).ConfigureAwait(false);
             return entity;
@@ -176,26 +185,17 @@ namespace SharpArch.NHibernate
         ///     NHibernate assembly.
         /// </summary>
         static LockMode ConvertFrom(Enums.LockMode lockMode)
-        {
-            switch (lockMode)
+            => lockMode switch
             {
-                case Enums.LockMode.None:
-                    return LockMode.None;
-                case Enums.LockMode.Read:
-                    return LockMode.Read;
-                case Enums.LockMode.Upgrade:
-                    return LockMode.Upgrade;
-                case Enums.LockMode.UpgradeNoWait:
-                    return LockMode.UpgradeNoWait;
-                case Enums.LockMode.Write:
-                    return LockMode.Write;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(lockMode), lockMode,
-                        "The provided lock mode , '" + lockMode +
-                        "', could not be translated into an NHibernate.LockMode. " +
-                        "This is probably because NHibernate was updated and now has different lock modes which are out of synch " +
-                        "with the lock modes maintained in the domain layer.");
-            }
-        }
+                Enums.LockMode.None => LockMode.None,
+                Enums.LockMode.Read => LockMode.Read,
+                Enums.LockMode.Upgrade => LockMode.Upgrade,
+                Enums.LockMode.UpgradeNoWait => LockMode.UpgradeNoWait,
+                Enums.LockMode.Write => LockMode.Write,
+                _ => throw new ArgumentOutOfRangeException(nameof(lockMode), lockMode,
+                    "The provided lock mode , '" + lockMode + "', could not be translated into an NHibernate.LockMode. " +
+                    "This is probably because NHibernate was updated and now has different lock modes which are out of synch " +
+                    "with the lock modes maintained in the domain layer.")
+            };
     }
 }

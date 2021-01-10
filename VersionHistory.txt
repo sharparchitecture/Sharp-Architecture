@@ -1,4 +1,13 @@
 ========================
+vNext
+========================
+
+BREAKING:
+* Removed EntityWithTypedId<> replaced with Entity<>, removed old entity class. Fix: replace `Entity` with `Entity<int>`.
+* Renamed IAsyncRepository to IRepository.
+* Added IEquatable<TId> constraint on IEntity<TId>.
+
+
 S#arp 6.1
 ========================
 NEW FEATURES:
@@ -145,7 +154,7 @@ S#arp Architecture 2.0.3 for Visual Studio 2010
 
 Issues:
 * #42: Show the expected/requested TResult in the exception message (Thanks Joel Purra @joelpurra).
-* #41: Decorated the attribute classes with the AttributeUsageAttribute, to restrict usage of the attributes to their intended targets. (Thanks Sandor Drieënhuizen @sandord)
+* #41: Decorated the attribute classes with the AttributeUsageAttribute, to restrict usage of the attributes to their intended targets. (Thanks Sandor DrieÃ«nhuizen @sandord)
 
 -------
 

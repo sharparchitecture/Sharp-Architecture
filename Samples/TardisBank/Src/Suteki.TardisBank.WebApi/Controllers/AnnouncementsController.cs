@@ -22,7 +22,7 @@
     [Transaction(IsolationLevel.ReadCommitted)]
     public class AnnouncementsController : ControllerBase
     {
-        readonly ILinqRepository<Announcement> _announcementRepository;
+        readonly ILinqRepository<Announcement, int> _announcementRepository;
 #if NETCOREAPP3_1 || NET5_0
         [NotNull] readonly LinkGenerator _linkGenerator;
 #endif
@@ -32,7 +32,7 @@
         ///     Creates AnnouncementController.
         /// </summary>
         /// <param name="announcementRepository">Announcements repository.</param>
-        public AnnouncementsController([NotNull] ILinqRepository<Announcement> announcementRepository,
+        public AnnouncementsController([NotNull] ILinqRepository<Announcement, int> announcementRepository,
 #if NETCOREAPP3_1 || NET5_0
             LinkGenerator linkGenerator,
 #endif

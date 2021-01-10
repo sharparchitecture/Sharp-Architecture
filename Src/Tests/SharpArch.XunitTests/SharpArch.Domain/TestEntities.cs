@@ -8,7 +8,7 @@ namespace Tests.SharpArch.Domain
 
 
     [HasUniqueDomainSignature]
-    public class Contractor : Entity
+    public class Contractor : Entity<int>
     {
         [DomainSignature]
         public virtual string Name { get; set; }
@@ -16,7 +16,7 @@ namespace Tests.SharpArch.Domain
 
 
     [HasUniqueDomainSignature]
-    public class ObjectWithGuidId : EntityWithTypedId<Guid>
+    public class ObjectWithGuidId : Entity<Guid>
     {
         [DomainSignature]
         public virtual string Name { get; set; }
@@ -24,7 +24,7 @@ namespace Tests.SharpArch.Domain
 
 
     [HasUniqueDomainSignature]
-    internal class ObjectWithStringIdAndValidatorForIntId : EntityWithTypedId<string>
+    internal class ObjectWithStringIdAndValidatorForIntId : Entity<string>
     {
         [DomainSignature]
         public virtual string Name { get; set; }
@@ -32,7 +32,7 @@ namespace Tests.SharpArch.Domain
 
 
     [HasUniqueDomainSignature]
-    public class User : EntityWithTypedId<string>
+    public class User : Entity<string>
     {
         [DomainSignature]
         public virtual string Ssn { get; set; }
@@ -49,7 +49,7 @@ namespace Tests.SharpArch.Domain
     }
 
 
-    internal class EntityWithNoDomainSignatureProperties : EntityWithTypedId<int>
+    internal class EntityWithNoDomainSignatureProperties : Entity<int>
     {
         public virtual string Property1 { get; set; }
 
@@ -57,24 +57,12 @@ namespace Tests.SharpArch.Domain
     }
 
 
-    internal class EntityWithAllPropertiesPartOfDomainSignature : EntityWithTypedId<int>
+    internal class EntityWithAllPropertiesPartOfDomainSignature : Entity<int>
     {
         [DomainSignature]
         public virtual string Property1 { get; set; }
 
         [DomainSignature]
-        public virtual int Property2 { get; set; }
-
-        [DomainSignature]
-        public virtual bool Property3 { get; set; }
-    }
-
-
-    internal class EntityWithSomePropertiesPartOfDomainSignature : EntityWithTypedId<int>
-    {
-        [DomainSignature]
-        public virtual string Property1 { get; set; }
-
         public virtual int Property2 { get; set; }
 
         [DomainSignature]
@@ -82,7 +70,19 @@ namespace Tests.SharpArch.Domain
     }
 
 
-    internal class EntityWithAnotherEntityAsPartOfDomainSignature : EntityWithTypedId<int>
+    internal class EntityWithSomePropertiesPartOfDomainSignature : Entity<int>
+    {
+        [DomainSignature]
+        public virtual string Property1 { get; set; }
+
+        public virtual int Property2 { get; set; }
+
+        [DomainSignature]
+        public virtual bool Property3 { get; set; }
+    }
+
+
+    internal class EntityWithAnotherEntityAsPartOfDomainSignature : Entity<int>
     {
         [DomainSignature]
         public virtual string Property1 { get; set; }
@@ -98,7 +98,7 @@ namespace Tests.SharpArch.Domain
 
 
     [HasUniqueDomainSignature]
-    public class Song : Entity
+    public class Song : Entity<int>
     {
         [DomainSignature]
         public virtual string SongTitle { get; set; }
@@ -109,7 +109,7 @@ namespace Tests.SharpArch.Domain
 
 
     [HasUniqueDomainSignature(ErrorMessage = "Band already exists")]
-    public class Band : Entity
+    public class Band : Entity<int>
     {
         [DomainSignature]
         [Required]
@@ -120,7 +120,7 @@ namespace Tests.SharpArch.Domain
 
 
     [HasUniqueDomainSignature(ErrorMessage = "Album already exists")]
-    public class Album : Entity
+    public class Album : Entity<int>
     {
         [DomainSignature]
         [Required]
@@ -139,7 +139,7 @@ namespace Tests.SharpArch.Domain
 
 
     [HasUniqueDomainSignature]
-    public class Customer : Entity
+    public class Customer : Entity<int>
     {
         [DomainSignature]
         public virtual string Name { get; set; }

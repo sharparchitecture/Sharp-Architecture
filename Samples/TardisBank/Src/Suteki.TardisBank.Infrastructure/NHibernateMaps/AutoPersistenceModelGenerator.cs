@@ -9,15 +9,14 @@ using Suteki.TardisBank.Infrastructure.NHibernateMaps.Conventions;
 namespace Suteki.TardisBank.Infrastructure.NHibernateMaps
 {
     /// <summary>
-    ///     Generates the automapping for the domain assembly
+    ///     Generates the auto-mapping for the domain assembly
     /// </summary>
     public class AutoPersistenceModelGenerator : IAutoPersistenceModelGenerator
     {
         public AutoPersistenceModel Generate()
         {
             var mappings = AutoMap.AssemblyOf<Child>(new AutomappingConfiguration());
-            mappings.IgnoreBase<Entity>();
-            mappings.IgnoreBase(typeof(EntityWithTypedId<>));
+            mappings.IgnoreBase(typeof(Entity<>));
             mappings.Conventions.Setup(GetConventions());
             mappings.UseOverridesFromAssemblyOf<AutoPersistenceModelGenerator>();
 

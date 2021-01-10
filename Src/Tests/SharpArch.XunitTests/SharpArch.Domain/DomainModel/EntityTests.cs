@@ -64,7 +64,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         }
 
 
-        public abstract class MockEntityObjectBase<T> : EntityWithTypedId<T>
+        public abstract class MockEntityObjectBase<T> : Entity<T>
             where T : IEquatable<T>
         {
             public string Email { get; set; }
@@ -77,7 +77,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         }
 
 
-        public class ObjectWithOneDomainSignatureProperty : Entity
+        public class ObjectWithOneDomainSignatureProperty : Entity<int>
         {
             [DomainSignature]
             public int Age { get; set; }
@@ -86,7 +86,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         }
 
 
-        class AddressBeingDomainSignatureComparable : Entity
+        class AddressBeingDomainSignatureComparable : Entity<int>
         {
             [DomainSignature]
             public string Address1 { get; set; }
@@ -130,17 +130,17 @@ namespace Tests.SharpArch.Domain.DomainModel
         }
 
 
-        class Entity1 : Entity
+        class Entity1 : Entity<int>
         {
         }
 
 
-        class Entity2 : Entity
+        class Entity2 : Entity<int>
         {
         }
 
 
-        class ObjectWithAllDomainSignatureProperty : Entity
+        class ObjectWithAllDomainSignatureProperty : Entity<int>
         {
             [DomainSignature]
             public int Age { get; set; }
@@ -150,7 +150,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         }
 
 
-        class ObjectWithAssignedId : EntityWithTypedId<string>, IHasAssignedId<string>
+        class ObjectWithAssignedId : Entity<string>, IHasAssignedId<string>
         {
             [DomainSignature]
             public string Name { get; set; }
@@ -162,7 +162,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         }
 
 
-        class ObjectWithComplexProperties : Entity
+        class ObjectWithComplexProperties : Entity<int>
         {
             [DomainSignature]
             public AddressBeingDomainSignatureComparable Address { get; set; }
@@ -175,7 +175,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         }
 
 
-        class ObjectWithIdenticalTypedProperties : Entity
+        class ObjectWithIdenticalTypedProperties : Entity<int>
         {
             [DomainSignature]
             public string Address { get; set; }
@@ -185,7 +185,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         }
 
 
-        class ObjectWithIntId : Entity
+        class ObjectWithIntId : Entity<int>
         {
             [DomainSignature]
             public string Name { get; set; }
@@ -196,7 +196,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         ///     This is a nonsense object; i.e., it doesn't make sense to have
         ///     an entity without a domain signature.
         /// </summary>
-        class ObjectWithNoDomainSignatureProperties : Entity
+        class ObjectWithNoDomainSignatureProperties : Entity<int>
         {
             public int Age { get; set; }
 
@@ -227,7 +227,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         }
 
 
-        class Contact : Entity
+        class Contact : Entity<int>
         {
             public virtual string EmailAddress { get; set; }
         }
@@ -424,14 +424,6 @@ namespace Tests.SharpArch.Domain.DomainModel
         }
 
         [Fact]
-        public void CanSerializeEntityToJson()
-        {
-            var obj1 = new Contact {EmailAddress = "serialize@this.net"};
-            string result = JsonConvert.SerializeObject(obj1);
-            result.Should().Contain("serialize@this.net");
-        }
-
-        [Fact]
         public void DoDefaultEntityEqualsOverrideWorkWhenIdIsAssigned()
         {
             _obj.SetAssignedIdTo(1);
@@ -515,33 +507,6 @@ namespace Tests.SharpArch.Domain.DomainModel
         }
 
         [Fact]
-        public void EntitySerializesAsJsonProperly()
-        {
-            var obj = new ObjectWithOneDomainSignatureProperty();
-            obj.SetIdTo(999);
-            obj.Age = 13;
-            obj.Name = "Foo";
-
-            var jsonSerializer = new JsonSerializer();
-
-            string jsonString;
-            using (var stringWriter = new StringWriter())
-            {
-                jsonSerializer.Serialize(stringWriter, obj);
-                jsonString = stringWriter.ToString();
-            }
-
-            using (var stringReader = new StringReader(jsonString))
-            {
-                using (var jsonReader = new JsonTextReader(stringReader))
-                {
-                    var deserialized = jsonSerializer.Deserialize<ObjectWithOneDomainSignatureProperty>(jsonReader);
-                    deserialized.Should().BeEquivalentTo(obj);
-                }
-            }
-        }
-
-        [Fact]
         public void KeepsConsistentHashThroughLifetimeOfPersistentObject()
         {
             var obj = new ObjectWithOneDomainSignatureProperty();
@@ -599,8 +564,8 @@ namespace Tests.SharpArch.Domain.DomainModel
         [Fact]
         public void Two_persistent_entities_with_different_domain_signature_and_equal_ids_generate_equal_hashcodes()
         {
-            IEntityWithTypedId<int> obj1 = new ObjectWithOneDomainSignatureProperty {Age = 1}.SetIdTo(1);
-            IEntityWithTypedId<int> obj2 = new ObjectWithOneDomainSignatureProperty {Age = 2}.SetIdTo(1);
+            IEntity<int> obj1 = new ObjectWithOneDomainSignatureProperty {Age = 1}.SetIdTo(1);
+            IEntity<int> obj2 = new ObjectWithOneDomainSignatureProperty {Age = 2}.SetIdTo(1);
 
             obj1.GetHashCode().Should().Be(obj2.GetHashCode());
         }
@@ -608,8 +573,8 @@ namespace Tests.SharpArch.Domain.DomainModel
         [Fact]
         public void Two_persistent_entities_with_equal_domain_signature_and_different_ids_generate_different_hashcodes()
         {
-            IEntityWithTypedId<int> obj1 = new ObjectWithOneDomainSignatureProperty {Age = 1}.SetIdTo(1);
-            IEntityWithTypedId<int> obj2 = new ObjectWithOneDomainSignatureProperty {Age = 1}.SetIdTo(2);
+            IEntity<int> obj1 = new ObjectWithOneDomainSignatureProperty {Age = 1}.SetIdTo(1);
+            IEntity<int> obj2 = new ObjectWithOneDomainSignatureProperty {Age = 1}.SetIdTo(2);
 
             obj1.GetHashCode().Should().NotBe(obj2.GetHashCode());
         }
@@ -618,8 +583,8 @@ namespace Tests.SharpArch.Domain.DomainModel
         public void Two_persistent_entities_with_no_signature_properties_and_different_ids_generate_different_hashcodes(
         )
         {
-            IEntityWithTypedId<int> obj1 = new ObjectWithNoDomainSignatureProperties().SetIdTo(1);
-            IEntityWithTypedId<int> obj2 = new ObjectWithNoDomainSignatureProperties().SetIdTo(2);
+            IEntity<int> obj1 = new ObjectWithNoDomainSignatureProperties().SetIdTo(1);
+            IEntity<int> obj2 = new ObjectWithNoDomainSignatureProperties().SetIdTo(2);
 
             obj1.GetHashCode().Should().NotBe(obj2.GetHashCode());
         }
@@ -627,8 +592,8 @@ namespace Tests.SharpArch.Domain.DomainModel
         [Fact]
         public void Two_persistent_entities_with_no_signature_properties_and_equal_ids_generate_equal_hashcodes()
         {
-            IEntityWithTypedId<int> obj1 = new ObjectWithNoDomainSignatureProperties().SetIdTo(1);
-            IEntityWithTypedId<int> obj2 = new ObjectWithNoDomainSignatureProperties().SetIdTo(1);
+            IEntity<int> obj1 = new ObjectWithNoDomainSignatureProperties().SetIdTo(1);
+            IEntity<int> obj2 = new ObjectWithNoDomainSignatureProperties().SetIdTo(1);
 
             obj1.GetHashCode().Should().Be(obj2.GetHashCode());
         }

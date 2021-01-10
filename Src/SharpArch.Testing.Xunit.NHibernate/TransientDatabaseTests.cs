@@ -5,6 +5,7 @@
     using global::Xunit;
     using JetBrains.Annotations;
     using SharpArch.NHibernate;
+    using SharpArch.NHibernate.Impl;
     using SharpArch.Testing.NHibernate;
 
 

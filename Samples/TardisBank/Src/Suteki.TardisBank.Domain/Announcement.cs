@@ -6,7 +6,7 @@
     using SharpArch.Domain.DomainModel;
 
     [DebuggerDisplay("{Id}: {Title}")]
-    public class Announcement: Entity
+    public class Announcement: Entity<int>
     {
         public virtual DateTime Date { get; set; }
 
