@@ -8,7 +8,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using SharpArch.Web.AspNetCore.Transaction;
     using Stubs;
-#if NETCOREAPP2_1 || NETCOREAPP2_2
+#if NETCOREAPP2_1
     using System.Globalization;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
@@ -37,7 +37,6 @@
                     options.Filters.Add(new TransactionAttribute(isolationLevel: IsolationLevel.Chaos));
                 })
                 ;
-
 #else
             // Add framework services.
             services.AddMvcCore(options =>
@@ -56,8 +55,6 @@
                 .AddJsonFormatters()
 #if NETCOREAPP2_1
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-#elif NETCOREAPP2_2
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
 #endif
                 ;
 #endif

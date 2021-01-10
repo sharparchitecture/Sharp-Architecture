@@ -18,7 +18,7 @@ namespace Suteki.TardisBank.WebApi
     using SharpArch.NHibernate.Impl;
     using SharpArch.Web.AspNetCore.Transaction;
 
-#if NETCOREAPP2_1 || NETCOREAPP2_2
+#if NETCOREAPP2_1
     using System.Globalization;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
@@ -63,8 +63,6 @@ namespace Suteki.TardisBank.WebApi
                 .AddJsonFormatters()
 #if NETCOREAPP2_1
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-#elif NETCOREAPP2_2
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
 #endif
                 ;
 #endif
