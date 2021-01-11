@@ -10,7 +10,6 @@
     using global::FluentNHibernate.Cfg.Db;
     using global::NHibernate;
     using global::NHibernate.Cfg;
-    using Infrastructure.Caching;
     using JetBrains.Annotations;
     using NHibernateValidator;
 
@@ -40,7 +39,6 @@
         AutoPersistenceModel _autoPersistenceModel;
         string _configFile;
 
-        INHibernateConfigurationCache _configurationCache;
         Action<Configuration> _exposeConfiguration;
         IPersistenceConfigurer _persistenceConfigurer;
         IDictionary<string, string> _properties;
@@ -52,9 +50,7 @@
         /// </summary>
         public NHibernateSessionFactoryBuilder()
         {
-            _configurationCache = NullNHibernateConfigurationCache.Null;
             _mappingAssemblies = new List<Assembly>(8);
-            _additionalDependencies = new List<string>(8);
         }
 
         /// <summary>
@@ -71,10 +67,6 @@
         /// <summary>
         ///     Builds NHibernate configuration.
         /// </summary>
-        /// <param name="basePath">
-        ///     Base directory to use for loading additional files.
-        ///     If <c>null</c> base folder of the current assembly is used.
-        /// </param>
         /// <remarks>
         ///     <para>
         ///         Any changes made to configuration object after this point <b>will not be persisted</b> in configuration cache.
@@ -87,28 +79,10 @@
         /// </remarks>
         /// <exception cref="InvalidOperationException">No dependencies were specified</exception>
         [NotNull]
-        public Configuration BuildConfiguration(string basePath = null)
+        public Configuration BuildConfiguration()
         {
-            var dependencyList = basePath == null
-                ? DependencyList.WithBasePathOfAssembly(Assembly.GetExecutingAssembly())
-                : DependencyList.WithPathPrefix(basePath);
-            dependencyList
-                .AddAssemblies(_mappingAssemblies);
-
-            if (!string.IsNullOrEmpty(_configFile)) dependencyList.AddFile(_configFile);
-            dependencyList.AddFiles(_additionalDependencies);
-
-            var timestamp = dependencyList.GetLastModificationTime();
-            if (timestamp == null) throw new InvalidOperationException("No dependencies were specified");
-
-            var configuration = _configurationCache.TryLoad(timestamp.Value);
-
-            if (configuration == null)
-            {
-                configuration = LoadExternalConfiguration();
-                configuration = ApplyCustomSettings(configuration);
-                _configurationCache.Save(configuration, timestamp.Value);
-            }
+            var configuration = LoadExternalConfiguration();
+            configuration = ApplyCustomSettings(configuration);
 
             return configuration;
         }
@@ -132,20 +106,6 @@
             return _exposeConfiguration != null;
         }
 
-        /// <summary>
-        ///     Allows to cache compiled NHibernate configuration.
-        /// </summary>
-        /// <param name="configurationCache">The configuration cache, see <see cref="INHibernateConfigurationCache" />. </param>
-        /// <returns></returns>
-        /// <exception cref="System.ArgumentNullException">Please provide configuration cache instance.</exception>
-        [NotNull]
-        public NHibernateSessionFactoryBuilder UseConfigurationCache(
-            [NotNull] INHibernateConfigurationCache configurationCache)
-        {
-            _configurationCache = configurationCache ??
-                throw new ArgumentNullException(nameof(configurationCache), "Please provide configuration cache instance.");
-            return this;
-        }
 
         /// <summary>
         ///     Allows to specify additional assemblies containing FluentNHibernate mappings.
@@ -162,24 +122,6 @@
             return this;
         }
 
-        /// <summary>
-        ///     Add generic file dependency.
-        ///     Used with session cache to add dependency which is not used to configure session
-        ///     (e.g. application configuration, shared library, etc...)
-        /// </summary>
-        /// <param name="fileName">File name</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException">File name cannot be empty</exception>
-        public NHibernateSessionFactoryBuilder WithFileDependency([NotNull] string fileName)
-        {
-            if (string.IsNullOrWhiteSpace(fileName))
-            {
-                throw new ArgumentException("File name cannot be empty", nameof(fileName));
-            }
-
-            _additionalDependencies.Add(fileName);
-            return this;
-        }
 
         /// <summary>
         ///     Allows to specify FluentNhibernate auto-persistence model to use..

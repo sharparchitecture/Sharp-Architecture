@@ -9,7 +9,7 @@
     using global::NHibernate;
     using global::NHibernate.Cfg;
     using global::NHibernate.Tool.hbm2ddl;
-    using Infrastructure.Caching;
+    using Infrastructure;
     using JetBrains.Annotations;
     using SharpArch.NHibernate;
     using SharpArch.NHibernate.FluentNHibernate;
@@ -25,10 +25,10 @@
     [PublicAPI]
     public class TestDatabaseSetup : IDisposable
     {
-        readonly string _basePath;
-        readonly Assembly[] _mappingAssemblies;
-        Configuration _configuration;
-        ISessionFactory _sessionFactory;
+        [NotNull] readonly string _basePath;
+        [NotNull] readonly Assembly[] _mappingAssemblies;
+        [CanBeNull] Configuration _configuration;
+        [CanBeNull] ISessionFactory _sessionFactory;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="TestDatabaseSetup" /> class.
@@ -61,7 +61,7 @@
         ///     <c>null</c>.
         /// </exception>
         public TestDatabaseSetup([NotNull] Assembly baseAssembly, [NotNull] Assembly[] mappingAssemblies)
-            : this(DependencyList.GetAssemblyCodeBasePath(baseAssembly),
+            : this(CodeBaseLocator.GetAssemblyCodeBasePath(baseAssembly),
                 mappingAssemblies)
         {
         }
@@ -93,6 +93,7 @@
         ///     allowed.
         /// </exception>
         /// <exception cref="TargetInvocationException">Unable to instantiate AutoPersistenceModelGenerator.</exception>
+        [NotNull]
         public static AutoPersistenceModel GenerateAutoPersistenceModel([NotNull] Assembly[] assemblies)
         {
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
@@ -158,7 +159,7 @@
         /// <param name="builder">
         ///     <see cref="NHibernateSessionFactoryBuilder" />
         /// </param>
-        protected virtual void Customize(NHibernateSessionFactoryBuilder builder)
+        protected virtual void Customize([NotNull] NHibernateSessionFactoryBuilder builder)
         {
         }
 
@@ -171,7 +172,7 @@
         {
             if (_sessionFactory != null) return _sessionFactory;
             _sessionFactory = GetConfiguration().BuildSessionFactory();
-            return _sessionFactory;
+            return _sessionFactory!;
         }
 
         /// <summary>
@@ -214,17 +215,17 @@
         /// </summary>
         /// <param name="assemblyPath"></param>
         /// <returns></returns>
-        static Assembly TryLoadAssembly(string assemblyPath)
-        {
-            return Assembly.LoadFrom(assemblyPath);
-        }
+        [NotNull]
+        static Assembly TryLoadAssembly([NotNull] string assemblyPath)
+            => Assembly.LoadFrom(assemblyPath);
 
         /// <summary>
         ///     Adds dll extension to assembly name if required.
         /// </summary>
         /// <param name="assemblyName">Name of the assembly.</param>
         /// <returns></returns>
-        static string EnsureDllExtension(string assemblyName)
+        [NotNull]
+        static string EnsureDllExtension([NotNull] string assemblyName)
         {
             assemblyName = assemblyName.Trim();
             const string dllExtension = ".dll";
