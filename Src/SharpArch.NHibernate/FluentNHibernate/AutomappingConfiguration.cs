@@ -46,18 +46,13 @@ namespace SharpArch.NHibernate.FluentNHibernate
         ///     See https://martinfowler.com/eaaCatalog/valueObject.html
         /// </summary>
         public override bool IsComponent(Type type)
-        {
-            return typeof(ValueObject).IsAssignableFrom(type);
-        }
+            => typeof(ValueObject).IsAssignableFrom(type);
 
         /// <summary>
-        ///     Marks all abstract descendants of <see cref="Entity" /> and <see cref="Entity{TId}" />
-        ///     as Layer Supertype.
+        ///     Marks all abstract descendants of <see cref="Entity{TId}" /> as Layer Supertype.
         ///     See http://martinfowler.com/eaaCatalog/layerSupertype.html
         /// </summary>
         public override bool AbstractClassIsLayerSupertype(Type type)
-        {
-            return type == typeof(Entity<>);
-        }
+            => type == typeof(Entity<>);
     }
 }
