@@ -31,10 +31,9 @@
         /// <summary>
         ///     Default NHibernate session factory key.
         /// </summary>
-        public static readonly string DefaultConfigurationName = "nhibernate.current_session";
+        [NotNull] public static readonly string DefaultConfigurationName = "nhibernate.current_session";
 
         readonly List<Assembly> _mappingAssemblies;
-        List<string> _additionalDependencies;
 
         AutoPersistenceModel _autoPersistenceModel;
         string _configFile;
@@ -67,16 +66,6 @@
         /// <summary>
         ///     Builds NHibernate configuration.
         /// </summary>
-        /// <remarks>
-        ///     <para>
-        ///         Any changes made to configuration object after this point <b>will not be persisted</b> in configuration cache.
-        ///         This can be useful to make dynamic changes to configuration or in case changes cannot be serialized
-        ///         (e.g. event listeners are not marked with <see cref="System.SerializableAttribute" />.
-        ///     </para>
-        ///     <para>
-        ///         To make persistent changes use <seealso cref="ExposeConfiguration" />.
-        ///     </para>
-        /// </remarks>
         /// <exception cref="InvalidOperationException">No dependencies were specified</exception>
         [NotNull]
         public Configuration BuildConfiguration()
