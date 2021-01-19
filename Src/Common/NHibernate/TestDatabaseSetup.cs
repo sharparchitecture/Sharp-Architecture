@@ -5,6 +5,8 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
     using FluentNHibernate.Automapping;
     using global::NHibernate;
     using global::NHibernate.Cfg;
@@ -194,9 +196,7 @@
         /// </summary>
         /// <param name="session">The session.</param>
         public static void Close([CanBeNull] ISession session)
-        {
-            session?.Dispose();
-        }
+            => session?.Dispose();
 
         /// <summary>
         ///     Shutdowns the specified session factory.
@@ -206,32 +206,30 @@
         ///     Dispose <see cref="TestDatabaseSetup" /> will destroy Session Factory associated with this instance.
         /// </remarks>
         public static void Shutdown([CanBeNull] ISessionFactory sessionFactory)
-        {
-            sessionFactory?.Dispose();
-        }
+            => sessionFactory?.Dispose();
 
-        /// <summary>
-        ///     Loads the assembly.
-        /// </summary>
-        /// <param name="assemblyPath"></param>
-        /// <returns></returns>
-        [NotNull]
-        static Assembly TryLoadAssembly([NotNull] string assemblyPath)
-            => Assembly.LoadFrom(assemblyPath);
+        ///// <summary>
+        /////     Loads the assembly.
+        ///// </summary>
+        ///// <param name="assemblyPath"></param>
+        ///// <returns></returns>
+        //[NotNull]
+        //static Assembly TryLoadAssembly([NotNull] string assemblyPath)
+        //    => Assembly.LoadFrom(assemblyPath);
 
-        /// <summary>
-        ///     Adds dll extension to assembly name if required.
-        /// </summary>
-        /// <param name="assemblyName">Name of the assembly.</param>
-        /// <returns></returns>
-        [NotNull]
-        static string EnsureDllExtension([NotNull] string assemblyName)
-        {
-            assemblyName = assemblyName.Trim();
-            const string dllExtension = ".dll";
-            if (!assemblyName.EndsWith(dllExtension, StringComparison.OrdinalIgnoreCase)) assemblyName = string.Concat(assemblyName, dllExtension);
+        ///// <summary>
+        /////     Adds dll extension to assembly name if required.
+        ///// </summary>
+        ///// <param name="assemblyName">Name of the assembly.</param>
+        ///// <returns></returns>
+        //[NotNull]
+        //static string EnsureDllExtension([NotNull] string assemblyName)
+        //{
+        //    assemblyName = assemblyName.Trim();
+        //    const string dllExtension = ".dll";
+        //    if (!assemblyName.EndsWith(dllExtension, StringComparison.OrdinalIgnoreCase)) assemblyName = string.Concat(assemblyName, dllExtension);
 
-            return assemblyName;
-        }
+        //    return assemblyName;
+        //}
     }
 }
