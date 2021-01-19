@@ -1,9 +1,10 @@
 ﻿namespace Tests.SharpArch.NHibernate
 {
+    using System.Threading;
     using System.Threading.Tasks;
     using Domain;
     using FluentAssertions;
-    using global::SharpArch.NHibernate.Impl;
+    using global::SharpArch.NHibernate;
     using global::SharpArch.Testing.Xunit.NHibernate;
     using Xunit;
 
@@ -19,9 +20,8 @@
         }
 
         /// <inheritdoc />
-        protected override void LoadTestData()
-        {
-        }
+        protected override Task LoadTestData(CancellationToken cancellationToken)
+            => Task.CompletedTask;
 
         [Fact]
         public async Task CanSaveAsync()

@@ -14,7 +14,7 @@
     <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
-  <PropertyGroup Label="Custom targeTs">
+  <PropertyGroup Label="Custom targets">
     <!-- target frameworks for unit-tests and applications -->
     <AppTargetFrameworks>netcoreapp2.1;netcoreapp3.1;net5</AppTargetFrameworks>
   </PropertyGroup>

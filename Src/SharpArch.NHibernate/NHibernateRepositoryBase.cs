@@ -10,31 +10,23 @@ namespace SharpArch.NHibernate
     using Domain.PersistenceSupport;
     using global::NHibernate;
     using global::NHibernate.Criterion;
-    using Impl;
     using JetBrains.Annotations;
 
 
     /// <summary>
-    ///     Provides a fully loaded DAO which may be created in a few ways including:
-    ///     * Direct instantiation; e.g., new GenericDao&lt;Customer, string&gt;
-    ///     * Spring configuration; e.g.,
-    ///     <object id="CustomerDao"
-    ///         type="SharpArch.Data.NHibernateSupport.GenericDao&lt;CustomerAlias, string>, SharpArch.Data" autowire="byName" />
+    ///     Provides a fully loaded DAO.
     /// </summary>
-    /// <remarks>
-    /// Keep constructor protected to enable support of single-database (<see cref="NHibernateRepository{TEntity,TId}"/>)
-    /// and multiple-database
-    /// </remarks>
-    /// <typeparam name="TEntity">Entity type/</typeparam>
+    /// <typeparam name="TEntity">Entity type.</typeparam>
     /// <typeparam name="TId">Entity identifier type.</typeparam>
     [PublicAPI]
-    public class NHibernateRepositoryBase<TEntity, TId> : INHibernateRepository<TEntity, TId>
+    public class NHibernateRepository<TEntity, TId> : INHibernateRepository<TEntity, TId>
         where TEntity : class, IEntity<TId>
         where TId : IEquatable<TId>
     {
         /// <summary>
         ///     Gets NHibernate session.
         /// </summary>
+        [NotNull]
         protected ISession Session => TransactionManager.Session;
 
         /// <summary>
@@ -42,14 +34,15 @@ namespace SharpArch.NHibernate
         ///     activities such as committing any pending changes, beginning a transaction,
         ///     rolling back a transaction, etc.
         /// </summary>
+        [NotNull]
         protected INHibernateTransactionManager TransactionManager { get; }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="NHibernateRepositoryBase{TEntity,TId}" /> class.
+        ///     Initializes a new instance of the <see cref="NHibernateRepository{TEntity,TId}" /> class.
         /// </summary>
         /// <param name="transactionManager">The transaction manager.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        protected NHibernateRepositoryBase(
+        public NHibernateRepository(
             [NotNull] INHibernateTransactionManager transactionManager)
         {
             TransactionManager = transactionManager ?? throw new ArgumentNullException(nameof(transactionManager));
@@ -180,11 +173,11 @@ namespace SharpArch.NHibernate
         }
 
         /// <summary>
-        ///     Translates a domain layer lock mode into an NHibernate lock mode via reflection.  This is
-        ///     provided to facilitate developing the domain layer without a direct dependency on the
+        ///     Translates a domain layer lock mode into an NHibernate lock mode via reflection.
+        ///     This is provided to facilitate developing the domain layer without a direct dependency on the
         ///     NHibernate assembly.
         /// </summary>
-        static LockMode ConvertFrom(Enums.LockMode lockMode)
+        [NotNull] static LockMode ConvertFrom(Enums.LockMode lockMode)
             => lockMode switch
             {
                 Enums.LockMode.None => LockMode.None,
@@ -193,9 +186,9 @@ namespace SharpArch.NHibernate
                 Enums.LockMode.UpgradeNoWait => LockMode.UpgradeNoWait,
                 Enums.LockMode.Write => LockMode.Write,
                 _ => throw new ArgumentOutOfRangeException(nameof(lockMode), lockMode,
-                    "The provided lock mode , '" + lockMode + "', could not be translated into an NHibernate.LockMode. " +
-                    "This is probably because NHibernate was updated and now has different lock modes which are out of synch " +
-                    "with the lock modes maintained in the domain layer.")
+                    $"The provided lock mode , '{lockMode}', could not be translated into an NHibernate.LockMode. "
+                    + "This is probably because NHibernate was updated and now has different lock modes "
+                    + "which are out of synch with the lock modes maintained in the domain layer.")
             };
     }
 }

@@ -1,5 +1,6 @@
 namespace Suteki.TardisBank.Tests.Model
 {
+    using System.Threading;
     using System.Threading.Tasks;
     using Domain;
     using FluentAssertions;
@@ -22,12 +23,12 @@ namespace Suteki.TardisBank.Tests.Model
             _mediator = new Mock<IMediator>();
         }
 
-        protected override void LoadTestData()
+        protected override async Task LoadTestData(CancellationToken cancellationToken)
         {
             User user = new Parent("Dad", "mike@mike.com", "xxx");
-            Session.Save(user);
+            await Session.SaveAsync(user, cancellationToken);
 
-            FlushSessionAndEvict(user);
+            await FlushSessionAndEvict(user, cancellationToken);
             _userId = user.Id;
         }
 
@@ -39,7 +40,7 @@ namespace Suteki.TardisBank.Tests.Model
 
             userToTestWith.SendMessage("some message", _mediator.Object);
 
-            FlushSessionAndEvict(userToTestWith);
+            await FlushSessionAndEvict(userToTestWith);
 
             Parent parent = await parentRepository.GetAsync(_userId);
             parent.Messages.Count.Should().Be(1);

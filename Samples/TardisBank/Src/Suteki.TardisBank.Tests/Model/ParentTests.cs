@@ -1,9 +1,9 @@
 namespace Suteki.TardisBank.Tests.Model
 {
+    using System.Threading;
     using System.Threading.Tasks;
     using Domain;
     using FluentAssertions;
-    using SharpArch.NHibernate;
     using SharpArch.NHibernate.Impl;
     using SharpArch.Testing.Xunit.NHibernate;
     using Xunit;
@@ -18,11 +18,11 @@ namespace Suteki.TardisBank.Tests.Model
         {
         }
 
-        protected override void LoadTestData()
+        protected override async Task LoadTestData(CancellationToken cancellationToken)
         {
             var parent = new Parent("Mike Hadlow", string.Format("{0}@yahoo.com", "mike"), "yyy");
-            Session.Save(parent);
-            FlushSessionAndEvict(parent);
+            await Session.SaveAsync(parent, cancellationToken);
+            await FlushSessionAndEvict(parent, cancellationToken);
             _parentId = parent.Id;
         }
 
@@ -36,7 +36,7 @@ namespace Suteki.TardisBank.Tests.Model
             savedParent.CreateChild("jim", "jim123", "passw0rd1");
             savedParent.CreateChild("jenny", "jenny123", "passw0rd2");
             savedParent.CreateChild("jez", "jez123", "passw0rd3");
-            FlushSessionAndEvict(savedParent);
+            await FlushSessionAndEvict(savedParent);
 
             Parent parent = await linqRepository.GetAsync(_parentId);
             parent.Children.Count.Should().Be(3);

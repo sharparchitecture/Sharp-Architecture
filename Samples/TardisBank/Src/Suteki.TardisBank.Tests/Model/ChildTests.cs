@@ -1,6 +1,7 @@
 namespace Suteki.TardisBank.Tests.Model
 {
     using System;
+    using System.Threading;
     using System.Threading.Tasks;
     using Domain;
     using FluentAssertions;
@@ -23,17 +24,17 @@ namespace Suteki.TardisBank.Tests.Model
             _childRepository = new LinqRepository<Child, int>(TransactionManager);
         }
 
-        protected override void LoadTestData()
+        protected override async Task LoadTestData(CancellationToken cancellationToken)
         {
             var parent = new Parent("Mike Hadlow", "mike@yahoo.com", "yyy");
-            Session.Save(parent);
+            await Session.SaveAsync(parent, cancellationToken);
 
             _parentId = parent.Id;
 
             var child = parent.CreateChild("Leo", "leohadlow", "xxx");
-            Session.Save(child);
-            FlushSessionAndEvict(child);
-            FlushSessionAndEvict(parent);
+            await Session.SaveAsync(child, cancellationToken);
+            await FlushSessionAndEvict(child, cancellationToken);
+            await FlushSessionAndEvict(parent, cancellationToken);
             _childId = child.Id;
         }
 
@@ -44,7 +45,7 @@ namespace Suteki.TardisBank.Tests.Model
             childToTestOn.Should().NotBeNull();
 
             childToTestOn.Account.AddPaymentSchedule(DateTime.UtcNow, Interval.Week, 10, "Weekly pocket money");
-            FlushSessionAndEvict(childToTestOn);
+            await FlushSessionAndEvict(childToTestOn);
 
             var child = await _childRepository.GetAsync(_childId);
             child.Should().NotBeNull();
@@ -56,7 +57,7 @@ namespace Suteki.TardisBank.Tests.Model
         {
             var childToTestOn = await _childRepository.GetAsync(_childId);
             childToTestOn.ReceivePayment(10, "Reward");
-            FlushSessionAndEvict(childToTestOn);
+            await FlushSessionAndEvict(childToTestOn);
 
             var child = await _childRepository.GetAsync(_childId);
             child.Account.Transactions[0].Id.Should().BePositive();

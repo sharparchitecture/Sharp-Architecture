@@ -3,8 +3,11 @@ namespace Suteki.TardisBank.Tests.Model
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Domain;
     using FluentAssertions;
+    using NHibernate.Linq;
     using SharpArch.Testing.Xunit.NHibernate;
     using Tasks;
     using Xunit;
@@ -21,17 +24,17 @@ namespace Suteki.TardisBank.Tests.Model
         {
         }
 
-        protected override void LoadTestData()
+        protected override async Task LoadTestData(CancellationToken cancellationToken)
         {
             _parent = new Parent("parent", "parent", "xxx");
-            Session.Save(_parent);
+            await Session.SaveAsync(_parent, cancellationToken);
             _someDate = new DateTime(2010, 4, 5);
-            Session.Save(CreateChildWithSchedule("one", 1M, _someDate.AddDays(-2)));
-            Session.Save(CreateChildWithSchedule("two", 2M, _someDate.AddDays(-1)));
-            Session.Save(CreateChildWithSchedule("three", 3M, _someDate));
-            Session.Save(CreateChildWithSchedule("four", 4M, _someDate.AddDays(1)));
-            Session.Save(CreateChildWithSchedule("five", 5M, _someDate.AddDays(2)));
-            Session.Flush();
+            await Session.SaveAsync(CreateChildWithSchedule("one", 1M, _someDate.AddDays(-2)), cancellationToken).ConfigureAwait(false);
+            await Session.SaveAsync(CreateChildWithSchedule("two", 2M, _someDate.AddDays(-1)), cancellationToken).ConfigureAwait(false);
+            await Session.SaveAsync(CreateChildWithSchedule("three", 3M, _someDate), cancellationToken).ConfigureAwait(false);
+            await Session.SaveAsync(CreateChildWithSchedule("four", 4M, _someDate.AddDays(1)), cancellationToken).ConfigureAwait(false);
+            await Session.SaveAsync(CreateChildWithSchedule("five", 5M, _someDate.AddDays(2)), cancellationToken).ConfigureAwait(false);
+            await Session.FlushAsync(cancellationToken).ConfigureAwait(false);
         }
 
         Child CreateChildWithSchedule(string name, decimal amount, DateTime startDate)
@@ -42,17 +45,17 @@ namespace Suteki.TardisBank.Tests.Model
         }
 
         [Fact]
-        public void Should_be_able_to_query_all_pending_scheduled_payments()
+        public async Task Should_be_able_to_query_all_pending_scheduled_payments()
         {
             ISchedulerService schedulerService = new SchedulerService(Session);
             schedulerService.ExecuteUpdates(_someDate);
-            Session.Flush();
+            await Session.FlushAsync();
 
             // check results
 
-            List<Child> results = Session.Query<Child>().ToList();
+            List<Child> results = await Session.Query<Child>().ToListAsync();
 
-            results.Count().Should().Be(5);
+            results.Should().HaveCount(5);
 
             results.Single(x => x.Name == "one").Account.PaymentSchedules[0].NextRun.Should().Be(_someDate.AddDays(5));
             results.Single(x => x.Name == "two").Account.PaymentSchedules[0].NextRun.Should().Be(_someDate.AddDays(6));

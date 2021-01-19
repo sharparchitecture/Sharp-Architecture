@@ -1,12 +1,14 @@
 ﻿namespace SharpArch.Testing.Xunit.NHibernate
 {
     using System;
+    using System.Threading;
+    using System.Threading.Tasks;
     using global::NHibernate;
     using global::Xunit;
     using JetBrains.Annotations;
     using SharpArch.NHibernate;
     using SharpArch.NHibernate.Impl;
-    using SharpArch.Testing.NHibernate;
+    using Testing.NHibernate;
 
 
     /// <summary>
@@ -21,32 +23,44 @@
     ///     </para>
     /// </summary>
     [PublicAPI]
-    public abstract class TransientDatabaseTests<TDatabaseSetup> : IClassFixture<TDatabaseSetup>, IDisposable
+    public abstract class TransientDatabaseTests<TDatabaseSetup> : IClassFixture<TDatabaseSetup>, IDisposable, IAsyncLifetime
         where TDatabaseSetup : TestDatabaseSetup, new()
     {
         /// <summary>
         ///     Transaction manager.
         /// </summary>
+        [NotNull]
         protected TransactionManager TransactionManager { get; private set; }
 
         /// <summary>
         ///     Database initializer.
         /// </summary>
+        [NotNull]
         protected TestDatabaseSetup DbSetup { get; private set; }
 
         /// <summary>
         ///     Database session.
         /// </summary>
+        [NotNull]
         protected ISession Session => TransactionManager.Session;
 
-        /// <inheritdoc />
-        protected TransientDatabaseTests(TestDatabaseSetup dbSetup)
+        /// <summary>
+        ///     Constructor.
+        /// </summary>
+        /// <param name="dbSetup"></param>
+        protected TransientDatabaseTests([NotNull] TestDatabaseSetup dbSetup)
         {
-            DbSetup = dbSetup;
+            DbSetup = dbSetup ?? throw new ArgumentNullException(nameof(dbSetup));
             TransactionManager = new TransactionManager(DbSetup.InitializeSession());
-            // ReSharper disable once VirtualMemberCallInConstructor
-            LoadTestData();
         }
+
+        /// <inheritdoc />
+        public Task InitializeAsync()
+            => LoadTestData(CancellationToken.None);
+
+        /// <inheritdoc />
+        public Task DisposeAsync()
+            => Task.CompletedTask;
 
         /// <inheritdoc />
         public virtual void Dispose()
@@ -58,28 +72,29 @@
         ///     Flushes the session and evicts entity from it.
         /// </summary>
         /// <param name="instance">The entity instance.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <exception cref="ArgumentNullException"><paramref name="instance" /> is <see langword="null" /></exception>
-        protected void FlushSessionAndEvict([NotNull] object instance)
-        {
-            if (instance == null) throw new ArgumentNullException(nameof(instance));
-            Session.FlushAndEvict(instance);
-        }
+        [NotNull]
+        protected Task FlushSessionAndEvict([NotNull] object instance, CancellationToken cancellationToken = default)
+            => Session.FlushAndEvictAsync(instance, cancellationToken);
 
         /// <summary>
         ///     Saves entity then flushes sessions and evicts it.
         /// </summary>
         /// <param name="instance">The entity instance.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <exception cref="ArgumentNullException"><paramref name="instance" /> is <see langword="null" /></exception>
-        protected void SaveAndEvict([NotNull] object instance)
+        protected async Task SaveAndEvict([NotNull] object instance, CancellationToken cancellationToken = default)
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
-            Session.Save(instance);
-            FlushSessionAndEvict(instance);
+            await Session.SaveAsync(instance, cancellationToken).ConfigureAwait(false);
+            await FlushSessionAndEvict(instance, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
         ///     Initializes database before each test run.
         /// </summary>
-        protected abstract void LoadTestData();
+        [NotNull]
+        protected abstract Task LoadTestData(CancellationToken cancellationToken);
     }
 }
