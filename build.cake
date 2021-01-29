@@ -1,17 +1,16 @@
 // ADDINS
 #addin nuget:?package=Cake.Coveralls&version=0.10.2
 #addin nuget:?package=Cake.FileHelpers&version=3.3.0
-#addin nuget:?package=Cake.Incubator&version=5.1.0
 #addin nuget:?package=Cake.Issues&version=0.9.1
 #addin nuget:?package=Cake.AppVeyor&version=4.0.0
 #addin nuget:?package=Cake.ReSharperReports&version=0.11.1
 
 // TOOLS
 #tool nuget:?package=GitReleaseManager&version=0.11.0
-#tool nuget:?package=GitVersion.CommandLine&version=5.5.1
+#tool nuget:?package=GitVersion.CommandLine&version=5.6.4
 #tool nuget:?package=coveralls.io&version=1.4.2
 #tool nuget:?package=OpenCover&version=4.7.922
-#tool nuget:?package=ReportGenerator&version=4.8.1
+#tool nuget:?package=ReportGenerator&version=4.8.4
 //#tool nuget:?package=JetBrains.ReSharper.CommandLineTools&version=2018.3.4
 
 // ARGUMENTS
@@ -251,8 +250,8 @@ Task("Build")
             var slnPath = solutionFile.GetDirectory().FullPath;
             var sln = solutionFile.GetFilenameWithoutExtension();
             if (isReleaseBuild) {
-                Information("Running {0} {1} build for code coverage", sln, "Debug");
-                // need Debug build for code coverage
+                Information("Running {0} {1} build to calculate code coverage", sln, "Debug");
+                // need Debug mode build for code coverage calculation
                 DotNetCoreBuild(slnPath, new DotNetCoreBuildSettings {
                     NoRestore = true,
                     Configuration = "Debug",
