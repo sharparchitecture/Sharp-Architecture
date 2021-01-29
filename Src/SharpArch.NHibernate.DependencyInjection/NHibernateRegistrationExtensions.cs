@@ -15,11 +15,9 @@
     [PublicAPI]
     public static class NHibernateRegistrationExtensions
     {
-        static readonly ILog _log = LogProvider.GetLogger("SharpArch.NHibernate.Extensions.DependencyInjection");
-
         /// <summary>
         ///     Adds NHibernate classes required to support <see cref="NHibernateRepository{T,TId}" />,
-        ///     <see cref="LinqRepository{T,TId}" /> instantiation from container.
+        ///     <see cref="LinqRepository{TEntity,TId}" /> instantiation from container.
         ///     <para>
         ///         <see cref="ISessionFactory" /> and <see cref="ITransactionManager" /> are registered as Singleton.
         ///     </para>
@@ -57,12 +55,14 @@
 
             services.AddSingleton(sp =>
             {
-                _log.Debug("Building session factory...");
+                var logger = GetLogger(sp);
+
+                logger.Debug?.Log("Building session factory...");
 
                 var sfBuilder = configureSessionFactory(sp);
                 var sessionFactory = sfBuilder.BuildSessionFactory();
 
-                _log.Info("Build session factory {SessionFactoryId}", sessionFactory.GetHashCode());
+                logger.Information?.Log("Build session factory {SessionFactoryId}", sessionFactory.GetHashCode());
                 return sessionFactory;
             });
 
@@ -73,7 +73,7 @@
                     ? sessionFactory.OpenSession()
                     : sessionConfigurator(sessionFactory.WithOptions(), sp);
 
-                if (_log.IsDebugEnabled()) _log.Debug("Created Session {SessionId}", session.GetSessionImplementation().SessionId);
+                GetLogger(sp).Debug?.Log("Created Session {SessionId}", session.GetSessionImplementation().SessionId);
 
                 return session;
             });
@@ -85,7 +85,7 @@
                     ? sessionFactory.OpenStatelessSession()
                     : statelessSessionConfigurator(sessionFactory.WithStatelessOptions(), sp);
 
-                if (_log.IsDebugEnabled()) _log.Debug("Created stateless Session {SessionId}", session.GetSessionImplementation().SessionId);
+                GetLogger(sp).Debug?.Log("Created stateless Session {SessionId}", session.GetSessionImplementation().SessionId);
 
                 return session;
             });
@@ -95,6 +95,13 @@
             services.AddTransient<ITransactionManager>(sp => sp.GetRequiredService<TransactionManager>());
 
             return services;
+        }
+
+        static LogWrapper GetLogger([NotNull] IServiceProvider sp)
+        {
+            var logger = new LogWrapper(sp.GetRequiredService<global::Microsoft.Extensions.Logging.ILoggerFactory>()
+                .CreateLogger("SharpArch.NHibernate.Extensions.DependencyInjection"));
+            return logger;
         }
     }
 }
