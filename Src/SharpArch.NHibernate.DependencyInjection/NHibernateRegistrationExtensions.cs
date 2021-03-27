@@ -45,9 +45,9 @@
         ///     <paramref name="services" />
         /// </returns>
         public static IServiceCollection AddNHibernateWithSingleDatabase(
-            [NotNull] this IServiceCollection services, [NotNull] Func<IServiceProvider, NHibernateSessionFactoryBuilder> configureSessionFactory,
-            [CanBeNull] Func<ISessionBuilder, IServiceProvider, ISession> sessionConfigurator = null,
-            [CanBeNull] Func<IStatelessSessionBuilder, IServiceProvider, IStatelessSession> statelessSessionConfigurator = null
+            this IServiceCollection services, Func<IServiceProvider, NHibernateSessionFactoryBuilder> configureSessionFactory,
+            Func<ISessionBuilder, IServiceProvider, ISession>? sessionConfigurator = null,
+            Func<IStatelessSessionBuilder, IServiceProvider, IStatelessSession>? statelessSessionConfigurator = null
         )
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
