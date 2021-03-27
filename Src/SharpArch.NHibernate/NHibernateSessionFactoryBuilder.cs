@@ -31,18 +31,18 @@
         /// <summary>
         ///     Default NHibernate session factory key.
         /// </summary>
-        [NotNull] public static readonly string DefaultConfigurationName = "nhibernate.current_session";
+        public static readonly string DefaultConfigurationName = "nhibernate.current_session";
 
         readonly List<Assembly> _mappingAssemblies;
 
-        AutoPersistenceModel _autoPersistenceModel;
-        string _configFile;
+        AutoPersistenceModel? _autoPersistenceModel;
+        string? _configFile;
 
-        Action<Configuration> _exposeConfiguration;
-        IPersistenceConfigurer _persistenceConfigurer;
-        IDictionary<string, string> _properties;
+        Action<Configuration>? _exposeConfiguration;
+        IPersistenceConfigurer? _persistenceConfigurer;
+        IDictionary<string, string>? _properties;
         bool _useDataAnnotationValidators;
-        Action<CacheSettingsBuilder> _cacheSettingsBuilder;
+        Action<CacheSettingsBuilder>? _cacheSettingsBuilder;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="NHibernateSessionFactoryBuilder" /> class.
@@ -56,7 +56,6 @@
         ///     Creates the session factory.
         /// </summary>
         /// <returns> NHibernate session factory <see cref="ISessionFactory" />.</returns>
-        [NotNull]
         public ISessionFactory BuildSessionFactory()
         {
             var configuration = BuildConfiguration();
@@ -67,7 +66,6 @@
         ///     Builds NHibernate configuration.
         /// </summary>
         /// <exception cref="InvalidOperationException">No dependencies were specified</exception>
-        [NotNull]
         public Configuration BuildConfiguration()
         {
             var configuration = LoadExternalConfiguration();
@@ -83,7 +81,6 @@
         ///     Changes to configuration will be persisted in configuration cache, if it is enabled.
         ///     In case changes must not be persisted in cache, they must be applied after <seealso cref="BuildConfiguration" />.
         /// </remarks>
-        [NotNull]
         public NHibernateSessionFactoryBuilder ExposeConfiguration([NotNull] Action<Configuration> config)
         {
             _exposeConfiguration = config ?? throw new ArgumentNullException(nameof(config));
@@ -259,7 +256,7 @@
 
             if (ShouldExposeConfiguration())
             {
-                _exposeConfiguration(e);
+                _exposeConfiguration!(e);
             }
         }
 

@@ -27,11 +27,10 @@
         /// <param name="mappingsContainer">Mappings container</param>
         /// <returns>Container <paramref name="mappingsContainer" /></returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="mappingsContainer" /> is <c>null</c>.</exception>
-        public static FluentMappingsContainer AddFromNamespaceOf<T>(
-            [NotNull] this FluentMappingsContainer mappingsContainer)
+        public static FluentMappingsContainer AddFromNamespaceOf<T>(this FluentMappingsContainer mappingsContainer)
         {
             if (mappingsContainer == null) throw new ArgumentNullException(nameof(mappingsContainer));
-            string ns = typeof(T).Namespace;
+            string ns = typeof(T).Namespace!;
             var types = typeof(T).Assembly.GetTypes()
                 .Where(t => !t.IsAbstract && t.Namespace == ns)
                 .Where(x => IsMappingOf<IMappingProvider>(x) ||
