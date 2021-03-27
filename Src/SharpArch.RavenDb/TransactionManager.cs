@@ -21,15 +21,15 @@ namespace SharpArch.RavenDb
     [PublicAPI]
     public class TransactionManager : ITransactionManager, ISupportsTransactionStatus
     {
-        [NotNull] readonly IAsyncDocumentSession _session;
+        readonly IAsyncDocumentSession _session;
 
-        [CanBeNull] TransactionScope _transaction;
+        TransactionScope? _transaction;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="TransactionManager" /> class.
         /// </summary>
         /// <param name="session">The document session.</param>
-        public TransactionManager([NotNull] IAsyncDocumentSession session)
+        public TransactionManager(IAsyncDocumentSession session)
         {
             _session = session ?? throw new ArgumentNullException(nameof(session));
         }
@@ -74,27 +74,17 @@ namespace SharpArch.RavenDb
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static System.Transactions.IsolationLevel MapIsolationLevel(IsolationLevel isolationLevel)
-        {
-            switch (isolationLevel)
+            => isolationLevel switch
             {
-                case IsolationLevel.Unspecified:
-                    return System.Transactions.IsolationLevel.Unspecified;
-                case IsolationLevel.Chaos:
-                    return System.Transactions.IsolationLevel.Chaos;
-                case IsolationLevel.ReadUncommitted:
-                    return System.Transactions.IsolationLevel.ReadUncommitted;
-                case IsolationLevel.ReadCommitted:
-                    return System.Transactions.IsolationLevel.ReadCommitted;
-                case IsolationLevel.RepeatableRead:
-                    return System.Transactions.IsolationLevel.RepeatableRead;
-                case IsolationLevel.Serializable:
-                    return System.Transactions.IsolationLevel.Serializable;
-                case IsolationLevel.Snapshot:
-                    return System.Transactions.IsolationLevel.Snapshot;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(isolationLevel), isolationLevel, null);
-            }
-        }
+                IsolationLevel.Unspecified => System.Transactions.IsolationLevel.Unspecified,
+                IsolationLevel.Chaos => System.Transactions.IsolationLevel.Chaos,
+                IsolationLevel.ReadUncommitted => System.Transactions.IsolationLevel.ReadUncommitted,
+                IsolationLevel.ReadCommitted => System.Transactions.IsolationLevel.ReadCommitted,
+                IsolationLevel.RepeatableRead => System.Transactions.IsolationLevel.RepeatableRead,
+                IsolationLevel.Serializable => System.Transactions.IsolationLevel.Serializable,
+                IsolationLevel.Snapshot => System.Transactions.IsolationLevel.Snapshot,
+                _ => throw new ArgumentOutOfRangeException(nameof(isolationLevel), isolationLevel, null)
+            };
 
         void ClearTransaction()
         {

@@ -33,13 +33,13 @@ namespace SharpArch.RavenDb
         /// <summary>
         ///     RavenDB Document Session.
         /// </summary>
-        public IAsyncDocumentSession Session { get; }
+        protected IAsyncDocumentSession Session { get; }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="RavenDbRepository{T,TIdT}" /> class.
         /// </summary>
         /// <param name="session">The session.</param>
-        public RavenDbRepository([NotNull] IAsyncDocumentSession session)
+        public RavenDbRepository(IAsyncDocumentSession session)
         {
             Session = session ?? throw new ArgumentNullException(nameof(session));
             TransactionManager = new TransactionManager(session);
@@ -77,14 +77,14 @@ namespace SharpArch.RavenDb
             => specification.SatisfyingElementsFrom(FindAll());
 
         /// <inheritdoc />
-        public async Task<IEnumerable<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> where, CancellationToken cancellationToken = default)
+        public async Task<TEntity[]> FindAllAsync(Expression<Func<TEntity, bool>> @where, CancellationToken cancellationToken = default)
         {
             var result = await Session.Query<TEntity>().Where(where).ToArrayAsync(cancellationToken).ConfigureAwait(false);
             return result;
         }
 
         /// <inheritdoc />
-        public async Task<TEntity> FindOneAsync(Expression<Func<TEntity, bool>> where, CancellationToken cancellationToken = default)
+        public async Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> @where, CancellationToken cancellationToken = default)
         {
             var result = await Session.Query<TEntity>().Where(where).SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
             return result
@@ -165,7 +165,5 @@ namespace SharpArch.RavenDb
             }
         }
 
-        /// <inheritdoc />
-        IAsyncDocumentSession IRavenDbRepository<TEntity, TId>.Session { get; }
     }
 }

@@ -6,7 +6,8 @@ BREAKING:
 * Removed EntityWithTypedId<> replaced with Entity<>, removed old entity class. Fix: replace `Entity` with `Entity<int>`.
 * Renamed IAsyncRepository to IRepository.
 * Added IEquatable<TId> constraint on IEntity<TId>.
-
+* IRavenDbRepository.FindAllAsync now returns Task<TEntity[]>, not Task<IEnumerable<TEntity>>.
+* Removed IRavenDbRepository.Session.
 
 S#arp 6.1
 ========================
