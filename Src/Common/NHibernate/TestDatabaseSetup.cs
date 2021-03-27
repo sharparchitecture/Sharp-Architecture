@@ -5,8 +5,6 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Threading;
-    using System.Threading.Tasks;
     using FluentNHibernate.Automapping;
     using global::NHibernate;
     using global::NHibernate.Cfg;
@@ -27,10 +25,10 @@
     [PublicAPI]
     public class TestDatabaseSetup : IDisposable
     {
-        [NotNull] readonly string _basePath;
-        [NotNull] readonly Assembly[] _mappingAssemblies;
-        [CanBeNull] Configuration _configuration;
-        [CanBeNull] ISessionFactory _sessionFactory;
+        readonly string _basePath;
+        readonly Assembly[] _mappingAssemblies;
+        Configuration? _configuration;
+        ISessionFactory? _sessionFactory;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="TestDatabaseSetup" /> class.
@@ -43,7 +41,7 @@
         ///     <paramref name="basePath" /> or <paramref name="mappingAssemblies" /> is
         ///     <c>null</c>.
         /// </exception>
-        public TestDatabaseSetup([NotNull] string basePath, [NotNull] Assembly[] mappingAssemblies)
+        public TestDatabaseSetup(string basePath, Assembly[] mappingAssemblies)
         {
             _basePath = basePath ?? throw new ArgumentNullException(nameof(basePath));
             if (mappingAssemblies == null) throw new ArgumentNullException(nameof(mappingAssemblies));
@@ -62,7 +60,7 @@
         ///     <paramref name="baseAssembly" /> or <paramref name="mappingAssemblies" /> is
         ///     <c>null</c>.
         /// </exception>
-        public TestDatabaseSetup([NotNull] Assembly baseAssembly, [NotNull] Assembly[] mappingAssemblies)
+        public TestDatabaseSetup(Assembly baseAssembly, Assembly[] mappingAssemblies)
             : this(CodeBaseLocator.GetAssemblyCodeBasePath(baseAssembly),
                 mappingAssemblies)
         {
@@ -122,7 +120,7 @@
                         ["Assemblies"] = assemblies
                     }
                 };
-            var generator = (IAutoPersistenceModelGenerator) Activator.CreateInstance(persistenceGeneratorTypes[0]);
+            var generator = (IAutoPersistenceModelGenerator) Activator.CreateInstance(persistenceGeneratorTypes[0])!;
             return generator.Generate();
         }
 
@@ -195,7 +193,7 @@
         ///     Closes the specified session.
         /// </summary>
         /// <param name="session">The session.</param>
-        public static void Close([CanBeNull] ISession session)
+        public static void Close(ISession? session)
             => session?.Dispose();
 
         /// <summary>
@@ -205,31 +203,7 @@
         /// <remarks>
         ///     Dispose <see cref="TestDatabaseSetup" /> will destroy Session Factory associated with this instance.
         /// </remarks>
-        public static void Shutdown([CanBeNull] ISessionFactory sessionFactory)
+        public static void Shutdown(ISessionFactory? sessionFactory)
             => sessionFactory?.Dispose();
-
-        ///// <summary>
-        /////     Loads the assembly.
-        ///// </summary>
-        ///// <param name="assemblyPath"></param>
-        ///// <returns></returns>
-        //[NotNull]
-        //static Assembly TryLoadAssembly([NotNull] string assemblyPath)
-        //    => Assembly.LoadFrom(assemblyPath);
-
-        ///// <summary>
-        /////     Adds dll extension to assembly name if required.
-        ///// </summary>
-        ///// <param name="assemblyName">Name of the assembly.</param>
-        ///// <returns></returns>
-        //[NotNull]
-        //static string EnsureDllExtension([NotNull] string assemblyName)
-        //{
-        //    assemblyName = assemblyName.Trim();
-        //    const string dllExtension = ".dll";
-        //    if (!assemblyName.EndsWith(dllExtension, StringComparison.OrdinalIgnoreCase)) assemblyName = string.Concat(assemblyName, dllExtension);
-
-        //    return assemblyName;
-        //}
     }
 }

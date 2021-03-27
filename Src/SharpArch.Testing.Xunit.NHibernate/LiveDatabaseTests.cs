@@ -36,10 +36,13 @@
         /// <summary>
         ///     Returns current NHibernate session.
         /// </summary>
-        protected ISession Session { get; private set; }
+        protected ISession? Session { get; private set; }
 
-        /// <inheritdoc />
-        protected LiveDatabaseTests([NotNull] TDatabaseSetup setup)
+        /// <summary>
+        /// Creates instance of live database tests.
+        /// </summary>
+        /// <param name="setup">Database setup, <see cref="TestDatabaseSetup"/>.</param>
+        protected LiveDatabaseTests(TDatabaseSetup setup)
         {
             DbSetup = setup ?? throw new ArgumentNullException(nameof(setup));
             Session = DbSetup.GetSessionFactory().OpenSession();

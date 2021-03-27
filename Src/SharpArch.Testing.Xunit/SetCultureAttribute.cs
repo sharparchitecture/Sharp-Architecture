@@ -19,8 +19,8 @@
     {
         readonly Lazy<CultureInfo> _culture;
         readonly Lazy<CultureInfo> _uiCulture;
-        CultureInfo _originalCulture;
-        CultureInfo _originalUiCulture;
+        CultureInfo? _originalCulture;
+        CultureInfo? _originalUiCulture;
 
         /// <summary>
         ///     Overrides the culture and UI culture of the current thread given culture.
@@ -37,7 +37,7 @@
         /// </summary>
         /// <param name="culture">The name of the culture.</param>
         /// <param name="uiCulture">The name of the UI culture.</param>
-        public SetCultureAttribute([NotNull] string culture, [NotNull] string uiCulture)
+        public SetCultureAttribute(string culture, string uiCulture)
         {
             if (string.IsNullOrWhiteSpace(culture)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(culture));
             if (string.IsNullOrWhiteSpace(uiCulture)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(uiCulture));
@@ -71,8 +71,10 @@
         /// </summary>
         public override void After(MethodInfo methodUnderTest)
         {
-            CultureInfo.CurrentCulture = _originalCulture;
-            CultureInfo.CurrentUICulture = _originalUiCulture;
+            if (_originalCulture != null)
+                CultureInfo.CurrentCulture = _originalCulture;
+            if (_originalUiCulture != null)
+                CultureInfo.CurrentUICulture = _originalUiCulture;
             ClearCachedData();
         }
     }
