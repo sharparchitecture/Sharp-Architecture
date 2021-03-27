@@ -23,7 +23,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.0" />
   </ItemGroup>
 
-  <ItemGroup Label="Package References (ASP.NET 5)" Condition=" '$(TargetFramework)' == 'net5' ">
+  <ItemGroup Label="Package References (ASP.NET 5)" Condition=" '$(TargetFramework)' == 'net5.0' ">
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
   </ItemGroup>
 

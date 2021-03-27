@@ -54,7 +54,7 @@ namespace SharpArch.Domain.Reflection
         /// <returns>
         ///     true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.
         /// </returns>
-        public bool Equals(TypePropertyDescriptor other)
+        public bool Equals(TypePropertyDescriptor? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -79,12 +79,11 @@ namespace SharpArch.Domain.Reflection
         /// <returns>
         ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            var other = obj as TypePropertyDescriptor;
-            return other != null && Equals(other);
+            return obj is TypePropertyDescriptor other && Equals(other);
         }
 
         /// <summary>

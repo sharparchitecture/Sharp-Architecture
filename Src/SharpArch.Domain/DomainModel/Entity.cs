@@ -1,5 +1,9 @@
 namespace SharpArch.Domain.DomainModel
 {
+#if !NULLABLE_REFERENCE_TYPES
+    #pragma warning disable 8618
+    #pragma warning disable 8604
+#endif
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -43,11 +47,21 @@ namespace SharpArch.Domain.DomainModel
         ///     </para>
         /// </remarks>
         [XmlIgnore]
+#if NULLABLE_REFERENCE_TYPES
+        [AllowNull] [MaybeNull]
+#endif
         public virtual TId Id { get; protected set; }
 
+
         /// <inheritdoc />
-        public virtual object GetId()
-            => Id.Equals(default(TId)) ? (object)null : Id;
+        public virtual object? GetId()
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            if (Id is null) return null;
+            return Id.Equals(default!)
+                ? (object?) null
+                : Id;
+        }
 
         /// <summary>
         ///     Returns a value indicating whether the current object is transient.
@@ -59,12 +73,13 @@ namespace SharpArch.Domain.DomainModel
         /// </remarks>
         public virtual bool IsTransient()
         {
-            if (!(Id is object)) return true;
-            return Id.Equals(default(TId));
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            return Id is null
+                || Id.Equals(default!);
         }
 
         /// <inheritdoc />
-        public virtual bool Equals(Entity<TId> other)
+        public virtual bool Equals(Entity<TId>? other)
         {
             if (ReferenceEquals(this, other)) {
                 return true;
@@ -74,7 +89,7 @@ namespace SharpArch.Domain.DomainModel
                 return false;
             }
 
-            if (HasSameNonDefaultIdAs(other)) {
+            if (HasSameNonDefaultIdAs(other!)) {
                 return true;
             }
 
@@ -90,7 +105,7 @@ namespace SharpArch.Domain.DomainModel
         /// </summary>
         /// <param name="obj">The <see cref="object" /> to compare with the current <see cref="object" />.</param>
         /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             var compareTo = obj as Entity<TId>;
             return Equals(compareTo);
@@ -108,7 +123,7 @@ namespace SharpArch.Domain.DomainModel
         ///     if at all, in an object's lifetime, it's important that properties are carefully
         ///     selected which truly represent the signature of an object.
         /// </remarks>
-        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
+        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode", Justification = "By design")]
         public override int GetHashCode()
         {
             if (_cachedHashcode.HasValue) {
@@ -119,12 +134,22 @@ namespace SharpArch.Domain.DomainModel
                 _cachedHashcode = base.GetHashCode();
             }
             else {
-                unchecked {
+                unchecked
+                {
                     // It's possible for two objects to return the same hash code based on 
                     // identically valued properties, even if they're of two different types, 
                     // so we include the object's type in the hash calculation
-                    int hashCode = GetType().GetHashCode();
-                    _cachedHashcode = (hashCode * HashMultiplier) ^ Id.GetHashCode();
+                    int hashCode = GetType().GetHashCode() * HashMultiplier;
+
+                    // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                    if (Id is null)
+                    {
+                        _cachedHashcode = hashCode;
+                    }
+                    else
+                    {
+                        _cachedHashcode = hashCode ^ Id.GetHashCode();
+                    }
                 }
             }
 
@@ -158,7 +183,31 @@ namespace SharpArch.Domain.DomainModel
         /// </returns>
         bool HasSameNonDefaultIdAs(Entity<TId> compareTo)
         {
-            return !IsTransient() && !compareTo.IsTransient() && Id.Equals(compareTo.Id);
+            return !IsTransient() && !compareTo.IsTransient() && Id!.Equals(compareTo.Id!);
         }
+
+        /// <summary>
+        ///     Check whether entities are equal.
+        /// </summary>
+        /// <param name="left">Entity to compare.</param>
+        /// <param name="right">Entity to compare.</param>
+        /// <returns><c>true</c> if entities are equal, <c>false</c> otherwise.</returns>
+        public static bool operator ==(Entity<TId>? left, Entity<TId>? right)
+            => Equals(left, right);
+
+        /// <summary>
+        ///     Check whether entities are not equal.
+        /// </summary>
+        /// <param name="left">Entity to compare.</param>
+        /// <param name="right">Entity to compare.</param>
+        /// <returns><c>true</c> if entities are not equal, <c>false</c> otherwise.</returns>
+        public static bool operator !=(Entity<TId>? left, Entity<TId>? right)
+            => !Equals(left, right);
     }
+
+#if !NULLABLE_REFERENCE_TYPES
+    #pragma warning restore 8618
+    #pragma warning restore 8604
+#endif
+
 }

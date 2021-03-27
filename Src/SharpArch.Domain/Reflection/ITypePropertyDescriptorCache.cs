@@ -22,8 +22,7 @@ namespace SharpArch.Domain.Reflection
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns><see cref="TypePropertyDescriptor" /> or <c>null</c> if does not exists.</returns>
-        [CanBeNull]
-        TypePropertyDescriptor Find([NotNull] Type type);
+        TypePropertyDescriptor? Find(Type type);
 
         /// <summary>
         ///     Get existing property descriptor or create and cache it.
@@ -31,8 +30,7 @@ namespace SharpArch.Domain.Reflection
         /// <param name="type">The type.</param>
         /// <param name="factory">The factory to create descriptor.</param>
         /// <returns></returns>
-        [NotNull]
-        TypePropertyDescriptor GetOrAdd([NotNull] Type type, [NotNull] Func<Type, TypePropertyDescriptor> factory);
+        TypePropertyDescriptor GetOrAdd(Type type, Func<Type, TypePropertyDescriptor> factory);
 
         /// <summary>
         ///     Clears the cache.

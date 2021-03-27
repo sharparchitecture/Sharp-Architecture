@@ -4,8 +4,8 @@ namespace SharpArch.Domain.Validation
     using System.ComponentModel.DataAnnotations;
     using System.Globalization;
     using JetBrains.Annotations;
-    using SharpArch.Domain.DomainModel;
-    using SharpArch.Domain.PersistenceSupport;
+    using DomainModel;
+    using PersistenceSupport;
 
     /// <summary>
     ///     Performs validation of domain signature uniqueness.
@@ -42,20 +42,19 @@ namespace SharpArch.Domain.Validation
         ///     <see cref="IEntityDuplicateChecker" />can not be resolved from
         ///     <paramref name="validationContext" />.
         /// </exception>
-        protected ValidationResult DoValidate([NotNull] object value,
-            [NotNull] ValidationContext validationContext)
+        protected ValidationResult? DoValidate(object? value, ValidationContext validationContext)
         {
             var entityToValidate = value as IEntity;
             if (entityToValidate == null)
                 throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
-                    "This validator must be used at the class level of an " + nameof(IEntity) + ". The type you provided was {0}.",
-                    value.GetType()));
+                    "This validator must be used at the class level of an " + nameof(IEntity) + ". The type you provided was '{0}'.",
+                    (value?.GetType() as object) ?? "null"));
 
             var duplicateChecker =
-                (IEntityDuplicateChecker) validationContext.GetService(typeof(IEntityDuplicateChecker));
+                (IEntityDuplicateChecker?) validationContext.GetService(typeof(IEntityDuplicateChecker));
             if (duplicateChecker == null)
                 throw new InvalidOperationException(
-                    $"'{typeof(IEntityDuplicateChecker).Name}' can not be resolved from validation context.");
+                    $"'{nameof(IEntityDuplicateChecker)}' can not be resolved from validation context.");
             return duplicateChecker.DoesDuplicateExistWithTypedIdOf(entityToValidate)
                 ? new ValidationResult(ErrorMessage)
                 : ValidationResult.Success;

@@ -15,7 +15,7 @@ namespace SharpArch.Domain.Specifications
         ///     Initializes a new instance of the <see cref="AdHoc{T}" /> class.
         /// </summary>
         /// <param name="expression">The expression.</param>
-        public AdHoc([CanBeNull] Expression<Func<T, bool>> expression)
+        public AdHoc(Expression<Func<T, bool>>? expression)
         {
             MatchingCriteria = expression;
         }
@@ -23,6 +23,6 @@ namespace SharpArch.Domain.Specifications
         /// <summary>
         ///     Gets the matching criteria.
         /// </summary>
-        public override Expression<Func<T, bool>> MatchingCriteria { get; }
+        public override Expression<Func<T, bool>>? MatchingCriteria { get; }
     }
 }

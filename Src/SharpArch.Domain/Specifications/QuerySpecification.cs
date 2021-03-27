@@ -15,7 +15,7 @@ namespace SharpArch.Domain.Specifications
         /// <summary>
         ///     Gets the matching criteria.
         /// </summary>
-        public virtual Expression<Func<T, bool>> MatchingCriteria => null;
+        public abstract Expression<Func<T, bool>>? MatchingCriteria { get; }
 
         /// <summary>
         ///     Returns the elements from the specified candidates that are satisfying the

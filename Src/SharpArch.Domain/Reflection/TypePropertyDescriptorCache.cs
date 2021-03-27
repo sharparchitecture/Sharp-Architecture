@@ -11,8 +11,7 @@
     [PublicAPI]
     public class TypePropertyDescriptorCache : ITypePropertyDescriptorCache
     {
-        private readonly ConcurrentDictionary<Type, TypePropertyDescriptor> cache =
-            new ConcurrentDictionary<Type, TypePropertyDescriptor>();
+        readonly ConcurrentDictionary<Type, TypePropertyDescriptor> _cache = new();
 
         /// <summary>
         ///     Find cached property descriptor.
@@ -22,10 +21,9 @@
         ///     <see cref="TypePropertyDescriptor" /> or <c>null</c> if does not exists.
         /// </returns>
         [MustUseReturnValue]
-        public TypePropertyDescriptor Find(Type type)
+        public TypePropertyDescriptor? Find(Type type)
         {
-            TypePropertyDescriptor result;
-            cache.TryGetValue(type, out result);
+            _cache.TryGetValue(type, out TypePropertyDescriptor? result);
             return result;
         }
 
@@ -44,7 +42,7 @@
             if (type == null) throw new ArgumentNullException(nameof(type));
             if (factory == null) throw new ArgumentNullException(nameof(factory));
 
-            return cache.GetOrAdd(type, factory);
+            return _cache.GetOrAdd(type, factory);
         }
 
         /// <summary>
@@ -52,12 +50,12 @@
         /// </summary>
         public void Clear()
         {
-            cache.Clear();
+            _cache.Clear();
         }
 
         /// <summary>
         ///     Returns number of entries in the cache.
         /// </summary>
-        public int Count => cache.Count;
+        public int Count => _cache.Count;
     }
 }
