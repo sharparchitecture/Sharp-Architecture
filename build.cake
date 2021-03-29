@@ -1,17 +1,17 @@
 // ADDINS
-#addin nuget:?package=Cake.Coveralls&version=0.10.2
-#addin nuget:?package=Cake.FileHelpers&version=3.3.0
-#addin nuget:?package=Cake.Issues&version=0.9.1
-#addin nuget:?package=Cake.AppVeyor&version=4.0.0
+#addin nuget:?package=Cake.Coveralls&version=1.0.1
+#addin nuget:?package=Cake.FileHelpers&version=4.0.1
+//#addin nuget:?package=Cake.Issues&version=0.9.1
+#addin nuget:?package=Cake.AppVeyor&version=5.0.1
 #addin nuget:?package=Cake.ReSharperReports&version=0.11.1
 
 // TOOLS
 #tool nuget:?package=GitReleaseManager&version=0.11.0
-#tool nuget:?package=GitVersion.CommandLine&version=5.6.4
+#tool nuget:?package=GitVersion.CommandLine&version=5.6.7
 #tool nuget:?package=coveralls.io&version=1.4.2
 #tool nuget:?package=OpenCover&version=4.7.922
-#tool nuget:?package=ReportGenerator&version=4.8.4
-//#tool nuget:?package=JetBrains.ReSharper.CommandLineTools&version=2018.3.4
+#tool nuget:?package=ReportGenerator&version=4.8.7
+#tool nuget:?package=JetBrains.ReSharper.CommandLineTools&version=2020.3.4
 
 // ARGUMENTS
 var target = Argument("target", "Default");
@@ -59,7 +59,7 @@ var milestone = semVersion.MajorMinorPatch;
 var artifactsDir = "./Drops";
 var artifactsDirAbsolutePath = MakeAbsolute(Directory(artifactsDir));
 
-var testCoverageOutputFile = artifactsDir + "/OpenCover.xml";
+var testCoverageOutputFile = new FilePath(artifactsDir + "/OpenCover.xml");
 var codeCoverageReportDir = artifactsDir + "/CodeCoverageReport";
 var codeInspectionsOutputFile = artifactsDir + "/Inspections/CodeInspections.xml";
 var duplicateFinderOutputFile = artifactsDir + "/Inspections/CodeDuplicates.xml";
@@ -67,7 +67,7 @@ var duplicateFinderOutputFile = artifactsDir + "/Inspections/CodeDuplicates.xml"
 var packagesDir = artifactsDir + "/packages";
 var srcDir = "./Src";
 var testsRootDir = srcDir + "/tests";
-var solutionFile = srcDir + "/SharpArch.sln";
+var solutionFile = new FilePath(srcDir + "/SharpArch.sln");
 var samplesDir = "./Samples";
 var coverageFilter="+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.Xunit*]* -[SharpArch.Infrastructure]SharpArch.Infrastructure.Logging.*";
 
@@ -109,7 +109,7 @@ Task("UpdateAppVeyorBuildNumber")
 
 
 Task("Restore")
-    .DoesForEach(GetFiles(solutionFile).Union(GetFiles($"{samplesDir}/**/*.sln")),
+    .DoesForEach(GetFiles(solutionFile.ToString()).Union(GetFiles($"{samplesDir}/**/*.sln")),
         (sln) => {
             Information("Running in {0}", sln.GetDirectory().FullPath);
             DotNetCoreRestore(sln.GetDirectory().FullPath);
@@ -154,7 +154,7 @@ Task("InspectCode")
 
 
 Task("RunXunitTests")
-    .DoesForEach(GetFiles(solutionFile).Union(GetFiles($"{samplesDir}/**/*.sln")),
+    .DoesForEach(GetFiles(solutionFile.ToString()).Union(GetFiles($"{samplesDir}/**/*.sln")),
     (testProj) => {
         var projectPath = testProj.GetDirectory();
         var projectFilename = testProj.GetFilenameWithoutExtension();
@@ -213,7 +213,10 @@ Task("CleanPreviousTestResults")
             DeleteFile(testCoverageOutputFile);
         DeleteFiles(artifactsDir + "/*.trx");
         if (DirectoryExists(codeCoverageReportDir))
-            DeleteDirectory(codeCoverageReportDir, recursive: true);
+            DeleteDirectory(codeCoverageReportDir, new DeleteDirectorySettings{
+                Recursive = true,
+                Force = true
+            });
     });
 
 

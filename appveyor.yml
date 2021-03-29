@@ -33,9 +33,11 @@ cache:
 
 install:
   - ps: ./mssql-setup.ps1
+  - ps: dotnet new tool-manifest
+  - ps: dotnet tool install Cake.Tool --version 1.1.0
 
 build_script:
-  - ps: ./build.ps1 -Verbosity Verbose
+  - ps: dotnet cake
 
 test: off
 
