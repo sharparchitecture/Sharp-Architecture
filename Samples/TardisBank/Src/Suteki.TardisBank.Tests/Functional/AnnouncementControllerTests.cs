@@ -13,9 +13,9 @@
     public class AnnouncementControllerTests : IClassFixture<TestServerSetup>, IDisposable
     {
         readonly TestServerSetup _setup;
-        Uri _newAnnouncementUri;
+        Uri? _newAnnouncementUri;
 
-        public AnnouncementControllerTests([NotNull] TestServerSetup setup)
+        public AnnouncementControllerTests(TestServerSetup setup)
         {
             _setup = setup ?? throw new ArgumentNullException(nameof(setup));
         }
@@ -47,7 +47,7 @@
             var response = await _setup.Client.PostAsJsonAsync("announcements", newAnnouncement);
             response.EnsureSuccessStatusCode();
 
-            _newAnnouncementUri = response.Headers.Location;
+            _newAnnouncementUri = response.Headers.Location!;
 
             var announcementResponse = await _setup.Client.GetAsync(_newAnnouncementUri);
             announcementResponse.EnsureSuccessStatusCode();

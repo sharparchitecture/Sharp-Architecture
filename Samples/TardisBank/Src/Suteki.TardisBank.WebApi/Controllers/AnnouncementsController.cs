@@ -1,4 +1,5 @@
-﻿namespace Suteki.TardisBank.WebApi.Controllers
+﻿#pragma warning disable 1573
+namespace Suteki.TardisBank.WebApi.Controllers
 {
     using System;
     using System.Collections.Generic;
@@ -24,19 +25,20 @@
     {
         readonly ILinqRepository<Announcement, int> _announcementRepository;
 #if NETCOREAPP3_1 || NET5_0
-        [NotNull] readonly LinkGenerator _linkGenerator;
+        readonly LinkGenerator _linkGenerator;
 #endif
-        [NotNull] readonly IMapper _mapper;
+        readonly IMapper _mapper;
 
         /// <summary>
         ///     Creates AnnouncementController.
         /// </summary>
         /// <param name="announcementRepository">Announcements repository.</param>
-        public AnnouncementsController([NotNull] ILinqRepository<Announcement, int> announcementRepository,
+        /// <param name="mapper">Mapper</param>
+        public AnnouncementsController(ILinqRepository<Announcement, int> announcementRepository,
 #if NETCOREAPP3_1 || NET5_0
             LinkGenerator linkGenerator,
 #endif
-            [NotNull] IMapper mapper)
+            IMapper mapper)
         {
             _announcementRepository = announcementRepository ?? throw new ArgumentNullException(nameof(announcementRepository));
 #if NETCOREAPP3_1 || NET5_0
@@ -70,7 +72,8 @@
         public async Task<ActionResult<AnnouncementModel>> Get(int id)
         {
             var announcement = await _announcementRepository.GetAsync(id).ConfigureAwait(false);
-            return announcement != null ? _mapper.Map<AnnouncementModel>(announcement) : null;
+            if (announcement != null) return _mapper.Map<AnnouncementModel>(announcement);
+            return NotFound(new {id});
         }
 
         [HttpPost]

@@ -16,9 +16,9 @@
         public const string TransactionState = "x-transaction-result";
         static readonly ILogger _log = Log.ForContext<TransactionManagerStub>();
         readonly IHttpContextAccessor _httpContextAccessor;
-        TransactionWrapper _transaction;
+        TransactionWrapper? _transaction;
 
-        public TransactionManagerStub([NotNull] IHttpContextAccessor httpContextAccessor)
+        public TransactionManagerStub(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
@@ -38,7 +38,7 @@
 
         public Task CommitTransactionAsync(CancellationToken cancellationToken)
         {
-            _httpContextAccessor.HttpContext.Response.Headers.Add(TransactionIsolationLevel, _transaction.IsolationLevel.ToString());
+            _httpContextAccessor.HttpContext!.Response.Headers.Add(TransactionIsolationLevel, _transaction?.IsolationLevel.ToString() ?? "unknown");
             _httpContextAccessor.HttpContext.Response.Headers.Add(TransactionState, "committed");
             _transaction?.Commit();
             return Task.CompletedTask;
@@ -46,7 +46,7 @@
 
         public Task RollbackTransactionAsync(CancellationToken cancellationToken)
         {
-            _httpContextAccessor.HttpContext.Response.Headers.Add(TransactionIsolationLevel, _transaction.IsolationLevel.ToString());
+            _httpContextAccessor.HttpContext!.Response.Headers.Add(TransactionIsolationLevel, _transaction?.IsolationLevel.ToString() ?? "unknown");
             _httpContextAccessor.HttpContext.Response.Headers.Add(TransactionState, "rolled-back");
             _transaction?.Dispose();
             return Task.CompletedTask;

@@ -19,7 +19,7 @@
 
         [Required]
         [JsonProperty("title")]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
     }
 
 
@@ -30,6 +30,6 @@
     {
         [JsonProperty("content")]
         [Required]
-        public string Content { get; set; }
+        public string Content { get; set; } = null!;
     }
 }

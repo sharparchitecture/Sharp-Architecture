@@ -11,10 +11,10 @@
         public virtual DateTime Date { get; set; }
 
         [MaxLength(120)]
-        public virtual string Title { get; set; }
+        public virtual string Title { get; set; } = null!;
 
         [MaxLength(2000)]
-        public virtual string Content { get; set; }
+        public virtual string? Content { get; set; }
 
         public virtual DateTime LastModifiedUtc { get; set; }
 
