@@ -32,7 +32,7 @@
             }
         }
 
-        string _tempFileName;
+        string _tempFileName = null!;
 
         static string GetConfigFullName()
         {
