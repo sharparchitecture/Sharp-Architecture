@@ -33,6 +33,6 @@ namespace Tests.SharpArch.NHibernate
 
     public class MyEntity: Entity<int>
     {
-        string Name { get; set; }
+        string? Name { get; set; }
     }
 }

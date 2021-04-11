@@ -3,7 +3,7 @@
     using System;
     using System.Reflection;
     using JetBrains.Annotations;
-    using SharpArch.Domain.Reflection;
+    using Reflection;
 
     /// <summary>
     ///     Provides a standard base class for facilitating comparison of objects.
@@ -25,13 +25,13 @@
         ///     of collissions. See http://computinglife.wordpress.com/2008/11/20/why-do-hash-functions-use-prime-numbers/
         ///     for more information.
         /// </summary>
-        private const int HashMultiplier = 31;
+        const int HashMultiplier = 31;
 
         /// <summary>
         ///     This static member caches the domain signature properties to avoid looking them up for
         ///     each instance of the same type.
         /// </summary>
-        private static readonly ITypePropertyDescriptorCache signaturePropertiesCache
+        static readonly ITypePropertyDescriptorCache _signaturePropertiesCache
             = new TypePropertyDescriptorCache();
 
         /// <summary>
@@ -39,7 +39,7 @@
         /// </summary>
         /// <param name="obj">The <see cref="object" /> to compare with the current <see cref="object" />.</param>
         /// <returns><c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             var compareTo = obj as BaseObject;
 
@@ -82,7 +82,7 @@
 
                 for (var i = 0; i < signatureProperties.Length; i++) {
                     PropertyInfo property = signatureProperties[i];
-                    object value = property.GetValue(this, null);
+                    object? value = property!.GetValue(this, null);
                     if (value != null) {
                         hashCode = (hashCode * HashMultiplier) ^ value.GetHashCode();
                     }
@@ -100,13 +100,13 @@
             Type type = GetTypeUnproxied();
 
             // Since data won't be in cache on first request only, use .GetOrAdd as second attempt to prevent allocation of extra lambda object.
-            TypePropertyDescriptor descriptor = signaturePropertiesCache.Find(type) ?? GetOrAdd(type);
+            TypePropertyDescriptor descriptor = _signaturePropertiesCache.Find(type) ?? GetOrAdd(type);
             return descriptor.Properties;
         }
 
-        private TypePropertyDescriptor GetOrAdd(Type type)
+        TypePropertyDescriptor GetOrAdd(Type type)
         {
-            return signaturePropertiesCache.GetOrAdd(type,
+            return _signaturePropertiesCache.GetOrAdd(type,
                 t => new TypePropertyDescriptor(t, GetTypeSpecificSignatureProperties()));
         }
 
@@ -134,15 +134,15 @@
             // ReSharper disable once LoopCanBeConvertedToQuery
             for (var index = 0; index < signatureProperties.Length; index++) {
                 PropertyInfo property = signatureProperties[index];
-                object valueOfThisObject = property.GetValue(this, null);
-                object valueToCompareTo = property.GetValue(compareTo, null);
+                object? valueOfThisObject = property.GetValue(this, null);
+                object? valueToCompareTo = property.GetValue(compareTo, null);
 
                 if (valueOfThisObject == null && valueToCompareTo == null) {
                     continue;
                 }
 
                 if (valueOfThisObject == null ^ valueToCompareTo == null ||
-                    !valueOfThisObject.Equals(valueToCompareTo)) {
+                    !(valueOfThisObject!.Equals(valueToCompareTo))) {
                     return false;
                 }
             }
@@ -156,7 +156,6 @@
         ///     Enforces the template method pattern to have child objects determine which specific
         ///     properties should and should not be included in the object signature comparison.
         /// </summary>
-        [NotNull]
         protected abstract PropertyInfo[] GetTypeSpecificSignatureProperties();
 
         /// <summary>

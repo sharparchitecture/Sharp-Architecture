@@ -17,7 +17,7 @@ namespace Suteki.TardisBank.Domain
         }
 
         public virtual int ParentId { get; set; }
-        public virtual Account Account { get; set; }
+        public virtual Account Account { get; set; } = null!;
 
         public virtual void ReceivePayment(decimal amount, string description)
         {

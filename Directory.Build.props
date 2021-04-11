@@ -3,7 +3,7 @@
     <Product>Sharp Architecture</Product>
     <Authors>Sharp Architecture Dev Team</Authors>
 
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net5</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
     <SignAssembly>false</SignAssembly>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -11,12 +11,13 @@
     <DebugType>portable</DebugType>
 
     <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
     <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <PropertyGroup Label="Custom targets">
     <!-- target frameworks for unit-tests and applications -->
-    <AppTargetFrameworks>netcoreapp2.1;netcoreapp3.1;net5</AppTargetFrameworks>
+    <AppTargetFrameworks>netcoreapp2.1;netcoreapp3.1;net5.0</AppTargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -25,6 +26,11 @@
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <Optimize>True</Optimize>
+  </PropertyGroup>
+
+  <!-- nullable checks -->
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' or '$(TargetFramework)' == 'net5.0' ">
+    <DefineConstants>$(DefineConstants);NULLABLE_REFERENCE_TYPES</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Label="Package" Condition="'$(MSBuildProjectName.Contains(Tests))' == false">

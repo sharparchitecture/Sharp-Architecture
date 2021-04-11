@@ -13,7 +13,7 @@
 
     internal class HasUniqueDomainSignatureTestsBase : RepositoryTestsBase
     {
-        protected Mock<IServiceProvider> ServiceProviderMock;
+        protected Mock<IServiceProvider> ServiceProviderMock = null!;
 
         public HasUniqueDomainSignatureTestsBase()
             : base(new TestDatabaseSetup(

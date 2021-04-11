@@ -12,22 +12,22 @@
     [PublicAPI]
     public abstract class ApplyTransactionFilterBase 
     {
-        static readonly object _lock = new object();
+        static readonly object _lock = new();
 
-        static ImmutableDictionary<string, TransactionAttribute> _attributeCache
-            = ImmutableDictionary<string, TransactionAttribute>.Empty;
+        static ImmutableDictionary<string, TransactionAttribute?> _attributeCache
+            = ImmutableDictionary<string, TransactionAttribute?>.Empty;
 
         /// <summary>
         ///     Returns <see cref="TransactionAttribute" /> associated with given action.
         /// </summary>
         /// <param name="context"></param>
         /// <returns><see cref="TransactionAttribute" /> instance or <c>null</c>.</returns>
-        protected TransactionAttribute GetTransactionAttribute(FilterContext context)
+        protected TransactionAttribute? GetTransactionAttribute(FilterContext context)
         {
             var actionId = context.ActionDescriptor.Id;
             if (!_attributeCache.TryGetValue(actionId, out var transactionAttribute))
             {
-                lock(_lock)
+                lock (_lock)
                 {
                     transactionAttribute = context.FindEffectivePolicy<TransactionAttribute>();
                     if (!_attributeCache.ContainsKey(actionId))

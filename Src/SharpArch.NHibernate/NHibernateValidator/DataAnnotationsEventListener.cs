@@ -19,18 +19,18 @@
 
         class SessionProvider : IServiceProvider
         {
-            private readonly ISession session;
+            readonly ISession _session;
 
             public SessionProvider(ISession session)
             {
-                this.session = session;
+                _session = session;
             }
 
-            public object GetService(Type serviceType)
+            public object? GetService(Type serviceType)
             {
                 if (serviceType == typeof (ISession))
                 {
-                    return session;
+                    return _session;
                 }
                 return null;
             }
@@ -52,7 +52,7 @@
             return false;
         }
 
-        private static ValidationContext CreateValidationContext(IDatabaseEventArgs @event, object entity)
+        static ValidationContext CreateValidationContext(IDatabaseEventArgs @event, object entity)
         {
             return new ValidationContext(entity, new SessionProvider(@event.Session), null);
         }

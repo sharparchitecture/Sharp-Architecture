@@ -18,8 +18,7 @@
         /// <param name="assembly">Assembly</param>
         /// <returns>Directory path</returns>
         /// <exception cref="ArgumentNullException"><paramref name="assembly" /> is <see langword="null" /></exception>
-        [NotNull]
-        public static string GetAssemblyCodeBasePath([NotNull] Assembly assembly)
+        public static string GetAssemblyCodeBasePath(Assembly assembly)
         {
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
 #if NET5_0
@@ -28,7 +27,7 @@
             var uri = new UriBuilder(assembly.CodeBase);
 #endif
             var uriPath = Uri.UnescapeDataString(uri.Path);
-            return Path.GetDirectoryName(uriPath);
+            return Path.GetDirectoryName(uriPath)!;
         }
     }
 }

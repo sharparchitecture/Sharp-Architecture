@@ -130,7 +130,7 @@ namespace SharpArch.NHibernate
         }
 
         /// <inheritdoc />
-        public virtual async Task<TEntity> FindOneAsync(TEntity exampleInstance, CancellationToken ct, params string[] propertiesToExclude)
+        public virtual async Task<TEntity?> FindOneAsync(TEntity exampleInstance, CancellationToken ct, params string[] propertiesToExclude)
         {
             IList<TEntity> foundList = await FindAllAsync(exampleInstance, propertiesToExclude, 2, ct).ConfigureAwait(false);
             if (foundList.Count > 1) throw new NonUniqueResultException(foundList.Count);
@@ -139,7 +139,7 @@ namespace SharpArch.NHibernate
         }
 
         /// <inheritdoc />
-        public async Task<TEntity> FindOneAsync(
+        public async Task<TEntity?> FindOneAsync(
             IReadOnlyDictionary<string, object> propertyValuePairs,
             CancellationToken cancellationToken = default)
         {
@@ -150,8 +150,8 @@ namespace SharpArch.NHibernate
         }
 
         /// <inheritdoc />
-        public virtual Task<TEntity> GetAsync(TId id, Enums.LockMode lockMode, CancellationToken ct)
-            => Session.GetAsync<TEntity>(id, ConvertFrom(lockMode), ct);
+        public virtual Task<TEntity?> GetAsync(TId id, Enums.LockMode lockMode, CancellationToken ct)
+            => Session.GetAsync<TEntity?>(id, ConvertFrom(lockMode), ct);
 
         /// <inheritdoc />
         public virtual Task<TEntity> LoadAsync(TId id, CancellationToken ct)

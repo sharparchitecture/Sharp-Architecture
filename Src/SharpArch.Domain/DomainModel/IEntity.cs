@@ -1,6 +1,7 @@
 ﻿namespace SharpArch.Domain.DomainModel
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
     using JetBrains.Annotations;
 
@@ -19,8 +20,7 @@
         ///     Calling this method may result in boxing for entities with value type identifier.
         ///     Use <see cref="IEntity{TId}" /> where possible.
         /// </remarks>
-        [CanBeNull]
-        object GetId();
+        object? GetId();
 
         /// <summary>
         ///     Returns the properties of the current object that make up the object's signature.
@@ -69,6 +69,9 @@
         /// <summary>
         ///     Gets the ID which uniquely identifies the entity instance within its type's bounds.
         /// </summary>
+#if NULLABLE_REFERENCE_TYPES
+        [AllowNull] [MaybeNull]
+#endif
         TId Id { get; }
     }
 

@@ -13,7 +13,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         {
             public int Id { get; set; }
 
-            public string Name { get; set; }
+            public string? Name { get; set; }
         }
 
 
@@ -21,7 +21,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         {
             public int Id { get; set; }
 
-            public string Name { get; set; }
+            public string? Name { get; set; }
         }
 
 
@@ -32,7 +32,7 @@ namespace Tests.SharpArch.Domain.DomainModel
         public class ValueObjectWithDomainSignature : ValueObject
         {
             [DomainSignature]
-            public string Name { get; set; }
+            public string? Name { get; set; }
         }
 
 
@@ -114,7 +114,7 @@ namespace Tests.SharpArch.Domain.DomainModel
 
             (null == val1).Should().BeFalse();
             (val1 == null).Should().BeFalse();
-            (null != val1).Should().BeTrue();
+            (null! != val1).Should().BeTrue();
             (val1 != null).Should().BeTrue();
         }
 

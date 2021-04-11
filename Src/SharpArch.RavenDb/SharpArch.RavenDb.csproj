@@ -16,9 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" PrivateAssets="All" />
+    <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="RavenDb.Client" Version="5.1.2" />
+    <PackageReference Include="RavenDb.Client" Version="5.1.5" />
   </ItemGroup>
    
   <ItemGroup>

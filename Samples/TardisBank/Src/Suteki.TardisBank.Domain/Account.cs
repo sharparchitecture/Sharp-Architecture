@@ -27,7 +27,7 @@ namespace Suteki.TardisBank.Domain
 
         public virtual IList<PaymentSchedule> PaymentSchedules { get; protected set; }
 
-        public virtual void AddTransaction(string description, decimal amount)
+        public virtual void AddTransaction(string? description, decimal amount)
         {
             this.Transactions.Add(new Transaction(description, amount, this));
 

@@ -27,11 +27,10 @@
         /// <param name="valueObject1">The first value object.</param>
         /// <param name="valueObject2">The second value object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator ==(ValueObject valueObject1, ValueObject valueObject2)
+        public static bool operator ==(ValueObject? valueObject1, ValueObject? valueObject2)
         {
-            if ((object) valueObject1 == null) {
-                return (object) valueObject2 == null;
-            }
+            if (ReferenceEquals(valueObject1, null)) 
+                return ReferenceEquals(valueObject2, null);
 
             return valueObject1.Equals(valueObject2);
         }
@@ -42,7 +41,7 @@
         /// <param name="valueObject1">The first value object.</param>
         /// <param name="valueObject2">The second value object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator !=(ValueObject valueObject1, ValueObject valueObject2)
+        public static bool operator !=(ValueObject? valueObject1, ValueObject? valueObject2)
         {
             return !(valueObject1 == valueObject2);
         }
@@ -52,7 +51,7 @@
         /// </summary>
         /// <param name="obj">The <see cref="object" /> to compare with the current <see cref="object" />.</param>
         /// <returns><c>true</c> if the specified <see cref="object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return base.Equals(obj);
         }
@@ -83,8 +82,7 @@
         /// </exception>
         protected override PropertyInfo[] GetTypeSpecificSignatureProperties()
         {
-            var hasDomainSignature = this.GetType().GetProperties().Any(p => p.IsDefined(typeof(DomainSignatureAttribute), true));
-
+            var hasDomainSignature = GetType().GetProperties().Any(p => p.IsDefined(typeof(DomainSignatureAttribute), true));
 
             if (hasDomainSignature) {
                 string message = "Properties were found within " + GetType() +

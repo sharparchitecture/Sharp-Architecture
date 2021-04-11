@@ -28,7 +28,7 @@
         /// <param name="firstObject">The first object.</param>
         /// <param name="secondObject">The second object.</param>
         /// <returns><c>true</c> if the objects are equal, <c>false</c> otherwise.</returns>
-        public bool Equals([CanBeNull] T firstObject, [CanBeNull] T secondObject)
+        public bool Equals(T? firstObject, T? secondObject)
         {
             // While SQL would return false for the following condition, returning true when 
             // comparing two null values is consistent with the C# language
@@ -40,7 +40,7 @@
                 return false;
             }
 
-            return firstObject.Equals(secondObject);
+            return firstObject!.Equals(secondObject!);
         }
 
         /// <summary>Returns a hash code for the specified object.</summary>
@@ -49,7 +49,7 @@
         /// <returns>
         ///     A hash code for the object, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
-        public int GetHashCode([NotNull] T obj)
+        public int GetHashCode(T obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             return obj.GetHashCode();

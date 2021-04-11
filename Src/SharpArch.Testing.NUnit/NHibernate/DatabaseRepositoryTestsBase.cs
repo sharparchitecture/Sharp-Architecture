@@ -43,12 +43,12 @@
         /// <summary>
         ///     Database initializer instance.
         /// </summary>
-        protected TestDatabaseSetup Initializer { get; private set; }
+        protected TestDatabaseSetup Initializer { get; private set; } = null!;
 
         /// <summary>
         ///     Returns current NHibernate session.
         /// </summary>
-        protected ISession Session { get; private set; }
+        protected ISession? Session { get; private set; }
 
         DatabaseRepositoryTestsBase()
         {
@@ -58,7 +58,7 @@
         ///     Constructor.
         /// </summary>
         /// <param name="initializer"></param>
-        protected DatabaseRepositoryTestsBase([NotNull] TestDatabaseSetup initializer)
+        protected DatabaseRepositoryTestsBase(TestDatabaseSetup initializer)
         {
             Initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));
         }
@@ -77,7 +77,7 @@
         ///     Can be used to override Session Factory settings.
         /// </summary>
         /// <param name="configuration"></param>
-        protected virtual void UpdateConfiguration([NotNull] Configuration configuration)
+        protected virtual void UpdateConfiguration(Configuration configuration)
         {
         }
 
@@ -115,7 +115,7 @@
         public void OneTimeTearDown()
         {
             Initializer?.Dispose();
-            Initializer = null;
+            Initializer = null!;
         }
     }
 }

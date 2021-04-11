@@ -15,7 +15,7 @@ namespace Suteki.TardisBank.Tests.Model
 
     public class PaymentSchedulingQueryTests : TransientDatabaseTests<TransientDatabaseSetup>
     {
-        Parent _parent;
+        Parent _parent = null!;
 
         DateTime _someDate;
 

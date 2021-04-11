@@ -23,17 +23,12 @@ namespace SharpArch.RavenDb.Contracts.Repositories
         where TIdT : IEquatable<TIdT>
     {
         /// <summary>
-        ///     RavenDB Document Session.
-        /// </summary>
-        IAsyncDocumentSession Session { get; }
-
-        /// <summary>
         ///     Finds all documents satisfying given criteria.
         /// </summary>
         /// <param name="where">The criteria.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Documents</returns>
-        Task<IEnumerable<TEntity>> FindAllAsync(Expression<Func<TEntity, bool>> where, CancellationToken cancellationToken = default);
+        Task<TEntity[]> FindAllAsync(Expression<Func<TEntity, bool>> @where, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Finds single document satisfying given criteria.
@@ -42,7 +37,7 @@ namespace SharpArch.RavenDb.Contracts.Repositories
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The document</returns>
         /// <exception cref="InvalidOperationException">If more than one document found.</exception>
-        Task<TEntity> FindOneAsync(Expression<Func<TEntity, bool>> where, CancellationToken cancellationToken = default);
+        Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> @where, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Finds the first document satisfying given criteria.

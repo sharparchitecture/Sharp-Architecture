@@ -30,7 +30,7 @@ namespace SharpArch.Web.AspNetCore.Transaction
     [BaseTypeRequired(typeof(ControllerBase))]
     [PublicAPI]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public sealed class TransactionAttribute : Attribute, IFilterMetadata
+    public sealed class TransactionAttribute : Attribute, IFilterMetadata, IEquatable<TransactionAttribute>
     {
         /// <summary>
         ///     Gets or sets a value indicating whether rollback transaction in case of model validation error.
@@ -60,5 +60,43 @@ namespace SharpArch.Web.AspNetCore.Transaction
             IsolationLevel = isolationLevel;
             RollbackOnModelValidationError = rollbackOnModelValidationError;
         }
+
+        /// <inheritdoc />
+        public bool Equals(TransactionAttribute? other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return RollbackOnModelValidationError == other.RollbackOnModelValidationError && IsolationLevel == other.IsolationLevel;
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
+            => ReferenceEquals(this, obj) || obj is TransactionAttribute other && Equals(other);
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            int hashCode = RollbackOnModelValidationError ? 397 : 0;
+            hashCode ^= (int) IsolationLevel;
+            return hashCode;
+        }
+
+        /// <summary>
+        ///     Checks whether <see cref="TransactionAttribute" /> have same settings.
+        /// </summary>
+        /// <param name="left">Left operand.</param>
+        /// <param name="right">Right operand.</param>
+        /// <returns><c>true</c> if transaction attribute parameters are the same; otherwise <c>false</c>.</returns>
+        public static bool operator ==(TransactionAttribute? left, TransactionAttribute? right)
+            => Equals(left, right);
+
+        /// <summary>
+        ///     Checks whether <see cref="TransactionAttribute" /> have different settings.
+        /// </summary>
+        /// <param name="left">Left operand.</param>
+        /// <param name="right">Right operand.</param>
+        /// <returns><c>true</c> if transaction attribute parameters are the different; otherwise <c>false</c>.</returns>
+        public static bool operator !=(TransactionAttribute? left, TransactionAttribute? right)
+            => !Equals(left, right);
     }
 }

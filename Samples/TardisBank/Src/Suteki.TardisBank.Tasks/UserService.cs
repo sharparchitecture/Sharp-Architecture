@@ -25,9 +25,9 @@ namespace Suteki.TardisBank.Tasks
             _userRepository = userRepository;
         }
 
-        public Task<User> GetCurrentUser(CancellationToken cancellationToken)
+        public Task<User?> GetCurrentUser(CancellationToken cancellationToken)
         {
-            if (!_context.UserIsAuthenticated) return Task.FromResult<User>(null);
+            if (!_context.UserIsAuthenticated) return Task.FromResult<User?>(null);
 
             return GetUserByUserName(_context.UserName, cancellationToken);
         }
@@ -37,17 +37,17 @@ namespace Suteki.TardisBank.Tasks
             return _userRepository.FindOneAsync(userId, cancellationToken);
         }
 
-        public Task<User> GetUserByUserName(string userName, CancellationToken cancellationToken)
+        public Task<User?> GetUserByUserName(string userName, CancellationToken cancellationToken)
         {
             if (userName == null)
             {
                 throw new ArgumentNullException(nameof(userName));
             }
 
-            return _userRepository.FindAll().Where(u => u.UserName == userName).FirstOrDefaultAsync(cancellationToken);
+            return _userRepository.FindAll().Where(u => u.UserName == userName).FirstOrDefaultAsync(cancellationToken)!;
         }
 
-        public async Task<User> GetUserByActivationKey(string activationKey, CancellationToken cancellationToken)
+        public async Task<User?> GetUserByActivationKey(string activationKey, CancellationToken cancellationToken)
         {
             if (activationKey == null)
             {

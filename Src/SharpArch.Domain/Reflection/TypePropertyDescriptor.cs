@@ -11,8 +11,8 @@ namespace SharpArch.Domain.Reflection
     [PublicAPI]
     public class TypePropertyDescriptor : IEquatable<TypePropertyDescriptor>
     {
-        private static readonly PropertyInfo[] emptyArray = Array.Empty<PropertyInfo>();
-        private readonly Type ownerType;
+        static readonly PropertyInfo[] _emptyArray = Array.Empty<PropertyInfo>();
+        readonly Type _ownerType;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="TypePropertyDescriptor" /> class.
@@ -20,23 +20,22 @@ namespace SharpArch.Domain.Reflection
         /// <param name="ownerType">Type of the object.</param>
         /// <param name="properties">The injectable properties.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public TypePropertyDescriptor([NotNull] Type ownerType, [CanBeNull] PropertyInfo[] properties)
+        public TypePropertyDescriptor(Type ownerType, PropertyInfo[]? properties)
         {
             if (ownerType == null) throw new ArgumentNullException(nameof(ownerType));
 
-            this.ownerType = ownerType;
+            this._ownerType = ownerType;
             if (properties != null && properties.Length > 0)
                 Properties = properties;
             else
-                Properties = emptyArray;
+                Properties = _emptyArray;
         }
 
         /// <summary>
         ///     Owner type.
         /// </summary>
-        [NotNull]
         // ReSharper disable once ConvertToAutoPropertyWithPrivateSetter
-        public Type OwnerType => ownerType;
+        public Type OwnerType => _ownerType;
 
         /// <summary>
         ///     Gets the injectable properties.
@@ -44,7 +43,6 @@ namespace SharpArch.Domain.Reflection
         /// <value>
         ///     The injectable properties.
         /// </value>
-        [NotNull]
         public PropertyInfo[] Properties { get; private set; }
 
         /// <summary>
@@ -54,7 +52,7 @@ namespace SharpArch.Domain.Reflection
         /// <returns>
         ///     true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.
         /// </returns>
-        public bool Equals(TypePropertyDescriptor other)
+        public bool Equals(TypePropertyDescriptor? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -79,12 +77,11 @@ namespace SharpArch.Domain.Reflection
         /// <returns>
         ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            var other = obj as TypePropertyDescriptor;
-            return other != null && Equals(other);
+            return obj is TypePropertyDescriptor other && Equals(other);
         }
 
         /// <summary>

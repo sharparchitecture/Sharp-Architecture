@@ -3,7 +3,7 @@
     using System;
     using System.ComponentModel.DataAnnotations;
     using JetBrains.Annotations;
-    using SharpArch.Domain.DomainModel;
+    using DomainModel;
 
     /// <summary>
     ///     Provides a class level validator for determining if the entity has a unique domain signature
@@ -24,7 +24,7 @@
         /// <returns>
         ///     An instance of the <see cref="T:System.ComponentModel.DataAnnotations.ValidationResult" /> class.
         /// </returns>
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             return DoValidate(value, validationContext);
         }

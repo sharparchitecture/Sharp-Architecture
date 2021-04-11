@@ -17,8 +17,10 @@ namespace Suteki.TardisBank.Domain
         {
         }
 
-        public virtual IList<Child> Children { get; protected set; }
-        public virtual string ActivationKey { get; protected set; }
+        public virtual IList<Child> Children { get; protected set; } = null!;
+
+        public virtual string ActivationKey { get; protected set; } = null!;
+
         // should be called when parent is first created.
         public virtual Parent Initialise(IMediator mediator)
         {
@@ -69,7 +71,7 @@ namespace Suteki.TardisBank.Domain
 
         public virtual void RemoveChild(int childId)
         {
-            Child childToRemove = this.Children.SingleOrDefault(x => x.Id == childId);
+            Child? childToRemove = this.Children.SingleOrDefault(x => x.Id == childId);
             if (childToRemove != null)
             {
                 this.Children.Remove(childToRemove);

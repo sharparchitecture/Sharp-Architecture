@@ -23,7 +23,7 @@
         /// <returns></returns>
         public static IMapGenerator[] GetMapGenerators()
         {
-            var assembly = Assembly.GetAssembly(typeof(IMapGenerator));
+            var assembly = typeof(IMapGenerator).Assembly;
 
             return (from type in assembly.GetTypes()
                 where null != type.GetInterface(GeneratorInterface)
