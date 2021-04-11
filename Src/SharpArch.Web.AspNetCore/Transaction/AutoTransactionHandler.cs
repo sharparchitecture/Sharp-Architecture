@@ -22,7 +22,7 @@
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var transactionAttribute = GetTransactionAttribute(context);
-            ITransactionManager transactionManager = null;
+            ITransactionManager? transactionManager = null;
             if (transactionAttribute != null)
             {
                 transactionManager = context.HttpContext.RequestServices.GetRequiredService<ITransactionManager>();
@@ -41,7 +41,7 @@
                 }
 
                 if (executedContext.Exception != null ||
-                    transactionAttribute.RollbackOnModelValidationError && context.ModelState.IsValid == false)
+                    transactionAttribute!.RollbackOnModelValidationError && context.ModelState.IsValid == false)
                 {
                     // don't use cancellation token to ensure transaction is rolled back on error
                     await transactionManager.RollbackTransactionAsync().ConfigureAwait(false);

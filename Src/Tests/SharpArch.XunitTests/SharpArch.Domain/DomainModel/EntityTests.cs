@@ -67,13 +67,13 @@ namespace Tests.SharpArch.Domain.DomainModel
         public abstract class MockEntityObjectBase<T> : Entity<T>
             where T : IEquatable<T>
         {
-            public string Email { get; set; }
+            public string? Email { get; set; }
 
             [DomainSignature]
-            public string FirstName { get; set; }
+            public string FirstName { get; set; } = null!;
 
             [DomainSignature]
-            public string LastName { get; set; }
+            public string LastName { get; set; } = null!;
         }
 
 
@@ -82,16 +82,16 @@ namespace Tests.SharpArch.Domain.DomainModel
             [DomainSignature]
             public int Age { get; set; }
 
-            public string Name { get; set; }
+            public string? Name { get; set; }
         }
 
 
         class AddressBeingDomainSignatureComparable : Entity<int>
         {
             [DomainSignature]
-            public string Address1 { get; set; }
+            public string Address1 { get; set; } = null!;
 
-            public string Address2 { get; set; }
+            public string? Address2 { get; set; }
 
             [DomainSignature]
             public int ZipCode { get; set; }
@@ -100,7 +100,7 @@ namespace Tests.SharpArch.Domain.DomainModel
 
         class InheritedObjectWithExtraDomainSignatureProperty : ObjectWithOneDomainSignatureProperty
         {
-            public string Address { get; set; }
+            public string? Address { get; set; }
 
             [DomainSignature]
             public bool IsLiving { get; set; }
@@ -146,14 +146,14 @@ namespace Tests.SharpArch.Domain.DomainModel
             public int Age { get; set; }
 
             [DomainSignature]
-            public string Name { get; set; }
+            public string? Name { get; set; }
         }
 
 
         class ObjectWithAssignedId : Entity<string>, IHasAssignedId<string>
         {
             [DomainSignature]
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
             public void SetAssignedIdTo(string assignedId)
             {
@@ -165,30 +165,30 @@ namespace Tests.SharpArch.Domain.DomainModel
         class ObjectWithComplexProperties : Entity<int>
         {
             [DomainSignature]
-            public AddressBeingDomainSignatureComparable Address { get; set; }
+            public AddressBeingDomainSignatureComparable? Address { get; set; }
 
             [DomainSignature]
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
             [DomainSignature]
-            public PhoneBeingNotDomainObject Phone { get; set; }
+            public PhoneBeingNotDomainObject? Phone { get; set; }
         }
 
 
         class ObjectWithIdenticalTypedProperties : Entity<int>
         {
             [DomainSignature]
-            public string Address { get; set; }
+            public string? Address { get; set; }
 
             [DomainSignature]
-            public string Name { get; set; }
+            public string? Name { get; set; }
         }
 
 
         class ObjectWithIntId : Entity<int>
         {
             [DomainSignature]
-            public string Name { get; set; }
+            public string? Name { get; set; }
         }
 
 
@@ -200,21 +200,21 @@ namespace Tests.SharpArch.Domain.DomainModel
         {
             public int Age { get; set; }
 
-            public string Name { get; set; }
+            public string? Name { get; set; }
         }
 
 
         class PhoneBeingNotDomainObject
         {
-            public string Extension { get; set; }
+            public string? Extension { get; set; }
 
-            public string PhoneNumber { get; set; }
+            public string PhoneNumber { get; set; } = null!;
         }
 
 
         class PhoneBeingNotDomainObjectButWithOverriddenEquals : PhoneBeingNotDomainObject
         {
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 return obj is PhoneBeingNotDomainObject compareTo && PhoneNumber.Equals(compareTo.PhoneNumber);
             }
@@ -229,7 +229,7 @@ namespace Tests.SharpArch.Domain.DomainModel
 
         class Contact : Entity<int>
         {
-            public virtual string EmailAddress { get; set; }
+            public virtual string? EmailAddress { get; set; }
         }
 
 
@@ -283,7 +283,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             var obj2 = new ObjectWithIntId {Name = "Anvil"};
 
             obj1.Equals(null).Should().BeFalse();
-            obj1.Equals(obj2).Should().BeFalse();
+            obj1!.Equals(obj2).Should().BeFalse();
 
             EntityIdSetter.SetIdOf(obj1, 10);
             EntityIdSetter.SetIdOf(obj2, 10);
@@ -312,7 +312,7 @@ namespace Tests.SharpArch.Domain.DomainModel
             var obj2 = new ObjectWithAssignedId {Name = "Anvil"};
 
             obj1.Equals(null).Should().BeFalse();
-            obj1.Equals(obj2).Should().BeFalse();
+            obj1!.Equals(obj2).Should().BeFalse();
 
             obj1.SetAssignedIdTo("AAAAA");
             obj2.SetAssignedIdTo("AAAAA");

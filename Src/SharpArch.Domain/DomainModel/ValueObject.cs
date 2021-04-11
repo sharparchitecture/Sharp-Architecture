@@ -29,9 +29,8 @@
         /// <returns>The result of the operator.</returns>
         public static bool operator ==(ValueObject? valueObject1, ValueObject? valueObject2)
         {
-            if ((object?) valueObject1 == null) {
-                return (object?) valueObject2 == null;
-            }
+            if (ReferenceEquals(valueObject1, null)) 
+                return ReferenceEquals(valueObject2, null);
 
             return valueObject1.Equals(valueObject2);
         }
@@ -42,7 +41,7 @@
         /// <param name="valueObject1">The first value object.</param>
         /// <param name="valueObject2">The second value object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator !=(ValueObject valueObject1, ValueObject valueObject2)
+        public static bool operator !=(ValueObject? valueObject1, ValueObject? valueObject2)
         {
             return !(valueObject1 == valueObject2);
         }

@@ -33,7 +33,7 @@
         class Contractor : Entity<int>
         {
             [DomainSignature]
-            public string Name { get; set; }
+            public string Name { get; set; } = null!;
         }
 
 
@@ -62,7 +62,7 @@
         class ObjectWithGuidId : Entity<Guid>
         {
             [DomainSignature]
-            public string Name { get; set; }
+            public string? Name { get; set; }
         }
 
 
@@ -70,7 +70,7 @@
         class ObjectWithStringIdAndValidatorForIntId : Entity<string>
         {
             [DomainSignature]
-            public string Name { get; set; }
+            public string? Name { get; set; }
         }
 
 
@@ -78,7 +78,7 @@
         class User : Entity<string>
         {
             [DomainSignature]
-            public string Ssn { get; set; }
+            public string? Ssn { get; set; }
         }
 
 

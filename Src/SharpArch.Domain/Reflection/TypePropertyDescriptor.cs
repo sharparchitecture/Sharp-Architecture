@@ -11,8 +11,8 @@ namespace SharpArch.Domain.Reflection
     [PublicAPI]
     public class TypePropertyDescriptor : IEquatable<TypePropertyDescriptor>
     {
-        private static readonly PropertyInfo[] emptyArray = Array.Empty<PropertyInfo>();
-        private readonly Type ownerType;
+        static readonly PropertyInfo[] _emptyArray = Array.Empty<PropertyInfo>();
+        readonly Type _ownerType;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="TypePropertyDescriptor" /> class.
@@ -20,23 +20,22 @@ namespace SharpArch.Domain.Reflection
         /// <param name="ownerType">Type of the object.</param>
         /// <param name="properties">The injectable properties.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public TypePropertyDescriptor([NotNull] Type ownerType, [CanBeNull] PropertyInfo[] properties)
+        public TypePropertyDescriptor(Type ownerType, PropertyInfo[]? properties)
         {
             if (ownerType == null) throw new ArgumentNullException(nameof(ownerType));
 
-            this.ownerType = ownerType;
+            this._ownerType = ownerType;
             if (properties != null && properties.Length > 0)
                 Properties = properties;
             else
-                Properties = emptyArray;
+                Properties = _emptyArray;
         }
 
         /// <summary>
         ///     Owner type.
         /// </summary>
-        [NotNull]
         // ReSharper disable once ConvertToAutoPropertyWithPrivateSetter
-        public Type OwnerType => ownerType;
+        public Type OwnerType => _ownerType;
 
         /// <summary>
         ///     Gets the injectable properties.
@@ -44,7 +43,6 @@ namespace SharpArch.Domain.Reflection
         /// <value>
         ///     The injectable properties.
         /// </value>
-        [NotNull]
         public PropertyInfo[] Properties { get; private set; }
 
         /// <summary>

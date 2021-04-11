@@ -10,8 +10,8 @@
 
     public abstract class HasUniqueDomainSignatureTestsBase : TransientDatabaseTests<NHibernateTestsSetup>
     {
-        protected Mock<IServiceProvider> ServiceProviderMock;
-        protected ValidationContext ValidationContext;
+        protected readonly Mock<IServiceProvider> ServiceProviderMock;
+        protected ValidationContext? ValidationContext;
 
         public HasUniqueDomainSignatureTestsBase()
             : base(new NHibernateTestsSetup())
@@ -28,7 +28,7 @@
         /// <returns></returns>
         protected ValidationContext ValidationContextFor(object objectToValidate)
         {
-            return new ValidationContext(objectToValidate, ServiceProviderMock.Object, null);
+            return new(objectToValidate, ServiceProviderMock.Object, null);
         }
     }
 }

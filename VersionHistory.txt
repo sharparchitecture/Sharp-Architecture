@@ -9,6 +9,9 @@ BREAKING:
 * IRavenDbRepository.FindAllAsync now returns Task<TEntity[]>, not Task<IEnumerable<TEntity>>.
 * Removed IRavenDbRepository.Session.
 
+IMPROVEMENTS:
+* TransactionAttribute now implements Equitable<>
+
 S#arp 6.1
 ========================
 NEW FEATURES:

@@ -11,7 +11,7 @@ namespace Tests.SharpArch.Domain
     public class Contractor : Entity<int>
     {
         [DomainSignature]
-        public virtual string Name { get; set; }
+        public virtual string Name { get; set; } = null!;
     }
 
 
@@ -19,7 +19,7 @@ namespace Tests.SharpArch.Domain
     public class ObjectWithGuidId : Entity<Guid>
     {
         [DomainSignature]
-        public virtual string Name { get; set; }
+        public virtual string Name { get; set; } = null!;
     }
 
 
@@ -27,7 +27,7 @@ namespace Tests.SharpArch.Domain
     internal class ObjectWithStringIdAndValidatorForIntId : Entity<string>
     {
         [DomainSignature]
-        public virtual string Name { get; set; }
+        public virtual string Name { get; set; } = null!;
     }
 
 
@@ -35,7 +35,7 @@ namespace Tests.SharpArch.Domain
     public class User : Entity<string>
     {
         [DomainSignature]
-        public virtual string Ssn { get; set; }
+        public virtual string Ssn { get; set; } = null!;
 
         public User(string id, string ssn)
         {
@@ -51,7 +51,7 @@ namespace Tests.SharpArch.Domain
 
     internal class EntityWithNoDomainSignatureProperties : Entity<int>
     {
-        public virtual string Property1 { get; set; }
+        public virtual string Property1 { get; set; } = null!;
 
         public virtual int Property2 { get; set; }
     }
@@ -60,7 +60,7 @@ namespace Tests.SharpArch.Domain
     internal class EntityWithAllPropertiesPartOfDomainSignature : Entity<int>
     {
         [DomainSignature]
-        public virtual string Property1 { get; set; }
+        public virtual string Property1 { get; set; } = null!;
 
         [DomainSignature]
         public virtual int Property2 { get; set; }
@@ -73,7 +73,7 @@ namespace Tests.SharpArch.Domain
     internal class EntityWithSomePropertiesPartOfDomainSignature : Entity<int>
     {
         [DomainSignature]
-        public virtual string Property1 { get; set; }
+        public virtual string Property1 { get; set; } = null!;
 
         public virtual int Property2 { get; set; }
 
@@ -85,7 +85,7 @@ namespace Tests.SharpArch.Domain
     internal class EntityWithAnotherEntityAsPartOfDomainSignature : Entity<int>
     {
         [DomainSignature]
-        public virtual string Property1 { get; set; }
+        public virtual string Property1 { get; set; } = null!;
 
         [DomainSignature]
         public virtual EntityWithAllPropertiesPartOfDomainSignature Property2 { get; set; }
@@ -101,10 +101,10 @@ namespace Tests.SharpArch.Domain
     public class Song : Entity<int>
     {
         [DomainSignature]
-        public virtual string SongTitle { get; set; }
+        public virtual string? SongTitle { get; set; }
 
         [DomainSignature]
-        public virtual Band Performer { get; set; }
+        public virtual Band? Performer { get; set; }
     }
 
 
@@ -113,7 +113,7 @@ namespace Tests.SharpArch.Domain
     {
         [DomainSignature]
         [Required]
-        public virtual string BandName { get; set; }
+        public virtual string BandName { get; set; } = null!;
 
         public virtual DateTime DateFormed { get; set; }
     }
@@ -124,17 +124,17 @@ namespace Tests.SharpArch.Domain
     {
         [DomainSignature]
         [Required]
-        public virtual string Title { get; set; }
+        public virtual string Title { get; set; } = null!;
 
-        public virtual Band Author { get; set; }
+        public virtual Band? Author { get; set; }
     }
 
 
     public class Address : ValueObject
     {
-        public virtual string StreetAddress { get; set; }
+        public virtual string? StreetAddress { get; set; }
 
-        public virtual string PostCode { get; set; }
+        public virtual string? PostCode { get; set; }
     }
 
 
@@ -142,9 +142,9 @@ namespace Tests.SharpArch.Domain
     public class Customer : Entity<int>
     {
         [DomainSignature]
-        public virtual string Name { get; set; }
+        public virtual string? Name { get; set; }
 
         [DomainSignature]
-        public virtual Address Address { get; set; }
+        public virtual Address? Address { get; set; }
     }
 }
