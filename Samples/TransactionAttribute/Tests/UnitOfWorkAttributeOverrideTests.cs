@@ -16,8 +16,9 @@
     {
         readonly TestServerSetup _setup;
 
-        public UnitOfWorkAttributeOverrideTests([NotNull] TestServerSetup setup)
+        public UnitOfWorkAttributeOverrideTests(TestServerSetup setup)
         {
+            if (setup == null) throw new ArgumentNullException(nameof(setup));
             _setup = setup ?? throw new ArgumentNullException(nameof(setup));
         }
 
@@ -44,7 +45,7 @@
 
         Task<HttpResponseMessage> GetAsync(string relativePath)
         {
-            return _setup.Client.GetAsync(new Uri(_setup.Client.BaseAddress, relativePath));
+            return _setup.Client.GetAsync(new Uri(_setup.Client.BaseAddress!, relativePath));
         }
     }
 }
