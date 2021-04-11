@@ -35,6 +35,7 @@ issue-labels-exclude:
   - question
   - ready
   - wontfix
+  - pull-request
 
 issue-labels-alias:
   - name: breaking-change
