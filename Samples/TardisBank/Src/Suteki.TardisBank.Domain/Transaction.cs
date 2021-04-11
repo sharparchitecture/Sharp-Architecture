@@ -6,7 +6,7 @@ namespace Suteki.TardisBank.Domain
 
     public class Transaction : Entity<int>
     {
-        public Transaction(string description, decimal amount, Account account)
+        public Transaction(string? description, decimal amount, Account account)
         {
             this.Description = description;
             this.Amount = amount;
@@ -18,10 +18,10 @@ namespace Suteki.TardisBank.Domain
         {
         }
 
-        public virtual string Description { get; protected set; }
+        public virtual string? Description { get; protected set; }
         public virtual decimal Amount { get; protected set; }
 
-        public virtual Account Account { get; protected set; }
+        public virtual Account Account { get; protected set; } = null!;
 
         public virtual DateTime Date { get; protected set; }
     }

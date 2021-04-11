@@ -32,11 +32,11 @@ namespace Suteki.TardisBank.Domain
         {
         }
 
-        public virtual string Name { get; protected set; }
-        public virtual string UserName { get; protected set; }
-        public virtual string Password { get; protected set; }
+        public virtual string Name { get; protected set; } = null!;
+        public virtual string UserName { get; protected set; } = null!;
+        public virtual string Password { get; protected set; } = null!;
         public virtual bool IsActive { get; protected set; }
-        public virtual IList<Message> Messages { get; protected set; }
+        public virtual IList<Message> Messages { get; protected set; } = null!;
 
         protected User(string name, string userName, string password)
         {
