@@ -16,6 +16,6 @@
         /// <returns>
         ///     <c>true</c> if a duplicate exists, <c>false</c> otherwise.
         /// </returns>
-        bool DoesDuplicateExistWithTypedIdOf([NotNull] IEntity entity);
+        bool DoesDuplicateExistWithTypedIdOf(IEntity entity);
     }
 }

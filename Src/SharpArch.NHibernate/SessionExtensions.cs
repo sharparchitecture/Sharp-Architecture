@@ -23,7 +23,7 @@ namespace SharpArch.NHibernate
         ///     <paramref name="session" /> or <paramref name="entity" /> is
         ///     <c>null</c>.
         /// </exception>
-        public static void FlushAndEvict([NotNull] this ISession session, [NotNull] object entity)
+        public static void FlushAndEvict(this ISession session, object entity)
         {
             if (session == null) throw new ArgumentNullException(nameof(session));
             if (entity == null) throw new ArgumentNullException(nameof(entity));
@@ -44,7 +44,7 @@ namespace SharpArch.NHibernate
         /// <exception cref="T:System.ArgumentNullException">
         ///     <paramref name="session" /> or <paramref name="entity" /> is <c>null</c>.
         /// </exception>
-        public static async Task FlushAndEvictAsync([NotNull] this ISession session, [NotNull] object entity, CancellationToken cancellationToken)
+        public static async Task FlushAndEvictAsync(this ISession session, object entity, CancellationToken cancellationToken)
         {
             if (session == null) throw new ArgumentNullException(nameof(session));
             if (entity == null) throw new ArgumentNullException(nameof(entity));
@@ -65,7 +65,7 @@ namespace SharpArch.NHibernate
         /// <param name="entity">Entity to increment version for.</param>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <exception cref="ArgumentNullException"><paramref name="session" /> is <c>null</c>.</exception>
-        public static Task IncrementVersionAsync([NotNull] this ISession session, [CanBeNull] object entity, CancellationToken cancellationToken)
+        public static Task IncrementVersionAsync(this ISession session, object? entity, CancellationToken cancellationToken)
         {
             if (session == null) throw new ArgumentNullException(nameof(session));
             if (entity == null) return Task.CompletedTask;
@@ -84,7 +84,7 @@ namespace SharpArch.NHibernate
         /// </param>
         /// <param name="entity">Entity to increment version for.</param>
         /// <exception cref="ArgumentNullException"><paramref name="session" /> is <c>null</c>.</exception>
-        public static void IncrementVersion([NotNull] this ISession session, [CanBeNull] object entity)
+        public static void IncrementVersion(this ISession session, object? entity)
         {
             if (session == null) throw new ArgumentNullException(nameof(session));
             if (entity == null) return;
@@ -106,7 +106,7 @@ namespace SharpArch.NHibernate
         /// <exception cref="T:System.ArgumentNullException">
         ///     <paramref name="entity" /> or <paramref name="session" /> is <c>null</c>.
         /// </exception>
-        public static bool IsModified([NotNull] this ISession session, [NotNull] object entity)
+        public static bool IsModified(this ISession session, object entity)
         {
             if (session == null) throw new ArgumentNullException(nameof(session));
             if (entity == null) throw new ArgumentNullException(nameof(entity));

@@ -29,26 +29,26 @@
         /// <summary>
         ///     Transaction manager.
         /// </summary>
-        [NotNull]
+        
         protected TransactionManager TransactionManager { get; private set; }
 
         /// <summary>
         ///     Database initializer.
         /// </summary>
-        [NotNull]
+        
         protected TestDatabaseSetup DbSetup { get; private set; }
 
         /// <summary>
         ///     Database session.
         /// </summary>
-        [NotNull]
+        
         protected ISession Session => TransactionManager.Session;
 
         /// <summary>
         ///     Constructor.
         /// </summary>
         /// <param name="dbSetup"></param>
-        protected TransientDatabaseTests([NotNull] TestDatabaseSetup dbSetup)
+        protected TransientDatabaseTests(TestDatabaseSetup dbSetup)
         {
             DbSetup = dbSetup ?? throw new ArgumentNullException(nameof(dbSetup));
             TransactionManager = new TransactionManager(DbSetup.InitializeSession());
@@ -74,8 +74,8 @@
         /// <param name="instance">The entity instance.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <exception cref="ArgumentNullException"><paramref name="instance" /> is <see langword="null" /></exception>
-        [NotNull]
-        protected Task FlushSessionAndEvict([NotNull] object instance, CancellationToken cancellationToken = default)
+        
+        protected Task FlushSessionAndEvict(object instance, CancellationToken cancellationToken = default)
             => Session.FlushAndEvictAsync(instance, cancellationToken);
 
         /// <summary>
@@ -84,7 +84,7 @@
         /// <param name="instance">The entity instance.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <exception cref="ArgumentNullException"><paramref name="instance" /> is <see langword="null" /></exception>
-        protected async Task SaveAndEvict([NotNull] object instance, CancellationToken cancellationToken = default)
+        protected async Task SaveAndEvict(object instance, CancellationToken cancellationToken = default)
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
             await Session.SaveAsync(instance, cancellationToken).ConfigureAwait(false);
@@ -94,7 +94,7 @@
         /// <summary>
         ///     Initializes database before each test run.
         /// </summary>
-        [NotNull]
+        
         protected abstract Task LoadTestData(CancellationToken cancellationToken);
     }
 }

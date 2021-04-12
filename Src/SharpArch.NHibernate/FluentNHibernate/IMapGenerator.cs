@@ -25,7 +25,7 @@
         /// <summary>
         ///     Generates XML mapping document.
         /// </summary>
-        [NotNull]
+        
         XmlDocument Generate();
     }
 }

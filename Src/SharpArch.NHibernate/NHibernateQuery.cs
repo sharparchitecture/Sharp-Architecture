@@ -15,7 +15,7 @@ namespace SharpArch.NHibernate
         /// </summary>
         /// <param name="session">The session.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="session"/> is <c>null</c>.</exception>
-        protected NHibernateQuery([NotNull] ISession session)
+        protected NHibernateQuery(ISession session)
         {
             if (session == null) throw new ArgumentNullException(nameof(session));
 
@@ -25,7 +25,7 @@ namespace SharpArch.NHibernate
         /// <summary>
         /// NHibernate <see cref="ISession"/>.
         /// </summary>
-        [NotNull]
+        
         protected virtual ISession Session { get; }
     }
 }

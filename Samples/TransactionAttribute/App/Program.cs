@@ -22,7 +22,7 @@
     [UsedImplicitly]
     public class Program
     {
-        public static int Main([NotNull] string[] args)
+        public static int Main(string[] args)
         {
             try
             {
@@ -42,7 +42,7 @@
             }
         }
 
-        [NotNull]
+        
         public static IWebHostBuilder CreateHostBuilder()
         {
             return new WebHostBuilder()

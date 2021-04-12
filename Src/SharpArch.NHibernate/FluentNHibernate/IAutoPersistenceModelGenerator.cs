@@ -17,7 +17,7 @@ namespace SharpArch.NHibernate.FluentNHibernate
         /// <summary>
         ///     Generates persistence model.
         /// </summary>
-        [NotNull]
+        
         AutoPersistenceModel Generate();
     }
 }

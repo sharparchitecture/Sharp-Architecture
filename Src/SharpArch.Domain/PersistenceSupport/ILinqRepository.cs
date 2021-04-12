@@ -37,13 +37,13 @@ namespace SharpArch.Domain.PersistenceSupport
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The matching item.</returns>
         [ItemCanBeNull]
-        Task<T> FindOneAsync([NotNull] ILinqSpecification<T> specification, CancellationToken cancellationToken = default);
+        Task<T> FindOneAsync(ILinqSpecification<T> specification, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Returns <see cref="IQueryable{T}" /> representing query for the entity.
         /// </summary>
         /// <returns>Query.</returns>
-        [NotNull]
+        
         IQueryable<T> FindAll();
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace SharpArch.Domain.PersistenceSupport
         /// </summary>
         /// <param name="specification">The specification.</param>
         /// <returns>Query.</returns>
-        [NotNull]
-        IQueryable<T> FindAll([NotNull] ILinqSpecification<T> specification);
+        
+        IQueryable<T> FindAll(ILinqSpecification<T> specification);
     }
 }

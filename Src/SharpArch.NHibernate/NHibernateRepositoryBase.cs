@@ -26,7 +26,7 @@ namespace SharpArch.NHibernate
         /// <summary>
         ///     Gets NHibernate session.
         /// </summary>
-        [NotNull]
+        
         protected ISession Session => TransactionManager.Session;
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace SharpArch.NHibernate
         ///     activities such as committing any pending changes, beginning a transaction,
         ///     rolling back a transaction, etc.
         /// </summary>
-        [NotNull]
+        
         protected INHibernateTransactionManager TransactionManager { get; }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace SharpArch.NHibernate
         /// <param name="transactionManager">The transaction manager.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
         public NHibernateRepository(
-            [NotNull] INHibernateTransactionManager transactionManager)
+            INHibernateTransactionManager transactionManager)
         {
             TransactionManager = transactionManager ?? throw new ArgumentNullException(nameof(transactionManager));
         }
@@ -177,7 +177,7 @@ namespace SharpArch.NHibernate
         ///     This is provided to facilitate developing the domain layer without a direct dependency on the
         ///     NHibernate assembly.
         /// </summary>
-        [NotNull] static LockMode ConvertFrom(Enums.LockMode lockMode)
+        static LockMode ConvertFrom(Enums.LockMode lockMode)
             => lockMode switch
             {
                 Enums.LockMode.None => LockMode.None,

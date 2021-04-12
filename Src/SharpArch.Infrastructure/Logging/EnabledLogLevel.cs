@@ -10,7 +10,7 @@ namespace SharpArch.Infrastructure.Logging
     /// </summary>
     public readonly struct EnabledLogLevel
     {
-        [NotNull] readonly ILogger _logger;
+        readonly ILogger _logger;
         readonly LogLevel _level;
 
         /// <summary>
@@ -18,7 +18,7 @@ namespace SharpArch.Infrastructure.Logging
         /// </summary>
         /// <param name="logger">Logger.</param>
         /// <param name="level">Log level to use.</param>
-        internal EnabledLogLevel([NotNull] ILogger logger, LogLevel level)
+        internal EnabledLogLevel(ILogger logger, LogLevel level)
         {
             _logger = logger;
             _level = level;
@@ -29,7 +29,7 @@ namespace SharpArch.Infrastructure.Logging
         /// </summary>
         /// <param name="message">Message template.</param>
         /// <param name="args">Template parameters.</param>
-        public void Log([NotNull] string message, [CanBeNull] params object[] args)
+        public void Log(string message, params object[]? args)
         {
             // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
             _logger.Log(_level, message, args);
@@ -41,7 +41,7 @@ namespace SharpArch.Infrastructure.Logging
         /// <param name="ex">Exception to log.</param>
         /// <param name="message">Message template.</param>
         /// <param name="args">Template parameters.</param>
-        public void Log([CanBeNull] Exception ex, [NotNull] string message, [CanBeNull] params object[] args)
+        public void Log(Exception? ex, string message, params object[]? args)
         {
             // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
             _logger.Log(_level, ex, message, args);

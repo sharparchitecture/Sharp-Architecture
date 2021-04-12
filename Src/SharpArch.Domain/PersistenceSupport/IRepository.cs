@@ -24,7 +24,7 @@
         ///     activities such as committing any pending changes, beginning a transaction,
         ///     rolling back a transaction, etc.
         /// </summary>
-        [NotNull]
+        
         ITransactionManager TransactionManager { get; }
 
         /// <summary>
@@ -33,14 +33,14 @@
         /// <remarks>
         ///     An entity or <c>null</c> if a row is not found matching the provided ID.
         /// </remarks>
-        [NotNull]
+        
         [ItemCanBeNull]
         Task<TEntity> GetAsync(TId id, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Returns all of the items of a given type.
         /// </summary>
-        [NotNull]
+        
         [ItemNotNull]
         Task<IList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
 
@@ -52,9 +52,9 @@
         ///     Saved entity instance.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="entity" /> is <c>null</c>.</exception>
-        [NotNull]
+        
         [ItemNotNull]
-        Task<TEntity> SaveAsync([NotNull] TEntity entity, CancellationToken cancellationToken = default);
+        Task<TEntity> SaveAsync(TEntity entity, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Saves or updates the specified entity.
@@ -74,9 +74,9 @@
         ///     Entity instance.
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="entity" /> is <c>null</c>.</exception>
-        [NotNull]
+        
         [ItemNotNull]
-        Task<TEntity> SaveOrUpdateAsync([NotNull] TEntity entity, CancellationToken cancellationToken = default);
+        Task<TEntity> SaveOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Disassociates the entity with the ORM so that changes made to it are not automatically
@@ -87,13 +87,13 @@
         ///     More details may be found at http://www.hibernate.org/hib_docs/nhibernate/html_single/#performance-sessioncache.
         /// </remarks>
         /// <exception cref="ArgumentNullException"><paramref name="entity" /> is <c>null</c>.</exception>
-        Task EvictAsync([NotNull] TEntity entity, CancellationToken cancellationToken = default);
+        Task EvictAsync(TEntity entity, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Deletes the specified entity.
         /// </summary>
         /// <exception cref="ArgumentNullException"><paramref name="entity" /> is <c>null</c>.</exception>
-        Task DeleteAsync([NotNull] TEntity entity, CancellationToken cancellationToken = default);
+        Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Deletes the entity that matches the provided Id.

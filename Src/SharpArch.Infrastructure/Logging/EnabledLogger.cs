@@ -10,13 +10,13 @@ namespace SharpArch.Infrastructure.Logging
     /// </summary>
     public readonly struct LogWrapper
     {
-        [NotNull] readonly ILogger _logger;
+        readonly ILogger _logger;
 
         /// <summary>
         ///     Constructor.
         /// </summary>
         /// <param name="logger">Logger.</param>
-        public LogWrapper([NotNull] ILogger logger)
+        public LogWrapper(ILogger logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }

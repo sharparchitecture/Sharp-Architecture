@@ -97,7 +97,7 @@
             return services;
         }
 
-        static LogWrapper GetLogger([NotNull] IServiceProvider sp)
+        static LogWrapper GetLogger(IServiceProvider sp)
         {
             var logger = new LogWrapper(sp.GetRequiredService<global::Microsoft.Extensions.Logging.ILoggerFactory>()
                 .CreateLogger("SharpArch.NHibernate.Extensions.DependencyInjection"));

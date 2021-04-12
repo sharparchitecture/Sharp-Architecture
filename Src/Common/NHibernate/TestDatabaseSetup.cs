@@ -93,8 +93,8 @@
         ///     allowed.
         /// </exception>
         /// <exception cref="TargetInvocationException">Unable to instantiate AutoPersistenceModelGenerator.</exception>
-        [NotNull]
-        public static AutoPersistenceModel GenerateAutoPersistenceModel([NotNull] Assembly[] assemblies)
+        
+        public static AutoPersistenceModel GenerateAutoPersistenceModel(Assembly[] assemblies)
         {
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
             var persistenceGeneratorTypes = assemblies.SelectMany(a =>
@@ -128,7 +128,7 @@
         ///     Returns NHibernate <see cref="Configuration" />.
         ///     Configuration instance is cached, all subsequent calls will return the same instance.
         /// </summary>
-        [NotNull]
+        
         public Configuration GetConfiguration()
         {
             if (_configuration != null) return _configuration;
@@ -159,7 +159,7 @@
         /// <param name="builder">
         ///     <see cref="NHibernateSessionFactoryBuilder" />
         /// </param>
-        protected virtual void Customize([NotNull] NHibernateSessionFactoryBuilder builder)
+        protected virtual void Customize(NHibernateSessionFactoryBuilder builder)
         {
         }
 
@@ -167,7 +167,7 @@
         ///     Returns NHibernate <see cref="ISessionFactory" />.
         ///     Session factory instance is cached, all subsequent calls to GetSessionFactory() will return the same instance.
         /// </summary>
-        [NotNull]
+        
         public ISessionFactory GetSessionFactory()
         {
             if (_sessionFactory != null) return _sessionFactory;
@@ -179,7 +179,7 @@
         ///     Creates new NHibernate session and initializes database structure.
         /// </summary>
         /// <returns>NHibernate Session</returns>
-        [NotNull]
+        
         public ISession InitializeSession()
         {
             var session = GetSessionFactory().OpenSession();

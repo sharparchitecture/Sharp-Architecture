@@ -81,7 +81,7 @@
         ///     Changes to configuration will be persisted in configuration cache, if it is enabled.
         ///     In case changes must not be persisted in cache, they must be applied after <seealso cref="BuildConfiguration" />.
         /// </remarks>
-        public NHibernateSessionFactoryBuilder ExposeConfiguration([NotNull] Action<Configuration> config)
+        public NHibernateSessionFactoryBuilder ExposeConfiguration(Action<Configuration> config)
         {
             _exposeConfiguration = config ?? throw new ArgumentNullException(nameof(config));
             return this;
@@ -99,8 +99,8 @@
         /// <param name="mappingAssemblies">The mapping assemblies.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">Mapping assemblies are not specified.</exception>
-        [NotNull]
-        public NHibernateSessionFactoryBuilder AddMappingAssemblies([NotNull] IEnumerable<Assembly> mappingAssemblies)
+        
+        public NHibernateSessionFactoryBuilder AddMappingAssemblies(IEnumerable<Assembly> mappingAssemblies)
         {
             if (mappingAssemblies == null) throw new ArgumentNullException(nameof(mappingAssemblies), "Mapping assemblies are not specified.");
 
@@ -115,9 +115,9 @@
         /// <param name="autoPersistenceModel">The automatic persistence model.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException"></exception>
-        [NotNull]
+        
         public NHibernateSessionFactoryBuilder UseAutoPersistenceModel(
-            [NotNull] AutoPersistenceModel autoPersistenceModel)
+            AutoPersistenceModel autoPersistenceModel)
         {
             _autoPersistenceModel = autoPersistenceModel ?? throw new ArgumentNullException(nameof(autoPersistenceModel));
             return this;
@@ -130,8 +130,8 @@
         /// <param name="properties">The properties.</param>
         /// <returns>Builder instance.</returns>
         /// <exception cref="System.ArgumentNullException"><paramref name="properties" /> is <c>null</c>.</exception>
-        [NotNull]
-        public NHibernateSessionFactoryBuilder UseProperties([NotNull] IEnumerable<KeyValuePair<string, string>> properties)
+        
+        public NHibernateSessionFactoryBuilder UseProperties(IEnumerable<KeyValuePair<string, string>> properties)
         {
             if (properties == null) throw new ArgumentNullException(nameof(properties));
 
@@ -152,7 +152,7 @@
         ///     about Data Annotations.
         /// </remarks>
         /// <seealso cref="DataAnnotationsEventListener" />.
-        [NotNull]
+        
         public NHibernateSessionFactoryBuilder UseDataAnnotationValidators(bool addDataAnnotationValidators)
         {
             _useDataAnnotationValidators = addDataAnnotationValidators;
@@ -167,7 +167,7 @@
         ///     details
         /// </remarks>
         /// <exception cref="System.ArgumentException">NHibernate config was not specified.</exception>
-        [NotNull]
+        
         public NHibernateSessionFactoryBuilder UseConfigFile(string nhibernateConfigFile)
         {
             if (string.IsNullOrWhiteSpace(nhibernateConfigFile))
@@ -182,8 +182,8 @@
         /// Allows to configure second-level cache.
         /// </summary>
         /// <param name="cacheSettingsBuilder">Cache settings configuration. Use <c>null</c> to clear previous setting.</param>
-        [NotNull]
-        public NHibernateSessionFactoryBuilder UseCache([CanBeNull] Action<CacheSettingsBuilder> cacheSettingsBuilder)
+        
+        public NHibernateSessionFactoryBuilder UseCache(Action<CacheSettingsBuilder>? cacheSettingsBuilder)
         {
             _cacheSettingsBuilder = cacheSettingsBuilder;
             return this;
@@ -202,9 +202,9 @@
         /// </code>
         /// </example>
         /// <exception cref="System.ArgumentNullException"><paramref name="persistenceConfigurer" /> is <c>null</c>.</exception>
-        [NotNull]
+        
         public NHibernateSessionFactoryBuilder UsePersistenceConfigurer(
-            [NotNull] IPersistenceConfigurer persistenceConfigurer)
+            IPersistenceConfigurer persistenceConfigurer)
         {
             _persistenceConfigurer = persistenceConfigurer ?? throw new ArgumentNullException(nameof(persistenceConfigurer));
             return this;

@@ -21,7 +21,7 @@
         ///     Creates instance of transaction manager.
         /// </summary>
         /// <param name="session"></param>
-        public TransactionManager([NotNull] ISession session)
+        public TransactionManager(ISession session)
         {
             Session = session ?? throw new ArgumentNullException(nameof(session));
         }
