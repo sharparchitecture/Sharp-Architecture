@@ -8,6 +8,7 @@ namespace SharpArch.Infrastructure.Logging
     /// <summary>
     ///     Logs with specific log level.
     /// </summary>
+    [PublicAPI]
     public readonly struct EnabledLogLevel
     {
         readonly ILogger _logger;

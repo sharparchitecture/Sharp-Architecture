@@ -1,6 +1,7 @@
 ﻿namespace SharpArch.Testing.NHibernate
 {
     using System;
+    using System.Data.Common;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -65,6 +66,22 @@
                 mappingAssemblies)
         {
         }
+
+        /// <summary>
+        ///     Allows to apply custom configuration to new ISession.
+        /// </summary>
+        /// <remarks>
+        ///     Callback is executed by default implementation of <see cref="ConfigureSession" /> from <see cref="InitializeSession" />.
+        /// </remarks>
+        public Action<ISessionBuilder>? SessionConfigurator { get; set; }
+
+        /// <summary>
+        ///     Allows to apply custom configuration to new ISession.
+        /// </summary>
+        /// <remarks>
+        ///     Callback is executed by default implementation of <see cref="ConfigureSession" /> from <see cref="InitializeSession" />.
+        /// </remarks>
+        public Action<IStatelessSessionBuilder>? StatelessSessionConfigurator { get; set; }
 
         /// <summary>
         ///     Disposes SessionFactory.
@@ -164,10 +181,31 @@
         }
 
         /// <summary>
+        ///     Configures <see cref="ISession" /> before usage.
+        /// </summary>
+        /// <param name="sessionBuilder">Session builder.</param>
+        protected virtual ISessionBuilder ConfigureSession(ISessionBuilder sessionBuilder)
+        {
+            if (sessionBuilder == null) throw new ArgumentNullException(nameof(sessionBuilder));
+            SessionConfigurator?.Invoke(sessionBuilder);
+            return sessionBuilder;
+        }
+
+        /// <summary>
+        ///     Configures <see cref="IStatelessSession" /> before usage.
+        /// </summary>
+        /// <param name="statelessSessionBuilder">Session builder.</param>
+        protected virtual IStatelessSessionBuilder ConfigureStatelessSession(IStatelessSessionBuilder statelessSessionBuilder)
+        {
+            if (statelessSessionBuilder == null) throw new ArgumentNullException(nameof(statelessSessionBuilder));
+            StatelessSessionConfigurator?.Invoke(statelessSessionBuilder);
+            return statelessSessionBuilder;
+        }
+
+        /// <summary>
         ///     Returns NHibernate <see cref="ISessionFactory" />.
         ///     Session factory instance is cached, all subsequent calls to GetSessionFactory() will return the same instance.
         /// </summary>
-        
         public ISessionFactory GetSessionFactory()
         {
             if (_sessionFactory != null) return _sessionFactory;
@@ -179,14 +217,30 @@
         ///     Creates new NHibernate session and initializes database structure.
         /// </summary>
         /// <returns>NHibernate Session</returns>
-        
         public ISession InitializeSession()
         {
-            var session = GetSessionFactory().OpenSession();
+            var sessionBuilder = GetSessionFactory().WithOptions();
+            var session = ConfigureSession(sessionBuilder).OpenSession();
             var connection = session.Connection;
             new SchemaExport(_configuration).Execute(false, true, false, connection, null);
-
             return session;
+        }
+
+        /// <summary>
+        ///     Creates new NHibernate stateless session.
+        /// </summary>
+        /// <remarks>
+        ///     When testing using transient database, database structure should be created once per test.
+        ///     If stateless session is required, it should be created using connection opened by regular session, <see cref="InitializeSession" />.
+        /// </remarks>
+        /// <returns>NHibernate Session</returns>
+        public IStatelessSession CreateStatelessSessionForConnection(DbConnection connection)
+        {
+            if (connection == null) throw new ArgumentNullException(nameof(connection));
+            var sessionBuilder = GetSessionFactory().WithStatelessOptions();
+            sessionBuilder.Connection(connection);
+            var statelessSession = ConfigureStatelessSession(sessionBuilder).OpenStatelessSession();
+            return statelessSession;
         }
 
         /// <summary>

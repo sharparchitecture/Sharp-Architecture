@@ -8,6 +8,7 @@ namespace SharpArch.Infrastructure.Logging
     /// <summary>
     ///     Skips call to <see cref="ILogger.Log{TState}" /> to prevent unnecessary memory allocations.
     /// </summary>
+    [PublicAPI]
     public readonly struct LogWrapper
     {
         readonly ILogger _logger;
