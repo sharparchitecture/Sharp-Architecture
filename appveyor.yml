@@ -33,9 +33,9 @@ cache:
 
 install:
   - ps: ./mssql-setup.ps1
+  - ps: ./dotnet-install.ps1 -Version 6.0.100-preview.3.21202.5 -InstallDir "C:\Program Files\dotnet"
   - ps: dotnet new tool-manifest
   - ps: dotnet tool install Cake.Tool --version 1.1.0
-  - ps: ./dotnet-install.ps1 -Version 6.0.100-preview.3.21202.5 -InstallDir "C:\Program Files\dotnet"
 
 build_script:
   - ps: dotnet cake
