@@ -1,0 +1,8 @@
+<Project>
+  <!-- Workaround for this bug (https://github.com/dotnet/sdk/issues/18148) (replace the analyzer name with the one you need to exclude (filename only, no extension) -->
+  <Target Name="RemoveLoggingAnalyzer" AfterTargets="ResolveLockFileAnalyzers">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" Condition="%(FileName) == 'Microsoft.Extensions.Logging.Generators'" />
+    </ItemGroup>
+  </Target>
+</Project>

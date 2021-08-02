@@ -56,7 +56,6 @@
             services.AddSingleton(sp =>
             {
                 var logger = GetLogger(sp);
-
                 logger.Debug?.Log("Building session factory...");
 
                 var sfBuilder = configureSessionFactory(sp);

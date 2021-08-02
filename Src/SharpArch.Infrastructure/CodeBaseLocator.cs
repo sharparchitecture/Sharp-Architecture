@@ -21,7 +21,7 @@
         public static string GetAssemblyCodeBasePath(Assembly assembly)
         {
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
-#if NET5_0
+#if NET5_0 || NET6_0
             var uri = new UriBuilder(assembly.Location);
 #else
             var uri = new UriBuilder(assembly.CodeBase);

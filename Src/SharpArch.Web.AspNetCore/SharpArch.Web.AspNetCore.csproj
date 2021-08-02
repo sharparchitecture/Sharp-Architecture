@@ -39,6 +39,10 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
+  <ItemGroup Label="Package References (ASP.NET 6)" Condition=" '$(TargetFramework)' == 'net6.0' ">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\SharpArch.Domain\SharpArch.Domain.csproj" />
     <ProjectReference Include="..\SharpArch.Infrastructure\SharpArch.Infrastructure.csproj" />
