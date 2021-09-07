@@ -1,7 +1,6 @@
 // ADDINS
-#addin nuget:?package=Cake.Coveralls&version=1.0.1
+#addin nuget:?package=Cake.Coveralls&version=1.1.0
 #addin nuget:?package=Cake.FileHelpers&version=4.0.1
-//#addin nuget:?package=Cake.Issues&version=0.9.1
 #addin nuget:?package=Cake.AppVeyor&version=5.0.1
 #addin nuget:?package=Cake.ReSharperReports&version=0.11.1
 

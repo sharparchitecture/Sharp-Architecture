@@ -10,9 +10,11 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
 
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <IsTestProject>false</IsTestProject>
+
+    <NoWarn>$(NoWarn);0105</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Label="Custom targets">
@@ -57,9 +59,18 @@
     <NoWarn>$(NoWarn);0618;1591</NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(MSBuildProjectFullPath.Contains(Sample))' == true  ">
+  <PropertyGroup Condition="'$(MSBuildProjectFullPath.Contains(Sample))' == true">
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0'">
+    <DefineConstants>$(DefineConstants);NET3UP</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <DefineConstants>$(DefineConstants);NET3UP</DefineConstants>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
 </Project>
