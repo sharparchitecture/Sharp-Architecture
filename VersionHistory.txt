@@ -8,6 +8,7 @@ BREAKING:
 * Added IEquatable<TId> constraint on IEntity<TId>.
 * IRavenDbRepository.FindAllAsync now returns Task<TEntity[]>, not Task<IEnumerable<TEntity>>.
 * Removed IRavenDbRepository.Session.
+* [.NET 6] Temporary disable logging analyzers - https://github.com/NuGet/Home/issues/6279, https://github.com/dotnet/sdk/issues/18148
 
 IMPROVEMENTS:
 * TransactionAttribute now implements Equitable<>

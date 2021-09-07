@@ -27,6 +27,10 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup Label="Package References (.NET 6)" Condition=" '$(TargetFramework)' == 'net6.0' ">
+    <PackageReference Include="System.ComponentModel.Annotations" Version="6.0.0-preview.4.*" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />

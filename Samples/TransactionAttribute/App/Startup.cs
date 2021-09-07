@@ -30,7 +30,7 @@
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-#if NETCOREAPP3_1 || NET5_0
+#if NET3UP
             services.AddControllers(options =>
                 {
                     options.Filters.Add(new AutoTransactionHandler());
@@ -68,7 +68,7 @@
         /// <param name="app"></param>
         public void Configure(IApplicationBuilder app)
         {
-#if NETCOREAPP3_1 || NET5_0
+#if NET3UP
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

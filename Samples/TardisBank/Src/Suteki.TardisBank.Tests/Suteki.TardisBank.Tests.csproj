@@ -4,7 +4,7 @@
     <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="2.1.2" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="3.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -32,6 +32,9 @@
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.0-preview.7.*" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Src\SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj" />

@@ -1,7 +1,7 @@
 ﻿namespace TransactionAttribute.WebApi
 {
 
-#if NETCOREAPP3_1 || NET5_0
+#if NET3UP
     using Microsoft.Extensions.Hosting;
     using Microsoft.AspNetCore.Hosting;
 #else
