@@ -13,9 +13,9 @@
     /// Performs entity validation using <see cref="Validator"/> class.
     /// </summary>
     [Serializable]
-    internal class DataAnnotationsEventListener : IPreUpdateEventListener, IPreInsertEventListener
+    class DataAnnotationsEventListener : IPreUpdateEventListener, IPreInsertEventListener
     {
-        private static readonly Task<bool> False = Task.FromResult(false);
+        static readonly Task<bool> _false = Task.FromResult(false);
 
         class SessionProvider : IServiceProvider
         {
@@ -39,7 +39,7 @@
         public Task<bool> OnPreUpdateAsync(PreUpdateEvent @event, CancellationToken cancellationToken)
         {
             OnPreUpdate(@event);
-            return False;
+            return _false;
         }
 
         public bool OnPreUpdate(PreUpdateEvent @event)
@@ -60,7 +60,7 @@
         public Task<bool> OnPreInsertAsync(PreInsertEvent @event, CancellationToken cancellationToken)
         {
             OnPreInsert(@event);
-            return False;
+            return _false;
         }
 
         public bool OnPreInsert(PreInsertEvent @event)

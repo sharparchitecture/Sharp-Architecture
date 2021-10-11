@@ -34,14 +34,12 @@
         ///     An entity or <c>null</c> if a row is not found matching the provided ID.
         /// </remarks>
         
-        [ItemCanBeNull]
-        Task<TEntity> GetAsync(TId id, CancellationToken cancellationToken = default);
+        Task<TEntity?> GetAsync(TId id, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Returns all of the items of a given type.
         /// </summary>
         
-        [ItemNotNull]
         Task<IList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -53,7 +51,6 @@
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="entity" /> is <c>null</c>.</exception>
         
-        [ItemNotNull]
         Task<TEntity> SaveAsync(TEntity entity, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -75,7 +72,6 @@
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="entity" /> is <c>null</c>.</exception>
         
-        [ItemNotNull]
         Task<TEntity> SaveOrUpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
 
         /// <summary>

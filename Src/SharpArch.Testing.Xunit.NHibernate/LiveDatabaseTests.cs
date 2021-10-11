@@ -59,6 +59,7 @@
                 Session.Dispose();
                 Session = null;
             }
+            GC.SuppressFinalize(this);
         }
     }
 }

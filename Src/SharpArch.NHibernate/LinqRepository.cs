@@ -1,15 +1,14 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
-using NHibernate.Linq;
-using SharpArch.Domain.PersistenceSupport;
-using SharpArch.Domain.Specifications;
-
-namespace SharpArch.NHibernate.Impl
+namespace SharpArch.NHibernate
 {
     using System;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Domain.DomainModel;
+    using Domain.PersistenceSupport;
+    using Domain.Specifications;
+    using global::NHibernate.Linq;
+    using JetBrains.Annotations;
 
 
     /// <summary>
@@ -34,15 +33,15 @@ namespace SharpArch.NHibernate.Impl
         }
 
         /// <inheritdoc />
-        public Task<TEntity> FindOneAsync(TId id, CancellationToken cancellationToken = default)
+        public Task<TEntity?> FindOneAsync(TId id, CancellationToken cancellationToken = default)
         {
-            return Session.GetAsync<TEntity>(id, cancellationToken);
+            return Session.GetAsync<TEntity?>(id, cancellationToken);
         }
 
         /// <inheritdoc />
-        public Task<TEntity> FindOneAsync(ILinqSpecification<TEntity> specification, CancellationToken cancellationToken = default)
+        public Task<TEntity?> FindOneAsync(ILinqSpecification<TEntity> specification, CancellationToken cancellationToken = default)
         {
-            return specification.SatisfyingElementsFrom(Session.Query<TEntity>()).SingleOrDefaultAsync(cancellationToken);
+            return specification.SatisfyingElementsFrom(Session.Query<TEntity>()).SingleOrDefaultAsync(cancellationToken)!;
         }
 
         /// <inheritdoc />

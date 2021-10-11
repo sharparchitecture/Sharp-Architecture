@@ -49,8 +49,8 @@ namespace SharpArch.NHibernate
         }
 
         /// <inheritdoc />
-        public Task<TEntity> GetAsync(TId id, CancellationToken cancellationToken = default)
-            => Session.GetAsync<TEntity>(id, cancellationToken);
+        public Task<TEntity?> GetAsync(TId id, CancellationToken cancellationToken = default)
+            => Session.GetAsync<TEntity?>(id, cancellationToken);
 
         /// <inheritdoc />
         public Task<IList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -92,7 +92,7 @@ namespace SharpArch.NHibernate
 
         /// <inheritdoc />
         public virtual Task<IList<TEntity>> FindAllAsync(
-            IReadOnlyDictionary<string, object> propertyValuePairs,
+            IReadOnlyDictionary<string, object?> propertyValuePairs,
             int? maxResults = null,
             CancellationToken cancellationToken = default)
         {
@@ -140,7 +140,7 @@ namespace SharpArch.NHibernate
 
         /// <inheritdoc />
         public async Task<TEntity?> FindOneAsync(
-            IReadOnlyDictionary<string, object> propertyValuePairs,
+            IReadOnlyDictionary<string, object?> propertyValuePairs,
             CancellationToken cancellationToken = default)
         {
             var foundList = await FindAllAsync(propertyValuePairs, 2, cancellationToken).ConfigureAwait(false);
@@ -151,7 +151,7 @@ namespace SharpArch.NHibernate
 
         /// <inheritdoc />
         public virtual Task<TEntity?> GetAsync(TId id, Enums.LockMode lockMode, CancellationToken ct)
-            => Session.GetAsync<TEntity?>(id, ConvertFrom(lockMode), ct);
+            => Session.GetAsync<TEntity?>(id, lockMode.ToNHibernate(), ct);
 
         /// <inheritdoc />
         public virtual Task<TEntity> LoadAsync(TId id, CancellationToken ct)
@@ -159,7 +159,7 @@ namespace SharpArch.NHibernate
 
         /// <inheritdoc />
         public virtual Task<TEntity> LoadAsync(TId id, Enums.LockMode lockMode, CancellationToken ct)
-            => Session.LoadAsync<TEntity>(id, ConvertFrom(lockMode), ct);
+            => Session.LoadAsync<TEntity>(id, lockMode.ToNHibernate(), ct);
 
         /// <inheritdoc />
         public Task<TEntity> MergeAsync(TEntity entity, CancellationToken cancellationToken = default)
@@ -172,23 +172,5 @@ namespace SharpArch.NHibernate
             return entity;
         }
 
-        /// <summary>
-        ///     Translates a domain layer lock mode into an NHibernate lock mode via reflection.
-        ///     This is provided to facilitate developing the domain layer without a direct dependency on the
-        ///     NHibernate assembly.
-        /// </summary>
-        static LockMode ConvertFrom(Enums.LockMode lockMode)
-            => lockMode switch
-            {
-                Enums.LockMode.None => LockMode.None,
-                Enums.LockMode.Read => LockMode.Read,
-                Enums.LockMode.Upgrade => LockMode.Upgrade,
-                Enums.LockMode.UpgradeNoWait => LockMode.UpgradeNoWait,
-                Enums.LockMode.Write => LockMode.Write,
-                _ => throw new ArgumentOutOfRangeException(nameof(lockMode), lockMode,
-                    $"The provided lock mode , '{lockMode}', could not be translated into an NHibernate.LockMode. "
-                    + "This is probably because NHibernate was updated and now has different lock modes "
-                    + "which are out of synch with the lock modes maintained in the domain layer.")
-            };
     }
 }

@@ -1,16 +1,12 @@
 namespace Tests.SharpArch.NHibernate.Mappings
 {
-    #region Using Directives
-
     using System;
     using FluentNHibernate.Automapping;
     using FluentNHibernate.Conventions;
     using global::SharpArch.Domain.DomainModel;
     using global::SharpArch.NHibernate.FluentNHibernate;
     using global::SharpArch.NHibernate.FluentNHibernate.Conventions;
-    using Tests.SharpArch.Domain;
-
-    #endregion
+    using Domain;
 
 
     /// <summary>
@@ -32,7 +28,7 @@ namespace Tests.SharpArch.NHibernate.Mappings
             return mappings;
         }
 
-        private static Action<IConventionFinder> GetConventions()
+        static Action<IConventionFinder> GetConventions()
         {
             return c => {
                 c.Add<PrimaryKeyConvention>();

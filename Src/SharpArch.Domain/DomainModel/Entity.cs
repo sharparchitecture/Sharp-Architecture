@@ -48,7 +48,7 @@ namespace SharpArch.Domain.DomainModel
         /// </remarks>
         [XmlIgnore]
 #if NULLABLE_REFERENCE_TYPES
-        [AllowNull] [MaybeNull]
+        [MaybeNull]
 #endif
         public virtual TId Id { get; protected set; }
 
@@ -59,6 +59,7 @@ namespace SharpArch.Domain.DomainModel
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (Id is null) return null;
             return Id.Equals(default!)
+                // ReSharper disable once RedundantCast
                 ? (object?) null
                 : Id;
         }
@@ -89,7 +90,7 @@ namespace SharpArch.Domain.DomainModel
                 return false;
             }
 
-            if (HasSameNonDefaultIdAs(other!)) {
+            if (HasSameNonDefaultIdAs(other)) {
                 return true;
             }
 
@@ -183,7 +184,11 @@ namespace SharpArch.Domain.DomainModel
         /// </returns>
         bool HasSameNonDefaultIdAs(Entity<TId> compareTo)
         {
+#if NULLABLE_REFERENCE_TYPES
             return !IsTransient() && !compareTo.IsTransient() && Id!.Equals(compareTo.Id!);
+#else
+            return !IsTransient() && !compareTo.IsTransient() && Id.Equals(compareTo.Id);
+#endif
         }
 
         /// <summary>

@@ -30,7 +30,7 @@ namespace SharpArch.Infrastructure.Logging
         /// </summary>
         /// <param name="message">Message template.</param>
         /// <param name="args">Template parameters.</param>
-        public void Log(string message, params object[]? args)
+        public void Log(string message, params object[] args)
         {
             // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
             _logger.Log(_level, message, args);
@@ -42,7 +42,7 @@ namespace SharpArch.Infrastructure.Logging
         /// <param name="ex">Exception to log.</param>
         /// <param name="message">Message template.</param>
         /// <param name="args">Template parameters.</param>
-        public void Log(Exception? ex, string message, params object[]? args)
+        public void Log(Exception? ex, string message, params object[] args)
         {
             // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
             _logger.Log(_level, ex, message, args);

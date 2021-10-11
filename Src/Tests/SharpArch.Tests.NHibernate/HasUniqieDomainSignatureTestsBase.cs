@@ -11,7 +11,7 @@
     using NUnit.Framework;
 
 
-    internal class HasUniqueDomainSignatureTestsBase : RepositoryTestsBase
+    class HasUniqueDomainSignatureTestsBase : RepositoryTestsBase
     {
         protected Mock<IServiceProvider> ServiceProviderMock = null!;
 

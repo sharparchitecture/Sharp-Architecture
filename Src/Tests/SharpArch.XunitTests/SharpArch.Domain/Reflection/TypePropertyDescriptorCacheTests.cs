@@ -34,7 +34,7 @@ namespace Tests.SharpArch.Domain.Reflection
         {
             Type type = GetType();
             var descriptor = new TypePropertyDescriptor(type, null);
-            _cache.GetOrAdd(type, t => descriptor).Should().BeSameAs(descriptor);
+            _cache.GetOrAdd(type, _ => descriptor).Should().BeSameAs(descriptor);
         }
     }
 }

@@ -1,6 +1,9 @@
 ﻿namespace SharpArch.Testing.NUnit.NHibernate
 {
     using System;
+#if NULLABLE_REFERENCE_TYPES
+    using System.Diagnostics.CodeAnalysis;
+#endif
     using global::NHibernate;
     using global::NHibernate.Cfg;
     using global::NUnit.Framework;
@@ -43,6 +46,9 @@
         /// <summary>
         ///     Database initializer instance.
         /// </summary>
+#if NULLABLE_REFERENCE_TYPES
+        [MaybeNull]
+#endif
         protected TestDatabaseSetup Initializer { get; private set; } = null!;
 
         /// <summary>
@@ -114,7 +120,11 @@
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
+#if NULLABLE_REFERENCE_TYPES
             Initializer?.Dispose();
+#else
+            Initializer.Dispose();
+#endif
             Initializer = null!;
         }
     }

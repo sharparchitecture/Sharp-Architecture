@@ -1,3 +1,4 @@
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 namespace Tests.SharpArch.Domain.DomainModel
 {
     using System.Collections.Generic;

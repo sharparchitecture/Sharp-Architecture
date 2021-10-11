@@ -5,10 +5,9 @@
     using System.Reflection;
     using global::NHibernate;
     using global::NHibernate.Criterion;
-    using global::NHibernate.Util;
     using JetBrains.Annotations;
-    using SharpArch.Domain.DomainModel;
-    using SharpArch.Domain.PersistenceSupport;
+    using Domain.DomainModel;
+    using Domain.PersistenceSupport;
 
     /// <summary>
     ///     Checks if entity with the same domain signature already exists in the database.
@@ -19,7 +18,7 @@
     [PublicAPI]
     public class EntityDuplicateChecker : IEntityDuplicateChecker
     {
-        static readonly DateTime _uninitializedDatetime = default;
+        static readonly DateTime _uninitializedDatetime;
         readonly ISession _session;
 
         /// <summary>

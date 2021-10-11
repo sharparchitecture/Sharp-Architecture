@@ -1,7 +1,9 @@
 ﻿namespace SharpArch.Domain.DomainModel
 {
     using System;
+#if    NULLABLE_REFERENCE_TYPES
     using System.Diagnostics.CodeAnalysis;
+#endif
     using System.Reflection;
     using JetBrains.Annotations;
 

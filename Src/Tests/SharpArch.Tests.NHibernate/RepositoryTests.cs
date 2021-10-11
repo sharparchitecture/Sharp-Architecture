@@ -1,7 +1,4 @@
-// ReSharper disable PublicMembersMustHaveComments
-// ReSharper disable HeapView.ObjectAllocation
-// ReSharper disable HeapView.ObjectAllocation.Evident
-
+// ReSharper disable UnusedMember.Local
 namespace Tests.SharpArch.NHibernate
 {
     using FluentAssertions;
@@ -9,7 +6,6 @@ namespace Tests.SharpArch.NHibernate
     using global::SharpArch.Domain.DomainModel;
     using global::SharpArch.Domain.PersistenceSupport;
     using global::SharpArch.NHibernate;
-    using global::SharpArch.NHibernate.Impl;
     using Moq;
     using NUnit.Framework;
 

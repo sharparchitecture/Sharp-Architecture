@@ -40,34 +40,21 @@
         class DuplicateCheckerStub : IEntityDuplicateChecker
         {
             public bool DoesDuplicateExistWithTypedIdOf(IEntity entity)
-            {
-                switch (entity)
+                => entity switch
                 {
-                    case Contractor contractor:
-                        return !string.IsNullOrEmpty(contractor.Name) && string.Equals(contractor.Name, @"codai", StringComparison.OrdinalIgnoreCase);
-                    case User user:
-                        return !string.IsNullOrEmpty(user.Ssn) && user.Ssn == "123-12-1234";
-                    case ObjectWithGuidId objectWithGuidId:
-                        return !string.IsNullOrEmpty(objectWithGuidId.Name) &&
-                            string.Equals(objectWithGuidId.Name, @"codai", StringComparison.OrdinalIgnoreCase);
-                }
-
-                // By default, simply return false for no duplicates found
-                return false;
-            }
+                    Contractor contractor => !string.IsNullOrEmpty(contractor.Name) &&
+                        string.Equals(contractor.Name, @"codai", StringComparison.OrdinalIgnoreCase),
+                    User user => !string.IsNullOrEmpty(user.Ssn) && user.Ssn == "123-12-1234",
+                    ObjectWithGuidId objectWithGuidId => !string.IsNullOrEmpty(objectWithGuidId.Name) &&
+                        string.Equals(objectWithGuidId.Name, @"codai", StringComparison.OrdinalIgnoreCase),
+                    // By default, simply return false for no duplicates found
+                    _ => false
+                };
         }
 
 
         [HasUniqueDomainSignature]
         class ObjectWithGuidId : Entity<Guid>
-        {
-            [DomainSignature]
-            public string? Name { get; set; }
-        }
-
-
-        [HasUniqueDomainSignature]
-        class ObjectWithStringIdAndValidatorForIntId : Entity<string>
         {
             [DomainSignature]
             public string? Name { get; set; }

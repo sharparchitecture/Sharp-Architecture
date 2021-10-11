@@ -1,4 +1,4 @@
-﻿namespace SharpArch.NHibernate.Impl
+﻿namespace SharpArch.NHibernate
 {
     using System;
     using System.Data;
@@ -15,7 +15,7 @@
     [PublicAPI]
     public class TransactionManager : INHibernateTransactionManager, ISupportsTransactionStatus
     {
-        private static readonly string NoTransactionAvailable = "No transaction is currently active.";
+        static readonly string _noTransactionAvailable = "No transaction is currently active.";
 
         /// <summary>
         ///     Creates instance of transaction manager.
@@ -32,16 +32,16 @@
         /// <summary>
         ///     Returns current transaction or <c>null</c> if no transaction was open.
         /// </summary>
-        protected ITransaction GetTransaction()
+        protected ITransaction? GetTransaction()
             => Session.GetCurrentTransaction();
 
         /// <inheritdoc />
         public Task CommitTransactionAsync(CancellationToken cancellationToken)
-            => GetTransaction()?.CommitAsync(cancellationToken) ?? throw new InvalidOperationException(NoTransactionAvailable);
+            => GetTransaction()?.CommitAsync(cancellationToken) ?? throw new InvalidOperationException(_noTransactionAvailable);
 
         /// <inheritdoc />
         public Task RollbackTransactionAsync(CancellationToken cancellationToken)
-            => GetTransaction()?.RollbackAsync(cancellationToken) ?? throw new InvalidOperationException(NoTransactionAvailable);
+            => GetTransaction()?.RollbackAsync(cancellationToken) ?? throw new InvalidOperationException(_noTransactionAvailable);
 
         /// <inheritdoc />
         public IDisposable BeginTransaction(IsolationLevel isolationLevel)

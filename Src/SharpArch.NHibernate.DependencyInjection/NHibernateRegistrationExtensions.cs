@@ -3,7 +3,6 @@
     using System;
     using Domain.PersistenceSupport;
     using global::NHibernate;
-    using Impl;
     using Infrastructure.Logging;
     using JetBrains.Annotations;
     using Microsoft.Extensions.DependencyInjection;

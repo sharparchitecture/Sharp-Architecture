@@ -1,11 +1,12 @@
+// ReSharper disable UnusedAutoPropertyAccessor.Local
+// ReSharper disable UnusedMember.Local
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 namespace Tests.SharpArch.Domain.DomainModel
 {
     using System;
-    using System.IO;
     using FluentAssertions;
     using global::SharpArch.Domain.DomainModel;
     using global::SharpArch.Testing.Helpers;
-    using Newtonsoft.Json;
     using Xunit;
 
 
@@ -224,12 +225,6 @@ namespace Tests.SharpArch.Domain.DomainModel
                 // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
                 return base.GetHashCode();
             }
-        }
-
-
-        class Contact : Entity<int>
-        {
-            public virtual string? EmailAddress { get; set; }
         }
 
 

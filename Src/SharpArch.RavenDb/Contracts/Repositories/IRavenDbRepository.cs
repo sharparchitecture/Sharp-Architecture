@@ -8,7 +8,6 @@ namespace SharpArch.RavenDb.Contracts.Repositories
     using Domain.DomainModel;
     using Domain.PersistenceSupport;
     using JetBrains.Annotations;
-    using Raven.Client.Documents.Session;
 
 
     /// <summary>

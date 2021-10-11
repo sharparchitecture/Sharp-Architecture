@@ -31,7 +31,7 @@
   </PropertyGroup>
 
   <!-- nullable checks -->
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' or '$(TargetFramework)' == 'net5.0' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0'">
     <DefineConstants>$(DefineConstants);NULLABLE_REFERENCE_TYPES</DefineConstants>
   </PropertyGroup>
 

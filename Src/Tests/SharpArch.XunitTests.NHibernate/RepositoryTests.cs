@@ -1,3 +1,4 @@
+// ReSharper disable UnusedMember.Global
 namespace Tests.SharpArch.NHibernate
 {
     using FluentAssertions;
@@ -5,7 +6,6 @@ namespace Tests.SharpArch.NHibernate
     using global::SharpArch.Domain.DomainModel;
     using global::SharpArch.Domain.PersistenceSupport;
     using global::SharpArch.NHibernate;
-    using global::SharpArch.NHibernate.Impl;
     using Moq;
     using Xunit;
 
@@ -27,6 +27,6 @@ namespace Tests.SharpArch.NHibernate
 
     public class MyEntity: Entity<int>
     {
-        string? Name { get; set; }
+        public string? Name { get; set; }
     }
 }

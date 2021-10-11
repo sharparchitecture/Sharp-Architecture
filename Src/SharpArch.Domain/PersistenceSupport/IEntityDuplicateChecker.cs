@@ -1,6 +1,5 @@
 ﻿namespace SharpArch.Domain.PersistenceSupport
 {
-    using System;
     using DomainModel;
     using JetBrains.Annotations;
 

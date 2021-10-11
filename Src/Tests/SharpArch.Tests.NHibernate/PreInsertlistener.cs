@@ -1,7 +1,4 @@
-﻿// ReSharper disable PublicMembersMustHaveComments
-// ReSharper disable InternalMembersMustHaveComments
-
-namespace Tests.SharpArch.NHibernate
+﻿namespace Tests.SharpArch.NHibernate
 {
     using System;
     using System.Threading;
@@ -10,7 +7,7 @@ namespace Tests.SharpArch.NHibernate
 
 
     [Serializable]
-    internal class PreInsertListener : IPreInsertEventListener
+    class PreInsertListener : IPreInsertEventListener
     {
         public Task<bool> OnPreInsertAsync(PreInsertEvent @event, CancellationToken cancellationToken)
         {

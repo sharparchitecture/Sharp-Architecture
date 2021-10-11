@@ -24,7 +24,7 @@ namespace Tests.SharpArch.Domain
 
 
     [HasUniqueDomainSignature]
-    internal class ObjectWithStringIdAndValidatorForIntId : Entity<string>
+    class ObjectWithStringIdAndValidatorForIntId : Entity<string>
     {
         [DomainSignature]
         public virtual string Name { get; set; } = null!;
@@ -49,7 +49,7 @@ namespace Tests.SharpArch.Domain
     }
 
 
-    internal class EntityWithNoDomainSignatureProperties : Entity<int>
+    class EntityWithNoDomainSignatureProperties : Entity<int>
     {
         public virtual string Property1 { get; set; } = null!;
 
@@ -57,24 +57,12 @@ namespace Tests.SharpArch.Domain
     }
 
 
-    internal class EntityWithAllPropertiesPartOfDomainSignature : Entity<int>
+    class EntityWithAllPropertiesPartOfDomainSignature : Entity<int>
     {
         [DomainSignature]
         public virtual string Property1 { get; set; } = null!;
 
         [DomainSignature]
-        public virtual int Property2 { get; set; }
-
-        [DomainSignature]
-        public virtual bool Property3 { get; set; }
-    }
-
-
-    internal class EntityWithSomePropertiesPartOfDomainSignature : Entity<int>
-    {
-        [DomainSignature]
-        public virtual string Property1 { get; set; } = null!;
-
         public virtual int Property2 { get; set; }
 
         [DomainSignature]
@@ -82,7 +70,19 @@ namespace Tests.SharpArch.Domain
     }
 
 
-    internal class EntityWithAnotherEntityAsPartOfDomainSignature : Entity<int>
+    class EntityWithSomePropertiesPartOfDomainSignature : Entity<int>
+    {
+        [DomainSignature]
+        public virtual string Property1 { get; set; } = null!;
+
+        public virtual int Property2 { get; set; }
+
+        [DomainSignature]
+        public virtual bool Property3 { get; set; }
+    }
+
+
+    class EntityWithAnotherEntityAsPartOfDomainSignature : Entity<int>
     {
         [DomainSignature]
         public virtual string Property1 { get; set; } = null!;

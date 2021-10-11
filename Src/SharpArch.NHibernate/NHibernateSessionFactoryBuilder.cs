@@ -285,7 +285,7 @@
             return cfg;
         }
 
-        static T[] InsertFirst<T>(T[] array, T item)
+        static T[] InsertFirst<T>(T[]? array, T item)
         {
             if (array == null)
             {
@@ -295,13 +295,6 @@
             var items = new List<T>(array.Length + 1) {item};
             items.AddRange(array);
             return items.ToArray();
-        }
-
-        static string MakeLoadReadyAssemblyName(string assemblyName)
-        {
-            return assemblyName.IndexOf(".dll", StringComparison.OrdinalIgnoreCase) == -1
-                ? assemblyName.Trim() + ".dll"
-                : assemblyName.Trim();
         }
     }
 }

@@ -17,8 +17,8 @@ namespace SharpArch.Domain.PersistenceSupport
     ///     define the items that should be returned.
     /// </remarks>
     [PublicAPI]
-    public interface ILinqRepository<T, in TId> : IRepository<T, TId>
-        where T : class, IEntity<TId>
+    public interface ILinqRepository<TEntity, in TId> : IRepository<TEntity, TId>
+        where TEntity : class, IEntity<TId>
         where TId : IEquatable<TId>
     {
         /// <summary>
@@ -27,8 +27,7 @@ namespace SharpArch.Domain.PersistenceSupport
         /// <param name="id">The ID of the entity.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The matching item.</returns>
-        [ItemCanBeNull]
-        Task<T> FindOneAsync(TId id, CancellationToken cancellationToken = default);
+        Task<TEntity?> FindOneAsync(TId id, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Finds an item by a specification.
@@ -36,15 +35,14 @@ namespace SharpArch.Domain.PersistenceSupport
         /// <param name="specification">The specification.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The matching item.</returns>
-        [ItemCanBeNull]
-        Task<T> FindOneAsync(ILinqSpecification<T> specification, CancellationToken cancellationToken = default);
+        Task<TEntity?> FindOneAsync(ILinqSpecification<TEntity> specification, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Returns <see cref="IQueryable{T}" /> representing query for the entity.
         /// </summary>
         /// <returns>Query.</returns>
         
-        IQueryable<T> FindAll();
+        IQueryable<TEntity> FindAll();
 
         /// <summary>
         ///     Returns query to filter entities by a specification.
@@ -52,6 +50,6 @@ namespace SharpArch.Domain.PersistenceSupport
         /// <param name="specification">The specification.</param>
         /// <returns>Query.</returns>
         
-        IQueryable<T> FindAll(ILinqSpecification<T> specification);
+        IQueryable<TEntity> FindAll(ILinqSpecification<TEntity> specification);
     }
 }

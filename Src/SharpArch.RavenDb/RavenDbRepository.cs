@@ -46,15 +46,15 @@ namespace SharpArch.RavenDb
         }
 
         /// <inheritdoc />
-        public Task<TEntity> FindOneAsync(TId id, CancellationToken cancellationToken = default)
+        public Task<TEntity?> FindOneAsync(TId id, CancellationToken cancellationToken = default)
             => GetAsync(id, cancellationToken);
 
         /// <inheritdoc />
-        public Task<TEntity> FindOneAsync(ILinqSpecification<TEntity> specification, CancellationToken cancellationToken = default)
+        public Task<TEntity?> FindOneAsync(ILinqSpecification<TEntity> specification, CancellationToken cancellationToken = default)
         {
             if (specification == null) throw new ArgumentNullException(nameof(specification));
             return specification.SatisfyingElementsFrom(Session.Query<TEntity>())
-                .SingleOrDefaultAsync(cancellationToken);
+                .SingleOrDefaultAsync(cancellationToken)!;
         }
 
         /// <summary>
@@ -114,8 +114,8 @@ namespace SharpArch.RavenDb
         public virtual ITransactionManager TransactionManager { get; }
 
         /// <inheritdoc />
-        public Task<TEntity> GetAsync(TId id, CancellationToken cancellationToken = default)
-            => Session.LoadAsync<TEntity>(id.ToString(), cancellationToken);
+        public Task<TEntity?> GetAsync(TId id, CancellationToken cancellationToken = default)
+            => Session.LoadAsync<TEntity?>(id.ToString(), cancellationToken);
 
         /// <inheritdoc />
         public async Task<IList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -157,7 +157,8 @@ namespace SharpArch.RavenDb
             if (id is ValueType)
             {
                 var entity = await GetAsync(id, cancellationToken).ConfigureAwait(false);
-                await DeleteAsync(entity, cancellationToken).ConfigureAwait(false);
+                if (entity != null)
+                    await DeleteAsync(entity, cancellationToken).ConfigureAwait(false);
             }
             else
             {

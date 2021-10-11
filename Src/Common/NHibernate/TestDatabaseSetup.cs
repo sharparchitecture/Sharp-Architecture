@@ -91,6 +91,7 @@
             Shutdown(_sessionFactory);
             _sessionFactory = null;
             _configuration = null;
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>

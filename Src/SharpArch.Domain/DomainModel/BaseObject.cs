@@ -82,7 +82,7 @@
 
                 for (var i = 0; i < signatureProperties.Length; i++) {
                     PropertyInfo property = signatureProperties[i];
-                    object? value = property!.GetValue(this, null);
+                    object? value = property.GetValue(this, null);
                     if (value != null) {
                         hashCode = (hashCode * HashMultiplier) ^ value.GetHashCode();
                     }

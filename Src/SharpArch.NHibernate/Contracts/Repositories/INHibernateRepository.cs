@@ -33,7 +33,7 @@ namespace SharpArch.NHibernate.Contracts.Repositories
         /// <exception cref="ArgumentNullException"><paramref name="propertyValuePairs" /> is <see langword="null" /></exception>
         /// <exception cref="ArgumentException">No properties specified.</exception>
         Task<IList<TEntity>> FindAllAsync(
-            IReadOnlyDictionary<string, object> propertyValuePairs,
+            IReadOnlyDictionary<string, object?> propertyValuePairs,
             int? maxResults = null,
             CancellationToken cancellationToken = default);
 
@@ -61,7 +61,7 @@ namespace SharpArch.NHibernate.Contracts.Repositories
         /// <exception cref="NonUniqueResultException" />
         /// <param name="propertyValuePairs">Property name/value pairs to use as search criteria.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
-        Task<TEntity?> FindOneAsync(IReadOnlyDictionary<string, object> propertyValuePairs, CancellationToken cancellationToken = default);
+        Task<TEntity?> FindOneAsync(IReadOnlyDictionary<string, object?> propertyValuePairs, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Returns null if a row is not found matching the provided Id.
