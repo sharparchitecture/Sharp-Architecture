@@ -9,6 +9,7 @@ nuget:
 
 image:
   - Visual Studio 2019
+  - Ubuntu
 
 services:
   - mssql2017
@@ -72,3 +73,14 @@ deploy:
       secure: kvGBJqOLM4uyxv3IVpAC9ZjMSPaL0bnvAXJeK0t1TbL3wpBa7raxKLETd4px1/LY
     on:
       appveyor_repo_tag: true
+
+for:
+-
+  matrix:
+    only:
+      - image: Ubuntu
+
+  install:
+    - sh: ./dotnet-install.sh -Version 6.0.100-rc.1.21463.6
+    - sh: touch ./Src/Common.AssemblyVersion.cs
+    - sh: dotnet test
