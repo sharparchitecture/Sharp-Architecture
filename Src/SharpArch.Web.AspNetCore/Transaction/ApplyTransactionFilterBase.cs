@@ -1,6 +1,7 @@
 ﻿namespace SharpArch.Web.AspNetCore.Transaction
 {
-    using System.Collections.Immutable;
+    using System;
+    using System.Collections.Generic;
     using JetBrains.Annotations;
     using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -14,8 +15,8 @@
     {
         static readonly object _lock = new();
 
-        static ImmutableDictionary<string, TransactionAttribute?> _attributeCache
-            = ImmutableDictionary<string, TransactionAttribute?>.Empty;
+        static IReadOnlyDictionary<string, TransactionAttribute?> _attributeCache
+            = new Dictionary<string, TransactionAttribute?>(0, StringComparer.Ordinal);
 
         /// <summary>
         ///     Returns <see cref="TransactionAttribute" /> associated with given action.
@@ -30,8 +31,15 @@
                 lock (_lock)
                 {
                     transactionAttribute = context.FindEffectivePolicy<TransactionAttribute>();
-                    if (!_attributeCache.ContainsKey(actionId))
-                        _attributeCache = _attributeCache.Add(actionId, transactionAttribute);
+                    var cache = _attributeCache;
+                    if (!cache.ContainsKey(actionId))
+                    {
+                        cache = new Dictionary<string, TransactionAttribute?>((Dictionary<string, TransactionAttribute?>)cache, StringComparer.Ordinal)
+                        {
+                            { actionId, transactionAttribute }
+                        };
+                        _attributeCache = cache;
+                    }
                 }
             }
 
