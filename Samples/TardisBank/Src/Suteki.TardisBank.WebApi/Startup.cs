@@ -15,7 +15,6 @@ namespace Suteki.TardisBank.WebApi
     using SharpArch.Domain.PersistenceSupport;
     using SharpArch.NHibernate;
     using SharpArch.NHibernate.Extensions.DependencyInjection;
-    using SharpArch.NHibernate.Impl;
     using SharpArch.Web.AspNetCore.Transaction;
 
 #if NETCOREAPP2_1

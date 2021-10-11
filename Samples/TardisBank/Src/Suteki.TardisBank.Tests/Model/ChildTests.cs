@@ -6,7 +6,6 @@ namespace Suteki.TardisBank.Tests.Model
     using Domain;
     using FluentAssertions;
     using SharpArch.NHibernate;
-    using SharpArch.NHibernate.Impl;
     using SharpArch.Testing.Xunit.NHibernate;
     using Xunit;
 
@@ -33,21 +32,20 @@ namespace Suteki.TardisBank.Tests.Model
 
             var child = parent.CreateChild("Leo", "leohadlow", "xxx");
             await Session.SaveAsync(child, cancellationToken);
-            await FlushSessionAndEvict(child, cancellationToken);
-            await FlushSessionAndEvict(parent, cancellationToken);
+            await Session.FlushAndEvictAsync(cancellationToken, child, parent);
             _childId = child.Id;
         }
 
         [Fact]
         public async Task Should_be_able_to_add_schedule_to_account()
         {
-            var childToTestOn = await _childRepository.GetAsync(_childId);
+            var childToTestOn = (await _childRepository.GetAsync(_childId))!;
             childToTestOn.Should().NotBeNull();
 
             childToTestOn.Account.AddPaymentSchedule(DateTime.UtcNow, Interval.Week, 10, "Weekly pocket money");
             await FlushSessionAndEvict(childToTestOn);
 
-            var child = await _childRepository.GetAsync(_childId);
+            var child = (await _childRepository.GetAsync(_childId))!;
             child.Should().NotBeNull();
             child.Account.PaymentSchedules[0].Id.Should().BePositive("schedule was not persisted");
         }
@@ -55,18 +53,18 @@ namespace Suteki.TardisBank.Tests.Model
         [Fact]
         public async Task Should_be_able_to_add_transaction_to_account()
         {
-            var childToTestOn = await _childRepository.GetAsync(_childId);
+            var childToTestOn = (await _childRepository.GetAsync(_childId))!;
             childToTestOn.ReceivePayment(10, "Reward");
             await FlushSessionAndEvict(childToTestOn);
 
-            var child = await _childRepository.GetAsync(_childId);
+            var child = (await _childRepository.GetAsync(_childId))!;
             child.Account.Transactions[0].Id.Should().BePositive();
         }
 
         [Fact]
         public async Task Should_be_able_to_create_and_retrieve_a_child()
         {
-            var child = await _childRepository.GetAsync(_childId);
+            var child = (await _childRepository.GetAsync(_childId))!;
             child.Name.Should().Be("Leo");
             child.UserName.Should().Be(@"leohadlow");
             child.ParentId.Should().Be(_parentId);

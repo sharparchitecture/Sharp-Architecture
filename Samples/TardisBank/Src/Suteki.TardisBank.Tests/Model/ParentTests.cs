@@ -4,7 +4,7 @@ namespace Suteki.TardisBank.Tests.Model
     using System.Threading.Tasks;
     using Domain;
     using FluentAssertions;
-    using SharpArch.NHibernate.Impl;
+    using SharpArch.NHibernate;
     using SharpArch.Testing.Xunit.NHibernate;
     using Xunit;
 
@@ -30,7 +30,7 @@ namespace Suteki.TardisBank.Tests.Model
         public async Task Should_be_able_to_add_a_child_to_a_parent()
         {
             var linqRepository = new LinqRepository<Parent, int>(TransactionManager);
-            Parent savedParent = await linqRepository.GetAsync(_parentId);
+            Parent savedParent = (await linqRepository.GetAsync(_parentId))!;
             savedParent.Should().NotBeNull();
 
             savedParent.CreateChild("jim", "jim123", "passw0rd1");
@@ -38,7 +38,7 @@ namespace Suteki.TardisBank.Tests.Model
             savedParent.CreateChild("jez", "jez123", "passw0rd3");
             await FlushSessionAndEvict(savedParent);
 
-            Parent parent = await linqRepository.GetAsync(_parentId);
+            Parent parent = (await linqRepository.GetAsync(_parentId))!;
             parent.Children.Count.Should().Be(3);
 
             parent.Children[0].Name.Should().Be("jim");
@@ -49,7 +49,7 @@ namespace Suteki.TardisBank.Tests.Model
         [Fact]
         public async Task Should_be_able_to_create_and_retrieve_Parent()
         {
-            Parent parent = await new LinqRepository<Parent, int>(TransactionManager).GetAsync(_parentId);
+            Parent parent = (await new LinqRepository<Parent, int>(TransactionManager).GetAsync(_parentId))!;
             parent.Should().NotBeNull();
             parent.Name.Should().Be("Mike Hadlow");
             parent.UserName.Should().Be("mike@yahoo.com");

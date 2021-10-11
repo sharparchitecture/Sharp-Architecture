@@ -53,7 +53,34 @@ namespace SharpArch.NHibernate
 
             // Evicts the entity from the current session so that it can be loaded during testing;
             // this gives the test a clean slate, if you will, to work with
-            await session.EvictAsync(entity, cancellationToken);
+            await session.EvictAsync(entity, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        ///     Flushes session and evict entities from the session.
+        /// </summary>
+        /// <param name="session">The session.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <param name="entities">Entities.</param>
+        /// <exception cref="T:System.ArgumentNullException">
+        ///     <paramref name="session" /> or <paramref name="entities" /> or it's item is <c>null</c>.
+        /// </exception>
+        public static async Task FlushAndEvictAsync(this ISession session, CancellationToken cancellationToken, params object[] entities)
+        {
+            if (session == null) throw new ArgumentNullException(nameof(session));
+            if (entities == null) throw new ArgumentNullException(nameof(entities));
+
+            // Commits any changes up to this point to the database
+            await session.FlushAsync(cancellationToken).ConfigureAwait(false);
+
+            for (var i = entities.Length - 1; i >= 0; i--)
+            {
+                var entity = entities[i];
+                
+                if (entity == null)
+                    throw new ArgumentNullException(nameof(entities), $"Item at index {i} it null.");
+                await session.EvictAsync(entity, cancellationToken).ConfigureAwait(false);    
+            }
         }
 
         /// <summary>
@@ -72,7 +99,7 @@ namespace SharpArch.NHibernate
 
             // don't process deleted entity.
             var entry = session.GetSessionImplementation().PersistenceContext.GetEntry(entity);
-            if (entry == null || entry.Status == Status.Deleted || entry.Status == Status.Gone) return Task.CompletedTask;
+            if (entry == null || entry.Status is Status.Deleted or Status.Gone) return Task.CompletedTask;
             return session.LockAsync(entity, LockMode.Force, cancellationToken);
         }
 
@@ -91,7 +118,7 @@ namespace SharpArch.NHibernate
 
             // ignore deleted entity
             var entry = session.GetSessionImplementation().PersistenceContext.GetEntry(entity);
-            if (entry == null || entry.Status == Status.Deleted || entry.Status == Status.Gone) return;
+            if (entry == null || entry.Status is Status.Deleted or Status.Gone) return;
             session.Lock(entity, LockMode.Force);
         }
 
