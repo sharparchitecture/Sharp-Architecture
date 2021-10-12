@@ -8,7 +8,6 @@ nuget:
 
 image:
   - Ubuntu
-  - macOS
   - Visual Studio 2019
 
 environment:
