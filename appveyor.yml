@@ -6,6 +6,9 @@ pull_requests:
 nuget:
   disable_publish_on_pr: true
 
+matrix:
+  - fast_finish: true
+
 image:
   - Ubuntu
   - Visual Studio 2019
@@ -29,6 +32,8 @@ test: off
 
 
 for:
+
+# Linux build
 -
   matrix:
     only:
@@ -45,6 +50,7 @@ for:
     - sh: dotnet test ./Src -c Release --test-adapter-path . --logger AppVeyor
 
 
+# Windows build
 -
   matrix:
     only:
