@@ -18,7 +18,7 @@
     [PublicAPI]
     public class EntityDuplicateChecker : IEntityDuplicateChecker
     {
-        static readonly DateTime _uninitializedDatetime;
+        static readonly DateTime _uninitializedDatetime = default;
         readonly ISession _session;
 
         /// <summary>
