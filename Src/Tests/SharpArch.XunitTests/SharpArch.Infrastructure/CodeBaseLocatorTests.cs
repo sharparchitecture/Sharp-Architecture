@@ -21,8 +21,8 @@
         [Fact]
         public void CanResolveAssemblyPath()
         {
-            _output.WriteLine("Assembly path: '{0}'", CodeBaseLocator.GetAssemblyPath(Assembly.GetExecutingAssembly()));
             var path = CodeBaseLocator.GetAssemblyCodeBasePath(Assembly.GetExecutingAssembly());
+            _output.WriteLine("Assembly path: '{0}'", path);
             path.Should().NotBeNullOrEmpty();
             Directory.Exists(path).Should().BeTrue();
         }

@@ -12,17 +12,6 @@
     [PublicAPI]
     public class CodeBaseLocator
     {
-        internal static string GetAssemblyPath(Assembly assembly)
-        {
-            return
-#if NET5_0_OR_GREATER
-                assembly.Location
-#else
-                assembly.CodeBase
-#endif
-                ;
-        }
-
         /// <summary>
         ///     Returns directory of assembly code base.
         /// </summary>
@@ -32,9 +21,16 @@
         public static string GetAssemblyCodeBasePath(Assembly assembly)
         {
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
-            var uri = new UriBuilder(GetAssemblyPath(assembly));
+
+#if NET5_0_OR_GREATER
+            return Path.GetDirectoryName(assembly.Location)
+                ?? Directory.GetCurrentDirectory();
+
+#else
+            var uri = new UriBuilder(assembly.CodeBase);
             var uriPath = Uri.UnescapeDataString(uri.Path);
             return Path.GetDirectoryName(uriPath)!;
+#endif
         }
     }
 }
