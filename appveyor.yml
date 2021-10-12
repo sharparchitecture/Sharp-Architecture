@@ -6,9 +6,6 @@ pull_requests:
 nuget:
   disable_publish_on_pr: true
 
-matrix:
-  - fast_finish: true
-
 image:
   - Ubuntu
   - Visual Studio 2019
@@ -30,6 +27,8 @@ build_script:
 
 test: off
 
+matrix:
+  fast_finish: true
 
 for:
 
