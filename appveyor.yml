@@ -8,6 +8,7 @@ nuget:
 
 image:
   - Ubuntu
+  - macOS
   - Visual Studio 2019
 
 environment:
@@ -35,8 +36,8 @@ for:
 # Linux build
 -
   matrix:
-    only:
-      - image: Ubuntu
+    except:
+      - image: Visual Studio 2019
 
   clone_folder: ~/work/sharp-arch
 
