@@ -90,7 +90,8 @@ for:
 
 -
   matrix:
-    only: VIsual Studio 2019
+    only:
+      - image: Visual Studio 2019
 
   clone_folder: c:\work\sharp-arch
 
