@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <Compile Include="..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
-    <Compile Include="..\Common\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
 
   <ItemGroup Label="NETStandard 2.0" Condition=" '$(TargetFramework)' == 'netstandard2.0' ">

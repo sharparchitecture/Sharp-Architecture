@@ -24,4 +24,8 @@
     <ProjectReference Include="..\..\SharpArch.Testing\SharpArch.Testing.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SharpArch.Infrastructure\" />
+  </ItemGroup>
+
 </Project>
