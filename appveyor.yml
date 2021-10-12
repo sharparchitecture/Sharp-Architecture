@@ -10,21 +10,11 @@ image:
   - Ubuntu
   - Visual Studio 2019
 
-services:
-  - mssql2017
-
-
 environment:
-  coveralls_repo_token:
-    secure: FgZlD1O2ilcGB6nF7cIgNcF6f8wWJk//ish6EG800QfuMd0y3BQWUXkl9u7TB4yG
-  appveyor_cache_entry_zip_args: -t7z -m0=lzma -mx=5 -ms=on
-  CAKE_PATHS_TOOLS: c:\tmp\cake\tools\
   CAKE_SETTINGS_SKIPVERIFICATION: true
   CAKE_SETTINGS_SKIPPACKAGEVERSIONCHECK: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  GITHUB_TOKEN:
-    secure: FgP/dEF7lumDgbjt3tzPSDqDTM16uoiPfKZPQSLJO+/GaIR2zSquSh0pXP8znx+c
 
 install:
   - ps: ./mssql-setup.ps1
@@ -37,37 +27,6 @@ build_script:
 
 test: off
 
-artifacts:
-  - path: Drops/Packages/*.nupkg
-    name: NuGet packages
-
-  - path: Drops/Packages/*.snupkg
-    name: NuGet symbol packages
-    type: NuGetPackage
-#  - path: Drops/Inspections/CodeDuplicates.html
-#    name: CodeDuplicates
-#  - path: Drops/Inspections/CodeInspections.html
-#    name: CodeInspections
-
-deploy:
-  - provider: NuGet
-    name: Pre-release
-    api_key:
-      secure: kvGBJqOLM4uyxv3IVpAC9ZjMSPaL0bnvAXJeK0t1TbL3wpBa7raxKLETd4px1/LY
-    on:
-      branch:
-        - develop
-        - /release\/v.*/
-        - /releases.*/
-        - /hotfixes.*/
-
-  - provider: NuGet
-    name: Tagged release
-    api_key:
-      secure: kvGBJqOLM4uyxv3IVpAC9ZjMSPaL0bnvAXJeK0t1TbL3wpBa7raxKLETd4px1/LY
-    on:
-      appveyor_repo_tag: true
-
 
 for:
 -
@@ -76,8 +35,6 @@ for:
       - image: Ubuntu
 
   clone_folder: ~/work/sharp-arch
-
-  services: []
 
   install:
     - sh: sudo ./dotnet-install.sh -Version 6.0.100-rc.1.21463.6 -InstallDir /usr/share/dotnet/
@@ -95,5 +52,48 @@ for:
 
   clone_folder: c:\work\sharp-arch
 
+  services:
+    - mssql2017
+
   cache:
     - c:\tmp\cake\tools -> appveyor.yml
+
+  environment:
+    coveralls_repo_token:
+      secure: FgZlD1O2ilcGB6nF7cIgNcF6f8wWJk//ish6EG800QfuMd0y3BQWUXkl9u7TB4yG
+    appveyor_cache_entry_zip_args: -t7z -m0=lzma -mx=5 -ms=on
+    CAKE_PATHS_TOOLS: c:\tmp\cake\tools\
+    GITHUB_TOKEN:
+      secure: FgP/dEF7lumDgbjt3tzPSDqDTM16uoiPfKZPQSLJO+/GaIR2zSquSh0pXP8znx+c
+
+  artifacts:
+    - path: Drops/Packages/*.nupkg
+      name: NuGet packages
+
+    - path: Drops/Packages/*.snupkg
+      name: NuGet symbol packages
+      type: NuGetPackage
+  #  - path: Drops/Inspections/CodeDuplicates.html
+  #    name: CodeDuplicates
+  #  - path: Drops/Inspections/CodeInspections.html
+  #    name: CodeInspections
+
+  deploy:
+    - provider: NuGet
+      name: Pre-release
+      api_key:
+        secure: kvGBJqOLM4uyxv3IVpAC9ZjMSPaL0bnvAXJeK0t1TbL3wpBa7raxKLETd4px1/LY
+      on:
+        branch:
+          - develop
+          - /release\/v.*/
+          - /releases.*/
+          - /hotfixes.*/
+
+    - provider: NuGet
+      name: Tagged release
+      api_key:
+        secure: kvGBJqOLM4uyxv3IVpAC9ZjMSPaL0bnvAXJeK0t1TbL3wpBa7raxKLETd4px1/LY
+      on:
+        appveyor_repo_tag: true
+
