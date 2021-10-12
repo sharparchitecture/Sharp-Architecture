@@ -80,7 +80,7 @@ for:
       - image: Ubuntu
 
   install:
-    - sh: ./dotnet-install.sh -Version 6.0.100-rc.1.21463.6 -InstallDir /usr/share/dotnet/
+    - sh: sudo ./dotnet-install.sh -Version 6.0.100-rc.1.21463.6 -InstallDir /usr/share/dotnet/
     - sh: touch ./Src/Common.AssemblyVersion.cs
     - sh: dotnet new tool-manifest
     - sh: dotnet test
