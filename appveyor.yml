@@ -26,11 +26,6 @@ environment:
   GITHUB_TOKEN:
     secure: FgP/dEF7lumDgbjt3tzPSDqDTM16uoiPfKZPQSLJO+/GaIR2zSquSh0pXP8znx+c
 
-cache:
-#  - c:\work\sharp-arch\tmp\ResharperCaches
-#  - c:\work\sharp-arch\tmp\DupFinderCaches
-  - c:\tmp\cake\tools -> appveyor.yml
-
 install:
   - ps: ./mssql-setup.ps1
   - ps: ./dotnet-install.ps1 -Version 6.0.100-rc.1.21463.6 -InstallDir "C:\Program Files\dotnet"
@@ -79,7 +74,9 @@ for:
     only:
       - image: Ubuntu
 
-  services:
+  clone_folder: ~/work/sharp-arch
+
+  services: []
 
   install:
     - sh: sudo ./dotnet-install.sh -Version 6.0.100-rc.1.21463.6 -InstallDir /usr/share/dotnet/
@@ -88,3 +85,14 @@ for:
 
   build_script:
     - sh: dotnet test ./Src -c Release --test-adapter-path . --logger AppVeyor
+
+
+for:
+-
+  matrix:
+    only: VIsual Studio 2019
+
+  clone_folder: c:\work\sharp-arch
+
+  cache:
+    - c:\tmp\cake\tools -> appveyor.yml
