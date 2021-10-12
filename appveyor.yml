@@ -68,6 +68,7 @@ deploy:
     on:
       appveyor_repo_tag: true
 
+
 for:
 -
   matrix:
@@ -87,7 +88,6 @@ for:
     - sh: dotnet test ./Src -c Release --test-adapter-path . --logger AppVeyor
 
 
-for:
 -
   matrix:
     only: VIsual Studio 2019
