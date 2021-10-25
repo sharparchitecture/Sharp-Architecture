@@ -21,13 +21,16 @@
         public static string GetAssemblyCodeBasePath(Assembly assembly)
         {
             if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+
 #if NET5_0_OR_GREATER
-            var uri = new UriBuilder(assembly.Location);
+            return Path.GetDirectoryName(assembly.Location)
+                ?? Directory.GetCurrentDirectory();
+
 #else
             var uri = new UriBuilder(assembly.CodeBase);
-#endif
             var uriPath = Uri.UnescapeDataString(uri.Path);
             return Path.GetDirectoryName(uriPath)!;
+#endif
         }
     }
 }
