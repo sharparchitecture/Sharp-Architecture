@@ -1,12 +1,8 @@
 ﻿namespace TransactionAttribute.WebApi
 {
 
-#if NET3UP
     using Microsoft.Extensions.Hosting;
     using Microsoft.AspNetCore.Hosting;
-#else
-    using Microsoft.AspNetCore.Hosting;
-#endif
     using System;
     using System.IO;
     using Autofac.Extensions.DependencyInjection;

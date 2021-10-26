@@ -18,7 +18,7 @@ environment:
 
 install:
   - ps: ./mssql-setup.ps1
-  - ps: ./dotnet-install.ps1 -Version 6.0.100-rc.1.21463.6 -InstallDir "C:\Program Files\dotnet"
+  - ps: ./dotnet-install.ps1 -Version 6.0.100-rc.2.21505.57 -InstallDir "C:\Program Files\dotnet"
   - ps: dotnet new tool-manifest
   - ps: dotnet tool install Cake.Tool --version 1.3.0
 
@@ -41,7 +41,7 @@ for:
   clone_folder: ~/work/sharp-arch
 
   install:
-    - sh: sudo ./dotnet-install.sh -Version 6.0.100-rc.1.21463.6 -InstallDir /usr/share/dotnet/
+    - sh: sudo ./dotnet-install.sh -Version 6.0.100-rc.2.21505.57 -InstallDir /usr/share/dotnet/
     - sh: touch ./Src/Common/AssemblyVersion.cs
     - sh: dotnet new tool-manifest
 

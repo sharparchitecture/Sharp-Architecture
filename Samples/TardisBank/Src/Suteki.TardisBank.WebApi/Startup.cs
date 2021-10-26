@@ -17,12 +17,6 @@ namespace Suteki.TardisBank.WebApi
     using SharpArch.NHibernate.Extensions.DependencyInjection;
     using SharpArch.Web.AspNetCore.Transaction;
 
-#if NETCOREAPP2_1
-    using System.Globalization;
-    using Microsoft.AspNetCore.Mvc;
-    using Newtonsoft.Json;
-#endif
-
 
     public class Startup
     {
@@ -41,30 +35,8 @@ namespace Suteki.TardisBank.WebApi
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-#if NET3UP
             services.AddControllers(options => { options.Filters.Add(new AutoTransactionHandler()); })
                 .AddNewtonsoftJson();
-
-#else
-            // Add framework services.
-            services.AddMvcCore(options =>
-                {
-                    options.Filters.Add(new AutoTransactionHandler());
-                })
-                .AddDataAnnotations()
-                .AddJsonOptions(options =>
-                {
-                    options.SerializerSettings.Culture = CultureInfo.InvariantCulture;
-                    options.SerializerSettings.Formatting = Formatting.None;
-                })
-                .AddAuthorization()
-                .AddFormatterMappings()
-                .AddJsonFormatters()
-#if NETCOREAPP2_1
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-#endif
-                ;
-#endif
 
             services.AddNHibernateWithSingleDatabase(sp =>
             {
@@ -85,14 +57,9 @@ namespace Suteki.TardisBank.WebApi
         /// <param name="app"></param>
         public void Configure(IApplicationBuilder app)
         {
-#if NET3UP
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-#else
-            app.UseAuthentication();
-            app.UseMvc();
-#endif
         }
 
         /// <summary>

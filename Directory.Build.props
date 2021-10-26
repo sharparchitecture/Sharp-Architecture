@@ -22,7 +22,7 @@
 
   <PropertyGroup Label="Custom targets">
     <!-- target frameworks for unit-tests and applications -->
-    <AppTargetFrameworks>netcoreapp2.1;netcoreapp3.1;net5.0;net6.0</AppTargetFrameworks>
+    <AppTargetFrameworks>netcoreapp3.1;net5.0;net6.0</AppTargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -74,12 +74,8 @@
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'net6.0'">
-    <DefineConstants>$(DefineConstants);NET3UP</DefineConstants>
-  </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <DefineConstants>$(DefineConstants);NET3UP</DefineConstants>
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
 

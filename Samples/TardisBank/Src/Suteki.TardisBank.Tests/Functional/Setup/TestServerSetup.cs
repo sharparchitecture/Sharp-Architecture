@@ -15,9 +15,7 @@
         public TestServerSetup()
         {
             Server = new TestServer(Program.CreateHostBuilder(Array.Empty<string>())
-#if NET3UP
                 .UseTestServer()
-#endif
                 .UseStartup<Startup>()
                 .UseSolutionRelativeContentRoot("TardisBank/Src/Suteki.TardisBank.WebApi/")
             );
