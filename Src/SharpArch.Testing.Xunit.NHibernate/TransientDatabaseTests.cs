@@ -21,6 +21,7 @@
     ///         such as a SQL Server instance, then use <see cref="LiveDatabaseTests{TDatabaseInitializer}" /> instead.
     ///     </para>
     /// </summary>
+    /// <typeparam name="TDatabaseSetup">Database setup class.</typeparam>
     [PublicAPI]
     public abstract class TransientDatabaseTests<TDatabaseSetup> : IClassFixture<TDatabaseSetup>, IDisposable, IAsyncLifetime
         where TDatabaseSetup : TestDatabaseSetup, new()

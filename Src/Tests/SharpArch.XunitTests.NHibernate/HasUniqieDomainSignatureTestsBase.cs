@@ -5,6 +5,7 @@
     using global::SharpArch.Domain.PersistenceSupport;
     using global::SharpArch.NHibernate;
     using global::SharpArch.Testing.Xunit.NHibernate;
+    using Mappings;
     using Moq;
 
 

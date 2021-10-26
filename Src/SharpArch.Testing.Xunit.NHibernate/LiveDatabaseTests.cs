@@ -4,6 +4,7 @@
     using global::NHibernate;
     using global::Xunit;
     using JetBrains.Annotations;
+    using SharpArch.NHibernate.FluentNHibernate;
     using SharpArch.Testing.NHibernate;
 
 
