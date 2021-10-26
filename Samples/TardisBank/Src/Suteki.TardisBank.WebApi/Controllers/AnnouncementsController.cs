@@ -24,9 +24,7 @@ namespace Suteki.TardisBank.WebApi.Controllers
     public class AnnouncementsController : ControllerBase
     {
         readonly ILinqRepository<Announcement, int> _announcementRepository;
-#if NET3UP
         readonly LinkGenerator _linkGenerator;
-#endif
         readonly IMapper _mapper;
 
         /// <summary>
@@ -35,15 +33,11 @@ namespace Suteki.TardisBank.WebApi.Controllers
         /// <param name="announcementRepository">Announcements repository.</param>
         /// <param name="mapper">Mapper</param>
         public AnnouncementsController(ILinqRepository<Announcement, int> announcementRepository,
-#if NET3UP
             LinkGenerator linkGenerator,
-#endif
             IMapper mapper)
         {
             _announcementRepository = announcementRepository ?? throw new ArgumentNullException(nameof(announcementRepository));
-#if NET3UP
             _linkGenerator = linkGenerator ?? throw new ArgumentNullException(nameof(linkGenerator));
-#endif
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -81,11 +75,7 @@ namespace Suteki.TardisBank.WebApi.Controllers
         {
             var announcement = _mapper.Map<Announcement>(model);
             await _announcementRepository.SaveAsync(announcement, HttpContext.RequestAborted).ConfigureAwait(false);
-#if NET3UP
             var location = _linkGenerator.GetPathByName("GetAnnouncement", new {id = announcement.Id});
-#else
-            var location = Url.RouteUrl("GetAnnouncement", new {id = announcement.Id});
-#endif
             return Created(location!, announcement);
         }
 
