@@ -32,7 +32,7 @@ namespace Suteki.TardisBank.Tasks
             return GetUserByUserName(_context.UserName, cancellationToken);
         }
 
-        public Task<User> GetUser(int userId, CancellationToken cancellationToken)
+        public Task<User?> GetUser(int userId, CancellationToken cancellationToken)
         {
             return _userRepository.FindOneAsync(userId, cancellationToken);
         }

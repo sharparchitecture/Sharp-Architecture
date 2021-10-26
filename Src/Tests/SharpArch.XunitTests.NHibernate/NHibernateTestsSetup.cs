@@ -14,10 +14,11 @@
     {
         public NHibernateTestsSetup()
             : base(Assembly.GetExecutingAssembly().Location,
+                typeof(TestsPersistenceModelGenerator),
                 new[]
                 {
                     typeof(ObjectWithGuidId).Assembly,
-                    typeof(TestsPersistenceModelGenerator).Assembly
+                    //typeof(TestsPersistenceModelGenerator).Assembly
                 })
         {
         }
@@ -27,7 +28,7 @@
         {
             base.Customize(builder);
             builder.UsePersistenceConfigurer(new SQLiteConfiguration().InMemory());
-            builder.UseProperties(new SortedList<string, string>()
+            builder.UseProperties(new SortedList<string, string>
             {
                 [Environment.ReleaseConnections] = "on_close",
                 [Environment.Hbm2ddlAuto] = "create"

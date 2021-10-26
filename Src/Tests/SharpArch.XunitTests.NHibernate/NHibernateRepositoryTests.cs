@@ -6,6 +6,7 @@
     using FluentAssertions;
     using global::SharpArch.NHibernate;
     using global::SharpArch.Testing.Xunit.NHibernate;
+    using Mappings;
     using Xunit;
 
 

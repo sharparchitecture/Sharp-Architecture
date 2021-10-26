@@ -28,44 +28,9 @@
     {
         readonly string _basePath;
         readonly Assembly[] _mappingAssemblies;
+        readonly Type _persistenceModelGenerator;
         Configuration? _configuration;
         ISessionFactory? _sessionFactory;
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="TestDatabaseSetup" /> class.
-        /// </summary>
-        /// <param name="basePath">Base bath to use when looking for mapping assemblies and default NHibernate configuration file.</param>
-        /// <param name="mappingAssemblies">
-        ///     List of assemblies containing NHibernate mapping files and persistence model generator.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="basePath" /> or <paramref name="mappingAssemblies" /> is
-        ///     <c>null</c>.
-        /// </exception>
-        public TestDatabaseSetup(string basePath, Assembly[] mappingAssemblies)
-        {
-            _basePath = basePath ?? throw new ArgumentNullException(nameof(basePath));
-            if (mappingAssemblies == null) throw new ArgumentNullException(nameof(mappingAssemblies));
-            _mappingAssemblies = mappingAssemblies.Distinct().ToArray();
-        }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="TestDatabaseSetup" /> class.
-        /// </summary>
-        /// <param name="baseAssembly">
-        ///     Assembly to use to determine configuration folder. Typically is it assembly containing
-        ///     tests.
-        /// </param>
-        /// <param name="mappingAssemblies"></param>
-        /// <exception cref="ArgumentNullException">
-        ///     <paramref name="baseAssembly" /> or <paramref name="mappingAssemblies" /> is
-        ///     <c>null</c>.
-        /// </exception>
-        public TestDatabaseSetup(Assembly baseAssembly, Assembly[] mappingAssemblies)
-            : this(CodeBaseLocator.GetAssemblyCodeBasePath(baseAssembly),
-                mappingAssemblies)
-        {
-        }
 
         /// <summary>
         ///     Allows to apply custom configuration to new ISession.
@@ -84,6 +49,61 @@
         public Action<IStatelessSessionBuilder>? StatelessSessionConfigurator { get; set; }
 
         /// <summary>
+        ///     Initializes a new instance of the <see cref="TestDatabaseSetup" /> class.
+        /// </summary>
+        /// <param name="basePath">Base bath to use when looking for mapping assemblies and default NHibernate configuration file.</param>
+        /// <param name="persistenceModelGenerator">Persistence model generator, type. Must implement <see cref="IAutoPersistenceModelGenerator" />.</param>
+        /// <param name="mappingAssemblies">
+        ///     List of assemblies containing NHibernate mapping files and persistence model generator.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="basePath" />, <paramref name="persistenceModelGenerator" /> or <paramref name="mappingAssemblies" /> is
+        ///     <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="persistenceModelGenerator" /> does not implement <see cref="IAutoPersistenceModelGenerator" />.
+        /// </exception>
+        public TestDatabaseSetup(
+            string basePath,
+            Type persistenceModelGenerator,
+            Assembly[] mappingAssemblies)
+        {
+            _basePath = basePath ?? throw new ArgumentNullException(nameof(basePath));
+            _persistenceModelGenerator = persistenceModelGenerator ?? throw new ArgumentNullException(nameof(persistenceModelGenerator));
+            if (!typeof(IAutoPersistenceModelGenerator).IsAssignableFrom(persistenceModelGenerator))
+                throw new ArgumentException($"Type {persistenceModelGenerator.FullName} must implement {nameof(IAutoPersistenceModelGenerator)}.");
+
+            if (mappingAssemblies == null) throw new ArgumentNullException(nameof(mappingAssemblies));
+            _mappingAssemblies = mappingAssemblies.Distinct().ToArray();
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TestDatabaseSetup" /> class.
+        /// </summary>
+        /// <param name="persistenceModelGenerator">Persistence model generator, type. Must implement <see cref="IAutoPersistenceModelGenerator" />.</param>
+        /// <param name="baseAssembly">
+        ///     Assembly to use to determine configuration folder. Typically is it assembly containing
+        ///     tests.
+        /// </param>
+        /// <param name="mappingAssemblies"></param>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="baseAssembly" /> or <paramref name="mappingAssemblies" /> is
+        ///     <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="persistenceModelGenerator" /> does not implement <see cref="IAutoPersistenceModelGenerator" />.
+        /// </exception>
+        public TestDatabaseSetup(
+            Assembly baseAssembly,
+            Type persistenceModelGenerator,
+            Assembly[] mappingAssemblies)
+            : this(CodeBaseLocator.GetAssemblyCodeBasePath(baseAssembly),
+                persistenceModelGenerator,
+                mappingAssemblies)
+        {
+        }
+
+        /// <summary>
         ///     Disposes SessionFactory.
         /// </summary>
         public virtual void Dispose()
@@ -95,63 +115,14 @@
         }
 
         /// <summary>
-        ///     Generates auto-persistence model.
-        /// </summary>
-        /// <param name="assemblies">List of assemblies to look for auto-persistence model generators.</param>
-        /// <returns>
-        ///     <see cref="AutoPersistenceModel" />
-        /// </returns>
-        /// <remarks>
-        ///     This method will load and scan assemblies for <see cref="IAutoPersistenceModelGenerator" />.
-        ///     Only first generated model is returned.
-        /// </remarks>
-        /// <exception cref="ArgumentNullException"><paramref name="assemblies" /> is <see langword="null" /></exception>
-        /// <exception cref="InvalidOperationException">
-        ///     Only one implementation of <see cref="IAutoPersistenceModelGenerator" /> is
-        ///     allowed.
-        /// </exception>
-        /// <exception cref="TargetInvocationException">Unable to instantiate AutoPersistenceModelGenerator.</exception>
-        
-        public static AutoPersistenceModel GenerateAutoPersistenceModel(Assembly[] assemblies)
-        {
-            if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
-            var persistenceGeneratorTypes = assemblies.SelectMany(a =>
-                    a.GetTypes().Where(t =>
-                        !t.IsAbstract && typeof(IAutoPersistenceModelGenerator).IsAssignableFrom(t)))
-                .ToArray();
-            if (persistenceGeneratorTypes.Length > 1)
-                throw new InvalidOperationException($"Found multiple classes implementing {nameof(IAutoPersistenceModelGenerator)}. " +
-                    "Only one persistence model generator is supported.")
-                {
-                    Data =
-                    {
-                        [nameof(IAutoPersistenceModelGenerator) + "s"] = persistenceGeneratorTypes,
-                        ["Assemblies"] = assemblies
-                    }
-                };
-            if (persistenceGeneratorTypes.Length == 0)
-                throw new InvalidOperationException($"No classes implementing {nameof(IAutoPersistenceModelGenerator)} were found. " +
-                    $"{nameof(TestDatabaseSetup)} requires persistence model generator to create test database.")
-                {
-                    Data =
-                    {
-                        ["Assemblies"] = assemblies
-                    }
-                };
-            var generator = (IAutoPersistenceModelGenerator) Activator.CreateInstance(persistenceGeneratorTypes[0])!;
-            return generator.Generate();
-        }
-
-        /// <summary>
         ///     Returns NHibernate <see cref="Configuration" />.
         ///     Configuration instance is cached, all subsequent calls will return the same instance.
         /// </summary>
-        
         public Configuration GetConfiguration()
         {
             if (_configuration != null) return _configuration;
 
-            var autoPersistenceModel = GenerateAutoPersistenceModel(_mappingAssemblies);
+            var autoPersistenceModel = GenerateAutoPersistenceModel();
 
             var builder = new NHibernateSessionFactoryBuilder()
                 .AddMappingAssemblies(_mappingAssemblies)
@@ -169,6 +140,19 @@
             Customize(builder);
             _configuration = builder.BuildConfiguration();
             return _configuration;
+        }
+
+        /// <summary>
+        ///     Generates auto-persistence model.
+        /// </summary>
+        /// <returns>
+        ///     <see cref="AutoPersistenceModel" />
+        /// </returns>
+        /// <exception cref="TargetInvocationException">Unable to instantiate AutoPersistenceModelGenerator.</exception>
+        public AutoPersistenceModel GenerateAutoPersistenceModel()
+        {
+            var generator = (IAutoPersistenceModelGenerator)Activator.CreateInstance(_persistenceModelGenerator)!;
+            return generator.Generate();
         }
 
         /// <summary>
@@ -256,7 +240,7 @@
         /// </summary>
         /// <param name="sessionFactory">The session factory.</param>
         /// <remarks>
-        ///     Dispose <see cref="TestDatabaseSetup" /> will destroy Session Factory associated with this instance.
+        ///     Disposing <see cref="TestDatabaseSetup" /> will destroy Session Factory associated with this instance.
         /// </remarks>
         public static void Shutdown(ISessionFactory? sessionFactory)
             => sessionFactory?.Dispose();

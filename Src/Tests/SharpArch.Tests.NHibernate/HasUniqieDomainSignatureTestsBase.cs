@@ -17,7 +17,9 @@
 
         public HasUniqueDomainSignatureTestsBase()
             : base(new TestDatabaseSetup(
-                TestContext.CurrentContext.TestDirectory, new[] {typeof(TestsPersistenceModelGenerator).Assembly}
+                TestContext.CurrentContext.TestDirectory,
+                typeof(TestsPersistenceModelGenerator),
+                new[] {typeof(TestsPersistenceModelGenerator).Assembly}
             ))
         {
         }

@@ -8,7 +8,7 @@
     {
         /// <inheritdoc />
         public TransientDatabaseSetup()
-            : base(typeof(TransientDatabaseSetup).Assembly, new[]
+            : base(typeof(TransientDatabaseSetup).Assembly, typeof(AutoPersistenceModelGenerator), new[]
             {
                 typeof(AutoPersistenceModelGenerator).Assembly
             })
