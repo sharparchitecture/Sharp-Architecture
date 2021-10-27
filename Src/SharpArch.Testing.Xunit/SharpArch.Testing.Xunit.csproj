@@ -16,10 +16,6 @@
 
   <ItemGroup Label="Common references">
     <PackageReference Include="xunit.core" Version="2.4.1" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
   </ItemGroup>
 
   <PropertyGroup>

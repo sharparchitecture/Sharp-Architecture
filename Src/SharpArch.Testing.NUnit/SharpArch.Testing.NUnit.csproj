@@ -18,13 +18,9 @@
 
   <ItemGroup Label="Common references">
     <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Label="Common project references">
+  <ItemGroup Label="Project references">
     <ProjectReference Include="..\SharpArch.Domain\SharpArch.Domain.csproj" />
     <ProjectReference Include="..\SharpArch.Testing\SharpArch.Testing.csproj" />
     <ProjectReference Include="..\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
