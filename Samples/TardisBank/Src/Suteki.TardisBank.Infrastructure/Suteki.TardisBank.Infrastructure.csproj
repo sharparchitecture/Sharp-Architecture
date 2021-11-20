@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="FluentNHibernate" Version="3.1.0" />
-    <PackageReference Include="Humanizer.Core" Version="2.11.10" />
+    <PackageReference Include="Humanizer.Core" Version="2.13.14" />
     <PackageReference Include="NHibernate" Version="5.3.10" />
   </ItemGroup>
 

@@ -74,11 +74,6 @@
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <LangVersion>preview</LangVersion>
-  </PropertyGroup>
-
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.InteropServices.ComVisibleAttribute">
       <_Parameter1>false</_Parameter1>

@@ -26,8 +26,4 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
   </ItemGroup>
 
-  <ItemGroup Label="Package References (.NET 6)" Condition=" '$(TargetFramework)' == 'net6.0' ">
-    <PackageReference Include="System.ComponentModel.Annotations" Version="6.0.0-preview.4.*" />
-  </ItemGroup>
-
 </Project>
