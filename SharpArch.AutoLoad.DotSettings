@@ -35,7 +35,7 @@
 // $MESSAGE$ -- string literal in the form of "$NAME$ != null"&#xD;
 FluentAssertions.AssertionExtensions.Should($EXPR$).NotBeNull()&#xD;
 </s:String>
-	<s:String x:Key="/Default/CodeInspection/CSharpLanguageProject/LanguageLevel/@EntryValue">CSharp90</s:String>
+	<s:String x:Key="/Default/CodeInspection/CSharpLanguageProject/LanguageLevel/@EntryValue">CSharp100</s:String>
 	<s:Boolean x:Key="/Default/CodeInspection/ExcludedFiles/FileMasksToSkip/=cake_002Econfig/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeInspection/ExcludedFiles/FileMasksToSkip/=LibLog_002Ecs/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/CodeInspection/GeneratedCode/GeneratedFileMasks/=LibLog_002Ecs/@EntryIndexedValue">LibLog.cs</s:String>

@@ -58,7 +58,7 @@ for:
   clone_folder: c:\work\sharp-arch
 
   services:
-    - mssql2017
+    - mssql2019
 
   cache:
     - c:\tmp\cake\tools -> appveyor.yml
