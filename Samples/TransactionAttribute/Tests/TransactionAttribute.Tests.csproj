@@ -29,6 +29,10 @@
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.0" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="7.0.0-preview.4.*" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\Src\SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj" />
     <ProjectReference Include="..\App\TransactionAttribute.WebApi.csproj" />

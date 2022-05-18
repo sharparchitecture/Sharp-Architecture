@@ -30,4 +30,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
   </ItemGroup>
 
+  <ItemGroup Label="Package References (ASP.NET 7)" Condition=" '$(TargetFramework)' == 'net7.0' ">
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0-preview.4.*" />
+  </ItemGroup>
+
 </Project>
