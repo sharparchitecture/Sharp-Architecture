@@ -19,7 +19,7 @@ namespace Suteki.TardisBank.WebApi
         {
             try
             {
-                CreateHostBuilder(args)
+                CreateHostBuilder()
                     .Build()
                     .Run();
                 return 0;
@@ -35,9 +35,10 @@ namespace Suteki.TardisBank.WebApi
             }
         }
 
-        public static IWebHostBuilder CreateHostBuilder(string[] args)
+        public static IHostBuilder CreateHostBuilder(Action<IWebHostBuilder>? webHostOverrides =null)
         {
-            return new WebHostBuilder()
+            return new HostBuilder()
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .UseSerilog((hostingContext, loggerConfiguration) =>
                 {
                     var env = hostingContext.HostingEnvironment;
@@ -64,17 +65,21 @@ namespace Suteki.TardisBank.WebApi
                     loggerConfiguration.WriteTo.Seq("http://localhost:5341");
 #endif
                 })
-                .UseKestrel()
-                .ConfigureServices(services => services.AddAutofac())
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .ConfigureAppConfiguration((hostingContext, appConfig) =>
                 {
-                    var envName = hostingContext.HostingEnvironment.EnvironmentName;
                     appConfig.AddJsonFile("appsettings.json", false, false)
-                        .AddJsonFile($"appsettings.{envName}.json", true, false);
+                        .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, false);
                     appConfig.AddEnvironmentVariables();
                 })
-                .UseStartup<Startup>();
+                .ConfigureWebHost(webHost =>
+                {
+                    webHost.UseKestrel();
+                    webHost.UseStartup<Startup>();
+                    webHostOverrides?.Invoke(webHost);
+
+                });
+
         }
     }
 }

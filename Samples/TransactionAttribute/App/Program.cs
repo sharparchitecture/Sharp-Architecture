@@ -39,9 +39,9 @@
         }
 
         
-        public static IWebHostBuilder CreateHostBuilder()
-        {
-            return new WebHostBuilder()
+        public static IHostBuilder CreateHostBuilder(Action<IWebHostBuilder>? webHostOverrides = null)
+            => new HostBuilder()
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .UseSerilog((hostingContext, loggerConfiguration) =>
                 {
                     var env = hostingContext.HostingEnvironment;
@@ -58,26 +58,30 @@
                             .MinimumLevel.Verbose()
                             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                             .MinimumLevel.Override("System", LogEventLevel.Information)
-                            .WriteTo.Console( theme: AnsiConsoleTheme.Code)
+                            .WriteTo.Console(theme: AnsiConsoleTheme.Code)
                             ;
                     else
                         loggerConfiguration
                             .WriteTo.Console(new JsonFormatter(), LogEventLevel.Information)
                             ;
+#if DEBUG                    
+                    loggerConfiguration.WriteTo.Seq("http://localhost:5341");
+#endif
                 })
-                .UseKestrel()
-                .ConfigureServices(services => services.AddAutofac())
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .ConfigureAppConfiguration((hostingContext, appConfig) =>
                 {
-                    var envName = hostingContext.HostingEnvironment.EnvironmentName;
                     appConfig.AddJsonFile("appsettings.json", false, false)
-                        .AddJsonFile($"appsettings.{envName}.json", true, false);
+                        .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, false);
                     appConfig.AddEnvironmentVariables();
                 })
-                .UseIISIntegration()
-                .UseStartup<Startup>();
-        }
+                .ConfigureWebHost(webHost =>
+                {
+                    webHost.UseKestrel();
+                    webHost.UseStartup<Startup>();
+                    webHostOverrides?.Invoke(webHost);
+
+                });
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

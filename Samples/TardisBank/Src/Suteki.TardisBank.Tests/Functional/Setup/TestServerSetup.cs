@@ -2,23 +2,28 @@
 {
     using System;
     using System.Net.Http;
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.TestHost;
+    using Microsoft.Extensions.Hosting;
     using WebApi;
 
 
     public class TestServerSetup : IDisposable
     {
+        readonly IHost _host;
         public HttpClient Client { get; }
         public TestServer Server { get; }
 
         public TestServerSetup()
         {
-            Server = new TestServer(Program.CreateHostBuilder(Array.Empty<string>())
-                .UseTestServer()
-                .UseStartup<Startup>()
-                .UseSolutionRelativeContentRoot("TardisBank/Src/Suteki.TardisBank.WebApi/")
+            var hostBuilder = Program.CreateHostBuilder(webHostBuilder =>
+                {
+                    webHostBuilder.UseTestServer();
+                    webHostBuilder.UseSolutionRelativeContentRoot("TardisBank/Src/Suteki.TardisBank.WebApi/");
+                }
             );
+            _host = hostBuilder.Build();
+            _host.Start();
+            Server = _host.GetTestServer();
             Client = Server.CreateClient();
             Client.BaseAddress = Server.BaseAddress;
         }
@@ -28,6 +33,7 @@
         {
             Server?.Dispose();
             Client?.Dispose();
+            _host?.Dispose();
         }
     }
 }
