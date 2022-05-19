@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="9.0.0" />
-    <PackageReference Include="NHibernate" Version="5.3.10" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="NHibernate" Version="5.3.12" />
   </ItemGroup>
 
   <ItemGroup>
