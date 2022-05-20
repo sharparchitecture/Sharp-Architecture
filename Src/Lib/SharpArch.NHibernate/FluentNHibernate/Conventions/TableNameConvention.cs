@@ -1,24 +1,22 @@
-namespace SharpArch.NHibernate.FluentNHibernate.Conventions
+namespace SharpArch.NHibernate.FluentNHibernate.Conventions;
+
+using global::FluentNHibernate.Conventions;
+using global::FluentNHibernate.Conventions.Instances;
+
+
+/// <summary>
+///     Table name convention.
+/// </summary>
+/// <remarks>Defines table name to match entity name. E.g.: <c>Color</c>.</remarks>
+/// <seealso cref="IClassConvention" />
+[PublicAPI]
+public class TableNameConvention : IClassConvention
 {
-    using global::FluentNHibernate.Conventions;
-    using global::FluentNHibernate.Conventions.Instances;
-    using JetBrains.Annotations;
-
-
     /// <summary>
-    ///     Table name convention.
+    ///     Applies convention.
     /// </summary>
-    /// <remarks>Defines table name to match entity name. E.g.: <c>Color</c>.</remarks>
-    /// <seealso cref="IClassConvention" />
-    [PublicAPI]
-    public class TableNameConvention : IClassConvention
+    public void Apply(IClassInstance instance)
     {
-        /// <summary>
-        ///     Applies convention.
-        /// </summary>
-        public void Apply(IClassInstance instance)
-        {
-            instance.Table(instance.EntityType.Name);
-        }
+        instance.Table(instance.EntityType.Name);
     }
 }

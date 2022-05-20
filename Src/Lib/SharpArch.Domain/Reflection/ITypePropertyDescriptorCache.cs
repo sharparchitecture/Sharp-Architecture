@@ -1,40 +1,36 @@
-namespace SharpArch.Domain.Reflection
+namespace SharpArch.Domain.Reflection;
+
+/// <summary>
+///     Property descriptors cache.
+/// </summary>
+/// <remarks>
+///     Implementation is thread-safe.
+/// </remarks>
+[PublicAPI]
+public interface ITypePropertyDescriptorCache
 {
-    using System;
-    using JetBrains.Annotations;
+    /// <summary>
+    ///     Returns number of entries in the cache.
+    /// </summary>
+    int Count { get; }
 
     /// <summary>
-    ///     Property descriptors cache.
+    ///     Find cached property descriptor.
     /// </summary>
-    /// <remarks>
-    ///     Implementation is thread-safe.
-    /// </remarks>
-    [PublicAPI]
-    public interface ITypePropertyDescriptorCache
-    {
-        /// <summary>
-        ///     Returns number of entries in the cache.
-        /// </summary>
-        int Count { get; }
+    /// <param name="type">The type.</param>
+    /// <returns><see cref="TypePropertyDescriptor" /> or <c>null</c> if does not exists.</returns>
+    TypePropertyDescriptor? Find(Type type);
 
-        /// <summary>
-        ///     Find cached property descriptor.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns><see cref="TypePropertyDescriptor" /> or <c>null</c> if does not exists.</returns>
-        TypePropertyDescriptor? Find(Type type);
+    /// <summary>
+    ///     Get existing property descriptor or create and cache it.
+    /// </summary>
+    /// <param name="type">The type.</param>
+    /// <param name="factory">The factory to create descriptor.</param>
+    /// <returns></returns>
+    TypePropertyDescriptor GetOrAdd(Type type, Func<Type, TypePropertyDescriptor> factory);
 
-        /// <summary>
-        ///     Get existing property descriptor or create and cache it.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="factory">The factory to create descriptor.</param>
-        /// <returns></returns>
-        TypePropertyDescriptor GetOrAdd(Type type, Func<Type, TypePropertyDescriptor> factory);
-
-        /// <summary>
-        ///     Clears the cache.
-        /// </summary>
-        void Clear();
-    }
+    /// <summary>
+    ///     Clears the cache.
+    /// </summary>
+    void Clear();
 }

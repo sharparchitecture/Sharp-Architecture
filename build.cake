@@ -65,7 +65,7 @@ var duplicateFinderOutputFile = artifactsDir + "/Inspections/CodeDuplicates.xml"
 
 var packagesDir = artifactsDir + "/packages";
 var srcDir = "./Src";
-var testsRootDir = srcDir + "/tests";
+var testsRootDir = srcDir + "/Tests";
 var solutionFile = new FilePath(srcDir + "/SharpArch.sln");
 var samplesDir = "./Samples";
 var coverageFilter="+[SharpArch*]* -[SharpArch.Tests*]* -[SharpArch.Xunit*]* -[SharpArch.Infrastructure]SharpArch.Infrastructure.Logging.*";

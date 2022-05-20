@@ -1,28 +1,26 @@
-namespace SharpArch.NHibernate.FluentNHibernate.Conventions
+namespace SharpArch.NHibernate.FluentNHibernate.Conventions;
+
+using global::FluentNHibernate;
+using global::FluentNHibernate.Conventions;
+
+
+/// <summary>
+///     Foreign key convention.
+/// </summary>
+/// <seealso cref="ForeignKeyConvention" />
+[PublicAPI]
+public class CustomForeignKeyConvention : ForeignKeyConvention
 {
-    using System;
-    using global::FluentNHibernate;
-    using global::FluentNHibernate.Conventions;
-    using JetBrains.Annotations;
-
-
     /// <summary>
-    ///     Foreign key convention.
+    ///     Generates Foreign Key name.
     /// </summary>
-    /// <seealso cref="ForeignKeyConvention" />
-    [PublicAPI]
-    public class CustomForeignKeyConvention : ForeignKeyConvention
+    protected override string GetKeyName(Member property, Type type)
     {
-        /// <summary>
-        ///     Generates Foreign Key name.
-        /// </summary>
-        protected override string GetKeyName(Member property, Type type)
+        if (property == null)
         {
-            if (property == null) {
-                return type.Name + "Id";
-            }
-
-            return property.Name + "Id";
+            return type.Name + "Id";
         }
+
+        return property.Name + "Id";
     }
 }

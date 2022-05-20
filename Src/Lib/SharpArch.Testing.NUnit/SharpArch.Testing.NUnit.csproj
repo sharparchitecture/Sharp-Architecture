@@ -6,8 +6,10 @@
   </ItemGroup>
 
   <PropertyGroup Label="Pack">
-    <Description>Provides base classes to help with testing applications written with Sharp Architecture and NHibernate. 
- This is legacy package, for future development xUnit is recommended.</Description>
+    <Description>
+      Provides base classes to help with testing applications written with Sharp Architecture and NHibernate.
+      This is legacy package, for future development xUnit is recommended.
+    </Description>
     <PackageTags>$(PackageTags);testing;nunit</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>

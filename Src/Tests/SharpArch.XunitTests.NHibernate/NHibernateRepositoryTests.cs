@@ -1,55 +1,52 @@
-﻿namespace Tests.SharpArch.NHibernate
+﻿namespace Tests.SharpArch.NHibernate;
+
+using Domain;
+using FluentAssertions;
+using global::SharpArch.NHibernate;
+using global::SharpArch.Testing.Xunit.NHibernate;
+using Xunit;
+
+
+public class NHibernateRepositoryTests : TransientDatabaseTests<NHibernateTestsSetup>
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Domain;
-    using FluentAssertions;
-    using global::SharpArch.NHibernate;
-    using global::SharpArch.Testing.Xunit.NHibernate;
-    using Mappings;
-    using Xunit;
+    readonly NHibernateRepository<Contractor, int> _repo;
 
-
-    public class NHibernateRepositoryTests : TransientDatabaseTests<NHibernateTestsSetup>
+    /// <inheritdoc />
+    public NHibernateRepositoryTests(NHibernateTestsSetup setup)
+        : base(setup)
     {
-        readonly NHibernateRepository<Contractor, int> _repo;
+        _repo = new NHibernateRepository<Contractor, int>(TransactionManager);
+    }
 
-        /// <inheritdoc />
-        public NHibernateRepositoryTests(NHibernateTestsSetup setup): base(setup)
+    /// <inheritdoc />
+    protected override Task LoadTestData(CancellationToken cancellationToken)
+        => Task.CompletedTask;
+
+    [Fact]
+    public async Task CanSaveAsync()
+    {
+        var entity = new Contractor
         {
-            _repo = new NHibernateRepository<Contractor, int>(TransactionManager);
-        }
+            Name = "John Doe"
+        };
 
-        /// <inheritdoc />
-        protected override Task LoadTestData(CancellationToken cancellationToken)
-            => Task.CompletedTask;
+        var res = await _repo.SaveAsync(entity).ConfigureAwait(false);
+        res.IsTransient().Should().BeFalse();
+        res.Id.Should().BeGreaterThan(0);
+    }
 
-        [Fact]
-        public async Task CanSaveAsync()
+    [Fact]
+    public async Task CanSaveOrUpdate()
+    {
+        var entity = new Contractor
         {
-            var entity = new Contractor
-            {
-                Name = "John Doe"
-            };
+            Name = "John Doe"
+        };
+        var res = await _repo.SaveOrUpdateAsync(entity).ConfigureAwait(false);
+        res.IsTransient().Should().BeFalse();
 
-            var res = await _repo.SaveAsync(entity).ConfigureAwait(false);
-            res.IsTransient().Should().BeFalse();
-            res.Id.Should().BeGreaterThan(0);
-        }
-
-        [Fact]
-        public async Task CanSaveOrUpdate()
-        {
-            var entity = new Contractor
-            {
-                Name = "John Doe"
-            };
-            var res = await _repo.SaveOrUpdateAsync(entity).ConfigureAwait(false);
-            res.IsTransient().Should().BeFalse();
-
-            entity.Name = "John Doe Jr";
-            res = await _repo.SaveOrUpdateAsync(entity).ConfigureAwait(false);
-            res.Name.Should().Be("John Doe Jr");
-        }
+        entity.Name = "John Doe Jr";
+        res = await _repo.SaveOrUpdateAsync(entity).ConfigureAwait(false);
+        res.Name.Should().Be("John Doe Jr");
     }
 }

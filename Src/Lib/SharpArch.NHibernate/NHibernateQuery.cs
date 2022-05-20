@@ -1,31 +1,29 @@
-namespace SharpArch.NHibernate
+namespace SharpArch.NHibernate;
+
+using global::NHibernate;
+
+
+/// <summary>
+///     Base class for NHibernate query objects.
+/// </summary>
+[PublicAPI]
+public abstract class NHibernateQuery
 {
-    using System;
-    using global::NHibernate;
-    using JetBrains.Annotations;
+    /// <summary>
+    ///     NHibernate <see cref="ISession" />.
+    /// </summary>
+
+    protected virtual ISession Session { get; }
 
     /// <summary>
-    /// Base class for NHibernate query objects.
+    ///     Initializes a new instance of the <see cref="NHibernateQuery" /> class.
     /// </summary>
-    [PublicAPI]
-    public abstract class NHibernateQuery
+    /// <param name="session">The session.</param>
+    /// <exception cref="System.ArgumentNullException"><paramref name="session" /> is <c>null</c>.</exception>
+    protected NHibernateQuery(ISession session)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NHibernateQuery"/> class.
-        /// </summary>
-        /// <param name="session">The session.</param>
-        /// <exception cref="System.ArgumentNullException"><paramref name="session"/> is <c>null</c>.</exception>
-        protected NHibernateQuery(ISession session)
-        {
-            if (session == null) throw new ArgumentNullException(nameof(session));
+        if (session == null) throw new ArgumentNullException(nameof(session));
 
-            this.Session = session;
-        }
-
-        /// <summary>
-        /// NHibernate <see cref="ISession"/>.
-        /// </summary>
-        
-        protected virtual ISession Session { get; }
+        Session = session;
     }
 }

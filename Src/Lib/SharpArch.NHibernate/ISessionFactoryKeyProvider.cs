@@ -1,27 +1,21 @@
-﻿namespace SharpArch.NHibernate
-{
-    using JetBrains.Annotations;
+﻿namespace SharpArch.NHibernate;
 
+/// <summary>
+///     Provides the key to retrieve session factory from IoC.
+/// </summary>
+[PublicAPI]
+public interface ISessionFactoryKeyProvider
+{
+    /// <summary>
+    ///     Gets the session factory key.
+    /// </summary>
+    /// <returns></returns>
+    string GetKey();
 
     /// <summary>
-    /// Provides the key to retrieve session factory from IoC.
+    ///     Gets the session factory key.
     /// </summary>
-    [PublicAPI]
-    public interface ISessionFactoryKeyProvider
-  {
-        /// <summary>
-        /// Gets the session factory key.
-        /// </summary>
-        /// <returns></returns>
-        
-        string GetKey();
-
-        /// <summary>
-        /// Gets the session factory key.
-        /// </summary>
-        /// <param name="anObject">An optional object that may have an attribute used to determine the session factory key.</param>
-        /// <returns></returns>
-        
-        string GetKeyFrom(object anObject);
-  }
+    /// <param name="anObject">An optional object that may have an attribute used to determine the session factory key.</param>
+    /// <returns></returns>
+    string GetKeyFrom(object anObject);
 }

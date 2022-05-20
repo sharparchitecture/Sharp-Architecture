@@ -1,136 +1,133 @@
-﻿namespace Tests.SharpArch.NHibernate
+﻿namespace Tests.SharpArch.NHibernate;
+
+using FluentAssertions;
+using FluentNHibernate.Cfg.Db;
+using global::NHibernate.Cfg;
+using global::SharpArch.NHibernate;
+using NUnit.Framework;
+
+
+[TestFixture]
+class NHibernateSessionFactoryBuilderTests
 {
-    using System;
-    using System.IO;
-    using FluentAssertions;
-    using FluentNHibernate.Cfg.Db;
-    using global::NHibernate.Cfg;
-    using global::SharpArch.NHibernate;
-    using NUnit.Framework;
-
-
-    [TestFixture]
-    class NHibernateSessionFactoryBuilderTests
+    [SetUp]
+    public void SetUp()
     {
-        [SetUp]
-        public void SetUp()
+        _tempFileName = "SharpArch.Tests." + Guid.NewGuid().ToString("D") + ".tmp";
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        try
         {
-            _tempFileName = "SharpArch.Tests." + Guid.NewGuid().ToString("D") + ".tmp";
+            if (File.Exists(_tempFileName)) File.Delete(_tempFileName);
+        }
+        // ReSharper disable once CatchAllClause
+        catch
+        {
+            // ignored
+        }
+    }
+
+    string _tempFileName = null!;
+
+    static string GetConfigFullName()
+    {
+        const string defaultConfigFile = "sqlite-nhibernate-config.xml";
+        return Path.Combine(TestContext.CurrentContext.TestDirectory, defaultConfigFile);
+    }
+
+    [Test]
+    public void CanExposeConfiguration()
+    {
+        var exposeCalled = false;
+
+        void configure(Configuration c)
+        {
+            exposeCalled = true;
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            try
-            {
-                if (File.Exists(_tempFileName)) File.Delete(_tempFileName);
-            }
-            // ReSharper disable once CatchAllClause
-            catch
-            {
-                // ignored
-            }
-        }
+        new NHibernateSessionFactoryBuilder()
+            .UseConfigFile(GetConfigFullName())
+            .ExposeConfiguration(configure)
+            .BuildConfiguration();
 
-        string _tempFileName = null!;
+        exposeCalled.Should().BeTrue();
+    }
 
-        static string GetConfigFullName()
-        {
-            const string defaultConfigFile = "sqlite-nhibernate-config.xml";
-            return Path.Combine(TestContext.CurrentContext.TestDirectory, defaultConfigFile);
-        }
+    [Test]
+    public void CanInitializeWithConfigFile()
+    {
+        Configuration configuration = new NHibernateSessionFactoryBuilder()
+            .UseConfigFile(GetConfigFullName())
+            .BuildConfiguration();
 
-        [Test]
-        public void CanExposeConfiguration()
-        {
-            var exposeCalled = false;
+        Assert.That(configuration, Is.Not.Null);
 
-            void configure(Configuration c)
-            {
-                exposeCalled = true;
-            }
+        configuration.BuildSessionFactory();
+    }
 
-            new NHibernateSessionFactoryBuilder()
-                .UseConfigFile(GetConfigFullName())
-                .ExposeConfiguration(configure)
-                .BuildConfiguration();
+    [Test]
+    public void CanInitializeWithConfigFileAndConfigurationFileCache()
+    {
+        Configuration configuration = new NHibernateSessionFactoryBuilder()
+            .UseConfigFile(GetConfigFullName())
+            .BuildConfiguration();
 
-            exposeCalled.Should().BeTrue();
-        }
+        Assert.That(configuration, Is.Not.Null);
 
-        [Test]
-        public void CanInitializeWithConfigFile()
-        {
-            Configuration configuration = new NHibernateSessionFactoryBuilder()
-                .UseConfigFile(GetConfigFullName())
-                .BuildConfiguration();
+        configuration.BuildSessionFactory();
+    }
 
-            Assert.That(configuration, Is.Not.Null);
+    [Test]
+    public void CanInitializeWithPersistenceConfigurerAndConfigFile()
+    {
+        SQLiteConfiguration persistenceConfigurer =
+            SQLiteConfiguration.Standard.ConnectionString(c => c.Is("Data Source=:memory:;Version=3;New=True;"));
 
-            configuration.BuildSessionFactory();
-        }
+        Configuration configuration = new NHibernateSessionFactoryBuilder()
+            .UsePersistenceConfigurer(persistenceConfigurer)
+            .UseConfigFile(GetConfigFullName())
+            .BuildConfiguration();
 
-        [Test]
-        public void CanInitializeWithConfigFileAndConfigurationFileCache()
-        {
-            Configuration configuration = new NHibernateSessionFactoryBuilder()
-                .UseConfigFile(GetConfigFullName())
-                .BuildConfiguration();
+        Assert.That(configuration, Is.Not.Null);
+        configuration.BuildSessionFactory();
+    }
 
-            Assert.That(configuration, Is.Not.Null);
+    [Test]
+    public void CanInitializeWithPersistenceConfigurerAndNoConfigFile()
+    {
+        SQLiteConfiguration persistenceConfigurer =
+            SQLiteConfiguration.Standard.ConnectionString(c => c.Is("Data Source=:memory:;Version=3;New=True;"));
 
-            configuration.BuildSessionFactory();
-        }
+        Configuration configuration = new NHibernateSessionFactoryBuilder()
+            .UsePersistenceConfigurer(persistenceConfigurer)
+            .BuildConfiguration();
 
-        [Test]
-        public void CanInitializeWithPersistenceConfigurerAndConfigFile()
-        {
-            SQLiteConfiguration persistenceConfigurer =
-                SQLiteConfiguration.Standard.ConnectionString(c => c.Is("Data Source=:memory:;Version=3;New=True;"));
+        Assert.That(configuration, Is.Not.Null);
+        configuration.BuildSessionFactory();
+    }
 
-            Configuration configuration = new NHibernateSessionFactoryBuilder()
-                .UsePersistenceConfigurer(persistenceConfigurer)
-                .UseConfigFile(GetConfigFullName())
-                .BuildConfiguration();
+    [Test]
+    public void WhenUsingDataAnnotationValidators_ShouldKeepRegisteredPreInsertEventListeners()
+    {
+        Configuration configuration = new NHibernateSessionFactoryBuilder()
+            .UseConfigFile(GetConfigFullName())
+            .UseDataAnnotationValidators(true)
+            .BuildConfiguration();
 
-            Assert.That(configuration, Is.Not.Null);
-            configuration.BuildSessionFactory();
-        }
+        configuration.EventListeners.PreInsertEventListeners.Should().Contain(l => l is PreInsertListener);
+    }
 
-        [Test]
-        public void CanInitializeWithPersistenceConfigurerAndNoConfigFile()
-        {
-            SQLiteConfiguration persistenceConfigurer =
-                SQLiteConfiguration.Standard.ConnectionString(c => c.Is("Data Source=:memory:;Version=3;New=True;"));
+    [Test]
+    public void WhenUsingDataAnnotationValidators_ShouldKeepRegisteredPreUpdateEventListeners()
+    {
+        Configuration configuration = new NHibernateSessionFactoryBuilder()
+            .UseConfigFile(GetConfigFullName())
+            .UseDataAnnotationValidators(true)
+            .BuildConfiguration();
 
-            Configuration configuration = new NHibernateSessionFactoryBuilder()
-                .UsePersistenceConfigurer(persistenceConfigurer)
-                .BuildConfiguration();
-
-            Assert.That(configuration, Is.Not.Null);
-            configuration.BuildSessionFactory();
-        }
-
-        [Test]
-        public void WhenUsingDataAnnotationValidators_ShouldKeepRegisteredPreInsertEventListeners()
-        {
-            Configuration configuration = new NHibernateSessionFactoryBuilder()
-                .UseConfigFile(GetConfigFullName())
-                .UseDataAnnotationValidators(true)
-                .BuildConfiguration();
-
-            configuration.EventListeners.PreInsertEventListeners.Should().Contain(l => l is PreInsertListener);
-        }
-
-        [Test]
-        public void WhenUsingDataAnnotationValidators_ShouldKeepRegisteredPreUpdateEventListeners()
-        {
-            Configuration configuration = new NHibernateSessionFactoryBuilder()
-                .UseConfigFile(GetConfigFullName())
-                .UseDataAnnotationValidators(true)
-                .BuildConfiguration();
-
-            configuration.EventListeners.PreUpdateEventListeners.Should().Contain(l => l is PreUpdateListener);
-        }
+        configuration.EventListeners.PreUpdateEventListeners.Should().Contain(l => l is PreUpdateListener);
     }
 }

@@ -1,17 +1,13 @@
-namespace SharpArch.Domain.PersistenceSupport
+namespace SharpArch.Domain.PersistenceSupport;
+
+/// <summary>
+///     Returns transaction status.
+/// </summary>
+[PublicAPI]
+public interface ISupportsTransactionStatus
 {
-    using JetBrains.Annotations;
-
-
     /// <summary>
-    ///     Returns transaction status.
+    ///     Checks whether transaction is active or not.
     /// </summary>
-    [PublicAPI]
-    public interface ISupportsTransactionStatus
-    {
-        /// <summary>
-        ///     Checks whether transaction is active or not.
-        /// </summary>
-        bool IsActive { get; }
-    }
+    bool IsActive { get; }
 }

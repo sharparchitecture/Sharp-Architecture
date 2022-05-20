@@ -17,7 +17,7 @@
   <ItemGroup>
     <PackageReference Include="RavenDb.Client" Version="5.3.102" />
   </ItemGroup>
-   
+
   <ItemGroup>
     <ProjectReference Include="..\SharpArch.Domain\SharpArch.Domain.csproj" />
   </ItemGroup>

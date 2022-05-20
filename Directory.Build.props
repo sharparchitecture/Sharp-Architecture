@@ -15,10 +15,17 @@
 
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <IsTestProject>false</IsTestProject>
+
+    <DefineConstants>$(DefineConstants);JETBRAINS_ANNOTATIONS</DefineConstants>
 
     <NoWarn>$(NoWarn);0105</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="JetBrains.Annotations" />
+  </ItemGroup>
 
   <PropertyGroup Label="Custom targets">
     <!-- target frameworks for unit-tests and applications -->
