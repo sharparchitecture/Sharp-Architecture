@@ -1,11 +1,6 @@
 ﻿namespace TransactionAttribute.WebApi.Stubs
 {
-    using System;
     using System.Data;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using JetBrains.Annotations;
-    using Microsoft.AspNetCore.Http;
     using Serilog;
     using SharpArch.Domain.PersistenceSupport;
 
@@ -14,7 +9,6 @@
     {
         public const string TransactionIsolationLevel = "x-transaction-isolation-level";
         public const string TransactionState = "x-transaction-result";
-        static readonly ILogger _log = Log.ForContext<TransactionManagerStub>();
         readonly IHttpContextAccessor _httpContextAccessor;
         TransactionWrapper? _transaction;
 
@@ -48,7 +42,7 @@
         {
             _httpContextAccessor.HttpContext!.Response.Headers.Add(TransactionIsolationLevel, _transaction?.IsolationLevel.ToString() ?? "unknown");
             _httpContextAccessor.HttpContext.Response.Headers.Add(TransactionState, "rolled-back");
-            _transaction?.Dispose();
+            _transaction?.Rollback();
             return Task.CompletedTask;
         }
 
@@ -65,19 +59,18 @@
 
             public void Dispose()
             {
-                _log.Information("Disposed {isolationLevel}", IsolationLevel);
+                _log.Information("Disposed {IsolationLevel}", IsolationLevel);
             }
 
             public void Commit()
             {
-                _log.Information("Committed {isolationLevel}", IsolationLevel);
+                _log.Information("Committed {IsolationLevel}", IsolationLevel);
             }
 
             public void Rollback()
             {
-                _log.Information("Rolled back {isolationLevel}", IsolationLevel);
+                _log.Information("Rolled back {IsolationLevel}", IsolationLevel);
             }
         }
-
     }
 }

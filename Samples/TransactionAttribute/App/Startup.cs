@@ -2,10 +2,6 @@
 {
     using System.Data;
     using Autofac;
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
     using SharpArch.Web.AspNetCore.Transaction;
     using Stubs;
 
@@ -28,7 +24,7 @@
             services.AddControllers(options =>
                 {
                     options.Filters.Add(new AutoTransactionHandler());
-                    options.Filters.Add(new TransactionAttribute(isolationLevel: IsolationLevel.Chaos));
+                    options.Filters.Add(new TransactionAttribute(IsolationLevel.Chaos));
                 })
                 ;
 
@@ -43,10 +39,7 @@
         {
             app.UseRouting();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
 
         /// <summary>

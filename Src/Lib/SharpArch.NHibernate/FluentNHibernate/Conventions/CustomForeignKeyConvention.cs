@@ -16,7 +16,7 @@ public class CustomForeignKeyConvention : ForeignKeyConvention
     /// </summary>
     protected override string GetKeyName(Member property, Type type)
     {
-        if (property == null)
+        if (property == null!)
         {
             return type.Name + "Id";
         }

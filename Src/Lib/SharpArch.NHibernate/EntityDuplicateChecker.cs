@@ -10,7 +10,7 @@ using global::NHibernate.Criterion;
 /// <summary>
 ///     Checks if entity with the same domain signature already exists in the database.
 /// </summary>
-/// <seealso cref="SharpArch.Domain.PersistenceSupport.IEntityDuplicateChecker" />
+/// <seealso cref="IEntityDuplicateChecker" />
 /// <seealso cref="DomainSignatureAttribute" />
 /// .
 [PublicAPI]

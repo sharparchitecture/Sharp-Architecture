@@ -1,15 +1,14 @@
-﻿namespace Suteki.TardisBank.Infrastructure.NHibernateMaps
+﻿namespace Suteki.TardisBank.Infrastructure.NHibernateMaps;
+
+using Domain;
+using FluentNHibernate.Automapping;
+using FluentNHibernate.Automapping.Alterations;
+
+
+public class UserMap : IAutoMappingOverride<User>
 {
-    using FluentNHibernate.Automapping;
-    using FluentNHibernate.Automapping.Alterations;
-
-    using Domain;
-
-    public class UserMap : IAutoMappingOverride<User>
+    public void Override(AutoMapping<User> mapping)
     {
-        public void Override(AutoMapping<User> mapping)
-        {
-            mapping.HasMany(u => u.Messages).Cascade.AllDeleteOrphan().Inverse();
-        }
+        mapping.HasMany(u => u.Messages).Cascade.AllDeleteOrphan().Inverse();
     }
 }

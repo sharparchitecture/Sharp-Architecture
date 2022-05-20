@@ -1,43 +1,38 @@
-namespace Suteki.TardisBank.Tasks.EventHandlers
+namespace Suteki.TardisBank.Tasks.EventHandlers;
+
+using Domain;
+using Domain.Events;
+using MediatR;
+
+
+[UsedImplicitly]
+public class SendMessageEmailHandler : INotificationHandler<SendMessageEvent>
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Domain;
-    using Domain.Events;
-    using JetBrains.Annotations;
-    using MediatR;
+    readonly IEmailService _emailService;
 
-
-    [UsedImplicitly]
-    public class SendMessageEmailHandler : INotificationHandler<SendMessageEvent>
+    public SendMessageEmailHandler(IEmailService emailService)
     {
-        private readonly IEmailService _emailService;
+        _emailService = emailService;
+    }
 
-        public SendMessageEmailHandler(IEmailService emailService)
+    public Task Handle(SendMessageEvent sendMessageEvent, CancellationToken token)
+    {
+        if (sendMessageEvent == null)
         {
-            _emailService = emailService;
+            throw new ArgumentNullException(nameof(sendMessageEvent));
         }
 
-        public Task Handle(SendMessageEvent sendMessageEvent, CancellationToken token)
+        if (sendMessageEvent.User is Child)
         {
-            if (sendMessageEvent == null)
-            {
-                throw new ArgumentNullException(nameof(sendMessageEvent));
-            }
-
-            if (sendMessageEvent.User is Child)
-            {
-                // we cannot send email messages to children.
-                return Task.CompletedTask;
-            }
-
-            var toAddress = sendMessageEvent.User.UserName;
-            const string subject = "Message from Tardis Bank";
-            var body = sendMessageEvent.Message;
-
-            _emailService.SendEmail(toAddress, subject, body);
+            // we cannot send email messages to children.
             return Task.CompletedTask;
         }
+
+        var toAddress = sendMessageEvent.User.UserName;
+        const string subject = "Message from Tardis Bank";
+        var body = sendMessageEvent.Message;
+
+        _emailService.SendEmail(toAddress, subject, body);
+        return Task.CompletedTask;
     }
 }

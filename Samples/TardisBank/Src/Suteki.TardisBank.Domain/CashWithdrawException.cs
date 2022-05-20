@@ -1,34 +1,36 @@
-namespace Suteki.TardisBank.Domain
+namespace Suteki.TardisBank.Domain;
+
+using System.Runtime.Serialization;
+
+
+[Serializable]
+public class CashWithdrawException : Exception
 {
-    using System;
-    using System.Runtime.Serialization;
+    //
+    // For guidelines regarding the creation of new exception types, see
+    //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/cpconerrorraisinghandlingguidelines.asp
+    // and
+    //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dncscol/html/csharp07192001.asp
+    //
 
-    [Serializable]
-    public class CashWithdrawException : Exception
+    public CashWithdrawException()
     {
-        //
-        // For guidelines regarding the creation of new exception types, see
-        //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/cpconerrorraisinghandlingguidelines.asp
-        // and
-        //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dncscol/html/csharp07192001.asp
-        //
+    }
 
-        public CashWithdrawException()
-        {
-        }
+    public CashWithdrawException(string message)
+        : base(message)
+    {
+    }
 
-        public CashWithdrawException(string message) : base(message)
-        {
-        }
+    public CashWithdrawException(string message, Exception inner)
+        : base(message, inner)
+    {
+    }
 
-        public CashWithdrawException(string message, Exception inner) : base(message, inner)
-        {
-        }
-
-        protected CashWithdrawException(
-            SerializationInfo info,
-            StreamingContext context) : base(info, context)
-        {
-        }
+    protected CashWithdrawException(
+        SerializationInfo info,
+        StreamingContext context)
+        : base(info, context)
+    {
     }
 }

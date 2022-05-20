@@ -1,9 +1,8 @@
-namespace Suteki.TardisBank.Domain
+namespace Suteki.TardisBank.Domain;
+
+public enum Interval
 {
-    public enum Interval
-    {
-        Day = 1,
-        Week = 2,
-        Month = 3
-    }
+    Day = 1,
+    Week = 2,
+    Month = 3
 }

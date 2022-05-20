@@ -1,7 +1,13 @@
 <Project>
 
-  <!-- test projects -->
   <Import Project="../../Directory.Build.props" />
+
+  <!-- test projects -->
+
+  <PropertyGroup>
+    <RootNamespace>Tests</RootNamespace>
+    <NoWarn>$(NoWarn);1701;1702;EPS06</NoWarn>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />

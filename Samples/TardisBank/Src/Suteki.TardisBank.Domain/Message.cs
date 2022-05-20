@@ -1,33 +1,31 @@
-namespace Suteki.TardisBank.Domain
+namespace Suteki.TardisBank.Domain;
+
+using SharpArch.Domain.DomainModel;
+
+
+public class Message : Entity<int>
 {
-    using System;
+    public virtual DateTime Date { get; protected set; }
+    public virtual string? Text { get; protected set; }
 
-    using SharpArch.Domain.DomainModel;
+    public virtual User User { get; set; } = null!;
 
-    public class Message : Entity<int>
+    public virtual bool HasBeenRead { get; protected set; }
+
+    public Message(DateTime date, string text, User user)
     {
-        public Message(DateTime date, string text, User user)
-        {
-            this.Date = date;
-            this.Text = text;
-            this.User = user;
-            this.HasBeenRead = false;
-        }
+        Date = date;
+        Text = text;
+        User = user;
+        HasBeenRead = false;
+    }
 
-        protected Message()
-        {
-        }
+    protected Message()
+    {
+    }
 
-        public virtual void Read()
-        {
-            this.HasBeenRead = true;
-        }
-
-        public virtual DateTime Date { get; protected set; }
-        public virtual string? Text { get; protected set; }
-
-        public virtual User User { get; set; } = null!;
-
-        public virtual bool HasBeenRead { get; protected set; }
+    public virtual void Read()
+    {
+        HasBeenRead = true;
     }
 }

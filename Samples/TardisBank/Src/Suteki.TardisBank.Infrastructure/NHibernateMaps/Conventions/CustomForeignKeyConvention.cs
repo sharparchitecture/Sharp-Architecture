@@ -1,24 +1,18 @@
-﻿namespace Suteki.TardisBank.Infrastructure.NHibernateMaps.Conventions
+﻿namespace Suteki.TardisBank.Infrastructure.NHibernateMaps.Conventions;
+
+using FluentNHibernate;
+using FluentNHibernate.Conventions;
+
+
+public class CustomForeignKeyConvention : ForeignKeyConvention
 {
-    #region Using Directives
-
-    using System;
-
-    using FluentNHibernate;
-    using FluentNHibernate.Conventions;
-
-    #endregion
-
-    public class CustomForeignKeyConvention : ForeignKeyConvention 
+    protected override string GetKeyName(Member property, Type type)
     {
-        protected override string GetKeyName(Member property, Type type)
+        if (property == null!)
         {
-            if (property == null)
-            {
-                return type.Name + "Id";
-            }
-
-            return property.Name + "Id";  
+            return type.Name + "Id";
         }
+
+        return property.Name + "Id";
     }
 }

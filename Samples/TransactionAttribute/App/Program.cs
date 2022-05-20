@@ -1,13 +1,6 @@
 ﻿namespace TransactionAttribute.WebApi
 {
-
-    using Microsoft.Extensions.Hosting;
-    using Microsoft.AspNetCore.Hosting;
-    using System;
-    using System.IO;
     using Autofac.Extensions.DependencyInjection;
-    using JetBrains.Annotations;
-    using Microsoft.Extensions.Configuration;
     using Serilog;
     using Serilog.Events;
     using Serilog.Exceptions;
@@ -38,7 +31,6 @@
             }
         }
 
-        
         public static IHostBuilder CreateHostBuilder(Action<IWebHostBuilder>? webHostOverrides = null)
             => new HostBuilder()
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
@@ -64,7 +56,7 @@
                         loggerConfiguration
                             .WriteTo.Console(new JsonFormatter(), LogEventLevel.Information)
                             ;
-#if DEBUG                    
+#if DEBUG
                     loggerConfiguration.WriteTo.Seq("http://localhost:5341");
 #endif
                 })
@@ -80,7 +72,6 @@
                     webHost.UseKestrel();
                     webHost.UseStartup<Startup>();
                     webHostOverrides?.Invoke(webHost);
-
                 });
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

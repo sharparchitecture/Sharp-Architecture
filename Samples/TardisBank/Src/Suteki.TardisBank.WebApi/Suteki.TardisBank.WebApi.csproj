@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Remove="System.Net.Http.Json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Autofac" Version="6.3.0" />

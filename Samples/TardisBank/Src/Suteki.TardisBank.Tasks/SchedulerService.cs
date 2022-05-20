@@ -1,41 +1,37 @@
-namespace Suteki.TardisBank.Tasks
+namespace Suteki.TardisBank.Tasks;
+
+using Domain;
+using NHibernate;
+using NHibernate.Linq;
+
+
+public interface ISchedulerService
 {
-    using System;
-    using System.Linq;
+    void ExecuteUpdates(DateTime now);
+}
 
-    using Domain;
 
-    using NHibernate;
-    using NHibernate.Linq;
+public class SchedulerService : ISchedulerService
+{
+    readonly ISession _session;
 
-    public interface ISchedulerService
+    public SchedulerService(ISession session)
     {
-        void ExecuteUpdates(DateTime now);
+        _session = session;
     }
 
-    public class SchedulerService : ISchedulerService
+    /// <summary>
+    ///     Gets all outstanding scheduled updates and performs the update.
+    /// </summary>
+    public void ExecuteUpdates(DateTime now)
     {
-        private ISession _session;
+        var today = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
 
-        public SchedulerService(ISession session)
+        var results = _session.Query<Child>().Where(c => c.Account.PaymentSchedules.Any(p => p.NextRun < today)).Fetch(c => c.Account);
+
+        foreach (var child in results.ToList())
         {
-            _session = session;
-        }
-
-        /// <summary>
-        /// Gets all outstanding scheduled updates and performs the update.
-        /// </summary>
-        public void ExecuteUpdates(DateTime now)
-        {
-            var today = new DateTime(now.Year, now.Month, now.Day, 23, 59, 59);
-
-            var results = _session.Query<Child>().
-                Where(c => c.Account.PaymentSchedules.Any(p => p.NextRun < today)).Fetch(c => c.Account);
-
-            foreach (var child in results.ToList())
-            {
-                child.Account.TriggerScheduledPayments(now);
-            }
+            child.Account.TriggerScheduledPayments(now);
         }
     }
 }

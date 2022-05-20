@@ -1,26 +1,26 @@
-namespace Suteki.TardisBank.Domain.Events
+namespace Suteki.TardisBank.Domain.Events;
+
+using MediatR;
+
+
+public class SendMessageEvent : INotification
 {
-    using System;
-    using MediatR;
+    public User User { get; }
+    public string Message { get; }
 
-    public class SendMessageEvent : INotification
+    public SendMessageEvent(User user, string message)
     {
-        public SendMessageEvent(User user, string message)
+        if (user == null)
         {
-            if (user == null)
-            {
-                throw new ArgumentNullException("user");
-            }
-            if (message == null)
-            {
-                throw new ArgumentNullException("message");
-            }
-
-            User = user;
-            Message = message;
+            throw new ArgumentNullException("user");
         }
 
-        public User User { get; private set; }
-        public string Message { get; private set; }
+        if (message == null)
+        {
+            throw new ArgumentNullException("message");
+        }
+
+        User = user;
+        Message = message;
     }
 }

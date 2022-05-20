@@ -1,10 +1,9 @@
-namespace Suteki.TardisBank.Tasks
-{
-    public interface IHttpContextService
-    {
-        string UserName { get; }
-        bool UserIsAuthenticated { get; }
+namespace Suteki.TardisBank.Tasks;
 
-        bool UserIsInRole(string role);
-    }
+public interface IHttpContextService
+{
+    string UserName { get; }
+    bool UserIsAuthenticated { get; }
+
+    bool UserIsInRole(string role);
 }

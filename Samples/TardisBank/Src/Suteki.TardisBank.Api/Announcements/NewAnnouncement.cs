@@ -1,22 +1,20 @@
-﻿namespace Suteki.TardisBank.Api.Announcements
+﻿namespace Suteki.TardisBank.Api.Announcements;
+
+using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+
+
+public class NewAnnouncement
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
-    using Newtonsoft.Json;
+    [JsonProperty("date")]
+    [DataType(DataType.Date)]
+    public DateTime Date { get; set; }
 
+    [Required]
+    [JsonProperty("title")]
+    public string Title { get; set; } = null!;
 
-    public class NewAnnouncement
-    {
-        [JsonProperty("date")]
-        [DataType(DataType.Date)]
-        public DateTime Date { get; set; }
-
-        [Required]
-        [JsonProperty("title")]
-        public string Title { get; set; } = null!;
-
-        [JsonProperty("content")]
-        [Required]
-        public string Content { get; set; } = null!;
-    }
+    [JsonProperty("content")]
+    [Required]
+    public string Content { get; set; } = null!;
 }

@@ -2,7 +2,6 @@ namespace SharpArch.Domain.DomainModel;
 
 #if !NULLABLE_REFERENCE_TYPES
 #pragma warning disable 8618
-#pragma warning disable 8604
 #endif
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
@@ -33,7 +32,7 @@ public abstract class Entity<TId> : ValidatableObject, IEntity<TId>, IEntity,
     /// <inheritdoc />
     public virtual object? GetId()
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (Id is null) return null;
         return Id.Equals(default!)
             // ReSharper disable once RedundantCast
@@ -50,7 +49,7 @@ public abstract class Entity<TId> : ValidatableObject, IEntity<TId>, IEntity,
     ///     objects to be lazily loaded.
     /// </remarks>
     public virtual bool IsTransient()
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         => Id is null
             || Id.Equals(default!);
 
@@ -146,7 +145,7 @@ public abstract class Entity<TId> : ValidatableObject, IEntity<TId>, IEntity,
                 // so we include the object's type in the hash calculation
                 int hashCode = GetType().GetHashCode() * HashMultiplier;
 
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (Id is null)
                 {
                     _cachedHashcode = hashCode;
@@ -215,5 +214,4 @@ public abstract class Entity<TId> : ValidatableObject, IEntity<TId>, IEntity,
 
 #if !NULLABLE_REFERENCE_TYPES
 #pragma warning restore 8618
-#pragma warning restore 8604
 #endif

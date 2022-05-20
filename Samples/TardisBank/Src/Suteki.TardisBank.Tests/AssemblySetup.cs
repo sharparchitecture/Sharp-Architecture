@@ -1,10 +1,8 @@
-﻿namespace Suteki.TardisBank.Tests
-{
+﻿namespace Suteki.TardisBank.Tests;
 
-    public class AssemblySetup
+public class AssemblySetup
+{
+    public void RunBeforeAllTests()
     {
-        public void RunBeforeAllTests()
-        {
-        }
     }
 }

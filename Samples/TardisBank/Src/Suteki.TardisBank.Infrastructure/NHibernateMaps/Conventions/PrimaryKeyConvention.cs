@@ -1,17 +1,15 @@
-﻿namespace Suteki.TardisBank.Infrastructure.NHibernateMaps.Conventions
+﻿namespace Suteki.TardisBank.Infrastructure.NHibernateMaps.Conventions;
+
+using FluentNHibernate.Conventions;
+using FluentNHibernate.Conventions.Instances;
+
+
+[UsedImplicitly]
+public class PrimaryKeyConvention : IIdConvention
 {
-    using FluentNHibernate.Conventions;
-    using FluentNHibernate.Conventions.Instances;
-    using JetBrains.Annotations;
-
-
-    [UsedImplicitly]
-    public class PrimaryKeyConvention : IIdConvention
+    public void Apply(IIdentityInstance instance)
     {
-        public void Apply(IIdentityInstance instance)
-        {
-            instance.Column(instance.EntityType.Name + "Id");
-            instance.GeneratedBy.HiLo("10");
-        }
+        instance.Column(instance.EntityType.Name + "Id");
+        instance.GeneratedBy.HiLo("10");
     }
 }

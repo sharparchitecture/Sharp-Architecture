@@ -22,7 +22,7 @@ end_of_line = lf
 [*.{cmd, bat}]
 end_of_line = crlf
 
-[{**/tests/**,**/Tests/**,**/*.Tests/**}.cs]
+[{**/tests/**,**/Tests/**,**/*.Tests/**,**/Samples/**}.cs]
 resharper_async_converter_async_await_may_be_elided_highlighting=do_not_show
 resharper_class_never_instantiated_global_highlighting = do_not_show
 resharper_class_with_virtual_members_never_inherited_global_highlighting = do_not_show

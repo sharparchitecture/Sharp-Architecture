@@ -49,7 +49,7 @@ public class BaseObjectEqualityComparer<T> : IEqualityComparer<T>
     /// </returns>
     public int GetHashCode(T obj)
     {
-        if (obj == null) throw new ArgumentNullException(nameof(obj));
+        if (obj is null) throw new ArgumentNullException(nameof(obj));
         return obj.GetHashCode();
     }
 }

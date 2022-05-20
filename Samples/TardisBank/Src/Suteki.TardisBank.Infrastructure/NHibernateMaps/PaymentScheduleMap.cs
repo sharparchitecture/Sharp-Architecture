@@ -1,15 +1,14 @@
-namespace Suteki.TardisBank.Infrastructure.NHibernateMaps
+namespace Suteki.TardisBank.Infrastructure.NHibernateMaps;
+
+using Domain;
+using FluentNHibernate.Automapping;
+using FluentNHibernate.Automapping.Alterations;
+
+
+public class PaymentScheduleMap : IAutoMappingOverride<PaymentSchedule>
 {
-    using FluentNHibernate.Automapping;
-    using FluentNHibernate.Automapping.Alterations;
-
-    using Domain;
-
-    public class PaymentScheduleMap : IAutoMappingOverride<PaymentSchedule>
+    public void Override(AutoMapping<PaymentSchedule> mapping)
     {
-        public void Override(AutoMapping<PaymentSchedule> mapping)
-        {
-            mapping.References(p => p.Account);
-        }
+        mapping.References(p => p.Account);
     }
 }

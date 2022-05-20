@@ -1,19 +1,19 @@
-namespace Suteki.TardisBank.Domain.Events
-{
-    using System;
-    using MediatR;
+namespace Suteki.TardisBank.Domain.Events;
 
-    public class NewParentCreatedEvent : INotification
+using MediatR;
+
+
+public class NewParentCreatedEvent : INotification
+{
+    public Parent Parent { get; }
+
+    public NewParentCreatedEvent(Parent parent)
     {
-        public NewParentCreatedEvent(Parent parent)
+        if (parent == null)
         {
-            if (parent == null)
-            {
-                throw new ArgumentNullException("parent");
-            }
-            Parent = parent;
+            throw new ArgumentNullException("parent");
         }
 
-        public Parent Parent { get; private set; }
+        Parent = parent;
     }
 }
