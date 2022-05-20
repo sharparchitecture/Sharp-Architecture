@@ -22,31 +22,31 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{86944A
 		..\Docker\start-mssql.ps1 = ..\Docker\start-mssql.ps1
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Domain", "SharpArch.Domain\SharpArch.Domain.csproj", "{8E7A0FBD-F643-4793-B05C-7B740DC98C2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Domain", "Lib\SharpArch.Domain\SharpArch.Domain.csproj", "{8E7A0FBD-F643-4793-B05C-7B740DC98C2A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.NUnit", "SharpArch.Testing.NUnit\SharpArch.Testing.NUnit.csproj", "{F5DF8FC7-7CFA-48FC-8A3B-6BFBFBEF2362}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.NUnit", "Lib\SharpArch.Testing.NUnit\SharpArch.Testing.NUnit.csproj", "{F5DF8FC7-7CFA-48FC-8A3B-6BFBFBEF2362}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.NHibernate", "SharpArch.NHibernate\SharpArch.NHibernate.csproj", "{74B5ABD8-CD58-4D8B-B872-08FFE3F19311}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.NHibernate", "Lib\SharpArch.NHibernate\SharpArch.NHibernate.csproj", "{74B5ABD8-CD58-4D8B-B872-08FFE3F19311}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Web.AspNetCore", "SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj", "{685D5CA7-3492-4386-B8DC-37116BA234CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Web.AspNetCore", "Lib\SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj", "{685D5CA7-3492-4386-B8DC-37116BA234CE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing", "SharpArch.Testing\SharpArch.Testing.csproj", "{1E09DC26-B287-48CE-948D-645C06053474}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing", "Lib\SharpArch.Testing\SharpArch.Testing.csproj", "{1E09DC26-B287-48CE-948D-645C06053474}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.XunitTests", "Tests\SharpArch.XunitTests\SharpArch.XunitTests.csproj", "{D9AF4843-E81B-4E91-84A7-A2326346D1BA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.Xunit.NHibernate", "SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj", "{96F50E09-433E-45DA-988E-E4B2E8BE238C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.Xunit.NHibernate", "Lib\SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj", "{96F50E09-433E-45DA-988E-E4B2E8BE238C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.XunitTests.NHibernate", "Tests\SharpArch.XunitTests.NHibernate\SharpArch.XunitTests.NHibernate.csproj", "{63DA7C82-5552-48A0-8331-96603E9CD635}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Tests.NHibernate", "Tests\SharpArch.Tests.NHibernate\SharpArch.Tests.NHibernate.csproj", "{8B8D5AF2-DBFB-4470-BAD2-969B3034E88F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Infrastructure", "SharpArch.Infrastructure\SharpArch.Infrastructure.csproj", "{6E6D8E13-510C-4042-B6EC-1C8DE70CEA72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Infrastructure", "Lib\SharpArch.Infrastructure\SharpArch.Infrastructure.csproj", "{6E6D8E13-510C-4042-B6EC-1C8DE70CEA72}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.Xunit", "SharpArch.Testing.Xunit\SharpArch.Testing.Xunit.csproj", "{AC2D2B51-4919-42E0-857C-9A88040EFBA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.Xunit", "Lib\SharpArch.Testing.Xunit\SharpArch.Testing.Xunit.csproj", "{AC2D2B51-4919-42E0-857C-9A88040EFBA7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.RavenDb", "SharpArch.RavenDb\SharpArch.RavenDb.csproj", "{17A1F67B-1F41-47EA-A7EE-9D3C678B0864}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.RavenDb", "Lib\SharpArch.RavenDb\SharpArch.RavenDb.csproj", "{17A1F67B-1F41-47EA-A7EE-9D3C678B0864}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.NHibernate.Extensions.DependencyInjection", "SharpArch.NHibernate.DependencyInjection\SharpArch.NHibernate.Extensions.DependencyInjection.csproj", "{575B638F-2B50-4780-9434-00A9476ACE35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.NHibernate.Extensions.DependencyInjection", "Lib\SharpArch.NHibernate.DependencyInjection\SharpArch.NHibernate.Extensions.DependencyInjection.csproj", "{575B638F-2B50-4780-9434-00A9476ACE35}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

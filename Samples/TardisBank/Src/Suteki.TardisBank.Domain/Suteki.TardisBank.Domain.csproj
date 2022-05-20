@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Src\SharpArch.Domain\SharpArch.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\Src\Lib\SharpArch.Domain\SharpArch.Domain.csproj" />
   </ItemGroup>
 
 </Project>

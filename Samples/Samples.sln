@@ -21,25 +21,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Suteki.TardisBank.Tasks", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Suteki.TardisBank.Tests", "TardisBank\Src\Suteki.TardisBank.Tests\Suteki.TardisBank.Tests.csproj", "{6AB4ABA4-DBB1-4A05-BE4C-894EF9836A29}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Domain", "..\Src\SharpArch.Domain\SharpArch.Domain.csproj", "{FA611294-98F7-4718-8EBE-F6DACF510040}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Domain", "..\Src\Lib\SharpArch.Domain\SharpArch.Domain.csproj", "{FA611294-98F7-4718-8EBE-F6DACF510040}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Infrastructure", "..\Src\SharpArch.Infrastructure\SharpArch.Infrastructure.csproj", "{C0C2A307-73F6-437D-9341-1A014000C023}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Infrastructure", "..\Src\Lib\SharpArch.Infrastructure\SharpArch.Infrastructure.csproj", "{C0C2A307-73F6-437D-9341-1A014000C023}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.NHibernate", "..\Src\SharpArch.NHibernate\SharpArch.NHibernate.csproj", "{E94D2E74-4900-44DD-B114-7C37502F88FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.NHibernate", "..\Src\Lib\SharpArch.NHibernate\SharpArch.NHibernate.csproj", "{E94D2E74-4900-44DD-B114-7C37502F88FA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.NHibernate.Extensions.DependencyInjection", "..\Src\SharpArch.NHibernate.DependencyInjection\SharpArch.NHibernate.Extensions.DependencyInjection.csproj", "{F7BED6C6-ACD4-41C4-8F2C-7FAEFFF53A8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.NHibernate.Extensions.DependencyInjection", "..\Src\Lib\SharpArch.NHibernate.DependencyInjection\SharpArch.NHibernate.Extensions.DependencyInjection.csproj", "{F7BED6C6-ACD4-41C4-8F2C-7FAEFFF53A8A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.RavenDb", "..\Src\SharpArch.RavenDb\SharpArch.RavenDb.csproj", "{CFFD11B3-E73D-4712-9A74-6B4EEE842BD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.RavenDb", "..\Src\Lib\SharpArch.RavenDb\SharpArch.RavenDb.csproj", "{CFFD11B3-E73D-4712-9A74-6B4EEE842BD4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing", "..\Src\SharpArch.Testing\SharpArch.Testing.csproj", "{172063A6-E0DD-4F71-8904-FEBEB1B285DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing", "..\Src\Lib\SharpArch.Testing\SharpArch.Testing.csproj", "{172063A6-E0DD-4F71-8904-FEBEB1B285DC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.NUnit", "..\Src\SharpArch.Testing.NUnit\SharpArch.Testing.NUnit.csproj", "{7D11D48A-38DA-4933-9670-0D7214DFA843}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.NUnit", "..\Src\Lib\SharpArch.Testing.NUnit\SharpArch.Testing.NUnit.csproj", "{7D11D48A-38DA-4933-9670-0D7214DFA843}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.Xunit", "..\Src\SharpArch.Testing.Xunit\SharpArch.Testing.Xunit.csproj", "{A615DFB3-F550-4B40-B90F-D10ED619359F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.Xunit", "..\Src\Lib\SharpArch.Testing.Xunit\SharpArch.Testing.Xunit.csproj", "{A615DFB3-F550-4B40-B90F-D10ED619359F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.Xunit.NHibernate", "..\Src\SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj", "{0DDF2078-BC4B-4890-9AFC-0407C1D24A0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Testing.Xunit.NHibernate", "..\Src\Lib\SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj", "{0DDF2078-BC4B-4890-9AFC-0407C1D24A0E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Web.AspNetCore", "..\Src\SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj", "{BC957B66-7B0C-44F6-8C03-518B384EB57D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpArch.Web.AspNetCore", "..\Src\Lib\SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj", "{BC957B66-7B0C-44F6-8C03-518B384EB57D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharpArch", "SharpArch", "{F2D26BF7-7343-4A9D-B73F-95506346EC33}"
 EndProject

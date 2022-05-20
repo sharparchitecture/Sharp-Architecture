@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Src\SharpArch.Domain\SharpArch.Domain.csproj" />
-    <ProjectReference Include="..\..\..\..\Src\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
+    <ProjectReference Include="..\..\..\..\Src\Lib\SharpArch.Domain\SharpArch.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\Src\Lib\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
     <ProjectReference Include="..\Suteki.TardisBank.Api\Suteki.TardisBank.Api.csproj" />
     <ProjectReference Include="..\Suteki.TardisBank.Domain\Suteki.TardisBank.Domain.csproj" />
   </ItemGroup>

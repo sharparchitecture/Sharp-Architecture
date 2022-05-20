@@ -16,10 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SharpArch.Domain\SharpArch.Domain.csproj" />
-    <ProjectReference Include="..\..\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
-    <ProjectReference Include="..\..\SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj" />
-    <ProjectReference Include="..\..\SharpArch.Testing\SharpArch.Testing.csproj" />
+    <ProjectReference Include="..\..\Lib\SharpArch.Domain\SharpArch.Domain.csproj" />
+    <ProjectReference Include="..\..\Lib\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
+    <ProjectReference Include="..\..\Lib\SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj" />
+    <ProjectReference Include="..\..\Lib\SharpArch.Testing\SharpArch.Testing.csproj" />
     <ProjectReference Include="..\SharpArch.XunitTests\SharpArch.XunitTests.csproj" />
   </ItemGroup>
 

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <Compile Include="..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
+    <Compile Include="..\..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
   </ItemGroup>
 
   <PropertyGroup Label="Pack">
@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\Artefacts\Documentation\icon.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\..\Artefacts\Documentation\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup Label="Package References (NetStandard 2.0)" Condition=" '$(TargetFramework)' == 'netstandard2.0' ">

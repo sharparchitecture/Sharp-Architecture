@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <Compile Include="..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
-    <Compile Include="..\Common\NHibernate\TestDatabaseSetup.cs" Link="NHibernate\TestDatabaseSetup.cs" />
+    <Compile Include="..\..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
+    <Compile Include="..\..\Common\NHibernate\TestDatabaseSetup.cs" Link="NHibernate\TestDatabaseSetup.cs" />
   </ItemGroup>
 
   <PropertyGroup Label="Pack">
@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\Artefacts\Documentation\icon.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\..\Artefacts\Documentation\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup Label="Common references">

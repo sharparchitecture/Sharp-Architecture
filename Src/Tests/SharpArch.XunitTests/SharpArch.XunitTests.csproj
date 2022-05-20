@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SharpArch.Domain\SharpArch.Domain.csproj" />
-    <ProjectReference Include="..\..\SharpArch.Infrastructure\SharpArch.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\SharpArch.Testing\SharpArch.Testing.csproj" />
+    <ProjectReference Include="..\..\Lib\SharpArch.Domain\SharpArch.Domain.csproj" />
+    <ProjectReference Include="..\..\Lib\SharpArch.Infrastructure\SharpArch.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Lib\SharpArch.Testing\SharpArch.Testing.csproj" />
   </ItemGroup>
 
 </Project>

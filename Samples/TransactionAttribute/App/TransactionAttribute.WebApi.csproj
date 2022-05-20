@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Src\SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\Src\Lib\SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj" />
   </ItemGroup>
 
 </Project>

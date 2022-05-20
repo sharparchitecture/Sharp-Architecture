@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <Compile Include="..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
+    <Compile Include="..\..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
   </ItemGroup>
 
   <PropertyGroup Label="Build">
@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\Artefacts\Documentation\icon.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\..\Artefacts\Documentation\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -36,9 +36,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Src\SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj" />
-    <ProjectReference Include="..\..\..\..\Src\SharpArch.Testing.Xunit\SharpArch.Testing.Xunit.csproj" />
-    <ProjectReference Include="..\..\..\..\Src\SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\..\Src\Lib\SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj" />
+    <ProjectReference Include="..\..\..\..\Src\Lib\SharpArch.Testing.Xunit\SharpArch.Testing.Xunit.csproj" />
+    <ProjectReference Include="..\..\..\..\Src\Lib\SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj" />
     <ProjectReference Include="..\Suteki.TardisBank.Api\Suteki.TardisBank.Api.csproj" />
     <ProjectReference Include="..\Suteki.TardisBank.Domain\Suteki.TardisBank.Domain.csproj" />
     <ProjectReference Include="..\Suteki.TardisBank.Infrastructure\Suteki.TardisBank.Infrastructure.csproj" />
