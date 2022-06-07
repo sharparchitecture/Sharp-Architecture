@@ -5,12 +5,12 @@
 #addin nuget:?package=Cake.ReSharperReports&version=0.11.1
 
 // TOOLS
-#tool nuget:?package=GitReleaseManager&version=0.11.0
-#tool nuget:?package=GitVersion.CommandLine&version=5.6.7
+#tool nuget:?package=GitReleaseManager&version=0.13.0
+#tool nuget:?package=GitVersion.CommandLine&version=5.10.3
 #tool nuget:?package=coveralls.io&version=1.4.2
-#tool nuget:?package=OpenCover&version=4.7.922
+#tool nuget:?package=OpenCover&version=4.7.1221
 #tool nuget:?package=ReportGenerator&version=4.8.7
-#tool nuget:?package=JetBrains.ReSharper.CommandLineTools&version=2020.3.4
+#tool nuget:?package=JetBrains.ReSharper.CommandLineTools&version=2022.1.2
 
 // ARGUMENTS
 var target = Argument("target", "Default");
