@@ -68,7 +68,7 @@ if (!isPullRequest)
 else
 {
     // GitVersion fails on PR builds, use 0.PullRequestId.0 as a version number
-    nugetVersion = $"0.{AppVeyor.Environment.PullRequest.Number}.0";
+    nugetVersion = $"0.{AppVeyor.Environment.PullRequest.Number}.{AppVeyor.Environment.Build.Id}";
     buildVersion = nugetVersion;
     informationalVersion = nugetVersion;
     nextMajorRelease = "1.0.0";
