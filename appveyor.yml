@@ -17,6 +17,7 @@ environment:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 install:
+  - ps: dotnet --info
   - ps: ./mssql-setup.ps1
   - ps: ./dotnet-install.ps1 -Version 7.0.100-preview.4.22252.9 -InstallDir "C:\Program Files\dotnet"
   - ps: dotnet new tool-manifest
@@ -41,6 +42,7 @@ for:
   clone_folder: ~/work/sharp-arch
 
   install:
+    - sh: dotnet --info
     - sh: sudo ./dotnet-install.sh -Version 7.0.100-preview.4.22252.9 -InstallDir /usr/share/dotnet/
     - sh: touch ./Src/Common/AssemblyVersion.cs
     - sh: dotnet new tool-manifest
