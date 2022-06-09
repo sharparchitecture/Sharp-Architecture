@@ -124,7 +124,7 @@ Task("UpdateAppVeyorBuildNumber")
     .ContinueOnError()
     .Does(() =>
     {
-        AppVeyor.UpdateBuildVersion(isPullRequest ? $"PR.{buildVersion} : buildVersion");
+        AppVeyor.UpdateBuildVersion(isPullRequest ? $"PR.{buildVersion}" : buildVersion);
     });
 
 
