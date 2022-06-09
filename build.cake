@@ -124,7 +124,7 @@ Task("UpdateAppVeyorBuildNumber")
     .ContinueOnError()
     .Does(() =>
     {
-        AppVeyor.UpdateBuildVersion(buildVersion);
+        AppVeyor.UpdateBuildVersion(isPullRequest ? $"PR.{buildVersion} : buildVersion");
     });
 
 
@@ -180,47 +180,73 @@ Task("RunXunitTests")
         var projectFilename = testProj.GetFilenameWithoutExtension();
         Information("Calculating code coverage for {0} ...", projectFilename);
 
-        var openCoverSettings = new OpenCoverSettings {
-            OldStyle = true,
-            ReturnTargetCodeOffset = 0,
-            ArgumentCustomization = args => args.Append("-mergeoutput").Append("-hideskipped:File;Filter;Attribute"),
-            WorkingDirectory = projectPath,
-        }
-        .WithFilter(coverageFilter)
-        .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
-        .ExcludeByFile("*/*Designer.cs");
+        // synchronize with Directory.Build.Props / AppTargetFrameworks
+        var testTargets = new KeyValuePair<string, bool>[] {
+            new KeyValuePair<string,bool>("netcoreapp3.1", true),
+            new KeyValuePair<string,bool>("net5.0", true),
+            new KeyValuePair<string,bool>("net6.0", true),
+            new KeyValuePair<string,bool>("net7.0", false)  // opencover does not work with .NET 7 preview
+        };
 
-        Func<string,ProcessArgumentBuilder> buildProcessArgs = (buildCfg) => {
-				var pb = new ProcessArgumentBuilder()
+        Func<string, string, ProcessArgumentBuilder> buildProcessArgs = (buildCfg, targetFramework) => {
+                var pb = new ProcessArgumentBuilder()
                     .AppendSwitch("--configuration", buildCfg)
                     .AppendSwitch("--filter", "Category!=IntegrationTests")
                     .AppendSwitch("--results-directory", artifactsDirAbsolutePath.FullPath)
+                    .AppendSwitch("--framework", targetFramework)
+                    .Append("--no-restore")
                     .Append("--no-build");
-				if (!local) {
-					pb.AppendSwitch("--test-adapter-path", ".")
-						.AppendSwitch("--logger", $"AppVeyor");
-				} else {
-                     pb.AppendSwitch("--logger", $"trx;LogFileName={projectFilename}.trx");
+                if (!local) {
+                    pb.AppendSwitch("--test-adapter-path", ".")
+                        .AppendSwitch("--logger", $"AppVeyor");
+                } else {
+                    pb.AppendSwitch("--logger", $"trx;LogFileName={projectFilename}.trx");
                 }
-				return pb;
-			};
+                return pb;
+            };
 
-        // run open cover for debug build configuration
-        OpenCover(
-            tool => tool.DotNetCoreTool(projectPath.FullPath,
-                "test",
-                buildProcessArgs("Debug")
-            ),
-            testCoverageOutputFile,
-            openCoverSettings);
+        foreach(var targetFw in testTargets)
+        {
+            if (targetFw.Value)
+            {
+                Information("Calculating code coverage for {0} ({1}) ...", projectFilename, targetFw.Key);
+                var openCoverSettings = new OpenCoverSettings {
+                    OldStyle = true,
+                    ReturnTargetCodeOffset = 0,
+                    ArgumentCustomization = args => args.Append("-mergeoutput").Append("-hideskipped:File;Filter;Attribute"),
+                    WorkingDirectory = projectPath,
+                }
+                .WithFilter(coverageFilter)
+                .ExcludeByAttribute("*.ExcludeFromCodeCoverage*")
+                .ExcludeByFile("*/*Designer.cs");
 
-        // run tests again if Release mode was requested
-        if (isReleaseBuild) {
-            Information("Running Release mode tests for {0}", projectFilename.ToString());
-            DotNetCoreTool(testProj.FullPath,
-                "test",
-                buildProcessArgs("Release")
-            );
+            
+                // run open cover for debug build configuration
+                OpenCover(
+                    tool => tool.DotNetCoreTool(projectPath.FullPath,
+                        "test",
+                        buildProcessArgs("Debug", targetFw.Key)
+                    ),
+                    testCoverageOutputFile,
+                    openCoverSettings);
+            }
+            else
+            {
+                Information("Running Debug mode tests for {0} ({1}) ...", projectFilename.ToString(), targetFw.Key);
+                DotNetCoreTool(testProj.FullPath,
+                    "test",
+                    buildProcessArgs("Debug", targetFw.Key)
+                );
+            }
+
+            // run tests again if Release mode was requested
+            if (isReleaseBuild) {
+                Information("Running Release mode tests for {0} ({1}) ...", projectFilename.ToString(), targetFw.Key);
+                DotNetCoreTool(testProj.FullPath,
+                    "test",
+                    buildProcessArgs("Release", targetFw.Key)
+                );
+            }
         }
     })
     .DeferOnError();
