@@ -37,22 +37,43 @@ var isDebugBuild = string.Equals(buildConfig, "Debug", StringComparison.OrdinalI
 var isReleaseBuild = string.Equals(buildConfig, "Release", StringComparison.OrdinalIgnoreCase);
 
 var isDevelopBranch = StringComparer.OrdinalIgnoreCase.Equals("develop", AppVeyor.Environment.Repository.Branch);
-var isReleaseBranch = AppVeyor.Environment.Repository.Branch.IndexOf("releases/", StringComparison.OrdinalIgnoreCase) >= 0
-    || AppVeyor.Environment.Repository.Branch.IndexOf("hotfixes/", StringComparison.OrdinalIgnoreCase) >= 0;
+var isReleaseBranch = AppVeyor.Environment.Repository.Branch.StartsWith("releases/", StringComparison.OrdinalIgnoreCase)
+    || AppVeyor.Environment.Repository.Branch.StartsWith("hotfixes/", StringComparison.OrdinalIgnoreCase)
+    || AppVeyor.Environment.Repository.Branch.StartsWith("release/", StringComparison.OrdinalIgnoreCase)
+    || AppVeyor.Environment.Repository.Branch.StartsWith("hotfix/", StringComparison.OrdinalIgnoreCase);
 
 var isTagged = AppVeyor.Environment.Repository.Tag.IsTag;
 var appVeyorJobId = AppVeyor.Environment.JobId;
 
 // Solution settings
 
-// Calculate version and commit hash
-GitVersion semVersion = GitVersion();
-var nugetVersion = semVersion.NuGetVersion;
-var buildVersion = semVersion.FullBuildMetaData;
-var informationalVersion = semVersion.InformationalVersion;
-var nextMajorRelease = $"{semVersion.Major+1}.0.0";
-var commitHash = semVersion.Sha;
-var milestone = semVersion.MajorMinorPatch;
+string nugetVersion;
+string buildVersion;
+string informationalVersion;
+string nextMajorRelease;
+string commitHash;
+string milestone;
+
+if (!isPullRequest)
+{
+    // Calculate version and commit hash
+    GitVersion semVersion = GitVersion();
+    nugetVersion = semVersion.NuGetVersion;
+    buildVersion = semVersion.FullBuildMetaData;
+    informationalVersion = semVersion.InformationalVersion;
+    nextMajorRelease = $"{semVersion.Major+1}.0.0";
+    commitHash = semVersion.Sha;
+    milestone = semVersion.MajorMinorPatch;
+}
+else
+{
+    // GitVersion fails on PR builds, use 0.PullRequestId.0 as a version number
+    nugetVersion = $"0.{AppVeyor.Environment.PullRequest.Number}.0";
+    buildVersion = nugetVersion;
+    informationalVersion = nugetVersion;
+    nextMajorRelease = "1.0.0";
+    commitHash = AppVeyor.Environment.Repository.Commit.Id;
+}
 
 // Artifacts
 var artifactsDir = "./Drops";
@@ -91,9 +112,9 @@ Task("SetVersion")
     .Does(() =>
     {
         CreateAssemblyInfo($"{srcDir}/Common/AssemblyVersion.cs", new AssemblyInfoSettings{
-            FileVersion = semVersion.MajorMinorPatch,
-            InformationalVersion = semVersion.InformationalVersion,
-            Version = semVersion.MajorMinorPatch
+            FileVersion = milestone,
+            InformationalVersion = informationalVersion,
+            Version = milestone
         });
     });
 
