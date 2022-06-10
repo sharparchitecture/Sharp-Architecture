@@ -10,7 +10,7 @@
 ///     </para>
 ///     <para>
 ///         NOTE: Microsoft decided that set operators such as Intersect, Union and Distinct should
-///         not use the <see cref="IEqualityComparer{T}.Equals(T?,T?)" /> method when comparing objects, but should instead
+///         not use the <see cref="IEqualityComparer{T}.Equals(T,T)" /> method when comparing objects, but should instead
 ///         use <see cref="IEqualityComparer{T}.GetHashCode(T)" /> method.
 ///     </para>
 /// </remarks>
