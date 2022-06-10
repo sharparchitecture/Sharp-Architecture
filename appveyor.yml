@@ -94,8 +94,8 @@ for:
         branch:
           - develop
           - /release\/v.*/
-          - /releases.*/
-          - /hotfixes.*/
+          - /releases?\/.*/
+          - /hotfix(?:es)?\/.*/
 
     - provider: NuGet
       name: Tagged release
