@@ -21,7 +21,8 @@ install:
   - ps: ./mssql-setup.ps1
   - ps: ./dotnet-install.ps1 -Version 7.0.100-preview.5.22307.18 -InstallDir "C:\Program Files\dotnet"
   - ps: dotnet new tool-manifest
-  - ps: dotnet tool install Cake.Tool --version 1.3.0
+  - ps: dotnet tool install Cake.Tool --version 4.0.0
+  - ps: dotnet tool install coveralls.net --version 4.0.1
 
 build_script:
   - ps: dotnet cake
@@ -63,7 +64,7 @@ for:
     - mssql2019
 
   cache:
-    - c:\tmp\cake\tools -> appveyor.yml
+    - c:\tmp\cake\tools -> build\*.cake, appveyor.yml
 
   environment:
     coveralls_repo_token:

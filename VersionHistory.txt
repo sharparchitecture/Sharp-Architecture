@@ -2,12 +2,19 @@
 vNext
 ========================
 
+9.0.0
+
+BREAKING:
+* Drop .NET 5 support
+* Drop .NET Core 3.1 support
+
+
 8.0.0
 ========================
 BREAKING:
 * Drop NetCoreApp 2.1 support.
 * NHibernate test setup will not search and execute IAutoPersistenceModelGenerator.
-*
+
 
 NEW FEATURES:
 * Add .NET 6 preview support
