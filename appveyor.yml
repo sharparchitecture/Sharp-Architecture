@@ -16,16 +16,6 @@ environment:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
-install:
-  - ps: dotnet --info
-  - ps: ./mssql-setup.ps1
-  - ps: ./dotnet-install.ps1 -Version 7.0.100-preview.5.22307.18 -InstallDir "C:\Program Files\dotnet"
-  - ps: dotnet new tool-manifest
-  - ps: dotnet tool install Cake.Tool --version 4.0.0
-  - ps: dotnet tool install coveralls.net --version 4.0.1
-
-build_script:
-  - ps: dotnet cake
 
 test: off
 
@@ -60,11 +50,22 @@ for:
 
   clone_folder: c:\work\sharp-arch
 
+  cache:
+    - c:\tmp\cake\tools -> build\*.cake, appveyor.yml
+
   services:
     - mssql2019
 
-  cache:
-    - c:\tmp\cake\tools -> build\*.cake, appveyor.yml
+  install:
+    - ps: dotnet --info
+    - ps: ./mssql-setup.ps1
+    - ps: ./dotnet-install.ps1 -Version 7.0.100-preview.5.22307.18 -InstallDir "C:\Program Files\dotnet"
+    - ps: dotnet new tool-manifest
+    - ps: dotnet tool install Cake.Tool --version 4.0.0
+    - ps: dotnet tool install coveralls.net --version 4.0.1
+
+  build_script:
+      - ps: dotnet cake
 
   environment:
     coveralls_repo_token:
