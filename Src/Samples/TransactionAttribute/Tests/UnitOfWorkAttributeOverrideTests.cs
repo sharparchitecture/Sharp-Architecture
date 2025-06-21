@@ -1,4 +1,8 @@
-﻿namespace TransactionAttribute.Tests;
+﻿using Xunit;
+
+[assembly: AssemblyTrait("Category", "Samples")]
+
+namespace TransactionAttribute.Tests;
 
 using System.Data;
 using System.Net;
@@ -14,7 +18,8 @@ public class UnitOfWorkAttributeOverrideTests : IClassFixture<TestServerSetup>
 
     public UnitOfWorkAttributeOverrideTests(TestServerSetup setup)
     {
-        if (setup == null) throw new ArgumentNullException(nameof(setup));
+        if (setup == null)
+            throw new ArgumentNullException(nameof(setup));
         _setup = setup ?? throw new ArgumentNullException(nameof(setup));
     }
 

@@ -23,10 +23,6 @@
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="3.1.5" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.0.11" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.5" />
   </ItemGroup>
@@ -36,9 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Src\Lib\SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj" />
-    <ProjectReference Include="..\..\..\..\Src\Lib\SharpArch.Testing.Xunit\SharpArch.Testing.Xunit.csproj" />
-    <ProjectReference Include="..\..\..\..\Src\Lib\SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\..\Lib\SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj" />
+    <ProjectReference Include="..\..\..\..\Lib\SharpArch.Testing.Xunit\SharpArch.Testing.Xunit.csproj" />
+    <ProjectReference Include="..\..\..\..\Lib\SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj" />
     <ProjectReference Include="..\Suteki.TardisBank.Api\Suteki.TardisBank.Api.csproj" />
     <ProjectReference Include="..\Suteki.TardisBank.Domain\Suteki.TardisBank.Domain.csproj" />
     <ProjectReference Include="..\Suteki.TardisBank.Infrastructure\Suteki.TardisBank.Infrastructure.csproj" />

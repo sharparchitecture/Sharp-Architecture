@@ -19,7 +19,7 @@ public class CodeBaseLocator
     {
         if (assembly == null) throw new ArgumentNullException(nameof(assembly));
 
-#if NET5_0_OR_GREATER
+#if NET6_0_OR_GREATER
             return Path.GetDirectoryName(assembly.Location)
                 ?? Directory.GetCurrentDirectory();
 
