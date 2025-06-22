@@ -41,8 +41,8 @@ for:
 
   build_script:
     - sh: cd Src
-    - sh: dotnet build -c Release --verbosity quiet
-    - sh: dotnet test --no-build -c Release --filter "Category!=IntegrationTests&Category!=Functional" --test-adapter-path . --logger AppVeyor --verbosity quiet
+    - sh: dotnet build -c Release --tl:off
+    - sh: dotnet test --no-build --tl:off -c Release --filter "Category!=IntegrationTests&Category!=Functional" --test-adapter-path . --logger AppVeyor --verbosity quiet
 
 
 # Windows build
