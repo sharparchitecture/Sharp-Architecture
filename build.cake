@@ -1,6 +1,6 @@
 // DEFAULTS
 
-#load "./.build/definitions.cake"
+#load "./.build/src/definitions.cake"
 
 
 // ARGUMENTS
@@ -38,7 +38,7 @@ Teardown(context =>
 
 // TASKS
 
-#load "./.build/tasks.cake"
+#load "./.build/src/tasks.cake"
 
 
 // EXECUTION
