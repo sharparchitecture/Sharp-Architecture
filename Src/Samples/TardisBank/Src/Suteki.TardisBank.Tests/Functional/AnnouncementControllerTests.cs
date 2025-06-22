@@ -50,6 +50,6 @@ public class AnnouncementControllerTests : IClassFixture<TestServerSetup>, IDisp
         announcementSummary.Id.Should().BeGreaterThan(0);
         announcementSummary.Title.Should().Be(newAnnouncement.Title);
 
-        await DeleteAnnouncement(_newAnnouncementUri).ConfigureAwait(false);
+        await DeleteAnnouncement(_newAnnouncementUri);
     }
 }

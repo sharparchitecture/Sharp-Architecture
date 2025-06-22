@@ -3,7 +3,7 @@
     <Product>Sharp Architecture</Product>
     <Authors>Sharp Architecture Dev Team</Authors>
     <Copyright>Copyright &#xA9; Sharp Architecture Development Team</Copyright>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net6.0</TargetFrameworks>
     <Culture></Culture>
     <SignAssembly>false</SignAssembly>
 
@@ -32,7 +32,7 @@
 
   <PropertyGroup Label="Custom targets">
     <!-- target frameworks for unit-tests and applications -->
-    <AppTargetFrameworks>netcoreapp3.1;net6.0</AppTargetFrameworks>
+    <AppTargetFrameworks>net6.0</AppTargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -93,7 +93,7 @@
 
   <!-- Common references -->
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
   </ItemGroup>
 
 </Project>

@@ -14,20 +14,8 @@
     <Compile Include="..\..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
   </ItemGroup>
 
-  <ItemGroup Label="NETStandard 2.0" Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.0" />
-  </ItemGroup>
-
-  <ItemGroup Label="NETStandard 2.1" Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.0" />
-  </ItemGroup>
-
-  <ItemGroup Label="Package References (ASP.NET 6)" Condition=" '$(TargetFramework)' == 'net6.0' ">
+  <ItemGroup Label="Package References (ASP.NET 6)" Condition=" '$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'netstandard2.1' ">
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
-  </ItemGroup>
-
-  <ItemGroup Label="Package References (ASP.NET 7)" Condition=" '$(TargetFramework)' == 'net7.0' ">
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0-preview.5.*" />
   </ItemGroup>
 
 </Project>

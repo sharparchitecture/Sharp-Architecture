@@ -5,10 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="11.0.1" />
-    <PackageReference Include="FluentNHibernate" Version="3.1.0" />
+    <PackageReference Include="AutoMapper" Version="13.0.0" />
     <PackageReference Include="Humanizer.Core" Version="2.14.1" />
-    <PackageReference Include="NHibernate" Version="5.3.12" />
   </ItemGroup>
 
   <ItemGroup>

@@ -16,7 +16,7 @@ public class TestServerSetup : IDisposable
         var hostBuilder = Program.CreateHostBuilder(webHostBuilder =>
             {
                 webHostBuilder.UseTestServer();
-                webHostBuilder.UseSolutionRelativeContentRoot("TardisBank/Src/Suteki.TardisBank.WebApi/");
+                webHostBuilder.UseSolutionRelativeContentRoot("Samples/TardisBank/Src/Suteki.TardisBank.WebApi/");
             }
         );
         _host = hostBuilder.Build();

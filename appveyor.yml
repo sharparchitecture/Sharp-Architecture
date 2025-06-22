@@ -7,7 +7,7 @@ nuget:
   disable_publish_on_pr: true
 
 image:
-  - Ubuntu
+  - Ubuntu2204
   - Visual Studio 2022
 
 environment:
@@ -27,19 +27,22 @@ for:
 # Linux build
 -
   matrix:
-    except:
-      - image: Visual Studio 2022
+    only:
+      - image: Ubuntu2204
 
   clone_folder: ~/work/sharp-arch
 
+  environment:
+    NO_COLOR=1
   install:
     - sh: dotnet --info
-    - sh: sudo ./dotnet-install.sh -Version 7.0.100-preview.5.22307.18 -InstallDir /usr/share/dotnet/
     - sh: touch ./Src/Common/AssemblyVersion.cs
     - sh: dotnet new tool-manifest
 
   build_script:
-    - sh: dotnet test ./Src -c Release --test-adapter-path . --logger AppVeyor
+    - sh: cd Src
+    - sh: dotnet build -c Release --verbosity quiet
+    - sh: dotnet test --no-build -c Release --filter Category!=Samples --test-adapter-path . --logger AppVeyor --verbosity quiet
 
 
 # Windows build
@@ -59,7 +62,6 @@ for:
   install:
     - ps: dotnet --info
     - ps: ./mssql-setup.ps1
-    - ps: ./dotnet-install.ps1 -Version 7.0.100-preview.5.22307.18 -InstallDir "C:\Program Files\dotnet"
     - ps: dotnet new tool-manifest
     - ps: dotnet tool install Cake.Tool --version 4.0.0
     - ps: dotnet tool install coveralls.net --version 4.0.1

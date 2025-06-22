@@ -61,7 +61,7 @@ public class AnnouncementsController : ControllerBase
     public async Task<ActionResult<AnnouncementModel>> Get(int id)
     {
         var announcement = await _announcementRepository.GetAsync(id).ConfigureAwait(false);
-        if (announcement != null) return _mapper.Map<AnnouncementModel>(announcement);
+        if (announcement != null) return _mapper.Map<AnnouncementModel>(announcement)!;
         return NotFound(new { id });
     }
 
@@ -69,8 +69,8 @@ public class AnnouncementsController : ControllerBase
     public async Task<ActionResult> Post(NewAnnouncement model)
     {
         var announcement = _mapper.Map<Announcement>(model);
-        await _announcementRepository.SaveAsync(announcement, HttpContext.RequestAborted).ConfigureAwait(false);
-        var location = _linkGenerator.GetPathByName("GetAnnouncement", new { id = announcement.Id });
+        await _announcementRepository.SaveAsync(announcement!, HttpContext.RequestAborted).ConfigureAwait(false);
+        var location = _linkGenerator.GetPathByName("GetAnnouncement", new { id = announcement!.Id });
         return Created(location!, announcement);
     }
 

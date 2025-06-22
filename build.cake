@@ -14,7 +14,7 @@ ProjectSettings settings = new ProjectSettings("sharparchitecture", "Sharp-Archi
         IncludeFilter = "+[SharpArch.*]*"
     }
 };
-
+settings.CodeCoverage.ExcludeFilter += ";-[Suteki*]*;-[TransactionAttribute*]*";
 
 // SETUP / TEARDOWN
 
