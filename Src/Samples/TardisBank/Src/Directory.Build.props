@@ -1,0 +1,9 @@
+<Project>
+
+  <Import Project="../../Directory.Build.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>net9.0</TargetFrameworks> <!-- SQLite with NHibernate on Linux works only on .NET9 -->
+  </PropertyGroup>
+
+</Project>

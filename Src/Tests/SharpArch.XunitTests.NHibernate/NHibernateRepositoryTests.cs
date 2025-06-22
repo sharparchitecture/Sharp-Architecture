@@ -30,7 +30,7 @@ public class NHibernateRepositoryTests : TransientDatabaseTests<NHibernateTestsS
             Name = "John Doe"
         };
 
-        var res = await _repo.SaveAsync(entity).ConfigureAwait(false);
+        var res = await _repo.SaveAsync(entity);
         res.IsTransient().Should().BeFalse();
         res.Id.Should().BeGreaterThan(0);
     }
@@ -42,11 +42,11 @@ public class NHibernateRepositoryTests : TransientDatabaseTests<NHibernateTestsS
         {
             Name = "John Doe"
         };
-        var res = await _repo.SaveOrUpdateAsync(entity).ConfigureAwait(false);
+        var res = await _repo.SaveOrUpdateAsync(entity);
         res.IsTransient().Should().BeFalse();
 
         entity.Name = "John Doe Jr";
-        res = await _repo.SaveOrUpdateAsync(entity).ConfigureAwait(false);
+        res = await _repo.SaveOrUpdateAsync(entity);
         res.Name.Should().Be("John Doe Jr");
     }
 }

@@ -1,8 +1,5 @@
 namespace SharpArch.Domain.DomainModel;
 
-#if !NULLABLE_REFERENCE_TYPES
-#pragma warning disable 8618
-#endif
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Xml.Serialization;
@@ -68,9 +65,7 @@ public abstract class Entity<TId> : ValidatableObject, IEntity<TId>, IEntity,
     ///     </para>
     /// </remarks>
     [XmlIgnore]
-#if NULLABLE_REFERENCE_TYPES
     [MaybeNull]
-#endif
     public virtual TId Id { get; protected set; }
 
     /// <inheritdoc />
@@ -186,11 +181,7 @@ public abstract class Entity<TId> : ValidatableObject, IEntity<TId>, IEntity,
     /// </returns>
     bool HasSameNonDefaultIdAs(Entity<TId> compareTo)
     {
-#if NULLABLE_REFERENCE_TYPES
         return !IsTransient() && !compareTo.IsTransient() && Id!.Equals(compareTo.Id!);
-#else
-        return !IsTransient() && !compareTo.IsTransient() && Id.Equals(compareTo.Id);
-#endif
     }
 
     /// <summary>
@@ -211,7 +202,3 @@ public abstract class Entity<TId> : ValidatableObject, IEntity<TId>, IEntity,
     public static bool operator !=(Entity<TId>? left, Entity<TId>? right)
         => !Equals(left, right);
 }
-
-#if !NULLABLE_REFERENCE_TYPES
-#pragma warning restore 8618
-#endif

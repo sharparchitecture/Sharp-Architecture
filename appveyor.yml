@@ -7,7 +7,7 @@ nuget:
   disable_publish_on_pr: true
 
 image:
-  - Ubuntu
+  - Ubuntu2204
   - Visual Studio 2022
 
 environment:
@@ -15,7 +15,8 @@ environment:
   CAKE_SETTINGS_SKIPPACKAGEVERSIONCHECK: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-
+  DOTNET_TERMINAL_LOGGER: false
+  DOTNET_NOLOGO: true
 
 test: off
 
@@ -27,19 +28,20 @@ for:
 # Linux build
 -
   matrix:
-    except:
-      - image: Visual Studio 2022
+    only:
+      - image: Ubuntu2204
 
   clone_folder: ~/work/sharp-arch
 
   install:
     - sh: dotnet --info
-    - sh: sudo ./dotnet-install.sh -Version 7.0.100-preview.5.22307.18 -InstallDir /usr/share/dotnet/
     - sh: touch ./Src/Common/AssemblyVersion.cs
     - sh: dotnet new tool-manifest
 
   build_script:
-    - sh: dotnet test ./Src -c Release --test-adapter-path . --logger AppVeyor
+    - sh: cd Src
+    - sh: dotnet build -c Release --tl:off
+    - sh: dotnet test --no-build --tl:off -c Release --filter "Category!=IntegrationTests&Category!=Functional" --test-adapter-path . --logger AppVeyor --verbosity quiet
 
 
 # Windows build
@@ -59,10 +61,8 @@ for:
   install:
     - ps: dotnet --info
     - ps: ./mssql-setup.ps1
-    - ps: ./dotnet-install.ps1 -Version 7.0.100-preview.5.22307.18 -InstallDir "C:\Program Files\dotnet"
-    - ps: dotnet new tool-manifest
-    - ps: dotnet tool install Cake.Tool --version 4.0.0
-    - ps: dotnet tool install coveralls.net --version 4.0.1
+    - ps: dotnet tool install Cake.Tool --version 4.0.0 --global
+    - ps: dotnet tool install coveralls.net --version 4.0.1 --global
 
   build_script:
       - ps: dotnet cake

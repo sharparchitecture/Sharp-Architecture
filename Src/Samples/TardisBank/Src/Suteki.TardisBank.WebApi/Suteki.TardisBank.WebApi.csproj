@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <Using Remove="System.Net.Http.Json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="8.3.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.3" />
+    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="5.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Lib\SharpArch.Domain\SharpArch.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\Lib\SharpArch.Infrastructure\SharpArch.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\..\Lib\SharpArch.NHibernate.DependencyInjection\SharpArch.NHibernate.Extensions.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\..\..\Lib\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
+    <ProjectReference Include="..\..\..\..\Lib\SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj" />
+    <ProjectReference Include="..\Suteki.TardisBank.Api\Suteki.TardisBank.Api.csproj" />
+    <ProjectReference Include="..\Suteki.TardisBank.Domain\Suteki.TardisBank.Domain.csproj" />
+    <ProjectReference Include="..\Suteki.TardisBank.Infrastructure\Suteki.TardisBank.Infrastructure.csproj" />
+    <ProjectReference Include="..\Suteki.TardisBank.Tasks\Suteki.TardisBank.Tasks.csproj" />
+  </ItemGroup>
+
+
+</Project>

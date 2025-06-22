@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Suteki.TardisBank.Domain\Suteki.TardisBank.Domain.csproj" />
+    <ProjectReference Include="..\Suteki.TardisBank.Infrastructure\Suteki.TardisBank.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

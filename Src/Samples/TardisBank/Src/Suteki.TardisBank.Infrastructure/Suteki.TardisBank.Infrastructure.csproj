@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.0" />
+    <PackageReference Include="Humanizer.Core" Version="2.14.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Lib\SharpArch.Domain\SharpArch.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\Lib\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
+    <ProjectReference Include="..\Suteki.TardisBank.Api\Suteki.TardisBank.Api.csproj" />
+    <ProjectReference Include="..\Suteki.TardisBank.Domain\Suteki.TardisBank.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

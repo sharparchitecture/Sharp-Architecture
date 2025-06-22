@@ -1,0 +1,97 @@
+﻿<Project>
+  <PropertyGroup Label="Build targets">
+    <!-- target frameworks for unit-tests and applications -->
+    <AppTargetFrameworks>net8.0;net9.0</AppTargetFrameworks>
+    <!-- target frameworks for SharpArch libraries -->
+    <LibraryTargetFrameworks>netstandard2.1;$(AppTargetFrameworks)</LibraryTargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Build">
+    <Product>Sharp Architecture</Product>
+    <Authors>Sharp Architecture Dev Team</Authors>
+    <Copyright>Copyright &#xA9; Sharp Architecture Development Team</Copyright>
+    <TargetFrameworks>$(LibraryTargetFrameworks)</TargetFrameworks>
+    <Culture></Culture>
+    <SignAssembly>false</SignAssembly>
+
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+
+    <LangVersion>preview</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <IsTestProject>false</IsTestProject>
+
+    <DefineConstants>$(DefineConstants);JETBRAINS_ANNOTATIONS;NULLABLE_REFERENCE_TYPES</DefineConstants>
+    <NoWarn>$(NoWarn);0105</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="JetBrains.Annotations" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package" Condition="'$(MSBuildProjectName.Contains(Tests))' == false">
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    <IsPackable>True</IsPackable>
+    <PackageIconUrl>https://github.com/sharparchitecture/Sharp-Architecture/raw/master/Artefacts/Documentation/icon.png</PackageIconUrl>
+    <PackageProjectUrl>http://sharparchitecture.github.io/</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/8.0.0</PackageReleaseNotes>
+    <PackageTags>sharp-architecture;sharp-arch</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Label="SourceLink">
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == true">
+    <TargetFrameworks>$(AppTargetFrameworks)</TargetFrameworks>
+    <IsTestProject>true</IsTestProject>
+    <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);0618;1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == false">
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>SharpArch.XunitTests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+
+  <PropertyGroup Condition="'$(MSBuildProjectFullPath.Contains(Sample))' == true">
+    <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.InteropServices.ComVisibleAttribute">
+      <_Parameter1>false</_Parameter1>
+      <_Parameter1_TypeName>System.Boolean</_Parameter1_TypeName>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <!-- Common references -->
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
+  </ItemGroup>
+
+</Project>

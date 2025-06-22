@@ -14,24 +14,16 @@
     <None Include="..\..\..\Artefacts\Documentation\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
-  <ItemGroup Label="Package References (NetStandard 2.0)" Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
-  </ItemGroup>
-
   <ItemGroup Label="Package References (NetStandard 2.1)" Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.0" />
-  </ItemGroup>
-
-  <ItemGroup Label="Package References (Net 5)" Condition=" '$(TargetFramework)' == 'net5.0' ">
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-  </ItemGroup>
-
-  <ItemGroup Label="Package References (Net 6)" Condition=" '$(TargetFramework)' == 'net6.0' ">
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
   </ItemGroup>
 
-  <ItemGroup Label="Package References (ASP.NET 7)" Condition=" '$(TargetFramework)' == 'net7.0' ">
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0-preview.5.*" />
+  <ItemGroup Label="Package References (.NET 8)" Condition=" '$(TargetFramework)' == 'net8.0' ">
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Package References (.NET 9)" Condition=" '$(TargetFramework)' == 'net9.0' ">
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
