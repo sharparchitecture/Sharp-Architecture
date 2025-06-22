@@ -1,9 +1,16 @@
 ﻿<Project>
+  <PropertyGroup Label="Build targets">
+    <LibraryTargetFrameworks>netstandard2.1;net6.0;net8.0;net9.0</LibraryTargetFrameworks>
+    <!-- target frameworks for unit-tests and applications -->
+    <AppTargetFrameworks>net6.0;net8.0;net9.0</AppTargetFrameworks>
+  </PropertyGroup>
+
+
   <PropertyGroup Label="Build">
     <Product>Sharp Architecture</Product>
     <Authors>Sharp Architecture Dev Team</Authors>
     <Copyright>Copyright &#xA9; Sharp Architecture Development Team</Copyright>
-    <TargetFrameworks>netstandard2.1;net6.0;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>$(LibraryTargetFrameworks)</TargetFrameworks>
     <Culture></Culture>
     <SignAssembly>false</SignAssembly>
 
@@ -30,11 +37,6 @@
     <Using Include="JetBrains.Annotations" />
     <Using Include="System.Diagnostics.CodeAnalysis" />
   </ItemGroup>
-
-  <PropertyGroup Label="Custom targets">
-    <!-- target frameworks for unit-tests and applications -->
-    <AppTargetFrameworks>net6.0;net8.0;net9.0</AppTargetFrameworks>
-  </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DebugType>full</DebugType>
