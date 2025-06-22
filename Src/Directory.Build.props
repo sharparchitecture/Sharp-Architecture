@@ -1,10 +1,10 @@
 ﻿<Project>
   <PropertyGroup Label="Build targets">
-    <LibraryTargetFrameworks>netstandard2.1;net6.0;net8.0;net9.0</LibraryTargetFrameworks>
     <!-- target frameworks for unit-tests and applications -->
-    <AppTargetFrameworks>net6.0;net8.0;net9.0</AppTargetFrameworks>
+    <AppTargetFrameworks>net8.0;net9.0</AppTargetFrameworks>
+    <!-- target frameworks for SharpArch libraries -->
+    <LibraryTargetFrameworks>netstandard2.1;$(AppTargetFrameworks)</LibraryTargetFrameworks>
   </PropertyGroup>
-
 
   <PropertyGroup Label="Build">
     <Product>Sharp Architecture</Product>
