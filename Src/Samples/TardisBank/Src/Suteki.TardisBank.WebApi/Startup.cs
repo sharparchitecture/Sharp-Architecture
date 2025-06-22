@@ -30,8 +30,7 @@ public class Startup
     /// <param name="services"></param>
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers(options => { options.Filters.Add(new AutoTransactionHandler()); })
-            .AddNewtonsoftJson();
+        services.AddControllers(options => { options.Filters.Add(new AutoTransactionHandler()); });
 
         services.AddNHibernateWithSingleDatabase(_ =>
         {

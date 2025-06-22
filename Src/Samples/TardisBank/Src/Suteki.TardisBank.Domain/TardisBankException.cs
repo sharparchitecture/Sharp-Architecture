@@ -1,8 +1,5 @@
 namespace Suteki.TardisBank.Domain;
 
-using System.Runtime.Serialization;
-
-
 [Serializable]
 public class TardisBankException : Exception
 {
@@ -29,13 +26,6 @@ public class TardisBankException : Exception
 
     public TardisBankException(string message, Exception inner)
         : base(message, inner)
-    {
-    }
-
-    protected TardisBankException(
-        SerializationInfo info,
-        StreamingContext context)
-        : base(info, context)
     {
     }
 }

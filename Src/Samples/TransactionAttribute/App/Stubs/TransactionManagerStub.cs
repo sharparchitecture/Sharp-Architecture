@@ -32,16 +32,16 @@
 
         public Task CommitTransactionAsync(CancellationToken cancellationToken)
         {
-            _httpContextAccessor.HttpContext!.Response.Headers.Add(TransactionIsolationLevel, _transaction?.IsolationLevel.ToString() ?? "unknown");
-            _httpContextAccessor.HttpContext.Response.Headers.Add(TransactionState, "committed");
+            _httpContextAccessor.HttpContext!.Response.Headers.Append(TransactionIsolationLevel, _transaction?.IsolationLevel.ToString() ?? "unknown");
+            _httpContextAccessor.HttpContext.Response.Headers.Append(TransactionState, "committed");
             _transaction?.Commit();
             return Task.CompletedTask;
         }
 
         public Task RollbackTransactionAsync(CancellationToken cancellationToken)
         {
-            _httpContextAccessor.HttpContext!.Response.Headers.Add(TransactionIsolationLevel, _transaction?.IsolationLevel.ToString() ?? "unknown");
-            _httpContextAccessor.HttpContext.Response.Headers.Add(TransactionState, "rolled-back");
+            _httpContextAccessor.HttpContext!.Response.Headers.Append(TransactionIsolationLevel, _transaction?.IsolationLevel.ToString() ?? "unknown");
+            _httpContextAccessor.HttpContext.Response.Headers.Append(TransactionState, "rolled-back");
             _transaction?.Rollback();
             return Task.CompletedTask;
         }

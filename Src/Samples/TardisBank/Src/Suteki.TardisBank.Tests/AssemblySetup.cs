@@ -1,6 +1,4 @@
-﻿[assembly: Xunit.AssemblyTrait("Category", "Samples")]
-
-namespace Suteki.TardisBank.Tests;
+﻿namespace Suteki.TardisBank.Tests;
 
 public class AssemblySetup
 {

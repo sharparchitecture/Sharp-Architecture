@@ -33,7 +33,7 @@ for:
   clone_folder: ~/work/sharp-arch
 
   environment:
-    NO_COLOR=1
+    NO_COLOR:1
   install:
     - sh: dotnet --info
     - sh: touch ./Src/Common/AssemblyVersion.cs
@@ -42,7 +42,7 @@ for:
   build_script:
     - sh: cd Src
     - sh: dotnet build -c Release --verbosity quiet
-    - sh: dotnet test --no-build -c Release --filter Category!=Samples --test-adapter-path . --logger AppVeyor --verbosity quiet
+    - sh: dotnet test --no-build -c Release --filter "Category!=IntegrationTests&Category!=Functional" --test-adapter-path . --logger AppVeyor --verbosity quiet
 
 
 # Windows build

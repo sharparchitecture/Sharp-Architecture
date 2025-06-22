@@ -1,8 +1,5 @@
 namespace Suteki.TardisBank.Domain;
 
-using System.Runtime.Serialization;
-
-
 [Serializable]
 public class CashWithdrawException : Exception
 {
@@ -24,13 +21,6 @@ public class CashWithdrawException : Exception
 
     public CashWithdrawException(string message, Exception inner)
         : base(message, inner)
-    {
-    }
-
-    protected CashWithdrawException(
-        SerializationInfo info,
-        StreamingContext context)
-        : base(info, context)
     {
     }
 }

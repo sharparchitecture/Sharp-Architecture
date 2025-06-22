@@ -5,7 +5,7 @@ using FluentAssertions;
 using Setup;
 using Xunit;
 
-
+[Trait("Category", "Functional")]
 public class AnnouncementControllerTests : IClassFixture<TestServerSetup>, IDisposable
 {
     readonly TestServerSetup _setup;
