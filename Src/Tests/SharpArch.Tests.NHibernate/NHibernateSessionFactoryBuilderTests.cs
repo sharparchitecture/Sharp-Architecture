@@ -1,6 +1,6 @@
 ﻿namespace Tests.SharpArch.NHibernate;
 
-using FluentAssertions;
+using Shouldly;
 using FluentNHibernate.Cfg.Db;
 using global::NHibernate.Cfg;
 using global::SharpArch.NHibernate;
@@ -53,7 +53,7 @@ class NHibernateSessionFactoryBuilderTests
             .ExposeConfiguration(configure)
             .BuildConfiguration();
 
-        exposeCalled.Should().BeTrue();
+        exposeCalled.ShouldBeTrue();
     }
 
     [Test]
@@ -117,7 +117,7 @@ class NHibernateSessionFactoryBuilderTests
             .UseDataAnnotationValidators(true)
             .BuildConfiguration();
 
-        configuration.EventListeners.PreInsertEventListeners.Should().Contain(l => l is PreInsertListener);
+        configuration.EventListeners.PreInsertEventListeners.ShouldContain(l => l is PreInsertListener);
     }
 
     [Test]
@@ -128,6 +128,6 @@ class NHibernateSessionFactoryBuilderTests
             .UseDataAnnotationValidators(true)
             .BuildConfiguration();
 
-        configuration.EventListeners.PreUpdateEventListeners.Should().Contain(l => l is PreUpdateListener);
+        configuration.EventListeners.PreUpdateEventListeners.ShouldContain(l => l is PreUpdateListener);
     }
 }

@@ -2,7 +2,7 @@ namespace Suteki.TardisBank.Tests.Model;
 
 using Domain;
 using Domain.Events;
-using FluentAssertions;
+using Shouldly;
 using MediatR;
 using Moq;
 using SharpArch.Testing.Xunit;
@@ -28,10 +28,11 @@ public class WithdrawlCashTests
     }
 
     [Fact]
-    public void Child_shold_not_be_able_to_withdraw_from_some_other_parent()
+    public void Child_should_not_be_able_to_withdraw_from_some_other_parent()
     {
         Action withdraw = () => _child.WithdrawCashFromParent(_somebodyElsesParent, 2.30M, "for toys", _mediator.Object);
-        withdraw.Should().Throw<CashWithdrawException>().WithMessage("Not Your Parent");
+        var exception = withdraw.ShouldThrow<CashWithdrawException>();
+        exception.Message.ShouldBe("Not Your Parent");
     }
 
     [Fact]
@@ -40,12 +41,12 @@ public class WithdrawlCashTests
     {
         _child.WithdrawCashFromParent(_parent, 2.30M, "For Toys", _mediator.Object);
 
-        _child.Account.Balance.Should().Be(7.70M);
-        _child.Account.Transactions[1].Amount.Should().Be(-2.30M);
-        _child.Account.Transactions[1].Description.Should().Be("For Toys");
+        _child.Account.Balance.ShouldBe(7.70M);
+        _child.Account.Transactions[1].Amount.ShouldBe(-2.30M);
+        _child.Account.Transactions[1].Description.ShouldBe("For Toys");
 
-        _parent.Messages.Count.Should().Be(1);
-        _parent.Messages[0].Text.Should().Be("Leo would like to withdraw \u00A32.30");
+        _parent.Messages.Count.ShouldBe(1);
+        _parent.Messages[0].Text.ShouldBe("Leo would like to withdraw £2.30");
     }
 
     [Fact]
@@ -53,8 +54,8 @@ public class WithdrawlCashTests
     public void Child_should_not_be_able_to_withdraw_more_than_their_balance()
     {
         Action withdraw = () => _child.WithdrawCashFromParent(_parent, 12.11M, "For Toys", _mediator.Object);
-        withdraw.Should().Throw<CashWithdrawException>()
-            .WithMessage("You can not withdraw \u00A312.11 because you only have \u00A310.00 in your account");
+        var exception = withdraw.ShouldThrow<CashWithdrawException>();
+        exception.Message.ShouldBe("You can not withdraw £12.11 because you only have £10.00 in your account");
     }
 
     [Fact]
@@ -65,7 +66,7 @@ public class WithdrawlCashTests
 
         _mediator.Verify(m => m.Publish(
             It.Is((SendMessageEvent ev) =>
-                ev.User == _parent && ev.Message == "Leo would like to withdraw \u00A32.30"),
+                ev.User == _parent && ev.Message == "Leo would like to withdraw £2.30"),
             default(CancellationToken)
         ), Times.Once());
     }

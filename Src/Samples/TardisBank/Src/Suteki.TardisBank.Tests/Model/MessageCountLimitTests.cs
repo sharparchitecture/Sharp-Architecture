@@ -1,7 +1,7 @@
 namespace Suteki.TardisBank.Tests.Model;
 
 using Domain;
-using FluentAssertions;
+using Shouldly;
 using MediatR;
 using Moq;
 using Xunit;
@@ -26,16 +26,16 @@ public class MessageCountLimitTests
             _user.SendMessage("Message" + i, _mediator.Object);
         }
 
-        _user.Messages.Count.Should().Be(User.MaxMessages);
+        _user.Messages.Count.ShouldBe(User.MaxMessages);
 
         _user.SendMessage("New", _mediator.Object);
-        _user.Messages.Count.Should().Be(User.MaxMessages);
-        _user.Messages.First().Text.Should().Be("Message1");
-        _user.Messages.Last().Text.Should().Be("New");
+        _user.Messages.Count.ShouldBe(User.MaxMessages);
+        _user.Messages.First().Text.ShouldBe("Message1");
+        _user.Messages.Last().Text.ShouldBe("New");
 
         _user.SendMessage("New2", _mediator.Object);
-        _user.Messages.Count.Should().Be(User.MaxMessages);
-        _user.Messages.First().Text.Should().Be("Message2");
-        _user.Messages.Last().Text.Should().Be("New2");
+        _user.Messages.Count.ShouldBe(User.MaxMessages);
+        _user.Messages.First().Text.ShouldBe("Message2");
+        _user.Messages.Last().Text.ShouldBe("New2");
     }
 }

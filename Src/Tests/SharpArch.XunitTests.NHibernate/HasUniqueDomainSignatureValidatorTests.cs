@@ -1,7 +1,7 @@
 ﻿namespace Tests.SharpArch.NHibernate;
 
 using Domain;
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 
@@ -19,7 +19,7 @@ public class HasUniqueDomainSignatureValidatorTests : HasUniqueDomainSignatureTe
         var duplicateObjectWithGuidId = new ObjectWithGuidId { Name = "codai" };
 
         duplicateObjectWithGuidId.IsValid(ValidationContextFor(duplicateObjectWithGuidId))
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public class HasUniqueDomainSignatureValidatorTests : HasUniqueDomainSignatureTe
         await SaveAndEvict(contractor, CancellationToken.None);
         var duplicateContractor = new Contractor { Name = "codai" };
         duplicateContractor.IsValid(ValidationContextFor(duplicateContractor))
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 
     [Fact]
@@ -40,6 +40,6 @@ public class HasUniqueDomainSignatureValidatorTests : HasUniqueDomainSignatureTe
         var duplicateUser = new User("user2", "123-12-1234");
 
         duplicateUser.IsValid(ValidationContextFor(duplicateUser))
-            .Should().BeFalse();
+            .ShouldBeFalse();
     }
 }

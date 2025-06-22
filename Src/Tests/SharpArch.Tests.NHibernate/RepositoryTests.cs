@@ -2,7 +2,7 @@
 
 namespace Tests.SharpArch.NHibernate;
 
-using FluentAssertions;
+using Shouldly;
 using global::NHibernate;
 using global::SharpArch.Domain.DomainModel;
 using global::SharpArch.Domain.PersistenceSupport;
@@ -23,7 +23,7 @@ class RepositoryTests
         transactionManager.SetupGet(t => t.Session).Returns(session.Object);
         var concreteRepository = new LinqRepository<MyEntity, int>(transactionManager.Object);
 
-        concreteRepository.Should().BeAssignableTo<ILinqRepository<MyEntity, int>>();
+        concreteRepository.ShouldBeAssignableTo<ILinqRepository<MyEntity, int>>();
     }
 }
 

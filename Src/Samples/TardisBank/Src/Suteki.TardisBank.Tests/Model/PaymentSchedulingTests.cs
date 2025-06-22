@@ -1,7 +1,7 @@
 namespace Suteki.TardisBank.Tests.Model;
 
 using Domain;
-using FluentAssertions;
+using Shouldly;
 using Humanizer;
 using Xunit;
 
@@ -26,12 +26,12 @@ public class PaymentSchedulingTests
     {
         _child.Account.AddPaymentSchedule(_startDate, Interval, Amount, Description);
 
-        _child.Account.PaymentSchedules.Count.Should().Be(1);
-        _child.Account.PaymentSchedules[0].NextRun.Should().Be(_startDate);
-        _child.Account.PaymentSchedules[0].Interval.Should().Be(Interval);
-        _child.Account.PaymentSchedules[0].Amount.Should().Be(Amount);
-        _child.Account.PaymentSchedules[0].Description.Should().Be(Description);
-        _child.Account.PaymentSchedules[0].Id.Should().Be(0);
+        _child.Account.PaymentSchedules.Count.ShouldBe(1);
+        _child.Account.PaymentSchedules[0].NextRun.ShouldBe(_startDate);
+        _child.Account.PaymentSchedules[0].Interval.ShouldBe(Interval);
+        _child.Account.PaymentSchedules[0].Amount.ShouldBe(Amount);
+        _child.Account.PaymentSchedules[0].Description.ShouldBe(Description);
+        _child.Account.PaymentSchedules[0].Id.ShouldBe(0);
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class PaymentSchedulingTests
         var id = _child.Account.PaymentSchedules[0].Id;
         _child.Account.RemovePaymentSchedule(id);
 
-        _child.Account.PaymentSchedules.Count.Should().Be(0);
+        _child.Account.PaymentSchedules.Count.ShouldBe(0);
     }
 
     [Fact]
@@ -52,13 +52,13 @@ public class PaymentSchedulingTests
 
         _child.Account.TriggerScheduledPayments(_startDate);
 
-        _child.Account.Transactions.Count.Should().Be(1);
-        _child.Account.Transactions[0].Amount.Should().Be(Amount);
-        _child.Account.Transactions[0].Description.Should().Be(Description);
-        _child.Account.Transactions[0].Date.Should().Be(DateTime.Now.Date);
+        _child.Account.Transactions.Count.ShouldBe(1);
+        _child.Account.Transactions[0].Amount.ShouldBe(Amount);
+        _child.Account.Transactions[0].Description.ShouldBe(Description);
+        _child.Account.Transactions[0].Date.ShouldBe(DateTime.Now.Date);
 
         var expectedNextRun = _startDate + 1.Weeks();
-        _child.Account.PaymentSchedules[0].NextRun.Should().Be(expectedNextRun);
+        _child.Account.PaymentSchedules[0].NextRun.ShouldBe(expectedNextRun);
     }
 
     [Fact]
@@ -67,7 +67,7 @@ public class PaymentSchedulingTests
         _child.Account.AddPaymentSchedule(_startDate, Interval, Amount, Description);
         _child.Account.TriggerScheduledPayments(_startDate.AddMinutes(-1));
 
-        _child.Account.Transactions.Count.Should().Be(0);
-        _child.Account.PaymentSchedules[0].NextRun.Should().Be(_startDate);
+        _child.Account.Transactions.Count.ShouldBe(0);
+        _child.Account.PaymentSchedules[0].NextRun.ShouldBe(_startDate);
     }
 }

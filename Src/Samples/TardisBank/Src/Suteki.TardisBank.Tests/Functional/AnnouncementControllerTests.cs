@@ -1,7 +1,7 @@
 ﻿namespace Suteki.TardisBank.Tests.Functional;
 
 using Api.Announcements;
-using FluentAssertions;
+using Shouldly;
 using Setup;
 using Xunit;
 
@@ -47,8 +47,8 @@ public class AnnouncementControllerTests : IClassFixture<TestServerSetup>, IDisp
         var announcementResponse = await _setup.Client.GetAsync(_newAnnouncementUri);
         announcementResponse.EnsureSuccessStatusCode();
         var announcementSummary = await announcementResponse.Content.ReadAsAsync<AnnouncementModel>();
-        announcementSummary.Id.Should().BeGreaterThan(0);
-        announcementSummary.Title.Should().Be(newAnnouncement.Title);
+        announcementSummary.Id.ShouldBeGreaterThan(0);
+        announcementSummary.Title.ShouldBe(newAnnouncement.Title);
 
         await DeleteAnnouncement(_newAnnouncementUri);
     }

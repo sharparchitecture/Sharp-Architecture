@@ -1,7 +1,7 @@
 namespace Suteki.TardisBank.Tests.Model;
 
 using Domain;
-using FluentAssertions;
+using Shouldly;
 using SharpArch.Testing.Xunit.NHibernate;
 using Xunit;
 
@@ -37,12 +37,12 @@ public class UserTests : TransientDatabaseTests<TransientDatabaseSetup>
     {
         User[] users = Session.Query<User>().ToArray();
 
-        users.Length.Should().Be(5);
+        users.Length.ShouldBe(5);
 
-        users[0].Should().BeOfType<Parent>();
-        users[1].GetType().Name.Should().Be("Child");
-        users[2].GetType().Name.Should().Be("Child");
-        users[3].GetType().Name.Should().Be("Parent");
-        users[4].GetType().Name.Should().Be("Child");
+        users[0].ShouldBeOfType<Parent>();
+        users[1].GetType().Name.ShouldBe("Child");
+        users[2].GetType().Name.ShouldBe("Child");
+        users[3].GetType().Name.ShouldBe("Parent");
+        users[4].GetType().Name.ShouldBe("Child");
     }
 }

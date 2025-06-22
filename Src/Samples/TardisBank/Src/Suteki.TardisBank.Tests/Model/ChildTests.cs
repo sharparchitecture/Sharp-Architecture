@@ -1,7 +1,7 @@
 namespace Suteki.TardisBank.Tests.Model;
 
 using Domain;
-using FluentAssertions;
+using Shouldly;
 using SharpArch.NHibernate;
 using SharpArch.Testing.Xunit.NHibernate;
 using Xunit;
@@ -37,14 +37,14 @@ public class ChildTests : TransientDatabaseTests<TransientDatabaseSetup>
     public async Task Should_be_able_to_add_schedule_to_account()
     {
         var childToTestOn = (await _childRepository.GetAsync(_childId))!;
-        childToTestOn.Should().NotBeNull();
+        childToTestOn.ShouldNotBeNull();
 
         childToTestOn.Account.AddPaymentSchedule(DateTime.UtcNow, Interval.Week, 10, "Weekly pocket money");
         await FlushSessionAndEvict(childToTestOn);
 
         var child = (await _childRepository.GetAsync(_childId))!;
-        child.Should().NotBeNull();
-        child.Account.PaymentSchedules[0].Id.Should().BePositive("schedule was not persisted");
+        child.ShouldNotBeNull();
+        child.Account.PaymentSchedules[0].Id.ShouldBePositive("schedule was not persisted");
     }
 
     [Fact]
@@ -55,17 +55,17 @@ public class ChildTests : TransientDatabaseTests<TransientDatabaseSetup>
         await FlushSessionAndEvict(childToTestOn);
 
         var child = (await _childRepository.GetAsync(_childId))!;
-        child.Account.Transactions[0].Id.Should().BePositive();
+        child.Account.Transactions[0].Id.ShouldBePositive();
     }
 
     [Fact]
     public async Task Should_be_able_to_create_and_retrieve_a_child()
     {
         var child = (await _childRepository.GetAsync(_childId))!;
-        child.Name.Should().Be("Leo");
-        child.UserName.Should().Be(@"leohadlow");
-        child.ParentId.Should().Be(_parentId);
-        child.Password.Should().Be("xxx");
-        child.Account.Should().NotBeNull();
+        child.Name.ShouldBe("Leo");
+        child.UserName.ShouldBe(@"leohadlow");
+        child.ParentId.ShouldBe(_parentId);
+        child.Password.ShouldBe("xxx");
+        child.Account.ShouldNotBeNull();
     }
 }

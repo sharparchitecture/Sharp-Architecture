@@ -1,7 +1,7 @@
 namespace Suteki.TardisBank.Tests.Model;
 
 using Domain;
-using FluentAssertions;
+using Shouldly;
 using SharpArch.NHibernate;
 using SharpArch.Testing.Xunit.NHibernate;
 using Xunit;
@@ -29,7 +29,7 @@ public class ParentTests : TransientDatabaseTests<TransientDatabaseSetup>
     {
         var linqRepository = new LinqRepository<Parent, int>(TransactionManager);
         Parent savedParent = (await linqRepository.GetAsync(_parentId))!;
-        savedParent.Should().NotBeNull();
+        savedParent.ShouldNotBeNull();
 
         savedParent.CreateChild("jim", "jim123", "passw0rd1");
         savedParent.CreateChild("jenny", "jenny123", "passw0rd2");
@@ -37,20 +37,20 @@ public class ParentTests : TransientDatabaseTests<TransientDatabaseSetup>
         await FlushSessionAndEvict(savedParent);
 
         Parent parent = (await linqRepository.GetAsync(_parentId))!;
-        parent.Children.Count.Should().Be(3);
+        parent.Children.Count.ShouldBe(3);
 
-        parent.Children[0].Name.Should().Be("jim");
-        parent.Children[1].Name.Should().Be("jenny");
-        parent.Children[2].Name.Should().Be("jez");
+        parent.Children[0].Name.ShouldBe("jim");
+        parent.Children[1].Name.ShouldBe("jenny");
+        parent.Children[2].Name.ShouldBe("jez");
     }
 
     [Fact]
     public async Task Should_be_able_to_create_and_retrieve_Parent()
     {
         Parent parent = (await new LinqRepository<Parent, int>(TransactionManager).GetAsync(_parentId))!;
-        parent.Should().NotBeNull();
-        parent.Name.Should().Be("Mike Hadlow");
-        parent.UserName.Should().Be("mike@yahoo.com");
-        parent.Children.Should().NotBeNull();
+        parent.ShouldNotBeNull();
+        parent.Name.ShouldBe("Mike Hadlow");
+        parent.UserName.ShouldBe("mike@yahoo.com");
+        parent.Children.ShouldNotBeNull();
     }
 }

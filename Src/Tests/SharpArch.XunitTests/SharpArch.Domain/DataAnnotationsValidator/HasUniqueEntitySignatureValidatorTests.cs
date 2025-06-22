@@ -2,7 +2,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using FluentAssertions;
+using Shouldly;
 using global::SharpArch.Domain.DomainModel;
 using global::SharpArch.Domain.PersistenceSupport;
 using global::SharpArch.Domain.Validation;
@@ -76,7 +76,7 @@ public class HasUniqueObjectSignatureValidatorTests
             Debug.WriteLine(invalidValue.ErrorMessage);
         }
 
-        contractor.IsValid(validationContext).Should().BeFalse();
+        contractor.IsValid(validationContext).ShouldBeFalse();
     }
 
     [Fact]
@@ -84,23 +84,23 @@ public class HasUniqueObjectSignatureValidatorTests
     {
         var objectWithGuidId = new ObjectWithGuidId { Name = "codai" };
 
-        objectWithGuidId.IsValid(ValidationContextFor(objectWithGuidId)).Should().BeFalse();
+        objectWithGuidId.IsValid(ValidationContextFor(objectWithGuidId)).ShouldBeFalse();
 
         objectWithGuidId = new ObjectWithGuidId { Name = "whatever" };
-        objectWithGuidId.IsValid(ValidationContextFor(objectWithGuidId)).Should().BeTrue();
+        objectWithGuidId.IsValid(ValidationContextFor(objectWithGuidId)).ShouldBeTrue();
     }
 
     [Fact]
     public void CanVerifyThatDuplicateExistsOfEntityWithStringIdDuringValidationProcess()
     {
         var user = new User { Ssn = "123-12-1234" };
-        user.IsValid(ValidationContextFor(user)).Should().BeFalse();
+        user.IsValid(ValidationContextFor(user)).ShouldBeFalse();
     }
 
     [Fact]
     public void CanVerifyThatNoDuplicateExistsDuringValidationProcess()
     {
         var contractor = new Contractor { Name = "Some unique name" };
-        contractor.IsValid(ValidationContextFor(contractor)).Should().BeTrue();
+        contractor.IsValid(ValidationContextFor(contractor)).ShouldBeTrue();
     }
 }

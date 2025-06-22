@@ -3,7 +3,7 @@
 namespace Tests.SharpArch.Domain.DomainModel;
 
 using System.Reflection;
-using FluentAssertions;
+using Shouldly;
 using global::SharpArch.Domain.DomainModel;
 using global::SharpArch.Testing.Helpers;
 using Xunit;
@@ -63,15 +63,15 @@ public class BaseObjectEqualityComparerTests
 
         objects1.Intersect(
                 objects2, new BaseObjectEqualityComparer<ConcreteEntityWithDomainSignatureProperties>())
-            .Should().HaveCount(1);
+            .Count().ShouldBe(1);
 
         objects1.Intersect(
                 objects2, new BaseObjectEqualityComparer<ConcreteEntityWithDomainSignatureProperties>()).First()
-            .Equals(obj1).Should().BeTrue();
+            .Equals(obj1).ShouldBeTrue();
 
         objects1.Intersect(
                 objects2, new BaseObjectEqualityComparer<ConcreteEntityWithDomainSignatureProperties>()).First()
-            .Equals(obj3).Should().BeTrue();
+            .Equals(obj3).ShouldBeTrue();
     }
 
     [Fact]
@@ -81,10 +81,10 @@ public class BaseObjectEqualityComparerTests
 
         var obj1 = new ConcreteBaseObject { Name = "Whatever" };
         var obj2 = new ConcreteBaseObject { Name = "Whatever" };
-        comparer.Equals(obj1, obj2).Should().BeTrue();
+        comparer.Equals(obj1, obj2).ShouldBeTrue();
 
         obj2.Name = "Mismatch";
-        comparer.Equals(obj1, obj2).Should().BeFalse();
+        comparer.Equals(obj1, obj2).ShouldBeFalse();
     }
 
     [Fact]
@@ -95,14 +95,14 @@ public class BaseObjectEqualityComparerTests
         var obj1 = new ConcreteEntityWithDomainSignatureProperties { Name = "Whatever" };
         var obj2 = new ConcreteEntityWithDomainSignatureProperties { Name = "Whatever" };
 
-        comparer.Equals(obj1, obj2).Should().BeTrue();
+        comparer.Equals(obj1, obj2).ShouldBeTrue();
 
         obj2.Name = "Mismatch";
-        comparer.Equals(obj1, obj2).Should().BeFalse();
+        comparer.Equals(obj1, obj2).ShouldBeFalse();
 
         EntityIdSetter.SetIdOf(obj1, 1);
         EntityIdSetter.SetIdOf(obj2, 1);
-        comparer.Equals(obj1, obj2).Should().BeTrue();
+        comparer.Equals(obj1, obj2).ShouldBeTrue();
     }
 
     [Fact]
@@ -112,20 +112,20 @@ public class BaseObjectEqualityComparerTests
 
         var obj1 = new ConcreteEntityWithNoDomainSignatureProperties { Name = "Whatever" };
         var obj2 = new ConcreteEntityWithNoDomainSignatureProperties { Name = @"asdf" };
-        comparer.Equals(obj1, obj2).Should().BeFalse();
+        comparer.Equals(obj1, obj2).ShouldBeFalse();
 
         EntityIdSetter.SetIdOf(obj1, 1);
         EntityIdSetter.SetIdOf(obj2, 1);
-        comparer.Equals(obj1, obj2).Should().BeTrue();
+        comparer.Equals(obj1, obj2).ShouldBeTrue();
     }
 
     [Fact]
     public void CanCompareNulls()
     {
         var comparer = new BaseObjectEqualityComparer<BaseObject>();
-        comparer.Equals(null, null).Should().BeTrue();
-        comparer.Equals(null, new ConcreteBaseObject()).Should().BeFalse();
-        comparer.Equals(new ConcreteBaseObject(), null).Should().BeFalse();
+        comparer.Equals(null, null).ShouldBeTrue();
+        comparer.Equals(null, new ConcreteBaseObject()).ShouldBeFalse();
+        comparer.Equals(new ConcreteBaseObject(), null).ShouldBeFalse();
     }
 
     [Fact]
@@ -135,10 +135,10 @@ public class BaseObjectEqualityComparerTests
 
         var obj1 = new ConcreteValueObject { Name = "Whatever" };
         var obj2 = new ConcreteValueObject { Name = "Whatever" };
-        comparer.Equals(obj1, obj2).Should().BeTrue();
+        comparer.Equals(obj1, obj2).ShouldBeTrue();
 
         obj2.Name = "Mismatch";
-        comparer.Equals(obj1, obj2).Should().BeFalse();
+        comparer.Equals(obj1, obj2).ShouldBeFalse();
     }
 
     [Fact]
@@ -149,6 +149,6 @@ public class BaseObjectEqualityComparerTests
         var obj1 = new ConcreteBaseObject { Name = "Whatever" };
         var obj2 = new ConcreteValueObject { Name = "Whatever" };
 
-        comparer.Equals(obj1, obj2).Should().BeFalse();
+        comparer.Equals(obj1, obj2).ShouldBeFalse();
     }
 }
