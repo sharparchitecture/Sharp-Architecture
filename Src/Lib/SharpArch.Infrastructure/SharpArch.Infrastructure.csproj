@@ -22,4 +22,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup Label="Package References (.NET 9)" Condition=" '$(TargetFramework)' == 'net9.0' ">
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+  </ItemGroup>
+
 </Project>

@@ -4,9 +4,6 @@ using global::NHibernate;
 using global::NUnit.Framework;
 using SharpArch.NHibernate;
 using Testing.NHibernate;
-#if NULLABLE_REFERENCE_TYPES
-using System.Diagnostics.CodeAnalysis;
-#endif
 
 
 /// <summary>
@@ -26,9 +23,7 @@ public abstract class RepositoryTestsBase
     /// <summary>
     ///     Database initializer.
     /// </summary>
-#if NULLABLE_REFERENCE_TYPES
     [MaybeNull]
-#endif
     protected TestDatabaseSetup DbInitializer { get; private set; } = null!;
 
     /// <summary>
@@ -56,11 +51,7 @@ public abstract class RepositoryTestsBase
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-#if NULLABLE_REFERENCE_TYPES
         DbInitializer?.Dispose();
-#else
-        DbInitializer.Dispose();
-#endif
         DbInitializer = null!;
     }
 
@@ -107,11 +98,7 @@ public abstract class RepositoryTestsBase
     [SetUp]
     protected virtual void SetUp()
     {
-#if NULLABLE_REFERENCE_TYPES
         TransactionManager = new TransactionManager(DbInitializer!.InitializeSession());
-#else
-        TransactionManager = new TransactionManager(DbInitializer.InitializeSession());
-#endif
         LoadTestData();
     }
 }

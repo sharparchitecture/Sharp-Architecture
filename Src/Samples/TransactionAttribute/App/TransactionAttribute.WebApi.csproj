@@ -25,6 +25,10 @@
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\Lib\SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj" />
   </ItemGroup>

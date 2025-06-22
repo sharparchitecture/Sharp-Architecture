@@ -1,9 +1,6 @@
 ﻿namespace SharpArch.Domain.DomainModel;
 
 using System.Reflection;
-#if NULLABLE_REFERENCE_TYPES
-using System.Diagnostics.CodeAnalysis;
-#endif
 
 
 /// <summary>
@@ -70,8 +67,6 @@ public interface IEntity<out TId>
     /// <summary>
     ///     Gets the ID which uniquely identifies the entity instance within its type's bounds.
     /// </summary>
-#if NULLABLE_REFERENCE_TYPES
     [AllowNull] [MaybeNull]
-#endif
     TId Id { get; }
 }

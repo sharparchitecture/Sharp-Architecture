@@ -3,7 +3,7 @@
     <Product>Sharp Architecture</Product>
     <Authors>Sharp Architecture Dev Team</Authors>
     <Copyright>Copyright &#xA9; Sharp Architecture Development Team</Copyright>
-    <TargetFrameworks>netstandard2.1;net6.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net6.0;net8.0;net9.0</TargetFrameworks>
     <Culture></Culture>
     <SignAssembly>false</SignAssembly>
 
@@ -22,17 +22,18 @@
 
     <IsTestProject>false</IsTestProject>
 
-    <DefineConstants>$(DefineConstants);JETBRAINS_ANNOTATIONS</DefineConstants>
+    <DefineConstants>$(DefineConstants);JETBRAINS_ANNOTATIONS;NULLABLE_REFERENCE_TYPES</DefineConstants>
     <NoWarn>$(NoWarn);0105</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <Using Include="JetBrains.Annotations" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
   </ItemGroup>
 
   <PropertyGroup Label="Custom targets">
     <!-- target frameworks for unit-tests and applications -->
-    <AppTargetFrameworks>net6.0;net8.0</AppTargetFrameworks>
+    <AppTargetFrameworks>net6.0;net8.0;net9.0</AppTargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -41,11 +42,6 @@
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <Optimize>True</Optimize>
-  </PropertyGroup>
-
-  <!-- nullable checks -->
-  <PropertyGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
-    <DefineConstants>$(DefineConstants);NULLABLE_REFERENCE_TYPES</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Label="Package" Condition="'$(MSBuildProjectName.Contains(Tests))' == false">

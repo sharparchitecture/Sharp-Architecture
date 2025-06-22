@@ -4,10 +4,6 @@ using global::NHibernate;
 using global::NHibernate.Cfg;
 using global::NUnit.Framework;
 using Testing.NHibernate;
-#if NULLABLE_REFERENCE_TYPES
-using System.Diagnostics.CodeAnalysis;
-#endif
-
 
 /// <summary>
 ///     <para>

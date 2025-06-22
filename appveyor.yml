@@ -33,7 +33,7 @@ for:
   clone_folder: ~/work/sharp-arch
 
   environment:
-    NO_COLOR:1
+    NO_COLOR: 1
   install:
     - sh: dotnet --info
     - sh: touch ./Src/Common/AssemblyVersion.cs
