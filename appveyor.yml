@@ -15,7 +15,8 @@ environment:
   CAKE_SETTINGS_SKIPPACKAGEVERSIONCHECK: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-
+  DOTNET_TERMINAL_LOGGER: false
+  DOTNET_NOLOGO: true
 
 test: off
 
@@ -32,8 +33,6 @@ for:
 
   clone_folder: ~/work/sharp-arch
 
-  environment:
-    NO_COLOR: 1
   install:
     - sh: dotnet --info
     - sh: touch ./Src/Common/AssemblyVersion.cs
