@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <Compile Include="..\..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
-  </ItemGroup>
-
   <PropertyGroup Label="Build">
     <!-- use application targets to sync dependencies -->
     <TargetFrameworks>$(AppTargetFrameworks)</TargetFrameworks>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
+  </ItemGroup>
 
   <PropertyGroup Label="Pack">
     <Description>Provides AspNet.Core MVC extensions.</Description>

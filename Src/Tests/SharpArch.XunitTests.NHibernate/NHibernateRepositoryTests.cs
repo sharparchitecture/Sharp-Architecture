@@ -1,7 +1,7 @@
 ﻿namespace Tests.SharpArch.NHibernate;
 
 using Domain;
-using FluentAssertions;
+using Shouldly;
 using global::SharpArch.NHibernate;
 using global::SharpArch.Testing.Xunit.NHibernate;
 using Xunit;
@@ -31,8 +31,8 @@ public class NHibernateRepositoryTests : TransientDatabaseTests<NHibernateTestsS
         };
 
         var res = await _repo.SaveAsync(entity);
-        res.IsTransient().Should().BeFalse();
-        res.Id.Should().BeGreaterThan(0);
+        res.IsTransient().ShouldBeFalse();
+        res.Id.ShouldBeGreaterThan(0);
     }
 
     [Fact]
@@ -43,10 +43,10 @@ public class NHibernateRepositoryTests : TransientDatabaseTests<NHibernateTestsS
             Name = "John Doe"
         };
         var res = await _repo.SaveOrUpdateAsync(entity);
-        res.IsTransient().Should().BeFalse();
+        res.IsTransient().ShouldBeFalse();
 
         entity.Name = "John Doe Jr";
         res = await _repo.SaveOrUpdateAsync(entity);
-        res.Name.Should().Be("John Doe Jr");
+        res.Name.ShouldBe("John Doe Jr");
     }
 }

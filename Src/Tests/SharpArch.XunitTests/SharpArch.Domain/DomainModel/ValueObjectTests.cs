@@ -1,7 +1,7 @@
 namespace Tests.SharpArch.Domain.DomainModel;
 
 using System.Diagnostics.CodeAnalysis;
-using FluentAssertions;
+using Shouldly;
 using global::SharpArch.Domain.DomainModel;
 using Xunit;
 
@@ -48,12 +48,12 @@ public class ValueObjectTests
     {
         var valueObj1 = new DummyValueType { Id = 1, Name = "Luis" };
         var valueObj2 = new DummyValueType { Id = 1, Name = "Luis" };
-        valueObj1.Should().NotBeSameAs(valueObj2);
-        valueObj1.Equals(valueObj2).Should().BeTrue();
-        (valueObj1 == valueObj2).Should().BeTrue();
+        valueObj1.ShouldNotBeSameAs(valueObj2);
+        valueObj1.Equals(valueObj2).ShouldBeTrue();
+        (valueObj1 == valueObj2).ShouldBeTrue();
 
         valueObj2.Name = "Billy";
-        (valueObj1 == valueObj2).Should().BeFalse();
+        (valueObj1 == valueObj2).ShouldBeFalse();
     }
 
     [Fact]
@@ -61,7 +61,7 @@ public class ValueObjectTests
     {
         var val1 = new DummyValueType { Id = 1, Name = "Luis" };
         // ReSharper disable once EqualExpressionComparison
-        val1.Equals(val1).Should().BeTrue();
+        val1.Equals(val1).ShouldBeTrue();
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class ValueObjectTests
     {
         var val1 = new DummyValueType { Id = 1, Name = "Luis" };
         var val2 = new DummyValueType { Id = 1, Name = "Luis" };
-        val1.Equals(val2).Should().BeTrue();
+        val1.Equals(val2).ShouldBeTrue();
     }
 
     [Fact]
@@ -77,7 +77,7 @@ public class ValueObjectTests
     {
         var val1 = new DummyValueType();
         // ReSharper disable once EqualExpressionComparison
-        val1.Equals(val1).Should().BeTrue();
+        val1.Equals(val1).ShouldBeTrue();
     }
 
     [Fact]
@@ -86,8 +86,8 @@ public class ValueObjectTests
         var val1 = new DummyValueType { Id = 10, Name = @"jose" };
         var val2 = new DummyValueType { Id = 20, Name = @"Rui" };
 
-        (val1 == val2).Should().BeFalse();
-        (val1 != val2).Should().BeTrue();
+        (val1 == val2).ShouldBeFalse();
+        (val1 != val2).ShouldBeTrue();
     }
 
     [Fact]
@@ -95,14 +95,14 @@ public class ValueObjectTests
     {
         var val1 = new DummyValueType { Id = 10, Name = "Miguel" };
         var val2 = new DummyValueType { Id = 10, Name = "Miguel" };
-        val1.GetHashCode().Should().Be(val2.GetHashCode());
+        val1.GetHashCode().ShouldBe(val2.GetHashCode());
     }
 
     [Fact]
     public void ShouldNotBeEqualToNull()
     {
         var val1 = new DummyValueType { Id = 1, Name = "Luis" };
-        val1.Equals(null).Should().BeFalse();
+        val1.Equals(null).ShouldBeFalse();
     }
 
     [Fact]
@@ -111,10 +111,10 @@ public class ValueObjectTests
     {
         var val1 = new DummyValueType { Id = 1, Name = "Luis" };
 
-        (null == val1).Should().BeFalse();
-        (val1 == null).Should().BeFalse();
-        (null! != val1).Should().BeTrue();
-        (val1 != null).Should().BeTrue();
+        (null == val1).ShouldBeFalse();
+        (val1 == null).ShouldBeFalse();
+        (null! != val1).ShouldBeTrue();
+        (val1 != null).ShouldBeTrue();
     }
 
     [Fact]
@@ -123,7 +123,7 @@ public class ValueObjectTests
         var val1 = new DummyValueType { Id = 1, Name = "Luis" };
         var val2 = new AnotherDummyValueType { Id = 1, Name = "Luis" };
         // ReSharper disable once SuspiciousTypeConversion.Global
-        val2.Equals(val1).Should().BeFalse();
+        val2.Equals(val1).ShouldBeFalse();
     }
 
     [Fact]
@@ -131,6 +131,6 @@ public class ValueObjectTests
     {
         var val1 = new DummyValueType { Id = 1, Name = "Luis" };
         var val2 = new DummyValueType { Id = 10, Name = "Luis" };
-        val2.Equals(val1).Should().BeFalse();
+        val2.Equals(val1).ShouldBeFalse();
     }
 }

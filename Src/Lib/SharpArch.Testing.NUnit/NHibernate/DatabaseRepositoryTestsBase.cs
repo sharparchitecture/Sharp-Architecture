@@ -40,9 +40,7 @@ public abstract class DatabaseRepositoryTestsBase
     /// <summary>
     ///     Database initializer instance.
     /// </summary>
-#if NULLABLE_REFERENCE_TYPES
     [MaybeNull]
-#endif
     protected TestDatabaseSetup Initializer { get; private set; } = null!;
 
     /// <summary>
@@ -101,7 +99,7 @@ public abstract class DatabaseRepositoryTestsBase
         if (Session != null)
         {
             var currentTransaction = Session.GetCurrentTransaction();
-            if (currentTransaction != null && currentTransaction.IsActive) currentTransaction.Rollback();
+            if (currentTransaction is { IsActive: true }) currentTransaction.Rollback();
             Session.Dispose();
             Session = null;
         }
@@ -113,11 +111,7 @@ public abstract class DatabaseRepositoryTestsBase
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-#if NULLABLE_REFERENCE_TYPES
         Initializer?.Dispose();
-#else
-        Initializer.Dispose();
-#endif
         Initializer = null!;
     }
 }

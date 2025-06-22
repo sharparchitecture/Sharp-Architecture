@@ -1,7 +1,7 @@
 namespace Suteki.TardisBank.Tests.Model;
 
 using Domain;
-using FluentAssertions;
+using Shouldly;
 using Xunit;
 
 
@@ -27,17 +27,18 @@ public class MakePaymentTests
     {
         _parent.MakePaymentTo(_child, 2.30M);
 
-        _child.Account.Transactions.Count.Should().Be(1);
-        _child.Account.Transactions[0].Amount.Should().Be(2.30M);
-        _child.Account.Transactions[0].Description.Should().Be("Payment from Mike Hadlow");
-        _child.Account.Transactions[0].Date.Should().Be(DateTime.Now.Date);
-        _child.Account.Balance.Should().Be(2.30M);
+        _child.Account.Transactions.Count.ShouldBe(1);
+        _child.Account.Transactions[0].Amount.ShouldBe(2.30M);
+        _child.Account.Transactions[0].Description.ShouldBe("Payment from Mike Hadlow");
+        _child.Account.Transactions[0].Date.ShouldBe(DateTime.Now.Date);
+        _child.Account.Balance.ShouldBe(2.30M);
     }
 
     [Fact]
     public void Should_not_be_able_to_make_a_payment_to_somebody_elses_child()
     {
         Action makePayment = () => _parent.MakePaymentTo(_somebodyElsesChild, 4.50M);
-        makePayment.Should().Throw<TardisBankException>().WithMessage("Jim is not a child of Mike Hadlow");
+        var ex = makePayment.ShouldThrow<TardisBankException>();
+        ex.Message.ShouldBe("Jim is not a child of Mike Hadlow");
     }
 }

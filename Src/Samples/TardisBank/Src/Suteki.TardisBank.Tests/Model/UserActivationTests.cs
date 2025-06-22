@@ -2,7 +2,7 @@ namespace Suteki.TardisBank.Tests.Model;
 
 using Domain;
 using Domain.Events;
-using FluentAssertions;
+using Shouldly;
 using MediatR;
 using Moq;
 using Xunit;
@@ -21,7 +21,7 @@ public class UserActivationTests
     public void Child_should_be_active_when_created()
     {
         User child = new Parent("Dad", "Mike@mike.com", "xxx").CreateChild("Leo", "leoahdlow", "bbb");
-        child.IsActive.Should().BeTrue();
+        child.IsActive.ShouldBeTrue();
     }
 
     [Fact]
@@ -39,6 +39,6 @@ public class UserActivationTests
     public void ParentShouldNotBeActiveWhenCreated()
     {
         User parent = new Parent("Dad", "mike@mike.com", "xxx");
-        parent.IsActive.Should().BeFalse();
+        parent.IsActive.ShouldBeFalse();
     }
 }

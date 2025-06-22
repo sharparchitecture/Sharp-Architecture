@@ -1,6 +1,6 @@
 namespace Tests.SharpArch.Domain.Reflection;
 
-using FluentAssertions;
+using Shouldly;
 using global::SharpArch.Domain.Reflection;
 using Xunit;
 
@@ -19,13 +19,13 @@ public class TypePropertyDescriptorCacheTests
     {
         _cache.GetOrAdd(GetType(), t => new TypePropertyDescriptor(t, null));
         _cache.Clear();
-        _cache.Find(GetType()).Should().BeNull();
+        _cache.Find(GetType()).ShouldBeNull();
     }
 
     [Fact]
     public void Find_Should_ReturnNullForMissingDescriptor()
     {
-        _cache.Find(typeof(TypePropertyDescriptorCache)).Should().BeNull();
+        _cache.Find(typeof(TypePropertyDescriptorCache)).ShouldBeNull();
     }
 
     [Fact]
@@ -33,6 +33,6 @@ public class TypePropertyDescriptorCacheTests
     {
         Type type = GetType();
         var descriptor = new TypePropertyDescriptor(type, null);
-        _cache.GetOrAdd(type, _ => descriptor).Should().BeSameAs(descriptor);
+        _cache.GetOrAdd(type, _ => descriptor).ShouldBeSameAs(descriptor);
     }
 }

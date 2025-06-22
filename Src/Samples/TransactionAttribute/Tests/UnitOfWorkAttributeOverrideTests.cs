@@ -6,7 +6,7 @@ namespace TransactionAttribute.Tests;
 
 using System.Data;
 using System.Net;
-using FluentAssertions;
+using Shouldly;
 using Setup;
 using WebApi.Stubs;
 using Xunit;
@@ -36,11 +36,11 @@ public class UnitOfWorkAttributeOverrideTests : IClassFixture<TestServerSetup>
     {
         using (var response = await GetAsync(method))
         {
-            response.StatusCode.Should().Be(statusCode);
+            response.StatusCode.ShouldBe(statusCode);
             response.Headers.GetValues(TransactionManagerStub.TransactionIsolationLevel)
-                .Should().Contain(isolationLevel);
+                .ShouldContain(isolationLevel);
             response.Headers.GetValues(TransactionManagerStub.TransactionState)
-                .Should().Contain(transactionState);
+                .ShouldContain(transactionState);
         }
     }
 

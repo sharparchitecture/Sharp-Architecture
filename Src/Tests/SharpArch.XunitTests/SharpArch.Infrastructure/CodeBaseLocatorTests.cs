@@ -1,7 +1,7 @@
 ﻿namespace Tests.SharpArch.Infrastructure;
 
 using System.Reflection;
-using FluentAssertions;
+using Shouldly;
 using global::SharpArch.Infrastructure;
 using Xunit;
 using Xunit.Abstractions;
@@ -21,7 +21,7 @@ public class CodeBaseLocatorTests
     {
         var path = CodeBaseLocator.GetAssemblyCodeBasePath(Assembly.GetExecutingAssembly());
         _output.WriteLine("Assembly path: '{0}'", path);
-        path.Should().NotBeNullOrEmpty();
-        Directory.Exists(path).Should().BeTrue();
+        path.ShouldNotBeNullOrEmpty();
+        Directory.Exists(path).ShouldBeTrue();
     }
 }

@@ -4,7 +4,7 @@
 
 namespace Tests.SharpArch.Domain.DomainModel;
 
-using FluentAssertions;
+using Shouldly;
 using global::SharpArch.Domain.DomainModel;
 using global::SharpArch.Testing.Helpers;
 using Xunit;
@@ -229,22 +229,22 @@ public class EntityTests
     {
         var obj1 = new ObjectWithAllDomainSignatureProperty();
         var obj2 = new ObjectWithAllDomainSignatureProperty();
-        obj1.Equals(obj2).Should().BeTrue();
+        obj1.Equals(obj2).ShouldBeTrue();
 
         obj1.Age = 13;
         obj2.Age = 13;
         obj1.Name = "Foo";
         obj2.Name = "Foo";
-        obj1.Equals(obj2).Should().BeTrue();
+        obj1.Equals(obj2).ShouldBeTrue();
 
         obj1.Name = "Bar";
-        obj1.Equals(obj2).Should().BeFalse();
+        obj1.Equals(obj2).ShouldBeFalse();
 
         obj1.Name = null;
-        obj1.Equals(obj2).Should().BeFalse();
+        obj1.Equals(obj2).ShouldBeFalse();
 
         obj2.Name = null;
-        obj1.Equals(obj2).Should().BeTrue();
+        obj1.Equals(obj2).ShouldBeTrue();
     }
 
     [Fact]
@@ -252,7 +252,7 @@ public class EntityTests
     {
         var obj1 = new ObjectWithOneDomainSignatureProperty();
         var obj2 = new ObjectWithOneDomainSignatureProperty();
-        obj1.Equals(obj2).Should().BeTrue();
+        obj1.Equals(obj2).ShouldBeTrue();
 
         obj1.Age = 13;
         obj2.Age = 13;
@@ -260,11 +260,11 @@ public class EntityTests
         // Name property isn't included in comparison
         obj1.Name = "Foo";
         obj2.Name = "Bar";
-        obj1.Equals(obj2).Should().BeTrue();
+        obj1.Equals(obj2).ShouldBeTrue();
 
         obj1.Age = 14;
-        obj1.Equals(obj2).Should().BeFalse();
-        obj1.Equals(obj2).Should().BeFalse();
+        obj1.Equals(obj2).ShouldBeFalse();
+        obj1.Equals(obj2).ShouldBeFalse();
     }
 
     [Fact]
@@ -273,27 +273,27 @@ public class EntityTests
         var obj1 = new ObjectWithIntId { Name = "Acme" };
         var obj2 = new ObjectWithIntId { Name = "Anvil" };
 
-        obj1.Equals(null).Should().BeFalse();
-        obj1!.Equals(obj2).Should().BeFalse();
+        obj1.Equals(null).ShouldBeFalse();
+        obj1!.Equals(obj2).ShouldBeFalse();
 
         EntityIdSetter.SetIdOf(obj1, 10);
         EntityIdSetter.SetIdOf(obj2, 10);
 
         // Even though the "business value signatures" are different, the persistent Ids 
         // were the same.  Call me crazy, but I put that much trust into persisted Ids.
-        obj1.Equals(obj2).Should().BeTrue();
-        obj1.GetHashCode().Should().Be(obj2.GetHashCode());
+        obj1.Equals(obj2).ShouldBeTrue();
+        obj1.GetHashCode().ShouldBe(obj2.GetHashCode());
 
         var obj3 = new ObjectWithIntId { Name = "Acme" };
 
         // Since obj1 has an Id but obj3 doesn't, they won't be equal
         // even though their signatures are the same
-        obj1.Equals(obj3).Should().BeFalse();
+        obj1.Equals(obj3).ShouldBeFalse();
 
         var obj4 = new ObjectWithIntId { Name = "Acme" };
 
         // obj3 and obj4 are both transient and share the same signature
-        obj3.Equals(obj4).Should().BeTrue();
+        obj3.Equals(obj4).ShouldBeTrue();
     }
 
     [Fact]
@@ -302,26 +302,26 @@ public class EntityTests
         var obj1 = new ObjectWithAssignedId { Name = "Acme" };
         var obj2 = new ObjectWithAssignedId { Name = "Anvil" };
 
-        obj1.Equals(null).Should().BeFalse();
-        obj1!.Equals(obj2).Should().BeFalse();
+        obj1.Equals(null).ShouldBeFalse();
+        obj1!.Equals(obj2).ShouldBeFalse();
 
         obj1.SetAssignedIdTo("AAAAA");
         obj2.SetAssignedIdTo("AAAAA");
 
         // Even though the "business value signatures" are different, the persistent Ids 
         // were the same.  Call me crazy, but I put that much trust into persisted Ids.
-        obj1.Equals(obj2).Should().BeTrue();
+        obj1.Equals(obj2).ShouldBeTrue();
 
         var obj3 = new ObjectWithAssignedId { Name = "Acme" };
 
         // Since obj1 has an Id but obj3 doesn't, they won't be equal
         // even though their signatures are the same
-        obj1.Equals(obj3).Should().BeFalse();
+        obj1.Equals(obj3).ShouldBeFalse();
 
         var obj4 = new ObjectWithAssignedId { Name = "Acme" };
 
         // obj3 and obj4 are both transient and share the same signature
-        obj3.Equals(obj4).Should().BeTrue();
+        obj3.Equals(obj4).ShouldBeTrue();
     }
 
     [Fact]
@@ -329,7 +329,7 @@ public class EntityTests
     {
         var obj1 = new InheritedObjectWithExtraDomainSignatureProperty();
         var obj2 = new InheritedObjectWithExtraDomainSignatureProperty();
-        obj1.Equals(obj2).Should().BeTrue();
+        obj1.Equals(obj2).ShouldBeTrue();
 
         obj1.Age = 13;
         obj1.IsLiving = true;
@@ -339,10 +339,10 @@ public class EntityTests
         // Address property isn't included in comparison
         obj1.Address = "123 Oak Ln.";
         obj2.Address = "Nightmare on Elm St.";
-        obj1.Equals(obj2).Should().BeTrue();
+        obj1.Equals(obj2).ShouldBeTrue();
 
         obj1.IsLiving = false;
-        obj1.Equals(obj2).Should().BeFalse();
+        obj1.Equals(obj2).ShouldBeFalse();
     }
 
     [Fact]
@@ -351,7 +351,7 @@ public class EntityTests
         var obj1 = new ObjectWithComplexProperties();
         var obj2 = new ObjectWithComplexProperties();
 
-        obj1.Equals(obj2).Should().BeTrue();
+        obj1.Equals(obj2).ShouldBeTrue();
 
         obj1.Address = new AddressBeingDomainSignatureComparable
         {
@@ -359,7 +359,7 @@ public class EntityTests
             Address2 = "Suite 201",
             ZipCode = 12345
         };
-        obj1.Equals(obj2).Should().BeFalse();
+        obj1.Equals(obj2).ShouldBeFalse();
 
         // Set the address of the 2nd to be different to the address of the first
         obj2.Address = new AddressBeingDomainSignatureComparable
@@ -371,26 +371,26 @@ public class EntityTests
             Address2 = "Suite 402",
             ZipCode = 98765
         };
-        obj1.Equals(obj2).Should().BeFalse();
+        obj1.Equals(obj2).ShouldBeFalse();
 
         // Set the address of the 2nd to be the same as the first
         obj2.Address.ZipCode = 12345;
-        obj1.Equals(obj2).Should().BeTrue();
+        obj1.Equals(obj2).ShouldBeTrue();
 
         obj1.Phone = new PhoneBeingNotDomainObject { PhoneNumber = "(555) 555-5555" };
-        obj1.Equals(obj2).Should().BeFalse();
+        obj1.Equals(obj2).ShouldBeFalse();
 
         // IMPORTANT: Note that even though the phone number below has the same value as the 
         // phone number on obj1, they're not domain signature comparable; therefore, the
         // "out of the box" equality will be used which shows them as being different objects.
         obj2.Phone = new PhoneBeingNotDomainObject { PhoneNumber = "(555) 555-5555" };
-        obj1.Equals(obj2).Should().BeFalse();
+        obj1.Equals(obj2).ShouldBeFalse();
 
         // Observe as we replace the obj1.Phone with an object that isn't domain-signature
         // comparable, but DOES have an overridden Equals which will return true if the phone
         // number properties are equal.
         obj1.Phone = new PhoneBeingNotDomainObjectButWithOverriddenEquals { PhoneNumber = "(555) 555-5555" };
-        obj1.Equals(obj2).Should().BeTrue();
+        obj1.Equals(obj2).ShouldBeTrue();
     }
 
     [Fact]
@@ -398,7 +398,7 @@ public class EntityTests
     {
         var invalidEntity = new ObjectWithNoDomainSignatureProperties();
 
-        invalidEntity.GetSignatureProperties().Should().BeEmpty();
+        invalidEntity.GetSignatureProperties().ShouldBeEmpty();
     }
 
     [Fact]
@@ -411,7 +411,7 @@ public class EntityTests
         EntityIdSetter.SetIdOf(obj2, 1);
 
         // ReSharper disable once SuspiciousTypeConversion.Global
-        obj1.Equals(obj2).Should().BeFalse();
+        obj1.Equals(obj2).ShouldBeFalse();
     }
 
     [Fact]
@@ -419,7 +419,7 @@ public class EntityTests
     {
         _obj.SetAssignedIdTo(1);
         _diffObj.SetAssignedIdTo(1);
-        _obj.Equals(_diffObj).Should().BeTrue();
+        _obj.Equals(_diffObj).ShouldBeTrue();
     }
 
     [Fact]
@@ -427,60 +427,60 @@ public class EntityTests
     {
         _objWithId.SetAssignedIdTo("1");
         _diffObjWithId.SetAssignedIdTo("1");
-        _objWithId.Equals(_diffObjWithId).Should().BeTrue();
+        _objWithId.Equals(_diffObjWithId).ShouldBeTrue();
     }
 
     [Fact]
     public void DoEqualDefaultEntitiesWithMatchingIdsGenerateDifferentHashCodes()
     {
-        _obj.GetHashCode().Should().NotBe(_diffObj.GetHashCode());
+        _obj.GetHashCode().ShouldNotBe(_diffObj.GetHashCode());
     }
 
     [Fact]
     public void DoEqualDefaultEntitiesWithNoIdsGenerateSameHashCodes()
     {
-        _obj.GetHashCode().Should().Be(_sameObj.GetHashCode());
+        _obj.GetHashCode().ShouldBe(_sameObj.GetHashCode());
     }
 
     [Fact]
     public void DoEqualEntitiesWithMatchingIdsGenerateDifferentHashCodes()
     {
-        _objWithId.GetHashCode().Should().NotBe(_diffObjWithId.GetHashCode());
+        _objWithId.GetHashCode().ShouldNotBe(_diffObjWithId.GetHashCode());
     }
 
     [Fact]
     public void DoEqualEntitiesWithNoIdsGenerateSameHashCodes()
     {
-        _objWithId.GetHashCode().Should().Be(_sameObjWithId.GetHashCode());
+        _objWithId.GetHashCode().ShouldBe(_sameObjWithId.GetHashCode());
     }
 
     [Fact]
     public void DoesDefaultEntityEqualsOverrideWorkWhenNoIdIsAssigned()
     {
-        _obj.Equals(_sameObj).Should().BeTrue();
-        _obj.Equals(_diffObj).Should().BeFalse();
-        _obj.Equals(new MockEntityObjectWithDefaultId()).Should().BeFalse();
+        _obj.Equals(_sameObj).ShouldBeTrue();
+        _obj.Equals(_diffObj).ShouldBeFalse();
+        _obj.Equals(new MockEntityObjectWithDefaultId()).ShouldBeFalse();
     }
 
     [Fact]
     public void DoesEntityEqualsOverrideWorkWhenNoIdIsAssigned()
     {
-        _objWithId.Equals(_sameObjWithId).Should().BeTrue();
-        _objWithId.Equals(_diffObjWithId).Should().BeFalse();
-        _objWithId.Equals(new MockEntityObjectWithSetId()).Should().BeFalse();
+        _objWithId.Equals(_sameObjWithId).ShouldBeTrue();
+        _objWithId.Equals(_diffObjWithId).ShouldBeFalse();
+        _objWithId.Equals(new MockEntityObjectWithSetId()).ShouldBeFalse();
     }
 
     [Fact]
     public void Entity_with_domain_signature_preserves_hashcode_when_transitioning_from_transient_to_persistent()
     {
         var obj = new ObjectWithOneDomainSignatureProperty { Age = 1 };
-        obj.IsTransient().Should().BeTrue();
+        obj.IsTransient().ShouldBeTrue();
 
         int hashcodeWhenTransient = obj.GetHashCode();
         obj.SetIdTo(1);
 
-        obj.IsTransient().Should().BeFalse();
-        obj.GetHashCode().Should().Be(hashcodeWhenTransient);
+        obj.IsTransient().ShouldBeFalse();
+        obj.GetHashCode().ShouldBe(hashcodeWhenTransient);
     }
 
     [Fact]
@@ -488,13 +488,13 @@ public class EntityTests
         Entity_with_no_signature_properties_preserves_hashcode_when_transitioning_from_transient_to_persistent()
     {
         var obj = new ObjectWithNoDomainSignatureProperties();
-        obj.IsTransient().Should().BeTrue();
+        obj.IsTransient().ShouldBeTrue();
 
         int hashcodeWhenTransient = obj.GetHashCode();
         obj.SetIdTo(1);
 
-        obj.IsTransient().Should().BeFalse();
-        obj.GetHashCode().Should().Be(hashcodeWhenTransient);
+        obj.IsTransient().ShouldBeFalse();
+        obj.GetHashCode().ShouldBe(hashcodeWhenTransient);
     }
 
     [Fact]
@@ -506,10 +506,10 @@ public class EntityTests
 
         obj.Age = 13;
         obj.Name = "Foo";
-        obj.GetHashCode().Should().Be(initialHash);
+        obj.GetHashCode().ShouldBe(initialHash);
 
         obj.Age = 14;
-        obj.GetHashCode().Should().Be(initialHash);
+        obj.GetHashCode().ShouldBe(initialHash);
     }
 
     [Fact]
@@ -521,10 +521,10 @@ public class EntityTests
         obj.Age = 13;
         obj.Name = "Foo";
 
-        obj.GetHashCode().Should().Be(initialHash);
+        obj.GetHashCode().ShouldBe(initialHash);
 
         obj.Age = 14;
-        obj.GetHashCode().Should().Be(initialHash);
+        obj.GetHashCode().ShouldBe(initialHash);
     }
 
     [Fact]
@@ -535,21 +535,21 @@ public class EntityTests
         int initialHash = obj.GetHashCode();
 
         obj.Age = 2;
-        obj.GetHashCode().Should().Be(initialHash);
+        obj.GetHashCode().ShouldBe(initialHash);
     }
 
     [Fact]
     public void Transient_entity_with_domain_signature_should_return_consistent_hashcode()
     {
         var obj = new ObjectWithOneDomainSignatureProperty { Age = 1 };
-        obj.GetHashCode().Should().Be(obj.GetHashCode());
+        obj.GetHashCode().ShouldBe(obj.GetHashCode());
     }
 
     [Fact]
     public void Transient_entity_without_domain_signature_should_return_consistent_hashcode()
     {
         var obj = new ObjectWithNoDomainSignatureProperties();
-        obj.GetHashCode().Should().Be(obj.GetHashCode());
+        obj.GetHashCode().ShouldBe(obj.GetHashCode());
     }
 
     [Fact]
@@ -558,7 +558,7 @@ public class EntityTests
         IEntity<int> obj1 = new ObjectWithOneDomainSignatureProperty { Age = 1 }.SetIdTo(1);
         IEntity<int> obj2 = new ObjectWithOneDomainSignatureProperty { Age = 2 }.SetIdTo(1);
 
-        obj1.GetHashCode().Should().Be(obj2.GetHashCode());
+        obj1.GetHashCode().ShouldBe(obj2.GetHashCode());
     }
 
     [Fact]
@@ -567,7 +567,7 @@ public class EntityTests
         IEntity<int> obj1 = new ObjectWithOneDomainSignatureProperty { Age = 1 }.SetIdTo(1);
         IEntity<int> obj2 = new ObjectWithOneDomainSignatureProperty { Age = 1 }.SetIdTo(2);
 
-        obj1.GetHashCode().Should().NotBe(obj2.GetHashCode());
+        obj1.GetHashCode().ShouldNotBe(obj2.GetHashCode());
     }
 
     [Fact]
@@ -577,7 +577,7 @@ public class EntityTests
         IEntity<int> obj1 = new ObjectWithNoDomainSignatureProperties().SetIdTo(1);
         IEntity<int> obj2 = new ObjectWithNoDomainSignatureProperties().SetIdTo(2);
 
-        obj1.GetHashCode().Should().NotBe(obj2.GetHashCode());
+        obj1.GetHashCode().ShouldNotBe(obj2.GetHashCode());
     }
 
     [Fact]
@@ -586,7 +586,7 @@ public class EntityTests
         IEntity<int> obj1 = new ObjectWithNoDomainSignatureProperties().SetIdTo(1);
         IEntity<int> obj2 = new ObjectWithNoDomainSignatureProperties().SetIdTo(1);
 
-        obj1.GetHashCode().Should().Be(obj2.GetHashCode());
+        obj1.GetHashCode().ShouldBe(obj2.GetHashCode());
     }
 
     [Fact]
@@ -594,7 +594,7 @@ public class EntityTests
     {
         var obj1 = new ObjectWithOneDomainSignatureProperty { Age = 1 };
         var obj2 = new ObjectWithOneDomainSignatureProperty { Age = 2 };
-        obj1.GetHashCode().Should().NotBe(obj2.GetHashCode());
+        obj1.GetHashCode().ShouldNotBe(obj2.GetHashCode());
     }
 
     [Fact]
@@ -602,7 +602,7 @@ public class EntityTests
     {
         var obj1 = new ObjectWithOneDomainSignatureProperty { Age = 1 };
         var obj2 = new ObjectWithOneDomainSignatureProperty { Age = 1 };
-        obj1.GetHashCode().Should().Be(obj2.GetHashCode());
+        obj1.GetHashCode().ShouldBe(obj2.GetHashCode());
     }
 
     [Fact]
@@ -610,7 +610,7 @@ public class EntityTests
     {
         var obj1 = new ObjectWithNoDomainSignatureProperties();
         var obj2 = new ObjectWithNoDomainSignatureProperties();
-        obj1.GetHashCode().Should().NotBe(obj2.GetHashCode());
+        obj1.GetHashCode().ShouldNotBe(obj2.GetHashCode());
     }
 
     [Fact]
@@ -623,22 +623,22 @@ public class EntityTests
         obj1.Name = "123 Lane St.";
         obj2.Address = "123 Lane St.";
         obj2.Name = "Henry";
-        obj1.Equals(obj2).Should().BeFalse();
+        obj1.Equals(obj2).ShouldBeFalse();
 
         obj1.Address = "Henry";
         obj1.Name = null;
         obj2.Address = "Henri";
         obj2.Name = null;
-        obj1.Equals(obj2).Should().BeFalse();
+        obj1.Equals(obj2).ShouldBeFalse();
 
         obj1.Address = null;
         obj1.Name = @"Supercalifragilisticexpialidocious";
         obj2.Address = null;
         obj2.Name = @"Supercalifragilisticexpialidocious";
-        obj1.Equals(obj2).Should().BeTrue();
+        obj1.Equals(obj2).ShouldBeTrue();
 
         obj1.Name = @"Supercalifragilisticexpialidocious";
         obj2.Name = @"Supercalifragilisticexpialidociouz";
-        obj1.Equals(obj2).Should().BeFalse();
+        obj1.Equals(obj2).ShouldBeFalse();
     }
 }

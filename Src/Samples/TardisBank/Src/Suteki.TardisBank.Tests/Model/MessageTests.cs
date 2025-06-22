@@ -1,7 +1,7 @@
 namespace Suteki.TardisBank.Tests.Model;
 
 using Domain;
-using FluentAssertions;
+using Shouldly;
 using MediatR;
 using Moq;
 using SharpArch.NHibernate;
@@ -40,6 +40,6 @@ public class MessageTests : TransientDatabaseTests<TransientDatabaseSetup>
         await FlushSessionAndEvict(userToTestWith);
 
         Parent parent = (await parentRepository.GetAsync(_userId))!;
-        parent.Messages.Count.Should().Be(1);
+        parent.Messages.Count.ShouldBe(1);
     }
 }
