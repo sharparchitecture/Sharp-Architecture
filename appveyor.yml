@@ -76,10 +76,10 @@ for:
       secure: FgP/dEF7lumDgbjt3tzPSDqDTM16uoiPfKZPQSLJO+/GaIR2zSquSh0pXP8znx+c
 
   artifacts:
-    - path: Drops/Packages/*.nupkg
+    - path: artifacts/packages/*.nupkg
       name: NuGet packages
 
-    - path: Drops/Packages/*.snupkg
+    - path: artifacts/packages/*.snupkg
       name: NuGet symbol packages
       type: NuGetPackage
   #  - path: Drops/Inspections/CodeDuplicates.html
