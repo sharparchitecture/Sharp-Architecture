@@ -18,15 +18,6 @@ using Reflection;
 public abstract class BaseObject
 {
     /// <summary>
-    ///     To help ensure hash code uniqueness, a carefully selected random number multiplier
-    ///     is used within the calculation. Goodrich and Tamassia's Data Structures and
-    ///     Algorithms in Java asserts that 31, 33, 37, 39 and 41 will produce the fewest number
-    ///     of collisions. See http://computinglife.wordpress.com/2008/11/20/why-do-hash-functions-use-prime-numbers/
-    ///     for more information.
-    /// </summary>
-    const int HashMultiplier = 31;
-
-    /// <summary>
     ///     This static member caches the domain signature properties to avoid looking them up for
     ///     each instance of the same type.
     /// </summary>
@@ -49,6 +40,7 @@ public abstract class BaseObject
             return true;
         }
 
+        // ReSharper disable once CheckForReferenceEqualityInstead.1
         return compareTo != null && GetType().Equals(compareTo.GetTypeUnproxied()) &&
             HasSameObjectSignatureAs(compareTo);
     }
@@ -84,19 +76,20 @@ public abstract class BaseObject
             // It's possible for two objects to return the same hash code based on 
             // identically valued properties, even if they're of two different types, 
             // so we include the object's type in the hash calculation
-            int hashCode = GetType().GetHashCode();
+            //int hashCode = GetType().GetHashCode();
+            var hash = new HashCode();
+            hash.Add(GetType());
 
-            for (var i = 0; i < signatureProperties.Length; i++)
+            foreach (var property in signatureProperties)
             {
-                PropertyInfo property = signatureProperties[i];
                 object? value = property.GetValue(this, null);
                 if (value != null)
                 {
-                    hashCode = (hashCode * HashMultiplier) ^ value.GetHashCode();
+                    hash.Add(value);
                 }
             }
 
-            return hashCode;
+            return hash.ToHashCode();
         }
     }
 
@@ -139,11 +132,9 @@ public abstract class BaseObject
         }
 
         // use for loop instead of foreach/LINQ for performance reasons.
-        // ReSharper disable once ForCanBeConvertedToForeach
         // ReSharper disable once LoopCanBeConvertedToQuery
-        for (var index = 0; index < signatureProperties.Length; index++)
+        foreach (var property in signatureProperties)
         {
-            PropertyInfo property = signatureProperties[index];
             object? valueOfThisObject = property.GetValue(this, null);
             object? valueToCompareTo = property.GetValue(compareTo, null);
 
