@@ -1,5 +1,7 @@
 namespace SharpArch.Domain.DomainModel;
 
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Xml.Serialization;
 
@@ -14,15 +16,6 @@ public abstract class Entity<TId> : ValidatableObject, IEntity<TId>, IEntity,
     IEquatable<Entity<TId>>
     where TId : IEquatable<TId>
 {
-    /// <summary>
-    ///     To help ensure hash code uniqueness, a carefully selected random number multiplier
-    ///     is used within the calculation.  Goodrich and Tamassia's Data Structures and
-    ///     Algorithms in Java asserts that 31, 33, 37, 39 and 41 will produce the fewest number
-    ///     of collisions.  See http://computinglife.wordpress.com/2008/11/20/why-do-hash-functions-use-prime-numbers/
-    ///     for more information.
-    /// </summary>
-    const int HashMultiplier = 31;
-
     int? _cachedHashcode;
 
     /// <inheritdoc />
@@ -86,8 +79,8 @@ public abstract class Entity<TId> : ValidatableObject, IEntity<TId>, IEntity,
             return true;
         }
 
-        // Since the Ids aren't the same, both of them must be transient to 
-        // compare domain signatures; because if one is transient and the 
+        // Since the Ids aren't the same, both of them must be transient to
+        // compare domain signatures; because if one is transient and the
         // other is a persisted entity, then they cannot be the same object.
         return IsTransient() && other.IsTransient() && HasSameObjectSignatureAs(other);
     }
@@ -133,23 +126,14 @@ public abstract class Entity<TId> : ValidatableObject, IEntity<TId>, IEntity,
         }
         else
         {
-            unchecked
-            {
-                // It's possible for two objects to return the same hash code based on 
-                // identically valued properties, even if they're of two different types, 
-                // so we include the object's type in the hash calculation
-                int hashCode = GetType().GetHashCode() * HashMultiplier;
+            // It's possible for two objects to return the same hash code based on
+            // identically valued properties, even if they're of two different types,
+            // so we include the object's type in the hash calculation
 
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-                if (Id is null)
-                {
-                    _cachedHashcode = hashCode;
-                }
-                else
-                {
-                    _cachedHashcode = hashCode ^ Id.GetHashCode();
-                }
-            }
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            _cachedHashcode = Id is null
+                ? HashCode.Combine(GetType())
+                : HashCode.Combine(GetType(), Id.GetHashCode());
         }
 
         return _cachedHashcode.Value;
