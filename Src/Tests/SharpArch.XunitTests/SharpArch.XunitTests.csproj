@@ -6,8 +6,4 @@
     <ProjectReference Include="..\..\Lib\SharpArch.Testing\SharpArch.Testing.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="xunit.runner.visualstudio" Version="3.1.3" />
-  </ItemGroup>
-
 </Project>
