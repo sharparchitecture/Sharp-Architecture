@@ -7,6 +7,20 @@ vNext
 BREAKING:
 * Drop .NET 5 support
 * Drop .NET Core 3.1 support
+* Drop .NetStandard2 support
+* Discontinue SharpArch.RavenDB library
+
+BUILD:
+* Update build system
+
+ENHANCEMENTS:
+* Add .NET 8 support
+* Add .NET 9 support
+* Update code to use C# 10 features
+
+DEPENDENCIES:
+* Upgrade dependencies
+* Replace FluentAssertions with Shouldy
 
 
 8.0.0
