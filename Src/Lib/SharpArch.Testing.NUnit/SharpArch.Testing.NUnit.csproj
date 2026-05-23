@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Build">
+    <!-- Unit-tests are not expected to be target netstandard  -->
+    <TargetFrameworks>$(AppTargetFrameworks)</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
+    <Compile Include="..\..\Common\NHibernate\TestDatabaseSetup.cs" Link="NHibernate\TestDatabaseSetup.cs" />
+  </ItemGroup>
+
+  <PropertyGroup Label="Pack">
+    <Description>
+      Provides base classes to help with testing applications written with Sharp Architecture and NHibernate.
+      This is legacy package, for future development xUnit is recommended.
+    </Description>
+    <PackageTags>$(PackageTags);testing;nunit</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\Artefacts\Documentation\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="4.4.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Project references">
+    <ProjectReference Include="..\SharpArch.Domain\SharpArch.Domain.csproj" />
+    <ProjectReference Include="..\SharpArch.Testing\SharpArch.Testing.csproj" />
+    <ProjectReference Include="..\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
+  </ItemGroup>
+
+</Project>

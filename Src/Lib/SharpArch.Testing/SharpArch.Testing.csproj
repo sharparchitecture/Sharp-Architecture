@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <Compile Include="..\..\Common\AssemblyVersion.cs" Link="AssemblyVersion.cs" />
+  </ItemGroup>
+
+  <PropertyGroup Label="Pack">
+    <Description>Provides base classes and extension methods to help with testing applications written with Sharp Architecture library.</Description>
+    <PackageTags>$(PackageTags);testing</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\Artefacts\Documentation\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup Label="Project references">
+    <ProjectReference Include="..\SharpArch.Domain\SharpArch.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

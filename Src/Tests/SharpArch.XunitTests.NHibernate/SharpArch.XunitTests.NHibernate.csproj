@@ -5,25 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />
-    <PackageReference Include="FluentAssertions" Version="6.2.0" />
-    <PackageReference Include="FluentNHibernate" Version="3.1.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-    <PackageReference Include="Moq" Version="4.16.1" />
-    <PackageReference Include="NHibernate" Version="5.3.10" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SharpArch.Domain\SharpArch.Domain.csproj" />
-    <ProjectReference Include="..\..\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
-    <ProjectReference Include="..\..\SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj" />
-    <ProjectReference Include="..\..\SharpArch.Testing\SharpArch.Testing.csproj" />
+    <ProjectReference Include="..\..\Lib\SharpArch.Domain\SharpArch.Domain.csproj" />
+    <ProjectReference Include="..\..\Lib\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
+    <ProjectReference Include="..\..\Lib\SharpArch.Testing.Xunit.NHibernate\SharpArch.Testing.Xunit.NHibernate.csproj" />
+    <ProjectReference Include="..\..\Lib\SharpArch.Testing\SharpArch.Testing.csproj" />
     <ProjectReference Include="..\SharpArch.XunitTests\SharpArch.XunitTests.csproj" />
   </ItemGroup>
 

@@ -1,0 +1,6 @@
+root=true
+
+[*.cs]
+# NHibernate requires all class members to be virtual
+resharper_virtual_member_call_in_constructor_highlighting=do_not_show
+resharper_class_with_virtual_members_never_inherited_global_highlighting=do_not_show

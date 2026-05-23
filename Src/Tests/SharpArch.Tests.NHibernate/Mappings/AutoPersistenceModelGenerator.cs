@@ -1,41 +1,40 @@
-namespace Tests.SharpArch.NHibernate.Mappings
+namespace Tests.SharpArch.NHibernate.Mappings;
+
+using Domain;
+using FluentNHibernate.Automapping;
+using FluentNHibernate.Conventions;
+using global::SharpArch.Domain.DomainModel;
+using global::SharpArch.NHibernate.FluentNHibernate;
+using global::SharpArch.NHibernate.FluentNHibernate.Conventions;
+
+
+/// <summary>
+///     Generates the auto-mapping for test entities.
+/// </summary>
+public class TestsPersistenceModelGenerator : IAutoPersistenceModelGenerator
 {
-    using System;
-    using FluentNHibernate.Automapping;
-    using FluentNHibernate.Conventions;
-    using global::SharpArch.Domain.DomainModel;
-    using global::SharpArch.NHibernate.FluentNHibernate;
-    using global::SharpArch.NHibernate.FluentNHibernate.Conventions;
-    using Domain;
-
-
     /// <summary>
-    ///     Generates the auto-mapping for test entities.
+    ///     Generates persistence model.
     /// </summary>
-    public class TestsPersistenceModelGenerator : IAutoPersistenceModelGenerator
+    /// <returns></returns>
+    public AutoPersistenceModel Generate()
     {
-        /// <summary>
-        ///     Generates persistence model.
-        /// </summary>
-        /// <returns></returns>
-        public AutoPersistenceModel Generate()
-        {
-            var mappings = AutoMap.AssemblyOf<Customer>(new AutomappingConfiguration());
-            mappings.IgnoreBase(typeof(Entity<>));
-            mappings.Conventions.Setup(GetConventions());
-            mappings.UseOverridesFromAssemblyOf<TestsPersistenceModelGenerator>();
+        var mappings = AutoMap.AssemblyOf<Customer>(new AutomappingConfiguration());
+        mappings.IgnoreBase(typeof(Entity<>));
+        mappings.Conventions.Setup(GetConventions());
+        mappings.UseOverridesFromAssemblyOf<TestsPersistenceModelGenerator>();
 
-            return mappings;
-        }
+        return mappings;
+    }
 
-        static Action<IConventionFinder> GetConventions()
+    static Action<IConventionFinder> GetConventions()
+    {
+        return c =>
         {
-            return c => {
-                c.Add<PrimaryKeyConvention>();
-                c.Add<CustomForeignKeyConvention>();
-                c.Add<HasManyConvention>();
-                c.Add<TableNameConvention>();
-            };
-        }
+            c.Add<PrimaryKeyConvention>();
+            c.Add<CustomForeignKeyConvention>();
+            c.Add<HasManyConvention>();
+            c.Add<TableNameConvention>();
+        };
     }
 }

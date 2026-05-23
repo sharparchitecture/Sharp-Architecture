@@ -1,158 +1,154 @@
 // ReSharper disable UnusedAutoPropertyAccessor.Local
-namespace Tests.SharpArch.Domain.DomainModel
+
+namespace Tests.SharpArch.Domain.DomainModel;
+
+using System.Reflection;
+using Shouldly;
+using global::SharpArch.Domain.DomainModel;
+using global::SharpArch.Testing.Helpers;
+using Xunit;
+
+
+public class BaseObjectEqualityComparerTests
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using FluentAssertions;
-    using global::SharpArch.Domain.DomainModel;
-    using global::SharpArch.Testing.Helpers;
-    using Xunit;
-
-
-    public class BaseObjectEqualityComparerTests
+    class ConcreteBaseObject : BaseObject
     {
-        class ConcreteBaseObject : BaseObject
+        public string Name { get; set; } = null!;
+
+        protected override PropertyInfo[] GetTypeSpecificSignatureProperties()
+            => GetType().GetProperties();
+    }
+
+
+    class ConcreteEntityWithDomainSignatureProperties : Entity<int>
+    {
+        [DomainSignature]
+        public string Name { get; set; } = null!;
+    }
+
+
+    class ConcreteEntityWithNoDomainSignatureProperties : Entity<int>
+    {
+        public string Name { get; set; } = null!;
+    }
+
+
+    class ConcreteValueObject : ValueObject
+    {
+        public string Name { get; set; } = null!;
+    }
+
+
+    [Fact]
+    public void CanBeUsedByLinqSetOperatorsSuchAsIntersect()
+    {
+        IList<ConcreteEntityWithDomainSignatureProperties> objects1 =
+            new List<ConcreteEntityWithDomainSignatureProperties>();
+        var obj1 = new ConcreteEntityWithDomainSignatureProperties { Name = @"Billy McCafferty" };
+        EntityIdSetter.SetIdOf(obj1, 2);
+        objects1.Add(obj1);
+
+        IList<ConcreteEntityWithDomainSignatureProperties> objects2 =
+            new List<ConcreteEntityWithDomainSignatureProperties>();
+        var obj2 = new ConcreteEntityWithDomainSignatureProperties { Name = @"Jimi Hendrix" };
+        EntityIdSetter.SetIdOf(obj2, 1);
+        objects2.Add(obj2);
+        var obj3 = new ConcreteEntityWithDomainSignatureProperties
         {
-            public string Name { get; set; } = null!;
+            Name =
+                "Doesn't Matter since the Id will match and the presence of the domain signature will go overridden"
+        };
+        EntityIdSetter.SetIdOf(obj3, 2);
+        objects2.Add(obj3);
 
-            protected override PropertyInfo[] GetTypeSpecificSignatureProperties()
-            {
-                return GetType().GetProperties();
-            }
-        }
+        objects1.Intersect(
+                objects2, new BaseObjectEqualityComparer<ConcreteEntityWithDomainSignatureProperties>())
+            .Count().ShouldBe(1);
 
+        objects1.Intersect(
+                objects2, new BaseObjectEqualityComparer<ConcreteEntityWithDomainSignatureProperties>()).First()
+            .Equals(obj1).ShouldBeTrue();
 
-        class ConcreteEntityWithDomainSignatureProperties : Entity<int>
-        {
-            [DomainSignature]
-            public string Name { get; set; } = null!;
-        }
+        objects1.Intersect(
+                objects2, new BaseObjectEqualityComparer<ConcreteEntityWithDomainSignatureProperties>()).First()
+            .Equals(obj3).ShouldBeTrue();
+    }
 
+    [Fact]
+    public void CanCompareBaseObjects()
+    {
+        var comparer = new BaseObjectEqualityComparer<BaseObject>();
 
-        class ConcreteEntityWithNoDomainSignatureProperties : Entity<int>
-        {
-            public string Name { get; set; } = null!;
-        }
+        var obj1 = new ConcreteBaseObject { Name = "Whatever" };
+        var obj2 = new ConcreteBaseObject { Name = "Whatever" };
+        comparer.Equals(obj1, obj2).ShouldBeTrue();
 
+        obj2.Name = "Mismatch";
+        comparer.Equals(obj1, obj2).ShouldBeFalse();
+    }
 
-        class ConcreteValueObject : ValueObject
-        {
-            public string Name { get; set; } = null!;
-        }
+    [Fact]
+    public void CanCompareEntitiesWithDomainSignatureProperties()
+    {
+        var comparer = new BaseObjectEqualityComparer<Entity<int>>();
 
+        var obj1 = new ConcreteEntityWithDomainSignatureProperties { Name = "Whatever" };
+        var obj2 = new ConcreteEntityWithDomainSignatureProperties { Name = "Whatever" };
 
-        [Fact]
-        public void CanBeUsedByLinqSetOperatorsSuchAsIntersect()
-        {
-            IList<ConcreteEntityWithDomainSignatureProperties> objects1 =
-                new List<ConcreteEntityWithDomainSignatureProperties>();
-            var obj1 = new ConcreteEntityWithDomainSignatureProperties {Name = @"Billy McCafferty"};
-            EntityIdSetter.SetIdOf(obj1, 2);
-            objects1.Add(obj1);
+        comparer.Equals(obj1, obj2).ShouldBeTrue();
 
-            IList<ConcreteEntityWithDomainSignatureProperties> objects2 =
-                new List<ConcreteEntityWithDomainSignatureProperties>();
-            var obj2 = new ConcreteEntityWithDomainSignatureProperties {Name = @"Jimi Hendrix"};
-            EntityIdSetter.SetIdOf(obj2, 1);
-            objects2.Add(obj2);
-            var obj3 = new ConcreteEntityWithDomainSignatureProperties
-            {
-                Name =
-                    "Doesn't Matter since the Id will match and the presence of the domain signature will go overridden"
-            };
-            EntityIdSetter.SetIdOf(obj3, 2);
-            objects2.Add(obj3);
+        obj2.Name = "Mismatch";
+        comparer.Equals(obj1, obj2).ShouldBeFalse();
 
-            objects1.Intersect(
-                    objects2, new BaseObjectEqualityComparer<ConcreteEntityWithDomainSignatureProperties>())
-                .Should().HaveCount(1);
+        EntityIdSetter.SetIdOf(obj1, 1);
+        EntityIdSetter.SetIdOf(obj2, 1);
+        comparer.Equals(obj1, obj2).ShouldBeTrue();
+    }
 
-            objects1.Intersect(
-                    objects2, new BaseObjectEqualityComparer<ConcreteEntityWithDomainSignatureProperties>()).First()
-                .Equals(obj1).Should().BeTrue();
+    [Fact]
+    public void CanCompareEntitiesWithNoDomainSignatureProperties()
+    {
+        var comparer = new BaseObjectEqualityComparer<BaseObject>();
 
-            objects1.Intersect(
-                    objects2, new BaseObjectEqualityComparer<ConcreteEntityWithDomainSignatureProperties>()).First()
-                .Equals(obj3).Should().BeTrue();
-        }
+        var obj1 = new ConcreteEntityWithNoDomainSignatureProperties { Name = "Whatever" };
+        var obj2 = new ConcreteEntityWithNoDomainSignatureProperties { Name = @"asdf" };
+        comparer.Equals(obj1, obj2).ShouldBeFalse();
 
-        [Fact]
-        public void CanCompareBaseObjects()
-        {
-            var comparer = new BaseObjectEqualityComparer<BaseObject>();
+        EntityIdSetter.SetIdOf(obj1, 1);
+        EntityIdSetter.SetIdOf(obj2, 1);
+        comparer.Equals(obj1, obj2).ShouldBeTrue();
+    }
 
-            var obj1 = new ConcreteBaseObject {Name = "Whatever"};
-            var obj2 = new ConcreteBaseObject {Name = "Whatever"};
-            comparer.Equals(obj1, obj2).Should().BeTrue();
+    [Fact]
+    public void CanCompareNulls()
+    {
+        var comparer = new BaseObjectEqualityComparer<BaseObject>();
+        comparer.Equals(null, null).ShouldBeTrue();
+        comparer.Equals(null, new ConcreteBaseObject()).ShouldBeFalse();
+        comparer.Equals(new ConcreteBaseObject(), null).ShouldBeFalse();
+    }
 
-            obj2.Name = "Mismatch";
-            comparer.Equals(obj1, obj2).Should().BeFalse();
-        }
+    [Fact]
+    public void CanCompareValueObjects()
+    {
+        var comparer = new BaseObjectEqualityComparer<BaseObject>();
 
-        [Fact]
-        public void CanCompareEntitiesWithDomainSignatureProperties()
-        {
-            var comparer = new BaseObjectEqualityComparer<Entity<int>>();
+        var obj1 = new ConcreteValueObject { Name = "Whatever" };
+        var obj2 = new ConcreteValueObject { Name = "Whatever" };
+        comparer.Equals(obj1, obj2).ShouldBeTrue();
 
-            var obj1 = new ConcreteEntityWithDomainSignatureProperties {Name = "Whatever"};
-            var obj2 = new ConcreteEntityWithDomainSignatureProperties {Name = "Whatever"};
+        obj2.Name = "Mismatch";
+        comparer.Equals(obj1, obj2).ShouldBeFalse();
+    }
 
-            comparer.Equals(obj1, obj2).Should().BeTrue();
+    [Fact]
+    public void CannotSuccessfullyCompareDifferentlyTypedObjectsThatDeriveFromBaseObject()
+    {
+        var comparer = new BaseObjectEqualityComparer<BaseObject>();
 
-            obj2.Name = "Mismatch";
-            comparer.Equals(obj1, obj2).Should().BeFalse();
+        var obj1 = new ConcreteBaseObject { Name = "Whatever" };
+        var obj2 = new ConcreteValueObject { Name = "Whatever" };
 
-            EntityIdSetter.SetIdOf(obj1, 1);
-            EntityIdSetter.SetIdOf(obj2, 1);
-            comparer.Equals(obj1, obj2).Should().BeTrue();
-        }
-
-        [Fact]
-        public void CanCompareEntitiesWithNoDomainSignatureProperties()
-        {
-            var comparer = new BaseObjectEqualityComparer<BaseObject>();
-
-            var obj1 = new ConcreteEntityWithNoDomainSignatureProperties {Name = "Whatever"};
-            var obj2 = new ConcreteEntityWithNoDomainSignatureProperties {Name = @"asdf"};
-            comparer.Equals(obj1, obj2).Should().BeFalse();
-
-            EntityIdSetter.SetIdOf(obj1, 1);
-            EntityIdSetter.SetIdOf(obj2, 1);
-            comparer.Equals(obj1, obj2).Should().BeTrue();
-        }
-
-        [Fact]
-        public void CanCompareNulls()
-        {
-            var comparer = new BaseObjectEqualityComparer<BaseObject>();
-            comparer.Equals(null, null).Should().BeTrue();
-            comparer.Equals(null, new ConcreteBaseObject()).Should().BeFalse();
-            comparer.Equals(new ConcreteBaseObject(), null).Should().BeFalse();
-        }
-
-        [Fact]
-        public void CanCompareValueObjects()
-        {
-            var comparer = new BaseObjectEqualityComparer<BaseObject>();
-
-            var obj1 = new ConcreteValueObject {Name = "Whatever"};
-            var obj2 = new ConcreteValueObject {Name = "Whatever"};
-            comparer.Equals(obj1, obj2).Should().BeTrue();
-
-            obj2.Name = "Mismatch";
-            comparer.Equals(obj1, obj2).Should().BeFalse();
-        }
-
-        [Fact]
-        public void CannotSuccessfullyCompareDifferentlyTypedObjectsThatDeriveFromBaseObject()
-        {
-            var comparer = new BaseObjectEqualityComparer<BaseObject>();
-
-            var obj1 = new ConcreteBaseObject {Name = "Whatever"};
-            var obj2 = new ConcreteValueObject {Name = "Whatever"};
-
-            comparer.Equals(obj1, obj2).Should().BeFalse();
-        }
+        comparer.Equals(obj1, obj2).ShouldBeFalse();
     }
 }

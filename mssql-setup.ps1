@@ -5,7 +5,7 @@
 [reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.SqlWmiManagement") | Out-Null
 
 $serverName = $env:COMPUTERNAME
-$instanceName = 'SQL2017'
+$instanceName = 'SQL2019'
 $smo = 'Microsoft.SqlServer.Management.Smo.'
 $wmi = new-object ($smo + 'Wmi.ManagedComputer')
 
@@ -29,7 +29,7 @@ Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\MSSQLServer\Client\ConnectTo -Na
 New-Item HKLM:\SOFTWARE\WOW6432Node\Microsoft\MSSQLServer\Client -Name ConnectTo | Out-Null
 Set-ItemProperty -Path HKLM:\SOFTWARE\WOW6432Node\Microsoft\MSSQLServer\Client\ConnectTo -Name 'TardisBank' -Value "DBMSSOCN,$serverName\$instanceName" | Out-Null
 
-$configPath=".\Samples\TardisBank\Src\Suteki.TardisBank.WebApi\NHibernate.config"
+$configPath=".\Src\Samples\TardisBank\Src\Suteki.TardisBank.WebApi\NHibernate.config"
 
 ((Get-Content -path $configPath -Raw) -replace 'Data Source=localhost,2433',"Data Source=$serverName\$instanceName") | Set-Content -Path $configPath
 

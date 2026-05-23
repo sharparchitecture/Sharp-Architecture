@@ -1,39 +1,27 @@
-﻿namespace Tests.SharpArch.NHibernate
+﻿namespace Tests.SharpArch.NHibernate;
+
+using global::NHibernate.Event;
+
+
+[Serializable]
+class PreInsertListener : IPreInsertEventListener
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using global::NHibernate.Event;
+    public Task<bool> OnPreInsertAsync(PreInsertEvent @event, CancellationToken cancellationToken)
+        => PreUpdateListener.True;
+
+    public bool OnPreInsert(PreInsertEvent @event)
+        => true;
+}
 
 
-    [Serializable]
-    internal class PreInsertListener : IPreInsertEventListener
-    {
-        public Task<bool> OnPreInsertAsync(PreInsertEvent @event, CancellationToken cancellationToken)
-        {
-            return PreUpdateListener.True;
-        }
+[Serializable]
+public class PreUpdateListener : IPreUpdateEventListener
+{
+    internal static readonly Task<bool> True = Task.FromResult(true);
 
-        public bool OnPreInsert(PreInsertEvent @event)
-        {
-            return true;
-        }
-    }
+    public Task<bool> OnPreUpdateAsync(PreUpdateEvent @event, CancellationToken cancellationToken)
+        => True;
 
-
-    [Serializable]
-    public class PreUpdateListener : IPreUpdateEventListener
-    {
-        internal static readonly Task<bool> True = Task.FromResult(true);
-
-        public Task<bool> OnPreUpdateAsync(PreUpdateEvent @event, CancellationToken cancellationToken)
-        {
-            return True;
-        }
-
-        public bool OnPreUpdate(PreUpdateEvent @event)
-        {
-            return true;
-        }
-    }
+    public bool OnPreUpdate(PreUpdateEvent @event)
+        => true;
 }

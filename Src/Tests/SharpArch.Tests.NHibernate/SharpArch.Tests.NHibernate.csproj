@@ -3,28 +3,24 @@
   <PropertyGroup>
     <RootNamespace>Tests.SharpArch.NHibernate</RootNamespace>
   </PropertyGroup>
-   
+
   <ItemGroup>
     <Compile Include="..\SharpArch.XunitTests\SharpArch.Domain\TestEntities.cs" Link="TestEntities.cs" />
   </ItemGroup>
-   
+
   <ItemGroup>
-    <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />
-    <PackageReference Include="FluentAssertions" Version="6.2.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-    <PackageReference Include="Moq" Version="4.16.1" />
-    <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.1.0" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
+    <PackageReference Include="NUnit" Version="4.4.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="5.1.0" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
   </ItemGroup>
-   
+
   <ItemGroup>
-    <ProjectReference Include="..\..\SharpArch.Domain\SharpArch.Domain.csproj" />
-    <ProjectReference Include="..\..\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
-    <ProjectReference Include="..\..\SharpArch.Testing.NUnit\SharpArch.Testing.NUnit.csproj" />
-    <ProjectReference Include="..\..\SharpArch.Testing\SharpArch.Testing.csproj" />
+    <ProjectReference Include="..\..\Lib\SharpArch.Domain\SharpArch.Domain.csproj" />
+    <ProjectReference Include="..\..\Lib\SharpArch.NHibernate\SharpArch.NHibernate.csproj" />
+    <ProjectReference Include="..\..\Lib\SharpArch.Testing.NUnit\SharpArch.Testing.NUnit.csproj" />
+    <ProjectReference Include="..\..\Lib\SharpArch.Testing\SharpArch.Testing.csproj" />
   </ItemGroup>
-   
+
   <ItemGroup>
     <None Update="hibernate.cfg.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

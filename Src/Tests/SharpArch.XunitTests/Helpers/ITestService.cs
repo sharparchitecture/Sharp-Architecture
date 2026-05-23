@@ -1,15 +1,14 @@
-namespace Tests.Helpers
+namespace Tests.Helpers;
+
+interface ITestService
 {
-    internal interface ITestService
-    {
-        void Do();
-    }
+    void Do();
+}
 
 
-    internal class TestService : ITestService
+class TestService : ITestService
+{
+    public void Do()
     {
-        public void Do()
-        {
-        }
     }
 }
