@@ -73,7 +73,7 @@ for:
     appveyor_cache_entry_zip_args: -t7z -m0=lzma -mx=5 -ms=on
     CAKE_PATHS_TOOLS: c:\tmp\cake\tools\
     GITHUB_TOKEN:
-      secure: FgP/dEF7lumDgbjt3tzPSDqDTM16uoiPfKZPQSLJO+/GaIR2zSquSh0pXP8znx+c
+      secure: 21bpvob1W59q2H3tgdQ4c6pkZVzTTZTTWUNkkLJ/1bo2xY4K160RtHw08cBRsQOd
 
   artifacts:
     - path: artifacts/packages/*.nupkg
