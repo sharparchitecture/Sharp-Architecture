@@ -290,4 +290,5 @@ Artefacts/Documentation/build/
 /DropsTestOutput.xml
 /Src/Common/AssemblyVersion.cs
 /Docker/mssql-data
+/Docker/postgres-data
 /tmp/

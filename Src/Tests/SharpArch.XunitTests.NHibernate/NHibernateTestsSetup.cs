@@ -27,10 +27,6 @@ public class NHibernateTestsSetup : TestDatabaseSetup
     {
         base.Customize(builder);
         builder.UsePersistenceConfigurer(new SQLiteConfiguration().InMemory());
-        builder.UseProperties(new SortedList<string, string>
-        {
-            [Environment.ReleaseConnections] = "on_close",
-            [Environment.Hbm2ddlAuto] = "create"
-        });
+        builder.UseProperties(new SortedList<string, string> { [Environment.ReleaseConnections] = "on_close", [Environment.Hbm2ddlAuto] = "create" });
     }
 }

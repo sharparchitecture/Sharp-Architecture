@@ -48,8 +48,10 @@ public static class NHibernateRegistrationExtensions
         Func<IStatelessSessionBuilder, IServiceProvider, IStatelessSession>? statelessSessionConfigurator = null
     )
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-        if (configureSessionFactory == null) throw new ArgumentNullException(nameof(configureSessionFactory));
+        if (services == null)
+            throw new ArgumentNullException(nameof(services));
+        if (configureSessionFactory == null)
+            throw new ArgumentNullException(nameof(configureSessionFactory));
 
         services.AddSingleton(sp =>
         {

@@ -22,7 +22,8 @@ public class UserService : IUserService
 
     public Task<User?> GetCurrentUser(CancellationToken cancellationToken)
     {
-        if (!_context.UserIsAuthenticated) return Task.FromResult<User?>(null);
+        if (!_context.UserIsAuthenticated)
+            return Task.FromResult<User?>(null);
 
         return GetUserByUserName(_context.UserName, cancellationToken);
     }
@@ -54,14 +55,16 @@ public class UserService : IUserService
 
     public Task SaveUser(User user, CancellationToken cancellationToken)
     {
-        if (user == null) throw new ArgumentNullException(nameof(user));
+        if (user == null)
+            throw new ArgumentNullException(nameof(user));
 
         return _userRepository.SaveAsync(user, cancellationToken);
     }
 
     public bool AreNullOrNotRelated(Parent? parent, Child? child)
     {
-        if (parent == null || child == null) return true;
+        if (parent == null || child == null)
+            return true;
 
         if (!parent.HasChild(child))
         {
@@ -73,8 +76,8 @@ public class UserService : IUserService
 
     public async Task<bool> IsNotChildOfCurrentUser(Child? child, CancellationToken cancellationToken)
     {
-        var parent = (await GetCurrentUser(cancellationToken).ConfigureAwait(false)) as Parent;
-        return (child == null) || (parent == null) || (!parent.HasChild(child));
+        var parent = await GetCurrentUser(cancellationToken).ConfigureAwait(false) as Parent;
+        return child == null || parent == null || !parent.HasChild(child);
     }
 
     public Task DeleteUser(int userId, CancellationToken cancellationToken)

@@ -48,7 +48,7 @@ public class HasUniqueDomainSignatureAttributeBase : ValidationAttribute
         if (entityToValidate == null)
             throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture,
                 "This validator must be used at the class level of an " + nameof(IEntity) + ". The type you provided was '{0}'.",
-                (value?.GetType() as object) ?? "null"));
+                value?.GetType() as object ?? "null"));
 
         var duplicateChecker =
             (IEntityDuplicateChecker?)validationContext.GetService(typeof(IEntityDuplicateChecker));

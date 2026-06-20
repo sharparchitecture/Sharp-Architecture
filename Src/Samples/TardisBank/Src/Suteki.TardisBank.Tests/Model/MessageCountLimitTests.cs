@@ -1,9 +1,9 @@
 namespace Suteki.TardisBank.Tests.Model;
 
 using Domain;
-using Shouldly;
 using MediatR;
 using Moq;
+using Shouldly;
 using Xunit;
 
 

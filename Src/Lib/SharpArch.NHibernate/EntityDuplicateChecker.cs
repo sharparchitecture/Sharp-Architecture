@@ -16,7 +16,7 @@ using global::NHibernate.Criterion;
 [PublicAPI]
 public class EntityDuplicateChecker : IEntityDuplicateChecker
 {
-    static readonly DateTime _uninitializedDatetime = default;
+    static readonly DateTime _uninitializedDatetime;
     readonly ISession _session;
 
     /// <summary>
@@ -39,7 +39,8 @@ public class EntityDuplicateChecker : IEntityDuplicateChecker
     /// <exception cref="System.ArgumentNullException">entity is null. </exception>
     public bool DoesDuplicateExistWithTypedIdOf(IEntity entity)
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        if (entity == null)
+            throw new ArgumentNullException(nameof(entity));
 
         var sessionForEntity = GetSessionFor(entity);
 
@@ -102,7 +103,7 @@ public class EntityDuplicateChecker : IEntityDuplicateChecker
             return signatureProperty.Name;
         }
 
-        if (parentPropertyName.EndsWith(".") == false)
+        if (!parentPropertyName.EndsWith("."))
         {
             parentPropertyName += ".";
         }
@@ -113,7 +114,7 @@ public class EntityDuplicateChecker : IEntityDuplicateChecker
     static void AppendDateTimePropertyCriteriaTo(ICriteria criteria, string propertyName, object? propertyValue)
     {
         criteria.Add(
-            (propertyValue is null) || (DateTime)propertyValue > _uninitializedDatetime
+            propertyValue is null || (DateTime)propertyValue > _uninitializedDatetime
                 ? Restrictions.Eq(propertyName, propertyValue)
                 : Restrictions.IsNull(propertyName));
     }
@@ -126,8 +127,7 @@ public class EntityDuplicateChecker : IEntityDuplicateChecker
             var propertyValue = signatureProperty.GetValue(entity, null);
             var propertyName = signatureProperty.Name;
 
-            if (propertyType.GetInterfaces().Any(
-                    x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEntity<>)))
+            if (propertyType.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEntity<>)))
             {
                 AppendEntityIdCriteriaTo(criteria, propertyName, propertyValue);
             }

@@ -1,8 +1,8 @@
 namespace Suteki.TardisBank.Tests.Model;
 
 using Domain;
-using Shouldly;
 using Humanizer;
+using Shouldly;
 using Xunit;
 
 

@@ -2,10 +2,10 @@ namespace Suteki.TardisBank.Tests.Model;
 
 using Domain;
 using Domain.Events;
-using Shouldly;
 using MediatR;
 using Moq;
 using SharpArch.Testing.Xunit;
+using Shouldly;
 using Xunit;
 
 
@@ -28,14 +28,6 @@ public class WithdrawlCashTests
     }
 
     [Fact]
-    public void Child_should_not_be_able_to_withdraw_from_some_other_parent()
-    {
-        Action withdraw = () => _child.WithdrawCashFromParent(_somebodyElsesParent, 2.30M, "for toys", _mediator.Object);
-        var exception = withdraw.ShouldThrow<CashWithdrawException>();
-        exception.Message.ShouldBe("Not Your Parent");
-    }
-
-    [Fact]
     [SetCulture("en-GB")]
     public void Child_should_be_able_to_withdraw_cash()
     {
@@ -47,6 +39,14 @@ public class WithdrawlCashTests
 
         _parent.Messages.Count.ShouldBe(1);
         _parent.Messages[0].Text.ShouldBe("Leo would like to withdraw £2.30");
+    }
+
+    [Fact]
+    public void Child_should_not_be_able_to_withdraw_from_some_other_parent()
+    {
+        Action withdraw = () => _child.WithdrawCashFromParent(_somebodyElsesParent, 2.30M, "for toys", _mediator.Object);
+        var exception = withdraw.ShouldThrow<CashWithdrawException>();
+        exception.Message.ShouldBe("Not Your Parent");
     }
 
     [Fact]

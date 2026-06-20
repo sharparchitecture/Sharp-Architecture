@@ -45,7 +45,8 @@ public static class LockModeConvertExtensions
     /// </summary>
     public static Enums.LockMode ToNHibernate(this LockMode lockMode)
     {
-        if (_nHibernateToSharpArchMap.TryGetValue(lockMode, out var convertedMode)) return convertedMode;
+        if (_nHibernateToSharpArchMap.TryGetValue(lockMode, out var convertedMode))
+            return convertedMode;
         throw new ArgumentOutOfRangeException(nameof(lockMode), lockMode,
             $"The provided lock mode , '{lockMode}', could not be translated into an SharpArch.LockMode. "
             + "This is probably because NHibernate was updated and now has different lock modes "

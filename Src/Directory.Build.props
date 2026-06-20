@@ -1,7 +1,7 @@
 ﻿<Project>
   <PropertyGroup Label="Build targets">
     <!-- target frameworks for unit-tests and applications -->
-    <AppTargetFrameworks>net8.0;net9.0</AppTargetFrameworks>
+    <AppTargetFrameworks>net8.0;net9.0;net10.0</AppTargetFrameworks>
     <!-- target frameworks for SharpArch libraries -->
     <LibraryTargetFrameworks>netstandard2.1;$(AppTargetFrameworks)</LibraryTargetFrameworks>
   </PropertyGroup>
@@ -70,6 +70,11 @@
     <NoWarn>$(NoWarn);0618;1591</NoWarn>
   </PropertyGroup>
 
+  <!-- xUnit v3 analyzer: suppress xunit1051 on .NET 8+ targets where xUnit v3 is used -->
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net9.0' Or '$(TargetFramework)' == 'net10.0' ">
+    <NoWarn>$(NoWarn);xunit1051</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == false">
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>SharpArch.XunitTests</_Parameter1>
@@ -91,7 +96,7 @@
 
   <!-- Common references -->
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2025.2.2" />
+    <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
   </ItemGroup>
 
 </Project>

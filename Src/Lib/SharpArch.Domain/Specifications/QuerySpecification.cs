@@ -24,7 +24,8 @@ public abstract class QuerySpecification<T> : ILinqSpecification<T>
     /// <exception cref="ArgumentNullException"><paramref name="candidates" /> is <see langword="null" />.</exception>
     public virtual IQueryable<T> SatisfyingElementsFrom(IQueryable<T> candidates)
     {
-        if (candidates == null) throw new ArgumentNullException(nameof(candidates));
+        if (candidates == null)
+            throw new ArgumentNullException(nameof(candidates));
         if (MatchingCriteria != null)
         {
             return candidates.Where(MatchingCriteria);

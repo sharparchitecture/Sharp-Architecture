@@ -1,6 +1,5 @@
 ﻿namespace SharpArch.Domain.DomainModel;
 
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 
@@ -27,7 +26,8 @@ public abstract class ValueObject : BaseObject
     /// <returns>The result of the operator.</returns>
     public static bool operator ==(ValueObject? valueObject1, ValueObject? valueObject2)
     {
-        if (ReferenceEquals(valueObject1, null)) return ReferenceEquals(valueObject2, null);
+        if (ReferenceEquals(valueObject1, null))
+            return ReferenceEquals(valueObject2, null);
 
         return valueObject1.Equals(valueObject2);
     }

@@ -1,6 +1,5 @@
 namespace SharpArch.Domain.DomainModel;
 
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Xml.Serialization;
 
@@ -30,7 +29,8 @@ public abstract class Entity<TId> : ValidatableObject, IEntity<TId>, IEntity,
     public virtual object? GetId()
     {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (Id is null) return null;
+        if (Id is null)
+            return null;
         return Id.Equals(default!)
             // ReSharper disable once RedundantCast
             ? (object?)null
@@ -180,9 +180,7 @@ public abstract class Entity<TId> : ValidatableObject, IEntity<TId>, IEntity,
     ///     default ID value; otherwise; <c>false</c>.
     /// </returns>
     bool HasSameNonDefaultIdAs(Entity<TId> compareTo)
-    {
-        return !IsTransient() && !compareTo.IsTransient() && Id!.Equals(compareTo.Id!);
-    }
+        => !IsTransient() && !compareTo.IsTransient() && Id!.Equals(compareTo.Id!);
 
     /// <summary>
     ///     Check whether entities are equal.

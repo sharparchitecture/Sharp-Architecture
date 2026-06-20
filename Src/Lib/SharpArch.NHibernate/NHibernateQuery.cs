@@ -22,7 +22,8 @@ public abstract class NHibernateQuery
     /// <exception cref="System.ArgumentNullException"><paramref name="session" /> is <c>null</c>.</exception>
     protected NHibernateQuery(ISession session)
     {
-        if (session == null) throw new ArgumentNullException(nameof(session));
+        if (session == null)
+            throw new ArgumentNullException(nameof(session));
 
         Session = session;
     }

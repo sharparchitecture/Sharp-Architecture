@@ -21,8 +21,10 @@ public static class RepositoryExtensions
         where TEntity : class, IEntity<TId>
         where TId : IEquatable<TId>
     {
-        if (repository == null) throw new ArgumentNullException(nameof(repository));
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        if (repository == null)
+            throw new ArgumentNullException(nameof(repository));
+        if (entity == null)
+            throw new ArgumentNullException(nameof(entity));
         var saved = await repository.SaveAsync(entity, CancellationToken.None).ConfigureAwait(false);
         await repository.EvictAsync(saved, cancellationToken).ConfigureAwait(false);
     }

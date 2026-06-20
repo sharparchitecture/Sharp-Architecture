@@ -8,7 +8,7 @@ using SharpArch.Web.AspNetCore.Transaction;
 
 [Route("api/[controller]")]
 [ApiController]
-[Transaction(IsolationLevel.ReadCommitted)]
+[Transaction()]
 public class OverridesController : ControllerBase
 {
     static readonly ILogger Log = Serilog.Log.ForContext<OverridesController>();

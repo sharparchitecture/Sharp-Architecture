@@ -71,7 +71,8 @@ public abstract class RepositoryTestsBase
     /// <exception cref="ArgumentNullException"><paramref name="instance" /> is <see langword="null" /></exception>
     protected void FlushSessionAndEvict(object instance)
     {
-        if (instance == null) throw new ArgumentNullException(nameof(instance));
+        if (instance == null)
+            throw new ArgumentNullException(nameof(instance));
         Session.FlushAndEvict(instance);
     }
 
@@ -82,7 +83,8 @@ public abstract class RepositoryTestsBase
     /// <exception cref="ArgumentNullException"><paramref name="instance" /> is <see langword="null" /></exception>
     protected void SaveAndEvict(object instance)
     {
-        if (instance == null) throw new ArgumentNullException(nameof(instance));
+        if (instance == null)
+            throw new ArgumentNullException(nameof(instance));
         Session.Save(instance);
         FlushSessionAndEvict(instance);
     }
