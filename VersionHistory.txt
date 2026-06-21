@@ -1,8 +1,43 @@
-========================
-vNext
+﻿vNext
 ========================
 
+
+9.1.0
+========================
+
+ENHANCEMENTS:
+* Add .NET 10 support (net10.0 added to AppTargetFrameworks)
+* TardisBank sample now targets net9.0 and net10.0
+
+BUILD:
+* Upgrade xUnit to v3 for .NET 8+ targets (xunit.v3 3.2.2 / xunit.v3.extensibility.core 3.2.2);
+  keep xunit v2 (xunit.core 2.9.3) for netstandard2.1 and net6.0
+* Upgrade Microsoft.SourceLink.GitHub 8.0.0 -> 10.0.300
+
+DEPENDENCIES:
+* NHibernate upgraded 5.5.3 -> 5.6.1
+* NUnit upgraded 4.4.0 -> 4.6.1
+* NUnit3TestAdapter upgraded 5.1.0 -> 6.2.0
+* xunit.runner.visualstudio upgraded 3.1.4 -> 3.1.5
+* Microsoft.NET.Test.Sdk upgraded 17.14.1 -> 18.6.0
+* JetBrains.Annotations upgraded 2025.2.2 -> 2026.2.0
+* Microsoft.Extensions.Logging.Abstractions 10.0.0 added for net10.0 target
+* Microsoft.Extensions.DependencyInjection.Abstractions 10.0.0 added for net10.0 target
+* Autofac upgraded 8.4.0 -> 9.3.0 (samples)
+* Autofac.Extensions.DependencyInjection upgraded 10.0.0 -> 11.0.1 (samples)
+* Microsoft.Data.SqlClient upgraded 6.1.1 -> 7.0.1 (samples)
+* Humanizer.Core upgraded 2.14.1 -> 3.0.10 (TardisBank sample)
+* Newtonsoft.Json upgraded 13.0.3 -> 13.0.4 (TardisBank sample)
+* Serilog.AspNetCore now TFM-conditional per target (8.0.0/9.0.0/10.0.0)
+* Serilog.Sinks.Console upgraded 6.0.0 -> 6.1.1 (samples)
+* Serilog.Sinks.Seq upgraded 9.0.0 -> 9.1.0 (samples)
+* Serilog upgraded 4.3.0 -> 4.3.1 (TardisBank sample)
+* SQLitePCLRaw.bundle_e_sqlite3 upgraded 3.0.2 -> 3.0.3 (TardisBank sample)
+* NHibernate.Extensions.Sqlite now TFM-conditional (9.0.11 / net9.0, 10.0.2 / net10.0)
+* Microsoft.AspNetCore.TestHost now TFM-conditional for net9.0 and net10.0 (samples)
+
 9.0.0
+========================
 
 BREAKING:
 * Drop .NET 5 support
@@ -26,7 +61,7 @@ DEPENDENCIES:
 8.0.1
 ========================
 * .NET 6 support (upgrade from RC to release)
- 
+
 
 8.0.0
 ========================
@@ -215,7 +250,7 @@ S#arp Architecture 2.0.3 for Visual Studio 2010
 
 Issues:
 * #42: Show the expected/requested TResult in the exception message (Thanks Joel Purra @joelpurra).
-* #41: Decorated the attribute classes with the AttributeUsageAttribute, to restrict usage of the attributes to their intended targets. (Thanks Sandor Drie�nhuizen @sandord)
+* #41: Decorated the attribute classes with the AttributeUsageAttribute, to restrict usage of the attributes to their intended targets. (Thanks Sandor Drieënhuizen @sandord)
 
 -------
 
