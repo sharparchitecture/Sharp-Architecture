@@ -151,18 +151,37 @@ public class BuildInfo {
             throw new ArgumentNullException(nameof(context));
         var target = context.Argument("target", "Default");
         var config = context.Argument("buildConfig", "Release");
-        var buildSystem = context.BuildSystem();
 
-        // Calculate version and commit hash
-        GitVersion semVersion = context.GitVersion();
-        var version = new BuildVersion(
-            semVersion.NuGetVersion,
-            semVersion.FullBuildMetaData,
-            semVersion.InformationalVersion,
-            $"{semVersion.Major+1}.0.0",
-            semVersion.Sha,
-            semVersion.MajorMinorPatch
-        );
+        var buildSystem = context.BuildSystem();
+        var repositoryInfo = RepositoryInfo.Get(buildSystem, settings);
+        BuildVersion version;
+        
+        if (repositoryInfo.IsPullRequest) {
+            // GitVersion fails on PR builds, use 0.PullRequestId.BuildNumber as a version number
+            var buildVersion = $"0.{buildSystem.AppVeyor.Environment.PullRequest.Number}.{buildSystem.AppVeyor.Environment.Build.Number}";
+            var commitHash = buildSystem.AppVeyor.Environment.Repository.Commit.Id;
+            
+            version = new BuildVersion(
+                buildVersion,
+                $"{buildVersion}/{commitHash}-PR-{buildSystem.AppVeyor.Environment.PullRequest.Title}",
+                buildVersion,
+                $"{buildVersion}.0",
+                commitHash,
+                buildVersion
+            );
+        }
+        else {
+            // Calculate version and commit hash
+            GitVersion semVersion = context.GitVersion();
+            version = new BuildVersion(
+                semVersion.NuGetVersion,
+                semVersion.FullBuildMetaData,
+                semVersion.InformationalVersion,
+                $"{semVersion.Major+1}.0.0",
+                semVersion.Sha,
+                semVersion.MajorMinorPatch
+            );
+        }
 
         var gitHubToken = context.EnvironmentVariable("GITHUB_TOKEN");
 
