@@ -56,7 +56,7 @@ for:
     - c:\tmp\cake\tools -> build\*.cake, appveyor.yml
 
   services:
-    - mssql2019
+    - mssql2025
 
   install:
     - ps: dotnet --info
