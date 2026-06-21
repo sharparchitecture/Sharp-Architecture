@@ -7,8 +7,8 @@ nuget:
   disable_publish_on_pr: true
 
 image:
-  - Ubuntu2204
-  - Visual Studio 2022
+  - Ubuntu2404
+  - Visual Studio 2026
 
 environment:
   CAKE_SETTINGS_SKIPVERIFICATION: true
