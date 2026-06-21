@@ -1,7 +1,7 @@
 ﻿namespace Suteki.TardisBank.Api.Announcements;
 
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 
 /// <summary>
@@ -9,15 +9,15 @@ using Newtonsoft.Json;
 /// </summary>
 public class AnnouncementSummary
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int Id { get; set; }
 
-    [JsonProperty("date")]
+    [JsonPropertyName("date")]
     [DataType(DataType.Date)]
     public DateTime Date { get; set; }
 
     [Required]
-    [JsonProperty("title")]
+    [JsonPropertyName("title")]
     public string Title { get; set; } = null!;
 }
 
@@ -27,7 +27,7 @@ public class AnnouncementSummary
 /// </summary>
 public class AnnouncementModel : AnnouncementSummary
 {
-    [JsonProperty("content")]
+    [JsonPropertyName("content")]
     [Required]
     public string Content { get; set; } = null!;
 }
