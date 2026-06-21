@@ -29,7 +29,7 @@ for:
 -
   matrix:
     only:
-      - image: Ubuntu2204
+      - image: Ubuntu2404
 
   clone_folder: ~/work/sharp-arch
 
@@ -48,7 +48,7 @@ for:
 -
   matrix:
     only:
-      - image: Visual Studio 2022
+      - image: Visual Studio 2026
 
   clone_folder: c:\work\sharp-arch
 
