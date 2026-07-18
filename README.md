@@ -36,7 +36,7 @@ Now you should have the latest development branch of S#arp Architecture.
 ## Documentation and Assemblies
 
 
-* /Artefacts/Documentation/:  Contains a link to comprehensive, online documentation at http://sharp-architecture.readthedocs.org/, and a diagram of what a S#arp Architecture project looks like.
+* [/docs/](docs/README.md): Comprehensive documentation, published via GitHub Pages at https://sharparchitecture.github.io/Sharp-Architecture/.
 
 
 ## How's this release organized?
