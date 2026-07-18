@@ -2,10 +2,10 @@
 branches:
   release:
     mode: ContinuousDeployment
-    tag: rc
+    label: rc
   develop:
     mode: ContinuousDeployment
-    tag: alpha
+    label: alpha
 ignore:
   sha: []
 

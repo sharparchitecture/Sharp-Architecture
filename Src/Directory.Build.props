@@ -70,6 +70,14 @@
     <NoWarn>$(NoWarn);0618;1591</NoWarn>
   </PropertyGroup>
 
+  <!-- Coverlet MSBuild integration for code coverage collection in all test projects -->
+  <ItemGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == true">
+    <PackageReference Include="coverlet.msbuild" Version="6.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
   <!-- xUnit v3 analyzer: suppress xunit1051 on .NET 8+ targets where xUnit v3 is used -->
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net9.0' Or '$(TargetFramework)' == 'net10.0' ">
     <NoWarn>$(NoWarn);xunit1051</NoWarn>

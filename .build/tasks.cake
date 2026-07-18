@@ -39,62 +39,54 @@ Task("Restore")
 Task("RunXunitTests")
     .Does<BuildInfo>(build =>
     {
-        var projectPath = build.Paths.SrcDir;
-        var projectFilename = build.Settings.SolutionName;
-        // keep in sync with src/Directory.Build.props
         var solutionFullPath = new DirectoryPath(build.Paths.SrcDir).Combine(build.Settings.SolutionName) + ".sln";
+
+        // Build DotNetTestSettings for a given configuration and log-file name.
+        DotNetTestSettings BuildTestSettings(string buildCfg, string logFilename)
         {
-            Func<string,ProcessArgumentBuilder> buildProcessArgs = (buildCfg) => {
-                var pb = new ProcessArgumentBuilder()
-                    .AppendSwitch("--configuration", buildCfg)
-                    .AppendSwitch("--filter", "Category!=ManualTests")
-                    .AppendSwitch("--results-directory", build.Paths.ArtifactsDir)
-                    .Append("--no-restore")
-                    .Append("--no-build");
-                if (!build.IsLocal) {
-                    pb.AppendSwitch("--test-adapter-path", ".")
-                        .AppendSwitch("--logger", "AppVeyor");
+            var ts = new DotNetTestSettings
+            {
+                Configuration = buildCfg,
+                Filter        = "Category!=ManualTests",
+                ResultsDirectory = new DirectoryPath(build.Paths.ArtifactsDir),
+                NoRestore = true,
+                NoBuild   = true,
+                ArgumentCustomization = args =>
+                {
+                    if (!build.IsLocal)
+                        return args.AppendSwitch("--test-adapter-path", ".")
+                                   .AppendSwitch("--logger", "AppVeyor");
+                    return args.AppendSwitch("--logger", $"trx;LogFileName={logFilename}.trx");
                 }
-                else {
-                    pb.AppendSwitch("--logger", $"trx;LogFileName={projectFilename}.trx");
-                }
-                return pb;
             };
+            return ts;
+        }
 
-            Information("Calculating code coverage for {0} ...", projectFilename);
+        var coverletSettings = new CoverletSettings
+        {
+            CollectCoverage    = true,
+            CoverletOutputFormat = CoverletOutputFormat.opencover | CoverletOutputFormat.json,
+            CoverletOutputDirectory = new DirectoryPath(build.Paths.ArtifactsDir),
+            CoverletOutputName = "coverage",
+            ExcludeByFile      = new List<string> { build.Settings.CodeCoverage.ExcludeByFile },
+            ExcludeByAttribute = new List<string> { build.Settings.CodeCoverage.ExcludeByAttribute },
+            Include            = build.Settings.CodeCoverage.IncludeFilter,
+            Exclude            = build.Settings.CodeCoverage.ExcludeFilter,
+        };
 
-            var openCoverSettings = new OpenCoverSettings
-            {
-                OldStyle = true,
-                ReturnTargetCodeOffset = 0,
-                ArgumentCustomization = args => args.Append("-mergeoutput").Append("-hideskipped:File;Filter;Attribute"),
-                WorkingDirectory = projectPath,
-            }
-            .WithFilter($"{build.Settings.CodeCoverage.IncludeFilter} {build.Settings.CodeCoverage.ExcludeFilter}")
-            .ExcludeByAttribute(build.Settings.CodeCoverage.ExcludeByAttribute)
-            .ExcludeByFile(build.Settings.CodeCoverage.ExcludeByFile);
+        Information("Calculating code coverage for {0} ...", build.Settings.SolutionName);
 
-            // run open cover for debug build configuration
-            OpenCover(
-                tool => tool.DotNetTool(
-                    projectPath.ToString(),
-                    "test",
-                    buildProcessArgs("Debug")
-                ),
-                build.Paths.TestCoverageOutputFile,
-                openCoverSettings
-            );
+        DotNetTest(
+            solutionFullPath,
+            BuildTestSettings("Debug", build.Settings.SolutionName),
+            coverletSettings
+        );
 
-            // run tests again if Release mode was requested
-            if (build.IsRelease)
-            {
-                Information("Running Release mode tests for {0} ...", projectFilename);
-                DotNetTool(
-                    solutionFullPath,
-                    "test",
-                    buildProcessArgs("Release")
-                );
-            }
+        // Run Release-mode tests (no coverage) when a Release build was requested.
+        if (build.IsRelease)
+        {
+            Information("Running Release mode tests for {0} ...", build.Settings.SolutionName);
+            DotNetTest(solutionFullPath, BuildTestSettings("Release", build.Settings.SolutionName));
         }
     })
     .DeferOnError();
@@ -102,8 +94,8 @@ Task("RunXunitTests")
 Task("CleanPreviousTestResults")
     .Does<BuildInfo>(build =>
     {
-        if (FileExists(build.Paths.TestCoverageOutputFile))
-            DeleteFile(build.Paths.TestCoverageOutputFile);
+        DeleteFiles(build.Paths.ArtifactsDir + "/coverage.*.json");
+        DeleteFiles(build.Paths.ArtifactsDir + "/coverage.*.opencover.xml");
         DeleteFiles(build.Paths.ArtifactsDir + "/*.trx");
         if (DirectoryExists(build.Paths.TestCoverageReportDir))
             DeleteDirectory(build.Paths.TestCoverageReportDir, new DeleteDirectorySettings
@@ -117,7 +109,7 @@ Task("GenerateCoverageReport")
     .WithCriteria<BuildInfo>((ctx, build) => build.IsLocal)
     .Does<BuildInfo>(build =>
     {
-        ReportGenerator((FilePath)build.Paths.TestCoverageOutputFile, build.Paths.TestCoverageReportDir);
+        ReportGenerator(new GlobPattern(build.Paths.TestCoverageGlobPattern), build.Paths.TestCoverageReportDir);
     });
 
 Task("UploadCoverage")

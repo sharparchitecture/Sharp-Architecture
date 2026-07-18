@@ -61,7 +61,7 @@ for:
   install:
     - ps: dotnet --info
     - ps: ./mssql-setup.ps1
-    - ps: dotnet tool install Cake.Tool --version 4.0.0 --global
+    - ps: dotnet tool install Cake.Tool --version 6.0.0 --global
     - ps: dotnet tool install coveralls.net --version 4.0.1 --global
 
   build_script:

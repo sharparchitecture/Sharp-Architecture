@@ -11,10 +11,11 @@ ProjectSettings settings = new ProjectSettings("sharparchitecture", "Sharp-Archi
 {
     CodeCoverage =
     {
-        IncludeFilter = "+[SharpArch.*]*"
+        // Coverlet filter syntax: [Assembly]TypeName
+        IncludeFilter = new List<string> { "[SharpArch.*]*" }
     }
 };
-settings.CodeCoverage.ExcludeFilter += ";-[Suteki*]*;-[TransactionAttribute*]*";
+settings.CodeCoverage.ExcludeFilter.AddRange(new[] { "[Suteki*]*", "[TransactionAttribute*]*" });
 
 // SETUP / TEARDOWN
 
