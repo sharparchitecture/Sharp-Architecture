@@ -6,9 +6,8 @@ Make sure to set AutoCRLF=true in your Git tool before cloning this repository. 
 
 ##Documentation##
 
-Documentation can be viewed on [sharp-architecture.readthedocs.org](http://sharp-architecture.readthedocs.org/) and gets generated from RST from the files in /Doc folder.
-
-> An RST web editor can be found [here](http://rst.ninjs.org/)
+Documentation lives as Markdown in the [`/docs`](docs/README.md) folder and is published
+via GitHub Pages at [sharparchitecture.github.io/Sharp-Architecture](https://sharparchitecture.github.io/Sharp-Architecture/).
 
 If your changes require a change in the documentation (e.g. adding a feature or changing existing behaviour) then you will need to modfy documentation accordingly.
 You can use the github webUI to do small changes like spelling mistakes and formatting. Feature or hotfix documentation changes should be included in the pull request.

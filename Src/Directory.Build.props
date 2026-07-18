@@ -52,7 +52,7 @@
     <PackageIconUrl>https://github.com/sharparchitecture/Sharp-Architecture/raw/master/Artefacts/Documentation/icon.png</PackageIconUrl>
     <PackageProjectUrl>http://sharparchitecture.github.io/</PackageProjectUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/9.0.0</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/sharparchitecture/Sharp-Architecture/releases/tag/9.1.0</PackageReleaseNotes>
     <PackageTags>sharp-architecture;sharp-arch</PackageTags>
   </PropertyGroup>
 
