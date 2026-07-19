@@ -125,14 +125,12 @@ public class Paths {
     public string TestCoverageReportDir { get; set; }
     public string PackagesDir { get; set; }
     public string BuildPropsFile { get; set; }
-    public string TestsRootDir { get; set; }
-    public string SamplesRootDir { get; set; }
     public string CommonAssemblyVersionFile { get; set; }
 
     public Paths(ICakeContext context)
     {
         RootDir = context.MakeAbsolute(context.Directory("./"));
-        SrcDir = RootDir.Combine("src").ToString();
+        SrcDir = RootDir.Combine("Src").ToString();
         ArtifactsDir = RootDir.Combine("artifacts").ToString();
         TestCoverageGlobPattern = ArtifactsDir + "/coverage.*.opencover.xml";
         PrimaryCoverageSourceFile = ArtifactsDir + "/coverage.net10.0.opencover.xml";
@@ -140,8 +138,7 @@ public class Paths {
         TestCoverageReportDir = ArtifactsDir + "/CodeCoverageReport";
         PackagesDir = ArtifactsDir + "/packages";
         BuildPropsFile = SrcDir + "/Directory.Build.props";
-        TestsRootDir = SrcDir + "/tests";
-        CommonAssemblyVersionFile = SrcDir + "/common/AssemblyVersion.cs";
+        CommonAssemblyVersionFile = SrcDir + "/Common/AssemblyVersion.cs";
     }
 
 }
