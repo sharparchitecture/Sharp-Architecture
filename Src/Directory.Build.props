@@ -68,6 +68,10 @@
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);0618;1591</NoWarn>
+    <!-- .NET 9+ SDK runs multi-targeted `dotnet test` TFMs concurrently by default, which races
+         tests that touch shared files on disk (e.g. MappingIntegrationTests.CanGenerateDatabaseSchema
+         writing to a fixed path under Database/). Keep TFM test runs sequential. -->
+    <TestTfmsInParallel>false</TestTfmsInParallel>
   </PropertyGroup>
 
   <!-- Coverlet MSBuild integration for code coverage collection in all test projects -->
