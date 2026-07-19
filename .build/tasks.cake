@@ -76,11 +76,22 @@ Task("RunXunitTests")
 
         Information("Calculating code coverage for {0} ...", build.Settings.SolutionName);
 
-        DotNetTest(
-            solutionFullPath,
-            BuildTestSettings("Debug", build.Settings.SolutionName),
-            coverletSettings
-        );
+        try
+        {
+            DotNetTest(
+                solutionFullPath,
+                BuildTestSettings("Debug", build.Settings.SolutionName),
+                coverletSettings
+            );
+        }
+        finally
+        {
+            // DotNetTest throws on test failures, which would otherwise skip this step.
+            // Coverlet always suffixes multi-targeted output with the TFM; copy the primary
+            // framework's report to the flat name consumed by CoverallsNet.
+            if (FileExists(build.Paths.PrimaryCoverageSourceFile))
+                CopyFile(build.Paths.PrimaryCoverageSourceFile, build.Paths.TestCoverageOutputFile);
+        }
 
         // Run Release-mode tests (no coverage) when a Release build was requested.
         if (build.IsRelease)
@@ -96,6 +107,8 @@ Task("CleanPreviousTestResults")
     {
         DeleteFiles(build.Paths.ArtifactsDir + "/coverage.*.json");
         DeleteFiles(build.Paths.ArtifactsDir + "/coverage.*.opencover.xml");
+        if (FileExists(build.Paths.TestCoverageOutputFile))
+            DeleteFile(build.Paths.TestCoverageOutputFile);
         DeleteFiles(build.Paths.ArtifactsDir + "/*.trx");
         if (DirectoryExists(build.Paths.TestCoverageReportDir))
             DeleteDirectory(build.Paths.TestCoverageReportDir, new DeleteDirectorySettings

@@ -118,7 +118,9 @@ public class Paths {
     public string ArtifactsDir { get; set; }
     /// <summary>Glob matching the per-TargetFramework OpenCover XML files Coverlet writes (e.g. coverage.net10.0.opencover.xml). Consumed by ReportGenerator, which can merge multiple inputs into one report.</summary>
     public string TestCoverageGlobPattern { get; set; }
-    /// <summary>Single OpenCover XML for the primary TFM, used for Coveralls upload (CoverallsNet has no multi-file/glob overload).</summary>
+    /// <summary>Raw per-TFM OpenCover XML Coverlet writes for the primary framework; copied to <see cref="TestCoverageOutputFile"/> since Coverlet always suffixes multi-targeted output with the TFM.</summary>
+    public string PrimaryCoverageSourceFile { get; set; }
+    /// <summary>Flat (no-TFM) OpenCover XML used for Coveralls upload (CoverallsNet has no multi-file/glob overload).</summary>
     public string TestCoverageOutputFile { get; set; }
     public string TestCoverageReportDir { get; set; }
     public string PackagesDir { get; set; }
@@ -133,7 +135,8 @@ public class Paths {
         SrcDir = RootDir.Combine("src").ToString();
         ArtifactsDir = RootDir.Combine("artifacts").ToString();
         TestCoverageGlobPattern = ArtifactsDir + "/coverage.*.opencover.xml";
-        TestCoverageOutputFile = ArtifactsDir + "/coverage.net10.0.opencover.xml";
+        PrimaryCoverageSourceFile = ArtifactsDir + "/coverage.net10.0.opencover.xml";
+        TestCoverageOutputFile = ArtifactsDir + "/coverage.opencover.xml";
         TestCoverageReportDir = ArtifactsDir + "/CodeCoverageReport";
         PackagesDir = ArtifactsDir + "/packages";
         BuildPropsFile = SrcDir + "/Directory.Build.props";
