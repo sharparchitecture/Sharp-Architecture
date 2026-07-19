@@ -1,5 +1,4 @@
 // ADDINS
-#addin nuget:?package=Cake.Coveralls&version=6.0.0
 #addin nuget:?package=Cake.Coverlet&version=6.0.1
 #addin nuget:?package=Cake.FileHelpers&version=9.0.0
 #addin nuget:?package=Cake.AppVeyor&version=10.0.0
@@ -116,11 +115,11 @@ public class Paths {
     public DirectoryPath RootDir { get; }
     public string SrcDir { get; set; }
     public string ArtifactsDir { get; set; }
-    /// <summary>Glob matching the per-TargetFramework OpenCover XML files Coverlet writes (e.g. coverage.net10.0.opencover.xml). Consumed by ReportGenerator, which can merge multiple inputs into one report.</summary>
+    /// <summary>Glob matching the per-TargetFramework Cobertura XML files Coverlet writes (e.g. coverage.net10.0.cobertura.xml). Consumed by ReportGenerator, which can merge multiple inputs into one report.</summary>
     public string TestCoverageGlobPattern { get; set; }
-    /// <summary>Raw per-TFM OpenCover XML Coverlet writes for the primary framework; copied to <see cref="TestCoverageOutputFile"/> since Coverlet always suffixes multi-targeted output with the TFM.</summary>
+    /// <summary>Raw per-TFM Cobertura XML Coverlet writes for the primary framework; copied to <see cref="TestCoverageOutputFile"/> since Coverlet always suffixes multi-targeted output with the TFM.</summary>
     public string PrimaryCoverageSourceFile { get; set; }
-    /// <summary>Flat (no-TFM) OpenCover XML used for Coveralls upload (CoverallsNet has no multi-file/glob overload).</summary>
+    /// <summary>Flat (no-TFM) Cobertura XML used for the Coveralls upload (coverage-reporter is invoked against a single file).</summary>
     public string TestCoverageOutputFile { get; set; }
     public string TestCoverageReportDir { get; set; }
     public string PackagesDir { get; set; }
@@ -132,9 +131,9 @@ public class Paths {
         RootDir = context.MakeAbsolute(context.Directory("./"));
         SrcDir = RootDir.Combine("Src").ToString();
         ArtifactsDir = RootDir.Combine("artifacts").ToString();
-        TestCoverageGlobPattern = ArtifactsDir + "/coverage.*.opencover.xml";
-        PrimaryCoverageSourceFile = ArtifactsDir + "/coverage.net10.0.opencover.xml";
-        TestCoverageOutputFile = ArtifactsDir + "/coverage.opencover.xml";
+        TestCoverageGlobPattern = ArtifactsDir + "/coverage.*.cobertura.xml";
+        PrimaryCoverageSourceFile = ArtifactsDir + "/coverage.net10.0.cobertura.xml";
+        TestCoverageOutputFile = ArtifactsDir + "/coverage.cobertura.xml";
         TestCoverageReportDir = ArtifactsDir + "/CodeCoverageReport";
         PackagesDir = ArtifactsDir + "/packages";
         BuildPropsFile = SrcDir + "/Directory.Build.props";

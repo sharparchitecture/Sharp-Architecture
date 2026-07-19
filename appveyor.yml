@@ -62,7 +62,8 @@ for:
     - ps: dotnet --info
     - ps: ./mssql-setup.ps1
     - ps: dotnet tool install Cake.Tool --version 6.1.0 --global
-    - ps: dotnet tool install coveralls.net --version 4.0.1 --global
+    - ps: New-Item -ItemType Directory -Force -Path C:\tools | Out-Null
+    - ps: Invoke-WebRequest -Uri "https://github.com/coverallsapp/coverage-reporter/releases/latest/download/coveralls-windows.exe" -OutFile "C:\tools\coveralls-windows.exe"
 
   build_script:
       - ps: dotnet cake
@@ -70,6 +71,7 @@ for:
   environment:
     coveralls_repo_token:
       secure: FgZlD1O2ilcGB6nF7cIgNcF6f8wWJk//ish6EG800QfuMd0y3BQWUXkl9u7TB4yG
+    coveralls_reporter_exe: C:\tools\coveralls-windows.exe
     appveyor_cache_entry_zip_args: -t7z -m0=lzma -mx=5 -ms=on
     CAKE_PATHS_TOOLS: c:\tmp\cake\tools\
     GITHUB_TOKEN:

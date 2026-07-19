@@ -65,7 +65,7 @@ Task("RunXunitTests")
         var coverletSettings = new CoverletSettings
         {
             CollectCoverage    = true,
-            CoverletOutputFormat = CoverletOutputFormat.opencover | CoverletOutputFormat.json,
+            CoverletOutputFormat = CoverletOutputFormat.cobertura | CoverletOutputFormat.json,
             CoverletOutputDirectory = new DirectoryPath(build.Paths.ArtifactsDir),
             CoverletOutputName = "coverage",
             ExcludeByFile      = new List<string> { build.Settings.CodeCoverage.ExcludeByFile },
@@ -88,7 +88,7 @@ Task("RunXunitTests")
         {
             // DotNetTest throws on test failures, which would otherwise skip this step.
             // Coverlet always suffixes multi-targeted output with the TFM; copy the primary
-            // framework's report to the flat name consumed by CoverallsNet.
+            // framework's report to the flat name consumed by the Coveralls upload.
             if (FileExists(build.Paths.PrimaryCoverageSourceFile))
                 CopyFile(build.Paths.PrimaryCoverageSourceFile, build.Paths.TestCoverageOutputFile);
         }
@@ -106,7 +106,7 @@ Task("CleanPreviousTestResults")
     .Does<BuildInfo>(build =>
     {
         DeleteFiles(build.Paths.ArtifactsDir + "/coverage.*.json");
-        DeleteFiles(build.Paths.ArtifactsDir + "/coverage.*.opencover.xml");
+        DeleteFiles(build.Paths.ArtifactsDir + "/coverage.*.cobertura.xml");
         if (FileExists(build.Paths.TestCoverageOutputFile))
             DeleteFile(build.Paths.TestCoverageOutputFile);
         DeleteFiles(build.Paths.ArtifactsDir + "/*.trx");
@@ -129,10 +129,22 @@ Task("UploadCoverage")
     .WithCriteria<BuildInfo>((ctx, build) => !build.IsLocal)
     .Does<BuildInfo>(build =>
     {
-        CoverallsNet(build.Paths.TestCoverageOutputFile, CoverallsNetReportType.OpenCover, new CoverallsNetSettings()
+        // Uses the self-contained coveralls-windows.exe "coverage-reporter" binary (no .NET runtime
+        // dependency) instead of the abandoned, .NET-6-only coveralls.net/Cake.Coveralls tool.
+        var reporterExe = EnvironmentVariable("COVERALLS_REPORTER_EXE") ?? "coveralls-windows.exe";
+        var repoToken = EnvironmentVariable("COVERALLS_REPO_TOKEN");
+
+        var exitCode = StartProcess(reporterExe, new ProcessSettings
         {
-            RepoTokenVariable = "COVERALLS_REPO_TOKEN"
+            Arguments = new ProcessArgumentBuilder()
+                .Append("report")
+                .AppendQuoted(build.Paths.TestCoverageOutputFile)
+                .Append("--format=cobertura")
+                .AppendSwitchSecret("--repo-token", "=", repoToken)
         });
+
+        if (exitCode != 0)
+            throw new Exception($"Coveralls report upload failed with exit code {exitCode}.");
     });
 
 Task("RunUnitTests")
