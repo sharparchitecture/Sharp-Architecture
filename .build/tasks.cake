@@ -140,7 +140,6 @@ Task("UploadCoverage")
                 .AppendQuoted(build.Paths.TestCoverageOutputFile)
                 .Append("--format=cobertura")
                 .Append("--no-logo")
-                .Append("--debug")
         });
 
         if (exitCode != 0)
