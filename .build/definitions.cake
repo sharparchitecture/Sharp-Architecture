@@ -130,7 +130,7 @@ public class Paths {
         RootDir = context.MakeAbsolute(context.Directory("./"));
         SrcDir = RootDir.Combine("Src").ToString();
         ArtifactsDir = RootDir.Combine("artifacts").ToString();
-        TestCoverageGlobPattern = ArtifactsDir + "/coverage.*.cobertura.xml";
+        TestCoverageGlobPattern = ArtifactsDir + "/coverage.*.cobertura.*.xml";
         TestCoverageReportDir = ArtifactsDir + "/CodeCoverageReport";
         PackagesDir = ArtifactsDir + "/packages";
         BuildPropsFile = SrcDir + "/Directory.Build.props";

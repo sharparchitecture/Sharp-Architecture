@@ -82,7 +82,7 @@ Task("RunXunitTests")
                 CollectCoverage    = true,
                 CoverletOutputFormat = CoverletOutputFormat.cobertura,
                 CoverletOutputDirectory = new DirectoryPath(build.Paths.ArtifactsDir),
-                CoverletOutputName = $"coverage.{projectName}",
+                CoverletOutputName = $"coverage.{projectName}.cobertura.xml",
                 ExcludeByFile      = new List<string> { build.Settings.CodeCoverage.ExcludeByFile },
                 ExcludeByAttribute = new List<string> { build.Settings.CodeCoverage.ExcludeByAttribute },
                 Include            = build.Settings.CodeCoverage.IncludeFilter,
