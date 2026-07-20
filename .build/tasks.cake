@@ -119,6 +119,62 @@ Task("CleanPreviousTestResults")
             });
     });
 
+Task("NormalizeCoveragePaths")
+    .IsDependentOn("RunXunitTests")
+    .Does<BuildInfo>(build =>
+    {
+        // Coverlet computes the Cobertura <source> (common source root) per test project, so the same
+        // source file ends up with different `filename` strings across reports: SharpArch.Domain/X.cs
+        // (root = Src/Lib) vs Lib/SharpArch.Domain/X.cs (root = Src). The coveralls coverage-reporter
+        // keys files by the `filename` attribute and ignores <source>, so those become DUPLICATE
+        // entries on Coveralls (one under Lib/, one at the top level). Normalize every report to the
+        // repo root with filenames relative to it so each source file has one consistent path.
+        // ReportGenerator still resolves files because <source> is rewritten to the same root.
+        var rootDir = build.Paths.RootDir.ToString();
+        var reports = GetFiles(build.Paths.TestCoverageGlobPattern).ToList();
+
+        foreach (var report in reports)
+        {
+            var doc = new System.Xml.XmlDocument { PreserveWhitespace = true };
+            doc.Load(report.FullPath);
+
+            var sourceNodes = doc.SelectNodes("//source");
+            string firstSource = rootDir;
+            bool captured = false;
+            if (sourceNodes != null)
+            {
+                foreach (System.Xml.XmlNode src in sourceNodes)
+                {
+                    if (!captured)
+                    {
+                        firstSource = src.InnerText;
+                        captured = true;
+                    }
+                    src.InnerText = rootDir;
+                }
+            }
+
+            var classNodes = doc.SelectNodes("//class");
+            if (classNodes != null)
+            {
+                foreach (System.Xml.XmlNode cls in classNodes)
+                {
+                    var fnAttr = cls.Attributes?["filename"];
+                    if (fnAttr == null || string.IsNullOrEmpty(fnAttr.Value))
+                        continue;
+
+                    var absolute = System.IO.Path.GetFullPath(System.IO.Path.Combine(firstSource, fnAttr.Value));
+                    fnAttr.Value = System.IO.Path.GetRelativePath(rootDir, absolute)
+                        .Replace(System.IO.Path.DirectorySeparatorChar, '/');
+                }
+            }
+
+            doc.Save(report.FullPath);
+        }
+
+        Information("Normalized source paths in {0} coverage report(s).", reports.Count);
+    });
+
 Task("GenerateCoverageReport")
     .WithCriteria<BuildInfo>((ctx, build) => build.IsLocal)
     .Does<BuildInfo>(build =>
@@ -213,6 +269,7 @@ Task("RunUnitTests")
     .IsDependentOn("Build")
     .IsDependentOn("CleanPreviousTestResults")
     .IsDependentOn("RunXunitTests")
+    .IsDependentOn("NormalizeCoveragePaths")
     .IsDependentOn("GenerateCoverageReport")
     .IsDependentOn("UploadCoverage")
     .Does<BuildInfo>(build =>
