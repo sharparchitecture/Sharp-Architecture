@@ -69,7 +69,7 @@ for:
       - ps: dotnet cake
 
   environment:
-    coveralls_repo_token:
+    COVERALLS_REPO_TOKEN:
       secure: FgZlD1O2ilcGB6nF7cIgNcF6f8wWJk//ish6EG800QfuMd0y3BQWUXkl9u7TB4yG
     coveralls_reporter_exe: C:\tools\coveralls-windows.exe
     appveyor_cache_entry_zip_args: -t7z -m0=lzma -mx=5 -ms=on

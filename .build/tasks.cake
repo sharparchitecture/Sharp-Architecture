@@ -132,7 +132,6 @@ Task("UploadCoverage")
         // Uses the self-contained coveralls-windows.exe "coverage-reporter" binary (no .NET runtime
         // dependency) instead of the abandoned, .NET-6-only coveralls.net/Cake.Coveralls tool.
         var reporterExe = EnvironmentVariable("COVERALLS_REPORTER_EXE") ?? "coveralls-windows.exe";
-        var repoToken = EnvironmentVariable("COVERALLS_REPO_TOKEN");
 
         var exitCode = StartProcess(reporterExe, new ProcessSettings
         {
@@ -140,7 +139,6 @@ Task("UploadCoverage")
                 .Append("report")
                 .AppendQuoted(build.Paths.TestCoverageOutputFile)
                 .Append("--format=cobertura")
-                .AppendSwitchSecret("--repo-token", "=", repoToken)
         });
 
         if (exitCode != 0)
