@@ -25,7 +25,7 @@ matrix:
 
 for:
 
-# Linux build
+ # Linux build
 -
   matrix:
     only:
@@ -70,9 +70,9 @@ for:
 
   environment:
     COVERALLS_REPO_TOKEN:
-      secure: FgZlD1O2ilcGB6nF7cIgNcF6f8wWJk//ish6EG800QfuMd0y3BQWUXkl9u7TB4yG
-    coveralls_reporter_exe: C:\tools\coveralls-windows.exe
-    appveyor_cache_entry_zip_args: -t7z -m0=lzma -mx=5 -ms=on
+      secure: Yf2HHc4ObFerbXits621royUrbahaAPNsUHdvJVnl7y1tTG/chj5wXKDnk0V71aP
+    COVERALLS_REPORTER_EXE: C:\tools\coveralls-windows.exe
+    APPVEYOR_CACHE_ENTRY_ZIP_ARGS: -t7z -m0=lzma -mx=5 -ms=on
     CAKE_PATHS_TOOLS: c:\tmp\cake\tools\
     GITHUB_TOKEN:
       secure: 21bpvob1W59q2H3tgdQ4c6pkZVzTTZTTWUNkkLJ/1bo2xY4K160RtHw08cBRsQOd
