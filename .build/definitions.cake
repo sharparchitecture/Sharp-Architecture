@@ -115,12 +115,11 @@ public class Paths {
     public DirectoryPath RootDir { get; }
     public string SrcDir { get; set; }
     public string ArtifactsDir { get; set; }
-    /// <summary>Glob matching the per-TargetFramework Cobertura XML files Coverlet writes (e.g. coverage.net10.0.cobertura.xml). Consumed by ReportGenerator, which can merge multiple inputs into one report.</summary>
+    /// <summary>Glob matching the per-test-project, per-TargetFramework Cobertura XML files Coverlet writes
+    /// (e.g. coverage.SharpArch.XunitTests.net10.0.cobertura.xml). Each test project is run separately with a
+    /// unique CoverletOutputName so projects/TFMs don't overwrite each other. Consumed both by ReportGenerator
+    /// (local HTML report) and by the Coveralls upload loop.</summary>
     public string TestCoverageGlobPattern { get; set; }
-    /// <summary>Raw per-TFM Cobertura XML Coverlet writes for the primary framework; copied to <see cref="TestCoverageOutputFile"/> since Coverlet always suffixes multi-targeted output with the TFM.</summary>
-    public string PrimaryCoverageSourceFile { get; set; }
-    /// <summary>Flat (no-TFM) Cobertura XML used for the Coveralls upload (coverage-reporter is invoked against a single file).</summary>
-    public string TestCoverageOutputFile { get; set; }
     public string TestCoverageReportDir { get; set; }
     public string PackagesDir { get; set; }
     public string BuildPropsFile { get; set; }
@@ -132,8 +131,6 @@ public class Paths {
         SrcDir = RootDir.Combine("Src").ToString();
         ArtifactsDir = RootDir.Combine("artifacts").ToString();
         TestCoverageGlobPattern = ArtifactsDir + "/coverage.*.cobertura.xml";
-        PrimaryCoverageSourceFile = ArtifactsDir + "/coverage.net10.0.cobertura.xml";
-        TestCoverageOutputFile = ArtifactsDir + "/coverage.cobertura.xml";
         TestCoverageReportDir = ArtifactsDir + "/CodeCoverageReport";
         PackagesDir = ArtifactsDir + "/packages";
         BuildPropsFile = SrcDir + "/Directory.Build.props";
