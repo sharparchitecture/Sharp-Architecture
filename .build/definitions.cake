@@ -4,7 +4,7 @@
 #addin nuget:?package=Cake.AppVeyor&version=10.0.0
 
 // TOOLS
-#tool nuget:?package=GitReleaseManager.Tool
+#tool nuget:?package=GitReleaseManager.Tool&version=0.20.0
 #tool "dotnet:?package=GitVersion.Tool&version=6.0.0"
 #tool nuget:?package=ReportGenerator&version=5.4.8
 
