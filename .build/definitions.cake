@@ -190,9 +190,11 @@ public class BuildInfo {
         }
         else {
             // Calculate version and commit hash
+            // GitVersion 6.0 removed the NuGetVersion variable; SemVer is its SemVer2-compatible
+            // replacement and is accepted by modern NuGet (v3+).
             GitVersion semVersion = context.GitVersion();
             version = new BuildVersion(
-                semVersion.NuGetVersion,
+                semVersion.SemVer,
                 semVersion.FullBuildMetaData,
                 semVersion.InformationalVersion,
                 $"{semVersion.Major+1}.0.0",
