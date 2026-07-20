@@ -126,7 +126,7 @@ Task("GenerateCoverageReport")
     });
 
 Task("UploadCoverage")
-    .WithCriteria<BuildInfo>((ctx, build) => !build.IsLocal)
+    .WithCriteria<BuildInfo>((ctx, build) => build.IsPullRequest == false && build.IsLocal == false)
     .Does<BuildInfo>(build =>
     {
         // Uses the self-contained coveralls-windows.exe "coverage-reporter" binary (no .NET runtime
