@@ -1,8 +1,7 @@
 namespace Tests.SharpArch.Domain.DomainModel;
 
-using System.Diagnostics.CodeAnalysis;
-using Shouldly;
 using global::SharpArch.Domain.DomainModel;
+using Shouldly;
 using Xunit;
 
 

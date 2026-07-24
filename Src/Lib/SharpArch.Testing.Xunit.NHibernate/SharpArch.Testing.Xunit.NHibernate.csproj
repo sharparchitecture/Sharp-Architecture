@@ -16,8 +16,12 @@
     <None Include="..\..\..\Artefacts\Documentation\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Label="Package References (xUnit v2 - netstandard2.1/net6.0)" Condition=" '$(TargetFramework)' == 'netstandard2.1' Or '$(TargetFramework)' == 'net6.0' ">
     <PackageReference Include="xunit.core" Version="2.9.3" />
+  </ItemGroup>
+
+  <ItemGroup Label="Package References (xUnit v3 - .NET 8+)" Condition=" '$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net9.0' Or '$(TargetFramework)' == 'net10.0' ">
+    <PackageReference Include="xunit.v3.extensibility.core" Version="3.2.2" />
   </ItemGroup>
 
   <ItemGroup>

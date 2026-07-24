@@ -94,7 +94,8 @@ public class NHibernateSessionFactoryBuilder
     /// <exception cref="System.ArgumentNullException">Mapping assemblies are not specified.</exception>
     public NHibernateSessionFactoryBuilder AddMappingAssemblies(IEnumerable<Assembly> mappingAssemblies)
     {
-        if (mappingAssemblies == null) throw new ArgumentNullException(nameof(mappingAssemblies), "Mapping assemblies are not specified.");
+        if (mappingAssemblies == null)
+            throw new ArgumentNullException(nameof(mappingAssemblies), "Mapping assemblies are not specified.");
 
         _mappingAssemblies.AddRange(mappingAssemblies);
         return this;
@@ -122,9 +123,11 @@ public class NHibernateSessionFactoryBuilder
     /// <exception cref="System.ArgumentNullException"><paramref name="properties" /> is <c>null</c>.</exception>
     public NHibernateSessionFactoryBuilder UseProperties(IEnumerable<KeyValuePair<string, string>> properties)
     {
-        if (properties == null) throw new ArgumentNullException(nameof(properties));
+        if (properties == null)
+            throw new ArgumentNullException(nameof(properties));
 
-        if (_properties == null) _properties = new Dictionary<string, string>(64);
+        if (_properties == null)
+            _properties = new Dictionary<string, string>(64);
         foreach (var pair in properties)
         {
             _properties[pair.Key] = pair.Value;

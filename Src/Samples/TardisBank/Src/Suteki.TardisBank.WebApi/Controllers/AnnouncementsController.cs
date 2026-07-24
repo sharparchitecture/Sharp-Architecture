@@ -1,7 +1,6 @@
 ﻿#pragma warning disable 1573
 namespace Suteki.TardisBank.WebApi.Controllers;
 
-using System.Data;
 using Api.Announcements;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -14,7 +13,7 @@ using SharpArch.Web.AspNetCore.Transaction;
 
 [ApiController]
 [Route("[controller]")]
-[Transaction(IsolationLevel.ReadCommitted)]
+[Transaction()]
 public class AnnouncementsController : ControllerBase
 {
     readonly ILinqRepository<Announcement, int> _announcementRepository;
@@ -61,7 +60,8 @@ public class AnnouncementsController : ControllerBase
     public async Task<ActionResult<AnnouncementModel>> Get(int id)
     {
         var announcement = await _announcementRepository.GetAsync(id).ConfigureAwait(false);
-        if (announcement != null) return _mapper.Map<AnnouncementModel>(announcement)!;
+        if (announcement != null)
+            return _mapper.Map<AnnouncementModel>(announcement)!;
         return NotFound(new { id });
     }
 

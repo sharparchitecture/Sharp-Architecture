@@ -67,6 +67,7 @@ public interface IEntity<out TId>
     /// <summary>
     ///     Gets the ID which uniquely identifies the entity instance within its type's bounds.
     /// </summary>
-    [AllowNull] [MaybeNull]
+    [AllowNull]
+    [MaybeNull]
     TId Id { get; }
 }

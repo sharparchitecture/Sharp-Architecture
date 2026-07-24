@@ -1,10 +1,9 @@
 ﻿namespace Tests.SharpArch.Infrastructure;
 
 using System.Reflection;
-using Shouldly;
 using global::SharpArch.Infrastructure;
+using Shouldly;
 using Xunit;
-using Xunit.Abstractions;
 
 
 public class CodeBaseLocatorTests

@@ -62,8 +62,10 @@ public sealed class TransactionAttribute : Attribute, IFilterMetadata, IEquatabl
     /// <inheritdoc />
     public bool Equals(TransactionAttribute? other)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
+        if (ReferenceEquals(null, other))
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
         return RollbackOnModelValidationError == other.RollbackOnModelValidationError && IsolationLevel == other.IsolationLevel;
     }
 

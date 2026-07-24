@@ -1,7 +1,7 @@
 namespace Tests.SharpArch.Domain.Reflection;
 
-using Shouldly;
 using global::SharpArch.Domain.Reflection;
+using Shouldly;
 using Xunit;
 
 

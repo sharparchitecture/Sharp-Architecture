@@ -39,7 +39,7 @@ public class AutoTransactionHandler : ApplyTransactionFilterBase, IAsyncActionFi
             }
 
             if (executedContext.Exception != null ||
-                transactionAttribute!.RollbackOnModelValidationError && context.ModelState.IsValid == false)
+                transactionAttribute!.RollbackOnModelValidationError && !context.ModelState.IsValid)
             {
                 // don't use cancellation token to ensure transaction is rolled back on error
                 await transactionManager.RollbackTransactionAsync().ConfigureAwait(false);

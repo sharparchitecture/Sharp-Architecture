@@ -5,6 +5,7 @@ using global::NHibernate.Cfg;
 using global::NUnit.Framework;
 using Testing.NHibernate;
 
+
 /// <summary>
 ///     <para>
 ///         Initiates a transaction before each test is run and rolls back the transaction after
@@ -67,7 +68,8 @@ public abstract class DatabaseRepositoryTestsBase
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        if (Initializer == null) throw new InvalidOperationException($"{nameof(Initializer)} is not set.");
+        if (Initializer == null)
+            throw new InvalidOperationException($"{nameof(Initializer)} is not set.");
         UpdateConfiguration(Initializer.GetConfiguration());
     }
 
@@ -85,7 +87,8 @@ public abstract class DatabaseRepositoryTestsBase
     [SetUp]
     public virtual void SetUp()
     {
-        if (Initializer == null) throw new InvalidOperationException($"{nameof(Initializer)} is not set.");
+        if (Initializer == null)
+            throw new InvalidOperationException($"{nameof(Initializer)} is not set.");
         Session = Initializer.GetSessionFactory().OpenSession();
         Session.BeginTransaction();
     }
@@ -99,7 +102,8 @@ public abstract class DatabaseRepositoryTestsBase
         if (Session != null)
         {
             var currentTransaction = Session.GetCurrentTransaction();
-            if (currentTransaction is { IsActive: true }) currentTransaction.Rollback();
+            if (currentTransaction is { IsActive: true })
+                currentTransaction.Rollback();
             Session.Dispose();
             Session = null;
         }

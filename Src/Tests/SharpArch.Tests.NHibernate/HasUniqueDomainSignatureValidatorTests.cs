@@ -1,8 +1,8 @@
 ﻿namespace Tests.SharpArch.NHibernate;
 
 using Domain;
-using Shouldly;
 using NUnit.Framework;
+using Shouldly;
 
 
 [TestFixture]

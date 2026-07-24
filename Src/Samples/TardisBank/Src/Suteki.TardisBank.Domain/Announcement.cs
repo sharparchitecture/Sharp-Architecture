@@ -1,4 +1,5 @@
 ﻿// ReSharper disable MissingXmlDoc
+
 namespace Suteki.TardisBank.Domain;
 
 using System.ComponentModel.DataAnnotations;

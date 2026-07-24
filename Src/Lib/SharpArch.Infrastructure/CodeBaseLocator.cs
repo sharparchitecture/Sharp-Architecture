@@ -17,11 +17,12 @@ public class CodeBaseLocator
     /// <exception cref="ArgumentNullException"><paramref name="assembly" /> is <see langword="null" /></exception>
     public static string GetAssemblyCodeBasePath(Assembly assembly)
     {
-        if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+        if (assembly == null)
+            throw new ArgumentNullException(nameof(assembly));
 
 #if NET6_0_OR_GREATER
-            return Path.GetDirectoryName(assembly.Location)
-                ?? Directory.GetCurrentDirectory();
+        return Path.GetDirectoryName(assembly.Location)
+            ?? Directory.GetCurrentDirectory();
 
 #else
         var uri = new UriBuilder(assembly.CodeBase);

@@ -7,8 +7,8 @@ nuget:
   disable_publish_on_pr: true
 
 image:
-  - Ubuntu2204
-  - Visual Studio 2022
+  - Ubuntu2404
+  - Visual Studio 2026
 
 environment:
   CAKE_SETTINGS_SKIPVERIFICATION: true
@@ -25,11 +25,11 @@ matrix:
 
 for:
 
-# Linux build
+ # Linux build
 -
   matrix:
     only:
-      - image: Ubuntu2204
+      - image: Ubuntu2404
 
   clone_folder: ~/work/sharp-arch
 
@@ -48,7 +48,7 @@ for:
 -
   matrix:
     only:
-      - image: Visual Studio 2022
+      - image: Visual Studio 2026
 
   clone_folder: c:\work\sharp-arch
 
@@ -56,21 +56,23 @@ for:
     - c:\tmp\cake\tools -> build\*.cake, appveyor.yml
 
   services:
-    - mssql2019
+    - mssql2025
 
   install:
     - ps: dotnet --info
     - ps: ./mssql-setup.ps1
-    - ps: dotnet tool install Cake.Tool --version 4.0.0 --global
-    - ps: dotnet tool install coveralls.net --version 4.0.1 --global
+    - ps: dotnet tool install Cake.Tool --version 6.1.0 --global
+    - ps: New-Item -ItemType Directory -Force -Path C:\tools | Out-Null
+    - ps: Invoke-WebRequest -Uri "https://github.com/coverallsapp/coverage-reporter/releases/latest/download/coveralls-windows.exe" -OutFile "C:\tools\coveralls-windows.exe"
 
   build_script:
       - ps: dotnet cake
 
   environment:
-    coveralls_repo_token:
-      secure: FgZlD1O2ilcGB6nF7cIgNcF6f8wWJk//ish6EG800QfuMd0y3BQWUXkl9u7TB4yG
-    appveyor_cache_entry_zip_args: -t7z -m0=lzma -mx=5 -ms=on
+    COVERALLS_REPO_TOKEN:
+      secure: Yf2HHc4ObFerbXits621royUrbahaAPNsUHdvJVnl7y1tTG/chj5wXKDnk0V71aP
+    COVERALLS_REPORTER_EXE: C:\tools\coveralls-windows.exe
+    APPVEYOR_CACHE_ENTRY_ZIP_ARGS: -t7z -m0=lzma -mx=5 -ms=on
     CAKE_PATHS_TOOLS: c:\tmp\cake\tools\
     GITHUB_TOKEN:
       secure: 21bpvob1W59q2H3tgdQ4c6pkZVzTTZTTWUNkkLJ/1bo2xY4K160RtHw08cBRsQOd

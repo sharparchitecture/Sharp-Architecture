@@ -1,6 +1,7 @@
 ﻿namespace Suteki.TardisBank.Tests.Helpers;
 
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Xunit;
 
 
@@ -11,11 +12,16 @@ using Xunit;
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class RunnableInDebugOnlyAttribute : FactAttribute
 {
+#if NET8_0_OR_GREATER
+    public RunnableInDebugOnlyAttribute(
+        [CallerFilePath] string? sourceFilePath = null,
+        [CallerLineNumber] int sourceLineNumber = -1)
+        : base(sourceFilePath, sourceLineNumber)
+#else
     public RunnableInDebugOnlyAttribute()
+#endif
     {
         if (!Debugger.IsAttached)
-        {
             Skip = "Only running in interactive mode.";
-        }
     }
 }

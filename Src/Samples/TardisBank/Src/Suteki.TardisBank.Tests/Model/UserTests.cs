@@ -1,8 +1,8 @@
 namespace Suteki.TardisBank.Tests.Model;
 
 using Domain;
-using Shouldly;
 using SharpArch.Testing.Xunit.NHibernate;
+using Shouldly;
 using Xunit;
 
 

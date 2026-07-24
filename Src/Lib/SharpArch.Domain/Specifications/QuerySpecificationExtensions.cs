@@ -21,8 +21,10 @@ public static class QuerySpecificationExtensions
         this QuerySpecification<T> specification1,
         QuerySpecification<T> specification2)
     {
-        if (specification1 == null) throw new ArgumentNullException(nameof(specification1));
-        if (specification2 == null) throw new ArgumentNullException(nameof(specification2));
+        if (specification1 == null)
+            throw new ArgumentNullException(nameof(specification1));
+        if (specification2 == null)
+            throw new ArgumentNullException(nameof(specification2));
         InvocationExpression invokedExpr =
             Expression.Invoke(specification2.MatchingCriteria!, specification1.MatchingCriteria!.Parameters);
         Expression<Func<T, bool>> dynamicClause = Expression.Lambda<Func<T, bool>>(

@@ -2,13 +2,13 @@
 
 namespace Tests.SharpArch.NHibernate;
 
-using Shouldly;
 using global::NHibernate;
 using global::SharpArch.Domain.DomainModel;
 using global::SharpArch.Domain.PersistenceSupport;
 using global::SharpArch.NHibernate;
 using Moq;
 using NUnit.Framework;
+using Shouldly;
 
 
 [TestFixture]

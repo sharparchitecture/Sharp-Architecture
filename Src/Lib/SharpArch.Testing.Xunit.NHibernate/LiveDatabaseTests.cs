@@ -53,7 +53,8 @@ public abstract class LiveDatabaseTests<TDatabaseSetup> : IClassFixture<TDatabas
         if (Session != null)
         {
             var currentTransaction = Session.GetCurrentTransaction();
-            if (currentTransaction != null && currentTransaction.IsActive) currentTransaction.Rollback();
+            if (currentTransaction != null && currentTransaction.IsActive)
+                currentTransaction.Rollback();
             Session.Dispose();
             Session = null;
         }

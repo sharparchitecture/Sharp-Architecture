@@ -3,9 +3,9 @@
 namespace Tests.SharpArch.Domain.DomainModel;
 
 using System.Reflection;
-using Shouldly;
 using global::SharpArch.Domain.DomainModel;
 using global::SharpArch.Testing.Helpers;
+using Shouldly;
 using Xunit;
 
 

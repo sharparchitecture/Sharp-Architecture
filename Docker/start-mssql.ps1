@@ -1,1 +1,8 @@
-docker.exe run --name sharparch-sql --user root -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Password12!' -p 2433:1433 -d -v./mssql-data:/var/opt/mssql/data mcr.microsoft.com/mssql/server:2019-latest
+docker.exe run `
+    --name sharparch-sql `
+    --user root `
+    -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Password12!' `
+    -p 2433:1433 `
+    -d `
+    -v./mssql-data:/var/opt/mssql/data `
+    mcr.microsoft.com/mssql/server:2019-latest
