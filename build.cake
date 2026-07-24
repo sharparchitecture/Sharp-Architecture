@@ -15,7 +15,11 @@ ProjectSettings settings = new ProjectSettings("sharparchitecture", "Sharp-Archi
         IncludeFilter = new List<string> { "[SharpArch.*]*" }
     }
 };
-settings.CodeCoverage.ExcludeFilter.AddRange(new[] { "[Suteki*]*", "[TransactionAttribute*]*" });
+// Exclude the test assemblies themselves. Coverlet does not instrument a test project's own
+// assembly, but when a test project references another test assembly (e.g. SharpArch.XunitTests.NHibernate
+// references SharpArch.XunitTests) coverlet lists that referenced test assembly's source files with 0
+// hits because its tests do not run here, which surfaces as bogus 0% coverage on Coveralls.
+settings.CodeCoverage.ExcludeFilter.AddRange(new[] { "[Suteki*]*", "[TransactionAttribute*]*", "[SharpArch.XunitTests*]*", "[SharpArch.Tests*]*" });
 
 // SETUP / TEARDOWN
 
