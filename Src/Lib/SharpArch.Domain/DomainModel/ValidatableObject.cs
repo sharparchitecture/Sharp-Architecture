@@ -1,7 +1,6 @@
 ﻿namespace SharpArch.Domain.DomainModel;
 
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 
 
 /// <summary>

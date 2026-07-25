@@ -8,10 +8,8 @@ public class TransientDatabaseSetup : TestDatabaseSetup
 {
     /// <inheritdoc />
     public TransientDatabaseSetup()
-        : base(typeof(TransientDatabaseSetup).Assembly, typeof(AutoPersistenceModelGenerator), new[]
-        {
-            typeof(AutoPersistenceModelGenerator).Assembly
-        })
+        : base(typeof(TransientDatabaseSetup).Assembly, typeof(AutoPersistenceModelGenerator),
+            new[] { typeof(AutoPersistenceModelGenerator).Assembly })
     {
     }
 }

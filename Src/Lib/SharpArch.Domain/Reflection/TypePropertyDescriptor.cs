@@ -35,7 +35,8 @@ public class TypePropertyDescriptor : IEquatable<TypePropertyDescriptor>
     /// <exception cref="System.ArgumentNullException"></exception>
     public TypePropertyDescriptor(Type ownerType, PropertyInfo[]? properties)
     {
-        if (ownerType == null) throw new ArgumentNullException(nameof(ownerType));
+        if (ownerType == null)
+            throw new ArgumentNullException(nameof(ownerType));
 
         _ownerType = ownerType;
         if (properties != null && properties.Length > 0)
@@ -53,8 +54,10 @@ public class TypePropertyDescriptor : IEquatable<TypePropertyDescriptor>
     /// </returns>
     public bool Equals(TypePropertyDescriptor? other)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
+        if (ReferenceEquals(null, other))
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
         return OwnerType == other.OwnerType;
     }
 
@@ -76,8 +79,10 @@ public class TypePropertyDescriptor : IEquatable<TypePropertyDescriptor>
     /// </returns>
     public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
+        if (ReferenceEquals(null, obj))
+            return false;
+        if (ReferenceEquals(this, obj))
+            return true;
         return obj is TypePropertyDescriptor other && Equals(other);
     }
 

@@ -1,4 +1,5 @@
 // ReSharper disable MissingXmlDoc
+
 namespace Suteki.TardisBank.Domain;
 
 using Events;
@@ -48,7 +49,8 @@ public abstract class User : Entity<int>
 
     public virtual void SendMessage(string text, IMediator mediator)
     {
-        if (mediator == null) throw new ArgumentNullException(nameof(mediator));
+        if (mediator == null)
+            throw new ArgumentNullException(nameof(mediator));
 
         Messages.Add(new Message(DateTime.Now.Date, text, this));
         RemoveOldMessages();
@@ -58,7 +60,8 @@ public abstract class User : Entity<int>
 
     void RemoveOldMessages()
     {
-        if (Messages.Count <= MaxMessages) return;
+        if (Messages.Count <= MaxMessages)
+            return;
 
         var oldestMessage = Messages.First();
         Messages.Remove(oldestMessage);

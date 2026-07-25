@@ -22,11 +22,13 @@ public static class EntityIdSetter
     public static void SetIdOf<TId>(IEntity<TId> entity, TId id)
         where TId : IEquatable<TId>
     {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        if (entity == null)
+            throw new ArgumentNullException(nameof(entity));
         // Set the data property reflectively
         PropertyInfo? idProperty = entity.GetType().GetProperty("Id", BindingFlags.Public | BindingFlags.Instance);
 
-        if (idProperty == null) throw new InvalidOperationException("Property with name 'Id' could not be found.");
+        if (idProperty == null)
+            throw new InvalidOperationException("Property with name 'Id' could not be found.");
 
         idProperty.SetValue(entity, id, null);
     }

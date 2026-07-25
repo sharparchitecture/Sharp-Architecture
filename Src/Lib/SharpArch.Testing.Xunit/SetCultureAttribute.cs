@@ -2,7 +2,12 @@
 
 using System.Globalization;
 using System.Reflection;
+#if NET8_0_OR_GREATER
+using global::Xunit.v3;
+
+#else
 using global::Xunit.Sdk;
+#endif
 
 
 /// <summary>
@@ -36,8 +41,10 @@ public sealed class SetCultureAttribute : BeforeAfterTestAttribute
     /// <param name="uiCulture">The name of the UI culture.</param>
     public SetCultureAttribute(string culture, string uiCulture)
     {
-        if (string.IsNullOrWhiteSpace(culture)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(culture));
-        if (string.IsNullOrWhiteSpace(uiCulture)) throw new ArgumentException("Value cannot be null or whitespace.", nameof(uiCulture));
+        if (string.IsNullOrWhiteSpace(culture))
+            throw new ArgumentException("Value cannot be null or whitespace.", nameof(culture));
+        if (string.IsNullOrWhiteSpace(uiCulture))
+            throw new ArgumentException("Value cannot be null or whitespace.", nameof(uiCulture));
         _culture = new Lazy<CultureInfo>(() => new CultureInfo(culture, false));
         _uiCulture = new Lazy<CultureInfo>(() => new CultureInfo(uiCulture, false));
     }
@@ -47,7 +54,11 @@ public sealed class SetCultureAttribute : BeforeAfterTestAttribute
     ///     <see cref="CultureInfo.CurrentCulture" /> and <see cref="CultureInfo.CurrentUICulture" />
     ///     and replaces them with the new cultures defined in the constructor.
     /// </summary>
+#if NET8_0_OR_GREATER
+    public override void Before(MethodInfo methodUnderTest, IXunitTest test)
+#else
     public override void Before(MethodInfo methodUnderTest)
+#endif
     {
         _originalCulture = CultureInfo.CurrentCulture;
         _originalUiCulture = CultureInfo.CurrentUICulture;
@@ -66,10 +77,16 @@ public sealed class SetCultureAttribute : BeforeAfterTestAttribute
     ///     Restores the original <see cref="CultureInfo.CurrentCulture" /> and
     ///     <see cref="CultureInfo.CurrentUICulture" />
     /// </summary>
+#if NET8_0_OR_GREATER
+    public override void After(MethodInfo methodUnderTest, IXunitTest test)
+#else
     public override void After(MethodInfo methodUnderTest)
+#endif
     {
-        if (_originalCulture != null) CultureInfo.CurrentCulture = _originalCulture;
-        if (_originalUiCulture != null) CultureInfo.CurrentUICulture = _originalUiCulture;
+        if (_originalCulture != null)
+            CultureInfo.CurrentCulture = _originalCulture;
+        if (_originalUiCulture != null)
+            CultureInfo.CurrentUICulture = _originalUiCulture;
         ClearCachedData();
     }
 }

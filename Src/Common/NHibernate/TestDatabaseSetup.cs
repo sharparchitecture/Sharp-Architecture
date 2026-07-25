@@ -69,7 +69,8 @@ public class TestDatabaseSetup : IDisposable
         if (!typeof(IAutoPersistenceModelGenerator).IsAssignableFrom(persistenceModelGenerator))
             throw new ArgumentException($"Type {persistenceModelGenerator.FullName} must implement {nameof(IAutoPersistenceModelGenerator)}.");
 
-        if (mappingAssemblies == null) throw new ArgumentNullException(nameof(mappingAssemblies));
+        if (mappingAssemblies == null)
+            throw new ArgumentNullException(nameof(mappingAssemblies));
         _mappingAssemblies = mappingAssemblies.Distinct().ToArray();
     }
 
@@ -116,7 +117,8 @@ public class TestDatabaseSetup : IDisposable
     /// </summary>
     public Configuration GetConfiguration()
     {
-        if (_configuration != null) return _configuration;
+        if (_configuration != null)
+            return _configuration;
 
         var autoPersistenceModel = GenerateAutoPersistenceModel();
 
@@ -167,7 +169,8 @@ public class TestDatabaseSetup : IDisposable
     /// <param name="sessionBuilder">Session builder.</param>
     protected virtual ISessionBuilder ConfigureSession(ISessionBuilder sessionBuilder)
     {
-        if (sessionBuilder == null) throw new ArgumentNullException(nameof(sessionBuilder));
+        if (sessionBuilder == null)
+            throw new ArgumentNullException(nameof(sessionBuilder));
         SessionConfigurator?.Invoke(sessionBuilder);
         return sessionBuilder;
     }
@@ -178,7 +181,8 @@ public class TestDatabaseSetup : IDisposable
     /// <param name="statelessSessionBuilder">Session builder.</param>
     protected virtual IStatelessSessionBuilder ConfigureStatelessSession(IStatelessSessionBuilder statelessSessionBuilder)
     {
-        if (statelessSessionBuilder == null) throw new ArgumentNullException(nameof(statelessSessionBuilder));
+        if (statelessSessionBuilder == null)
+            throw new ArgumentNullException(nameof(statelessSessionBuilder));
         StatelessSessionConfigurator?.Invoke(statelessSessionBuilder);
         return statelessSessionBuilder;
     }
@@ -189,7 +193,8 @@ public class TestDatabaseSetup : IDisposable
     /// </summary>
     public ISessionFactory GetSessionFactory()
     {
-        if (_sessionFactory != null) return _sessionFactory;
+        if (_sessionFactory != null)
+            return _sessionFactory;
         _sessionFactory = GetConfiguration().BuildSessionFactory();
         return _sessionFactory!;
     }
@@ -217,7 +222,8 @@ public class TestDatabaseSetup : IDisposable
     /// <returns>NHibernate Session</returns>
     public IStatelessSession CreateStatelessSessionForConnection(DbConnection connection)
     {
-        if (connection == null) throw new ArgumentNullException(nameof(connection));
+        if (connection == null)
+            throw new ArgumentNullException(nameof(connection));
         var sessionBuilder = GetSessionFactory().WithStatelessOptions();
         sessionBuilder.Connection(connection);
         var statelessSession = ConfigureStatelessSession(sessionBuilder).OpenStatelessSession();

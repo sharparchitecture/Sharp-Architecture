@@ -21,8 +21,10 @@ public static class SessionExtensions
     /// </exception>
     public static void FlushAndEvict(this ISession session, object entity)
     {
-        if (session == null) throw new ArgumentNullException(nameof(session));
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        if (session == null)
+            throw new ArgumentNullException(nameof(session));
+        if (entity == null)
+            throw new ArgumentNullException(nameof(entity));
         // Commits any changes up to this point to the database
         session.Flush();
 
@@ -42,8 +44,10 @@ public static class SessionExtensions
     /// </exception>
     public static async Task FlushAndEvictAsync(this ISession session, object entity, CancellationToken cancellationToken)
     {
-        if (session == null) throw new ArgumentNullException(nameof(session));
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        if (session == null)
+            throw new ArgumentNullException(nameof(session));
+        if (entity == null)
+            throw new ArgumentNullException(nameof(entity));
         // Commits any changes up to this point to the database
         await session.FlushAsync(cancellationToken).ConfigureAwait(false);
 
@@ -63,8 +67,10 @@ public static class SessionExtensions
     /// </exception>
     public static async Task FlushAndEvictAsync(this ISession session, CancellationToken cancellationToken, params object[] entities)
     {
-        if (session == null) throw new ArgumentNullException(nameof(session));
-        if (entities == null) throw new ArgumentNullException(nameof(entities));
+        if (session == null)
+            throw new ArgumentNullException(nameof(session));
+        if (entities == null)
+            throw new ArgumentNullException(nameof(entities));
 
         // Commits any changes up to this point to the database
         await session.FlushAsync(cancellationToken).ConfigureAwait(false);
@@ -73,7 +79,8 @@ public static class SessionExtensions
         {
             var entity = entities[i];
 
-            if (entity == null) throw new ArgumentNullException(nameof(entities), $"Item at index {i} it null.");
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entities), $"Item at index {i} it null.");
             await session.EvictAsync(entity, cancellationToken).ConfigureAwait(false);
         }
     }
@@ -89,12 +96,15 @@ public static class SessionExtensions
     /// <exception cref="ArgumentNullException"><paramref name="session" /> is <c>null</c>.</exception>
     public static Task IncrementVersionAsync(this ISession session, object? entity, CancellationToken cancellationToken)
     {
-        if (session == null) throw new ArgumentNullException(nameof(session));
-        if (entity == null) return Task.CompletedTask;
+        if (session == null)
+            throw new ArgumentNullException(nameof(session));
+        if (entity == null)
+            return Task.CompletedTask;
 
         // don't process deleted entity.
         var entry = session.GetSessionImplementation().PersistenceContext.GetEntry(entity);
-        if (entry == null || entry.Status is Status.Deleted or Status.Gone) return Task.CompletedTask;
+        if (entry == null || entry.Status is Status.Deleted or Status.Gone)
+            return Task.CompletedTask;
         return session.LockAsync(entity, LockMode.Force, cancellationToken);
     }
 
@@ -108,12 +118,15 @@ public static class SessionExtensions
     /// <exception cref="ArgumentNullException"><paramref name="session" /> is <c>null</c>.</exception>
     public static void IncrementVersion(this ISession session, object? entity)
     {
-        if (session == null) throw new ArgumentNullException(nameof(session));
-        if (entity == null) return;
+        if (session == null)
+            throw new ArgumentNullException(nameof(session));
+        if (entity == null)
+            return;
 
         // ignore deleted entity
         var entry = session.GetSessionImplementation().PersistenceContext.GetEntry(entity);
-        if (entry == null || entry.Status is Status.Deleted or Status.Gone) return;
+        if (entry == null || entry.Status is Status.Deleted or Status.Gone)
+            return;
         session.Lock(entity, LockMode.Force);
     }
 
@@ -130,15 +143,20 @@ public static class SessionExtensions
     /// </exception>
     public static bool IsModified(this ISession session, object entity)
     {
-        if (session == null) throw new ArgumentNullException(nameof(session));
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
+        if (session == null)
+            throw new ArgumentNullException(nameof(session));
+        if (entity == null)
+            throw new ArgumentNullException(nameof(entity));
         var sessionImplementation = session.GetSessionImplementation();
         var entry = sessionImplementation.PersistenceContext.GetEntry(entity);
-        if (entry == null) return false;
+        if (entry == null)
+            return false;
 
         var persister = entry.Persister;
-        if (entry.Status == Status.Deleted) return true;
-        if (!entry.RequiresDirtyCheck(entity)) return false;
+        if (entry.Status == Status.Deleted)
+            return true;
+        if (!entry.RequiresDirtyCheck(entity))
+            return false;
 
         var currentValue = persister.GetPropertyValues(entity);
         var dirtyPropertyIndexes = persister.FindDirty(currentValue, entry.LoadedState, entity, sessionImplementation);

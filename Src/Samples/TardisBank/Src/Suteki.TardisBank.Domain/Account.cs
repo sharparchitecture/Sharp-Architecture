@@ -1,4 +1,5 @@
 // ReSharper disable MissingXmlDoc
+
 namespace Suteki.TardisBank.Domain;
 
 using SharpArch.Domain.DomainModel;
@@ -34,7 +35,8 @@ public class Account : Entity<int>
 
     void RemoveOldTransactions()
     {
-        if (Transactions.Count <= MaxTransactions) return;
+        if (Transactions.Count <= MaxTransactions)
+            return;
 
         var oldestTransaction = Transactions.First();
         Transactions.Remove(oldestTransaction);
@@ -59,7 +61,8 @@ public class Account : Entity<int>
     public virtual void RemovePaymentSchedule(int paymentScheduleId)
     {
         var scheduleToRemove = PaymentSchedules.SingleOrDefault(x => x.Id == paymentScheduleId);
-        if (scheduleToRemove == null) return;
+        if (scheduleToRemove == null)
+            return;
 
         PaymentSchedules.Remove(scheduleToRemove);
     }

@@ -26,7 +26,8 @@ public static class FluentNHibernateExtensions
     /// <exception cref="T:System.ArgumentNullException"><paramref name="mappingsContainer" /> is <c>null</c>.</exception>
     public static FluentMappingsContainer AddFromNamespaceOf<T>(this FluentMappingsContainer mappingsContainer)
     {
-        if (mappingsContainer == null) throw new ArgumentNullException(nameof(mappingsContainer));
+        if (mappingsContainer == null)
+            throw new ArgumentNullException(nameof(mappingsContainer));
         string ns = typeof(T).Namespace!;
         var types = typeof(T).Assembly.GetTypes()
             .Where(t => !t.IsAbstract && t.Namespace == ns)

@@ -1,4 +1,5 @@
 // ReSharper disable MissingXmlDoc
+
 namespace Suteki.TardisBank.Domain;
 
 using Events;
@@ -24,7 +25,8 @@ public class Parent : User
     // should be called when parent is first created.
     public virtual Parent Initialise(IMediator mediator)
     {
-        if (mediator == null) throw new ArgumentNullException(nameof(mediator));
+        if (mediator == null)
+            throw new ArgumentNullException(nameof(mediator));
 
         ActivationKey = Guid.NewGuid().ToString();
         mediator.Publish(new NewParentCreatedEvent(this));

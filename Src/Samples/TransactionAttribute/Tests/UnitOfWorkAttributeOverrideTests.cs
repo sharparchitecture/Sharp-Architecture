@@ -1,13 +1,17 @@
 ﻿using Xunit;
 
-[assembly: AssemblyTrait("Category", "Samples")]
+#if NET8_0_OR_GREATER
+[assembly: Trait("Category", "Samples")]
+#else
+[assembly: Xunit.AssemblyTrait("Category", "Samples")]
+#endif
 
 namespace TransactionAttribute.Tests;
 
 using System.Data;
 using System.Net;
-using Shouldly;
 using Setup;
+using Shouldly;
 using WebApi.Stubs;
 using Xunit;
 

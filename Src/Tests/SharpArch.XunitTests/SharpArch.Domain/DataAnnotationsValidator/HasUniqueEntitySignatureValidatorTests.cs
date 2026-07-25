@@ -2,11 +2,11 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using Shouldly;
 using global::SharpArch.Domain.DomainModel;
 using global::SharpArch.Domain.PersistenceSupport;
 using global::SharpArch.Domain.Validation;
 using Moq;
+using Shouldly;
 using Xunit;
 
 

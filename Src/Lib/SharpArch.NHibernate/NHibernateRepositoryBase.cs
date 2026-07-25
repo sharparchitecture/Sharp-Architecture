@@ -80,7 +80,8 @@ public class NHibernateRepository<TEntity, TId> : INHibernateRepository<TEntity,
     public async Task DeleteAsync(TId id, CancellationToken cancellationToken = default)
     {
         var entity = await GetAsync(id, cancellationToken).ConfigureAwait(false);
-        if (entity != null) await DeleteAsync(entity, cancellationToken).ConfigureAwait(false);
+        if (entity != null)
+            await DeleteAsync(entity, cancellationToken).ConfigureAwait(false);
     }
 
     ITransactionManager IRepository<TEntity, TId>.TransactionManager => TransactionManager;
@@ -91,7 +92,8 @@ public class NHibernateRepository<TEntity, TId> : INHibernateRepository<TEntity,
         int? maxResults = null,
         CancellationToken cancellationToken = default)
     {
-        if (propertyValuePairs == null) throw new ArgumentNullException(nameof(propertyValuePairs));
+        if (propertyValuePairs == null)
+            throw new ArgumentNullException(nameof(propertyValuePairs));
         if (propertyValuePairs.Count == 0)
             throw new ArgumentException("No properties specified. Please specify at least one property/value pair.",
                 nameof(propertyValuePairs));
@@ -104,7 +106,8 @@ public class NHibernateRepository<TEntity, TId> : INHibernateRepository<TEntity,
                 : Restrictions.IsNull(key));
         }
 
-        if (maxResults.HasValue) criteria.SetMaxResults(maxResults.Value);
+        if (maxResults.HasValue)
+            criteria.SetMaxResults(maxResults.Value);
         return criteria.ListAsync<TEntity>(cancellationToken);
     }
 
@@ -115,11 +118,13 @@ public class NHibernateRepository<TEntity, TId> : INHibernateRepository<TEntity,
         ICriteria criteria = Session.CreateCriteria(typeof(TEntity));
         Example example = Example.Create(exampleInstance);
 
-        foreach (string propertyToExclude in propertiesToExclude) example.ExcludeProperty(propertyToExclude);
+        foreach (string propertyToExclude in propertiesToExclude)
+            example.ExcludeProperty(propertyToExclude);
 
         criteria.Add(example);
 
-        if (maxResults.HasValue) criteria.SetMaxResults(maxResults.Value);
+        if (maxResults.HasValue)
+            criteria.SetMaxResults(maxResults.Value);
 
         return criteria.ListAsync<TEntity>(cancellationToken);
     }
@@ -128,7 +133,8 @@ public class NHibernateRepository<TEntity, TId> : INHibernateRepository<TEntity,
     public virtual async Task<TEntity?> FindOneAsync(TEntity exampleInstance, CancellationToken ct, params string[] propertiesToExclude)
     {
         IList<TEntity> foundList = await FindAllAsync(exampleInstance, propertiesToExclude, 2, ct).ConfigureAwait(false);
-        if (foundList.Count > 1) throw new NonUniqueResultException(foundList.Count);
+        if (foundList.Count > 1)
+            throw new NonUniqueResultException(foundList.Count);
 
         return foundList.Count == 1 ? foundList[0] : default;
     }
@@ -139,7 +145,8 @@ public class NHibernateRepository<TEntity, TId> : INHibernateRepository<TEntity,
         CancellationToken cancellationToken = default)
     {
         var foundList = await FindAllAsync(propertyValuePairs, 2, cancellationToken).ConfigureAwait(false);
-        if (foundList.Count > 1) throw new NonUniqueResultException(foundList.Count);
+        if (foundList.Count > 1)
+            throw new NonUniqueResultException(foundList.Count);
 
         return foundList.Count == 1 ? foundList[0] : default;
     }

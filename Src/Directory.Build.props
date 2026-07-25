@@ -1,7 +1,7 @@
 ﻿<Project>
   <PropertyGroup Label="Build targets">
     <!-- target frameworks for unit-tests and applications -->
-    <AppTargetFrameworks>net8.0;net9.0</AppTargetFrameworks>
+    <AppTargetFrameworks>net8.0;net9.0;net10.0</AppTargetFrameworks>
     <!-- target frameworks for SharpArch libraries -->
     <LibraryTargetFrameworks>netstandard2.1;$(AppTargetFrameworks)</LibraryTargetFrameworks>
   </PropertyGroup>
@@ -38,10 +38,6 @@
     <Using Include="System.Diagnostics.CodeAnalysis" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <Optimize>True</Optimize>
   </PropertyGroup>
@@ -68,6 +64,23 @@
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);0618;1591</NoWarn>
+    <!-- .NET 9+ SDK runs multi-targeted `dotnet test` TFMs concurrently by default, which races
+         tests that touch shared files on disk (e.g. MappingIntegrationTests.CanGenerateDatabaseSchema
+         writing to a fixed path under Database/). Keep TFM test runs sequential. -->
+    <TestTfmsInParallel>false</TestTfmsInParallel>
+  </PropertyGroup>
+
+  <!-- Coverlet MSBuild integration for code coverage collection in all test projects -->
+  <ItemGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == true">
+    <PackageReference Include="coverlet.msbuild" Version="6.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!-- xUnit v3 analyzer: suppress xunit1051 on .NET 8+ targets where xUnit v3 is used -->
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net9.0' Or '$(TargetFramework)' == 'net10.0' ">
+    <NoWarn>$(NoWarn);xunit1051</NoWarn>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == false">
@@ -91,7 +104,7 @@
 
   <!-- Common references -->
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2025.2.2" />
+    <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
   </ItemGroup>
 
 </Project>

@@ -36,7 +36,8 @@ public class EmailService : IEmailService
             throw new ArgumentNullException(nameof(body));
         }
 
-        if (string.IsNullOrWhiteSpace(_configuration.EmailSmtpServer)) return;
+        if (string.IsNullOrWhiteSpace(_configuration.EmailSmtpServer))
+            return;
 
         var message = new MailMessage(
             _configuration.EmailFromAddress,
@@ -44,11 +45,7 @@ public class EmailService : IEmailService
             subject,
             body);
 
-        var client = new SmtpClient(_configuration.EmailSmtpServer)
-        {
-            EnableSsl = _configuration.EmailEnableSsl,
-            Port = _configuration.EmailPort,
-        };
+        var client = new SmtpClient(_configuration.EmailSmtpServer) { EnableSsl = _configuration.EmailEnableSsl, Port = _configuration.EmailPort, };
 
         if (!string.IsNullOrWhiteSpace(_configuration.EmailCredentialsUserName) &&
             !string.IsNullOrWhiteSpace(_configuration.EmailCredentialsPassword))

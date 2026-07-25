@@ -1,10 +1,10 @@
 ﻿namespace Tests.SharpArch.NHibernate;
 
-using Shouldly;
 using FluentNHibernate.Cfg.Db;
 using global::NHibernate.Cfg;
 using global::SharpArch.NHibernate;
 using NUnit.Framework;
+using Shouldly;
 
 
 [TestFixture]
@@ -21,7 +21,8 @@ class NHibernateSessionFactoryBuilderTests
     {
         try
         {
-            if (File.Exists(_tempFileName)) File.Delete(_tempFileName);
+            if (File.Exists(_tempFileName))
+                File.Delete(_tempFileName);
         }
         // ReSharper disable once CatchAllClause
         catch

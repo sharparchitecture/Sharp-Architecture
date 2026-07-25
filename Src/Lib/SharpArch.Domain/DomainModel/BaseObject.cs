@@ -153,7 +153,7 @@ public abstract class BaseObject
             }
 
             if (valueOfThisObject == null ^ valueToCompareTo == null ||
-                !(valueOfThisObject!.Equals(valueToCompareTo)))
+                !valueOfThisObject!.Equals(valueToCompareTo))
             {
                 return false;
             }

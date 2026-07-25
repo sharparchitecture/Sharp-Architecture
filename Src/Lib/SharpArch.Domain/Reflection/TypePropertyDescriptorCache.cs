@@ -38,8 +38,10 @@ public class TypePropertyDescriptorCache : ITypePropertyDescriptorCache
     /// </exception>
     public TypePropertyDescriptor GetOrAdd(Type type, Func<Type, TypePropertyDescriptor> factory)
     {
-        if (type == null) throw new ArgumentNullException(nameof(type));
-        if (factory == null) throw new ArgumentNullException(nameof(factory));
+        if (type == null)
+            throw new ArgumentNullException(nameof(type));
+        if (factory == null)
+            throw new ArgumentNullException(nameof(factory));
 
         return _cache.GetOrAdd(type, factory);
     }

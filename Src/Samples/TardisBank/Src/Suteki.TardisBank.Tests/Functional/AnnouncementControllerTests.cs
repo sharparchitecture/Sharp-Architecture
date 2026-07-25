@@ -1,9 +1,10 @@
 ﻿namespace Suteki.TardisBank.Tests.Functional;
 
 using Api.Announcements;
-using Shouldly;
 using Setup;
+using Shouldly;
 using Xunit;
+
 
 [Trait("Category", "Functional")]
 public class AnnouncementControllerTests : IClassFixture<TestServerSetup>, IDisposable
@@ -33,12 +34,7 @@ public class AnnouncementControllerTests : IClassFixture<TestServerSetup>, IDisp
     {
         var today = DateTime.Now.Date;
         var uid = Guid.NewGuid().ToString("N");
-        var newAnnouncement = new NewAnnouncement
-        {
-            Date = today,
-            Content = "New announcement " + today,
-            Title = uid
-        };
+        var newAnnouncement = new NewAnnouncement { Date = today, Content = "New announcement " + today, Title = uid };
         var response = await _setup.Client.PostAsJsonAsync("announcements", newAnnouncement);
         response.EnsureSuccessStatusCode();
 

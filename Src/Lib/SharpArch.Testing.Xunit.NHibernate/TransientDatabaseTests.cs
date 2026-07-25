@@ -51,12 +51,21 @@ public abstract class TransientDatabaseTests<TDatabaseSetup> : IClassFixture<TDa
     }
 
     /// <inheritdoc />
-    public Task InitializeAsync()
-        => LoadTestData(CancellationToken.None);
+#if NET8_0_OR_GREATER
+    public async ValueTask InitializeAsync()
+#else
+    public async Task InitializeAsync()
+#endif
+        => await LoadTestData(CancellationToken.None).ConfigureAwait(false);
 
     /// <inheritdoc />
+#if NET8_0_OR_GREATER
+    public ValueTask DisposeAsync()
+        => new ValueTask(Task.CompletedTask);
+#else
     public Task DisposeAsync()
-        => Task.CompletedTask;
+    => Task.CompletedTask;
+#endif
 
     /// <inheritdoc />
     public virtual void Dispose()
@@ -81,7 +90,8 @@ public abstract class TransientDatabaseTests<TDatabaseSetup> : IClassFixture<TDa
     /// <exception cref="ArgumentNullException"><paramref name="instance" /> is <see langword="null" /></exception>
     protected async Task SaveAndEvict(object instance, CancellationToken cancellationToken = default)
     {
-        if (instance == null) throw new ArgumentNullException(nameof(instance));
+        if (instance == null)
+            throw new ArgumentNullException(nameof(instance));
         await Session.SaveAsync(instance, cancellationToken).ConfigureAwait(false);
         await FlushSessionAndEvict(instance, cancellationToken).ConfigureAwait(false);
     }

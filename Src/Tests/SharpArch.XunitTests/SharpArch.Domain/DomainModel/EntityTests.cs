@@ -4,9 +4,9 @@
 
 namespace Tests.SharpArch.Domain.DomainModel;
 
-using Shouldly;
 using global::SharpArch.Domain.DomainModel;
 using global::SharpArch.Testing.Helpers;
+using Shouldly;
 using Xunit;
 
 
@@ -26,42 +26,12 @@ public class EntityTests
 
     public EntityTests()
     {
-        _obj = new MockEntityObjectWithDefaultId
-        {
-            FirstName = "FName1",
-            LastName = "LName1",
-            Email = @"testus...@mail.com"
-        };
-        _sameObj = new MockEntityObjectWithDefaultId
-        {
-            FirstName = "FName1",
-            LastName = "LName1",
-            Email = @"testus...@mail.com"
-        };
-        _diffObj = new MockEntityObjectWithDefaultId
-        {
-            FirstName = "FName2",
-            LastName = "LName2",
-            Email = @"testuse...@mail.com"
-        };
-        _objWithId = new MockEntityObjectWithSetId
-        {
-            FirstName = "FName1",
-            LastName = "LName1",
-            Email = @"testus...@mail.com"
-        };
-        _sameObjWithId = new MockEntityObjectWithSetId
-        {
-            FirstName = "FName1",
-            LastName = "LName1",
-            Email = @"testus...@mail.com"
-        };
-        _diffObjWithId = new MockEntityObjectWithSetId
-        {
-            FirstName = "FName2",
-            LastName = "LName2",
-            Email = @"testuse...@mail.com"
-        };
+        _obj = new MockEntityObjectWithDefaultId { FirstName = "FName1", LastName = "LName1", Email = @"testus...@mail.com" };
+        _sameObj = new MockEntityObjectWithDefaultId { FirstName = "FName1", LastName = "LName1", Email = @"testus...@mail.com" };
+        _diffObj = new MockEntityObjectWithDefaultId { FirstName = "FName2", LastName = "LName2", Email = @"testuse...@mail.com" };
+        _objWithId = new MockEntityObjectWithSetId { FirstName = "FName1", LastName = "LName1", Email = @"testus...@mail.com" };
+        _sameObjWithId = new MockEntityObjectWithSetId { FirstName = "FName1", LastName = "LName1", Email = @"testus...@mail.com" };
+        _diffObjWithId = new MockEntityObjectWithSetId { FirstName = "FName2", LastName = "LName2", Email = @"testuse...@mail.com" };
     }
 
 
@@ -353,12 +323,7 @@ public class EntityTests
 
         obj1.Equals(obj2).ShouldBeTrue();
 
-        obj1.Address = new AddressBeingDomainSignatureComparable
-        {
-            Address1 = "123 Smith Ln.",
-            Address2 = "Suite 201",
-            ZipCode = 12345
-        };
+        obj1.Address = new AddressBeingDomainSignatureComparable { Address1 = "123 Smith Ln.", Address2 = "Suite 201", ZipCode = 12345 };
         obj1.Equals(obj2).ShouldBeFalse();
 
         // Set the address of the 2nd to be different to the address of the first

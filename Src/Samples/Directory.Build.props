@@ -4,6 +4,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>$(AppTargetFrameworks)</TargetFrameworks>
+    <NoWarn>$(NoWarn);NU1903</NoWarn>
   </PropertyGroup>
 
 </Project>
