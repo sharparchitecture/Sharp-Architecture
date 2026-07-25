@@ -148,7 +148,7 @@ public class WhenGeneratingDomainSignatureSupportCode
     {
         var entity = new EntityWithMixedTypes { Code = 123, Name = "Test Entity", Description = "Test Description", AltCode = 456 };
 
-        entity.HasSameObjectSignatureAs(null).ShouldBeFalse();
+        entity.HasSameObjectSignatureAs(null!).ShouldBeFalse();
     }
 
     [Fact]
@@ -229,6 +229,6 @@ public class WhenGeneratingDomainSignatureSupportCode
     {
         var entity = new EntityWithReferenceType { Name = "Test Entity", Description = "Test Description" };
 
-        entity.HasSameObjectSignatureAs(null).ShouldBeFalse();
+        entity.HasSameObjectSignatureAs(null!).ShouldBeFalse();
     }
 }

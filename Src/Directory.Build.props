@@ -72,7 +72,7 @@
 
   <!-- Coverlet MSBuild integration for code coverage collection in all test projects -->
   <ItemGroup Condition="'$(MSBuildProjectName.Contains(Tests))' == true">
-    <PackageReference Include="coverlet.msbuild" Version="6.0.4">
+    <PackageReference Include="coverlet.msbuild" Version="10.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
