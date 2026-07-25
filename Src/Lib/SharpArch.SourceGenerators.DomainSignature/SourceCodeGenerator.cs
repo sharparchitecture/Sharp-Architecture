@@ -25,7 +25,6 @@ static class SourceCodeGenerator
         source.AppendLine(SourceCodeGeneratorHelper.Header);
         source.AppendLine();
         source.AppendLine("using System;");
-        source.AppendLine("using System.Reflection;");
         source.AppendLine("using SharpArch.Domain.DomainModel;");
         source.AppendLine($"using static global::{SourceCodeGeneratorHelper.InternalNamespace}.DomainSignatureComparerHelper;");
         source.AppendLine();
@@ -34,8 +33,8 @@ static class SourceCodeGenerator
         source.AppendLine($"namespace {namespaceName};");
         source.AppendLine();
 
-        // Begin class declaration
-        source.AppendLine($"partial class {className}");
+        // Begin class declaration (preserve record vs class kind)
+        source.AppendLine($"partial {(entity.IsRecord ? "record" : "class")} {className}");
         source.AppendLine("{");
 
         // Add GetHashCode override

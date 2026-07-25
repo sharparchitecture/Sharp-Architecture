@@ -1,6 +1,7 @@
 namespace Tests.SharpArch.SourceGenerators.DomainSignature.SourceGenerator;
 
 using global::SharpArch.SourceGenerators.DomainSignature.Impl;
+using Shouldly;
 
 
 public class SignatureMemberTypeTests
@@ -10,10 +11,9 @@ public class SignatureMemberTypeTests
     {
         var values = Enum.GetValues<SignatureMemberType>();
 
-        // Assert
-        Assert.Equal(3, values.Length);
-        Assert.Contains(SignatureMemberType.Value, values);
-        Assert.Contains(SignatureMemberType.NullableValue, values);
-        Assert.Contains(SignatureMemberType.Reference, values);
+        values.Length.ShouldBe(3);
+        values.ShouldContain(SignatureMemberType.Value);
+        values.ShouldContain(SignatureMemberType.NullableValue);
+        values.ShouldContain(SignatureMemberType.Reference);
     }
 }

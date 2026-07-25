@@ -1,6 +1,7 @@
 namespace Tests.SharpArch.SourceGenerators.DomainSignature.SourceGenerator;
 
 using global::SharpArch.SourceGenerators.DomainSignature.Impl;
+using Shouldly;
 
 
 public class DomainSignatureGeneratorSimpleTests
@@ -13,9 +14,8 @@ public class DomainSignatureGeneratorSimpleTests
     {
         var propertyInfo = new DomainSignaturePropertyInfo(name, type);
 
-        // Assert
-        Assert.Equal(name, propertyInfo.Name);
-        Assert.Equal(type, propertyInfo.MemberType);
+        propertyInfo.Name.ShouldBe(name);
+        propertyInfo.MemberType.ShouldBe(type);
     }
 
     [Fact]
@@ -30,26 +30,46 @@ public class DomainSignatureGeneratorSimpleTests
             true,
             true);
 
-        // Assert
-        Assert.Equal(2, entityInfo.DomainSignatureProperties.Count);
-        Assert.True(entityInfo.IsPartial);
-        Assert.True(entityInfo.IsBaseTypeCorrect);
+        entityInfo.DomainSignatureProperties.Count.ShouldBe(2);
+        entityInfo.IsPartial.ShouldBeTrue();
+        entityInfo.IsBaseTypeCorrect.ShouldBeTrue();
     }
 
     [Fact]
     public void GetDomainSignatureProperties_WithMockProperties_ReturnsExpectedTypes()
     {
         var propertyInfo = new DomainSignaturePropertyInfo("TestProp", SignatureMemberType.Value);
-        Assert.Equal("TestProp", propertyInfo.Name);
-        Assert.Equal(SignatureMemberType.Value, propertyInfo.MemberType);
+
+        propertyInfo.Name.ShouldBe("TestProp");
+        propertyInfo.MemberType.ShouldBe(SignatureMemberType.Value);
     }
 
     [Fact]
     public void SignatureMemberType_HasExpectedValues()
     {
-        // Verify the enum values are as expected
-        Assert.Equal(0, (int)SignatureMemberType.Value);
-        Assert.Equal(1, (int)SignatureMemberType.NullableValue);
-        Assert.Equal(2, (int)SignatureMemberType.Reference);
+        ((int)SignatureMemberType.Value).ShouldBe(0);
+        ((int)SignatureMemberType.NullableValue).ShouldBe(1);
+        ((int)SignatureMemberType.Reference).ShouldBe(2);
+    }
+
+    [Fact]
+    public void EntityInfo_NewOptionalFields_DefaultToValidValues()
+    {
+        var entity = new EntityInfo("Test", "Entity", new List<DomainSignaturePropertyInfo>(), true, true);
+
+        entity.HasNamespace.ShouldBeTrue();
+        entity.IsNested.ShouldBeFalse();
+        entity.IsRecord.ShouldBeFalse();
+    }
+
+    [Fact]
+    public void EntityInfo_NewOptionalFields_ExplicitValuesArePreserved()
+    {
+        var entity = new EntityInfo("Test", "Entity", new List<DomainSignaturePropertyInfo>(), true, false,
+            hasNamespace: false, isNested: true, isRecord: true);
+
+        entity.HasNamespace.ShouldBeFalse();
+        entity.IsNested.ShouldBeTrue();
+        entity.IsRecord.ShouldBeTrue();
     }
 }
