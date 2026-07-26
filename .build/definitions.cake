@@ -5,7 +5,7 @@
 
 // TOOLS
 #tool nuget:?package=GitReleaseManager.Tool&version=0.20.0
-#tool "dotnet:?package=GitVersion.Tool&version=6.0.0"
+#tool "dotnet:?package=GitVersion.Tool&version=6.8.2"
 #tool nuget:?package=ReportGenerator&version=5.4.8
 
 
@@ -192,7 +192,16 @@ public class BuildInfo {
             // Calculate version and commit hash
             // GitVersion 6.0 removed the NuGetVersion variable; SemVer is its SemVer2-compatible
             // replacement and is accepted by modern NuGet (v3+).
-            GitVersion semVersion = context.GitVersion();
+            // Force the pinned GitVersion.Tool (the dotnet global tool, `dotnet-gitversion`) so the
+            // GitVersion() alias never falls back to a stale legacy `GitVersion.exe`
+            // (GitVersion.CommandLine 5.x) lingering in the local tools cache; 5.x cannot
+            // deserialize the 6.0 `label` branch-config property used in GitVersion.yml.
+            var dotnetGitVersion = context.Tools.Resolve("dotnet-gitversion.exe");
+            GitVersion semVersion = context.GitVersion(new GitVersionSettings
+            {
+                OutputType = GitVersionOutput.Json,
+                ToolPath = dotnetGitVersion.FullPath is null ? null : dotnetGitVersion,
+            });
             version = new BuildVersion(
                 semVersion.SemVer,
                 semVersion.FullBuildMetaData,
