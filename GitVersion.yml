@@ -1,11 +1,24 @@
 # assembly-file-versioning-scheme: MajorMinorPatch
+mode: ContinuousDelivery
+
 branches:
-  release:
-    mode: ContinuousDeployment
-    label: rc
+  master:
+    label: ''
+    regex: "^master$"
+    increment: patch
+    is-release-branch: true
+
   develop:
-    mode: ContinuousDeployment
     label: alpha
+    increment: minor
+    is-release-branch: false
+
+  release:
+    # Matches release/1.5.3 or release/2.0.0
+    regex: release?[/-](?<version>\d+\.\d+\.\d+)
+    label: rc
+    is-release-branch: true
+    increment: none
+
 ignore:
   sha: []
-
