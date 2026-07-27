@@ -101,7 +101,7 @@ Task("RunXunitTests")
         if (build.IsRelease)
         {
             Information("Running Release mode tests for {0} ...", build.Settings.SolutionName);
-            DotNetTest(solutionFullPath, BuildTestSettings("Release", build.Settings.SolutionName));
+            DotNetTest(solutionFullPath, BuildTestSettings("Release", "${build.Settings.SolutionName}.slnx"));
         }
     })
     .DeferOnError();
