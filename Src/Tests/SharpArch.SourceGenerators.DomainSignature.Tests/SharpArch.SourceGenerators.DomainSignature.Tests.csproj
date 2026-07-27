@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Tests.SharpArch.SourceGenerators.DomainSignature</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup Label="Package References (xUnit v2 - netstandard2.1)" Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
+    <PackageReference Include="xunit" Version="2.9.3" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.6.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.6.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="5.6.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.SourceGenerators.Testing" Version="1.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lib\SharpArch.Domain\SharpArch.Domain.csproj" />
+    <ProjectReference Include="..\..\Lib\SharpArch.SourceGenerators.DomainSignature\SharpArch.SourceGenerators.DomainSignature.csproj" />
+  </ItemGroup>
+</Project>

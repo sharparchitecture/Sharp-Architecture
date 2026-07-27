@@ -39,7 +39,7 @@ Task("Restore")
 Task("RunXunitTests")
     .Does<BuildInfo>(build =>
     {
-        var solutionFullPath = new DirectoryPath(build.Paths.SrcDir).Combine(build.Settings.SolutionName) + ".sln";
+        var solutionFullPath = new DirectoryPath(build.Paths.SrcDir).Combine(build.Settings.SolutionName) + ".slnx";
 
         // Build DotNetTestSettings for a given configuration and log-file name.
         DotNetTestSettings BuildTestSettings(string buildCfg, string logFilename)
@@ -101,7 +101,7 @@ Task("RunXunitTests")
         if (build.IsRelease)
         {
             Information("Running Release mode tests for {0} ...", build.Settings.SolutionName);
-            DotNetTest(solutionFullPath, BuildTestSettings("Release", build.Settings.SolutionName));
+            DotNetTest(solutionFullPath, BuildTestSettings("Release", "${build.Settings.SolutionName}.slnx"));
         }
     })
     .DeferOnError();

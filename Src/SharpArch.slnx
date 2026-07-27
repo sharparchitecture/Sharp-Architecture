@@ -1,0 +1,52 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Lib/">
+    <File Path="Lib/Directory.Build.props" />
+    <Project Path="Lib/SharpArch.Domain/SharpArch.Domain.csproj" />
+    <Project Path="Lib/SharpArch.Infrastructure/SharpArch.Infrastructure.csproj" />
+    <Project Path="Lib/SharpArch.NHibernate.DependencyInjection/SharpArch.NHibernate.Extensions.DependencyInjection.csproj" />
+    <Project Path="Lib/SharpArch.NHibernate/SharpArch.NHibernate.csproj" />
+    <Project Path="Lib/SharpArch.SourceGenerators.DomainSignature/SharpArch.SourceGenerators.DomainSignature.csproj" />
+    <Project Path="Lib/SharpArch.Testing.NUnit/SharpArch.Testing.NUnit.csproj" />
+    <Project Path="Lib/SharpArch.Testing.Xunit.NHibernate/SharpArch.Testing.Xunit.NHibernate.csproj" />
+    <Project Path="Lib/SharpArch.Testing.Xunit/SharpArch.Testing.Xunit.csproj" />
+    <Project Path="Lib/SharpArch.Testing/SharpArch.Testing.csproj" />
+    <Project Path="Lib/SharpArch.Web.AspNetCore/SharpArch.Web.AspNetCore.csproj" />
+  </Folder>
+  <Folder Name="/Samples/" />
+  <Folder Name="/Samples/TardisBank/">
+    <Project Path="Samples/TardisBank/Src/Suteki.TardisBank.Api/Suteki.TardisBank.Api.csproj" />
+    <Project Path="Samples/TardisBank/Src/Suteki.TardisBank.Domain/Suteki.TardisBank.Domain.csproj" />
+    <Project Path="Samples/TardisBank/Src/Suteki.TardisBank.Infrastructure/Suteki.TardisBank.Infrastructure.csproj" />
+    <Project Path="Samples/TardisBank/Src/Suteki.TardisBank.Tasks/Suteki.TardisBank.Tasks.csproj" />
+    <Project Path="Samples/TardisBank/Src/Suteki.TardisBank.Tests/Suteki.TardisBank.Tests.csproj" />
+    <Project Path="Samples/TardisBank/Src/Suteki.TardisBank.WebApi/Suteki.TardisBank.WebApi.csproj" />
+  </Folder>
+  <Folder Name="/Samples/TransactionAttribute/">
+    <Project Path="Samples/TransactionAttribute/App/TransactionAttribute.WebApi.csproj" />
+    <Project Path="Samples/TransactionAttribute/Tests/TransactionAttribute.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="../appveyor.yml" />
+    <File Path="../build.cake" />
+    <File Path="../CONTRIBUTING.md" />
+    <File Path="../Directory.Build.props" />
+    <File Path="../README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/Docker/">
+    <File Path="../Docker/create_database.sql" />
+    <File Path="../Docker/start-mssql.ps1" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <File Path="Tests/Directory.Build.props" />
+    <Project Path="Tests/SharpArch.SourceGenerators.DomainSignature.IntegrationTests/SharpArch.SourceGenerators.DomainSignature.IntegrationTests.csproj" />
+    <Project Path="Tests/SharpArch.SourceGenerators.DomainSignature.Tests/SharpArch.SourceGenerators.DomainSignature.Tests.csproj" />
+    <Project Path="Tests/SharpArch.Tests.NHibernate/SharpArch.Tests.NHibernate.csproj" />
+    <Project Path="Tests/SharpArch.XunitTests.NHibernate/SharpArch.XunitTests.NHibernate.csproj" />
+    <Project Path="Tests/SharpArch.XunitTests/SharpArch.XunitTests.csproj" />
+  </Folder>
+</Solution>

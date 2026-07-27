@@ -8,20 +8,11 @@
     <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />
     <PackageReference Include="Shouldly" Version="4.3.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-  </ItemGroup>
-
-  <!-- xUnit v2 for .NET 6 -->
-  <ItemGroup Label="Package References (xUnit v2 - net6.0)" Condition=" '$(TargetFramework)' == 'net6.0' ">
-    <PackageReference Include="xunit" Version="2.9.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
   </ItemGroup>
 
   <!-- xUnit v3 for .NET 8+ -->
-  <ItemGroup Label="Package References (xUnit v3 - .NET 8+)" Condition=" '$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net9.0' Or '$(TargetFramework)' == 'net10.0' ">
+  <ItemGroup Label="Package References">
     <PackageReference Include="xunit.v3" Version="3.2.2" />
     <PackageReference Include="xunit.v3.extensibility.core" Version="3.2.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4">
