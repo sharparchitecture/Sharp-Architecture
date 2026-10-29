@@ -212,6 +212,8 @@ public class BuildInfo {
             );
         }
 
+        context.Information("Version: Nuget:{0}, Full:{1}, Informational:{2}", version.NuGet, version.Full, version.Informational);
+
         var gitHubToken = context.EnvironmentVariable("GITHUB_TOKEN");
 
         return new BuildInfo {
