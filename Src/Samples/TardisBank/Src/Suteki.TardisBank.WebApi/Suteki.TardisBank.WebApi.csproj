@@ -5,9 +5,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="9.3.0" />
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="11.0.1" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
+    <PackageReference Include="Autofac" Version="9.3.4" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="11.0.2" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.1" />
+    <!-- Direct reference to override vulnerable transitive dependency (NU1902, GHSA-2fmv-rv2c-59x7). -->
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.22" />
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />

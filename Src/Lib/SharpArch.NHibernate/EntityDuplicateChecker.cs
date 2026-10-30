@@ -16,7 +16,7 @@ using global::NHibernate.Criterion;
 [PublicAPI]
 public class EntityDuplicateChecker : IEntityDuplicateChecker
 {
-    static readonly DateTime _uninitializedDatetime;
+    static readonly DateTime _uninitializedDatetime = default!;
     readonly ISession _session;
 
     /// <summary>
@@ -39,7 +39,7 @@ public class EntityDuplicateChecker : IEntityDuplicateChecker
     /// <exception cref="System.ArgumentNullException">entity is null. </exception>
     public bool DoesDuplicateExistWithTypedIdOf(IEntity entity)
     {
-        if (entity == null)
+        if (entity == null!)
             throw new ArgumentNullException(nameof(entity));
 
         var sessionForEntity = GetSessionFor(entity);
