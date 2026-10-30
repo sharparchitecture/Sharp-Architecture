@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup Label="Package References (NetStandard 2.1)" Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.14" />
   </ItemGroup>
 
 
@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup Label="Package References (.NET 10)" Condition=" '$(TargetFramework)' == 'net10.0' ">
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.14" />
   </ItemGroup>
 
 </Project>
