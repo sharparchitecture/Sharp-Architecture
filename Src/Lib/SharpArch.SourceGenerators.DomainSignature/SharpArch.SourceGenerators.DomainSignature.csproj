@@ -12,8 +12,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0" PrivateAssets="all" />
+    <!--
+      Do NOT bump the Roslyn reference above the minimum compiler version you intend to support.
+      The compiler refuses to load a source generator that references a NEWER compiler version
+      than the running one (warning CS9057), silently disabling code generation.
+      Roslyn is backward compatible in the other direction: a generator referencing an older
+      compiler version runs fine on newer SDKs.
+    -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.6.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="5.6.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

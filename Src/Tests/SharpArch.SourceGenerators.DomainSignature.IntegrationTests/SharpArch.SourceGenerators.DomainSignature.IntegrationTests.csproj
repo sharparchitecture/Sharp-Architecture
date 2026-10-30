@@ -2,6 +2,13 @@
 
   <PropertyGroup>
     <RootNamespace>Tests.SharpArch.SourceGenerators.DomainSignature</RootNamespace>
+    <!--
+      Fail the build if the source generator assembly cannot be loaded by the compiler (CS9057),
+      e.g. when it references a newer Roslyn version than the SDK provides. Otherwise the tests
+      would silently exercise the reflection-based BaseObject fallback instead of the generated
+      code and fail with confusing runtime errors.
+    -->
+    <WarningsAsErrors>$(WarningsAsErrors);CS9057</WarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup>
