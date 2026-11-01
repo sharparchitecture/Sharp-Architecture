@@ -63,7 +63,7 @@ static class SourceCodeGenerator
             // HashCode.Combine can accept up to 8 arguments, so we handle that case separately
             if (entity.DomainSignatureProperties.Count < 8)
             {
-                source.AppendLine("             return HashCode.Combine(GetType()");
+                source.AppendLine("            return HashCode.Combine(GetType()");
                 foreach (var property in entity.DomainSignatureProperties)
                 {
                     source.AppendLine($"                ,this.{property.Name}");
@@ -132,7 +132,7 @@ static class SourceCodeGenerator
                 {
                     source.AppendLine($"        if (!this.{propName}.Equals(that.{propName}))");
                 }
-                source.AppendLine( "            return false;");
+                source.AppendLine("            return false;");
             }
 
             source.AppendLine();

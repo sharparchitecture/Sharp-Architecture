@@ -149,10 +149,28 @@ public abstract class Entity<TId> : ValidatableObject, IEntity<TId>, IEntity,
     ///     managing the domain signature of entity objects. This ensures that the entity has at
     ///     least one property decorated with the <see cref="DomainSignatureAttribute" /> attribute.
     /// </remarks>
+    /// <exception cref="InvalidOperationException">
+    ///     A property decorated with <see cref="DomainSignatureAttribute" /> has a type that is not
+    ///     supported as part of a domain signature (e.g. a pointer type or a ref struct type).
+    /// </exception>
     protected override PropertyInfo[] GetTypeSpecificSignatureProperties()
     {
-        return
+        var signatureProperties =
             GetType().GetProperties().Where(p => p.IsDefined(typeof(DomainSignatureAttribute), true)).ToArray();
+
+        foreach (var property in signatureProperties)
+        {
+            // NOTE: This rule is mirrored at compile time by the
+            // SharpArch.SourceGenerators.DomainSignature source generator (diagnostic SHARPARCH006)
+            // and by its IsUnsupportedSignatureType helper - keep both in sync. The generator
+            // additionally rejects generic type parameters, which is a compile-time-only concern:
+            // the runtime only ever sees closed instantiations where type parameters are substituted.
+            if (property.PropertyType.IsPointer || property.PropertyType.IsByRefLike)
+                throw new InvalidOperationException(
+                    $"Property '{property.Name}' in class '{GetType().Name}' has an unsupported type for domain signature.");
+        }
+
+        return signatureProperties;
     }
 
     /// <summary>

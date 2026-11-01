@@ -175,6 +175,20 @@ public class EntityTests
     }
 
 
+    unsafe class ObjectWithPointerSignatureProperty : Entity<int>
+    {
+        [DomainSignature]
+        public int* Pointer { get; set; }
+    }
+
+
+    class ObjectWithRefStructSignatureProperty : Entity<int>
+    {
+        [DomainSignature]
+        public Span<int> Data => default;
+    }
+
+
     class PhoneBeingNotDomainObject
     {
         public string? Extension { get; set; }
@@ -605,5 +619,25 @@ public class EntityTests
         obj1.Name = @"Supercalifragilisticexpialidocious";
         obj2.Name = @"Supercalifragilisticexpialidociouz";
         obj1.Equals(obj2).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void SignaturePropertyWithPointerType_ThrowsInvalidOperationException()
+    {
+        var obj1 = new ObjectWithPointerSignatureProperty();
+        var obj2 = new ObjectWithPointerSignatureProperty();
+
+        Should.Throw<InvalidOperationException>(() => obj1.HasSameObjectSignatureAs(obj2))
+            .Message.ShouldContain("has an unsupported type for domain signature");
+    }
+
+    [Fact]
+    public void SignaturePropertyWithRefStructType_ThrowsInvalidOperationException()
+    {
+        var obj1 = new ObjectWithRefStructSignatureProperty();
+        var obj2 = new ObjectWithRefStructSignatureProperty();
+
+        Should.Throw<InvalidOperationException>(() => obj1.HasSameObjectSignatureAs(obj2))
+            .Message.ShouldContain("has an unsupported type for domain signature");
     }
 }

@@ -76,7 +76,6 @@ public abstract class BaseObject
             // It's possible for two objects to return the same hash code based on 
             // identically valued properties, even if they're of two different types, 
             // so we include the object's type in the hash calculation
-            //int hashCode = GetType().GetHashCode();
             var hash = new HashCode();
             hash.Add(GetType());
 

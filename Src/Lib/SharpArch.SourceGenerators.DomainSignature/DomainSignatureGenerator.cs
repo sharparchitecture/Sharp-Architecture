@@ -63,6 +63,18 @@ public class DomainSignatureGenerator : IIncrementalGenerator
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
+    // NOTE: The message text is mirrored at runtime by
+    // SharpArch.Domain.DomainModel.Entity.GetTypeSpecificSignatureProperties, which rejects the same
+    // pointer and ref struct properties. Generic type parameters are rejected at compile time only.
+    // Keep both sides in sync.
+    static readonly DiagnosticDescriptor UnsupportedPropertyTypeDescriptor = new(
+        "SHARPARCH006",
+        "Property has an unsupported type for domain signature",
+        "Property '{0}' in class '{1}' has an unsupported type for domain signature",
+        "SharpArch",
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
     /// <inheritdoc />
     /// <summary>
     ///     Initializes the source generator with the given context.
@@ -93,26 +105,31 @@ public class DomainSignatureGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(classDeclarations,
             (spc, source) =>
             {
-                if (!source.IsPartial)
+                if (source.Errors.HasFlag(GenerationError.NotPartial))
                     spc.ReportDiagnostic(Diagnostic.Create(MustBePartialDescriptor, null, source.ClassName));
 
-                if (!source.IsBaseTypeCorrect)
+                if (source.Errors.HasFlag(GenerationError.WrongBaseType))
                     spc.ReportDiagnostic(Diagnostic.Create(MustDeriveFromBaseObjectDescriptor, null, source.ClassName));
 
-                if (!source.HasNamespace)
+                if (source.Errors.HasFlag(GenerationError.NoNamespace))
                     spc.ReportDiagnostic(Diagnostic.Create(MustBeInNamespaceDescriptor, null, source.ClassName));
 
-                if (source.IsNested)
+                if (source.Errors.HasFlag(GenerationError.Nested))
                     spc.ReportDiagnostic(Diagnostic.Create(MustNotBeNestedDescriptor, null, source.ClassName));
 
-                if (source.DomainSignatureProperties.Count == 0)
+                foreach (var propertyName in source.UnsupportedPropertyNames)
+                    spc.ReportDiagnostic(Diagnostic.Create(UnsupportedPropertyTypeDescriptor, null, propertyName, source.ClassName));
+
+                // Only warn about a missing signature when no properties were rejected above,
+                // otherwise SHARPARCH006 already explains why the signature looks empty.
+                if (source.DomainSignatureProperties.Count == 0 && source.UnsupportedPropertyNames.Count == 0)
                     spc.ReportDiagnostic(Diagnostic.Create(NoDomainSignaturePropertiesDescriptor, null, source.ClassName));
 
                 // Only emit generated source when the entity is in a valid state.
                 // Otherwise the generated partial would not compile (e.g. overriding a
                 // non-existent member or adding a partial part to a non-partial type),
                 // producing cascading compiler errors on top of the diagnostics above.
-                if (!source.IsPartial || !source.IsBaseTypeCorrect || !source.HasNamespace || source.IsNested)
+                if (source.Errors != GenerationError.None || source.UnsupportedPropertyNames.Count > 0)
                     return;
 
                 // Generate the source code
@@ -171,26 +188,42 @@ public class DomainSignatureGenerator : IIncrementalGenerator
             currentType = currentType.BaseType;
         }
 
+        // Collect validation errors as flags; the corresponding diagnostics are reported
+        // from the source output callback.
+        var errors = GenerationError.None;
+        if (!isPartial)
+            errors |= GenerationError.NotPartial;
+        if (!derivesFromBaseObject)
+            errors |= GenerationError.WrongBaseType;
+        if (classSymbol.ContainingNamespace.IsGlobalNamespace)
+            errors |= GenerationError.NoNamespace;
+        if (classSymbol.ContainingType != null)
+            errors |= GenerationError.Nested;
+
         // Get all properties with [DomainSignature] attribute
-        var domainSignatureProperties = GetDomainSignatureProperties(classSymbol);
+        var (domainSignatureProperties, unsupportedPropertyNames) = GetDomainSignatureProperties(classSymbol);
 
         return new EntityInfo(classSymbol.ContainingNamespace.ToDisplayString(),
             classSymbol.Name,
             domainSignatureProperties,
-            isPartial, derivesFromBaseObject,
-            hasNamespace: !classSymbol.ContainingNamespace.IsGlobalNamespace,
-            isNested: classSymbol.ContainingType != null,
-            isRecord: classSymbol.IsRecord);
+            errors,
+            classSymbol.IsRecord,
+            unsupportedPropertyNames: new EquatableArray<string>(unsupportedPropertyNames.ToArray()));
     }
 
     /// <summary>
     ///     Gets all properties marked with the DomainSignatureAttribute from the given class.
     /// </summary>
     /// <param name="classSymbol">The class symbol to analyze.</param>
-    /// <returns>A list of properties that are part of the domain signature.</returns>
-    static List<DomainSignaturePropertyInfo> GetDomainSignatureProperties(INamedTypeSymbol classSymbol)
+    /// <returns>
+    ///     The properties that are part of the domain signature and the names of the properties whose
+    ///     types are not supported as part of a domain signature.
+    /// </returns>
+    static (List<DomainSignaturePropertyInfo> SignatureProperties, List<string> UnsupportedPropertyNames)
+        GetDomainSignatureProperties(INamedTypeSymbol classSymbol)
     {
         var signatureProperties = new List<DomainSignaturePropertyInfo>();
+        var unsupportedPropertyNames = new List<string>();
 
         foreach (var member in classSymbol.GetMembers())
         {
@@ -200,23 +233,51 @@ public class DomainSignatureGenerator : IIncrementalGenerator
             if (propertySymbol.GetAttributes().Any(attr =>
                 attr.AttributeClass?.Name is DomainSignatureAttributeName or DomainSignatureAttributeShortName))
             {
-                SignatureMemberType? memberType = null;
-
-                if (propertySymbol.Type.IsReferenceType)
-                    memberType = SignatureMemberType.Reference;
-                else if (propertySymbol.Type.IsValueType && propertySymbol.NullableAnnotation == NullableAnnotation.Annotated)
-                    memberType = SignatureMemberType.NullableValue;
+                if (IsUnsupportedSignatureType(propertySymbol.Type))
+                    unsupportedPropertyNames.Add(propertySymbol.Name);
                 else
-                    memberType = SignatureMemberType.Value;
-
-                if (memberType is null)
-                    throw new InvalidOperationException(
-                        $"Property '{propertySymbol.Name}' in class '{classSymbol.Name}' has an unsupported type for domain signature.");
-
-                signatureProperties.Add(new DomainSignaturePropertyInfo(propertySymbol.Name, memberType.Value));
+                    signatureProperties.Add(new DomainSignaturePropertyInfo(propertySymbol.Name,
+                        GetSignatureMemberType(propertySymbol)));
             }
         }
 
-        return signatureProperties;
+        return (signatureProperties, unsupportedPropertyNames);
     }
+
+    /// <summary>
+    ///     Determines whether the property type is not supported as part of a domain signature:
+    ///     pointer types, ref struct types and generic type parameters cannot be reliably hashed
+    ///     or compared.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Pointer and ref struct properties are also rejected at runtime by
+    ///         SharpArch.Domain.DomainModel.Entity.GetTypeSpecificSignatureProperties - keep both in sync.
+    ///     </para>
+    ///     <para>
+    ///         Generic type parameters are a compile-time-only concern: the runtime only ever sees
+    ///         closed instantiations, where type parameters are already substituted.
+    ///     </para>
+    /// </remarks>
+    /// <param name="propertyType">The type of the property.</param>
+    /// <returns>Whether the type is not supported as part of a domain signature.</returns>
+    static bool IsUnsupportedSignatureType(ITypeSymbol propertyType)
+        => propertyType.IsRefLikeType ||
+           propertyType.TypeKind is TypeKind.Pointer or TypeKind.TypeParameter;
+
+    /// <summary>
+    ///     Determines the signature member type of a property based on its type and nullability:
+    ///     reference types, nullable value types and non-nullable value types are compared differently.
+    /// </summary>
+    /// <param name="propertySymbol">The property to classify.</param>
+    /// <returns>The signature member type of the property.</returns>
+    static SignatureMemberType GetSignatureMemberType(IPropertySymbol propertySymbol)
+        => propertySymbol switch
+        {
+            { Type.IsReferenceType: true }
+                => SignatureMemberType.Reference,
+            { Type.IsValueType: true, Type.NullableAnnotation: NullableAnnotation.Annotated }
+                => SignatureMemberType.NullableValue,
+            _ => SignatureMemberType.Value,
+        };
 }

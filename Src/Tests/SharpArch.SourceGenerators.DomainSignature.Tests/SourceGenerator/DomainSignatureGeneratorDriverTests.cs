@@ -14,7 +14,8 @@ using Shouldly;
 /// <summary>
 ///     In-process generator-driver tests that validate the <see cref="DomainSignatureGenerator" />
 ///     diagnostics and source-emission behaviour (valid input, partial / base-type / namespace /
-///     nesting guards, record support and unique hint names) so the behaviour cannot regress.
+///     nesting / unsupported-property-type guards, record support and unique hint names) so the
+///     behaviour cannot regress.
 /// </summary>
 /// <remarks>
 ///     The tests are self-contained: they declare stub <c>BaseObject</c> and attribute types with
@@ -69,7 +70,7 @@ public class DomainSignatureGeneratorDriverTests
                 CSharpSyntaxTree.ParseText(SourceText.From(source, Encoding.UTF8))
             },
             References,
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, nullableContextOptions: NullableContextOptions.Enable));
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, nullableContextOptions: NullableContextOptions.Enable, allowUnsafe: true));
 
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new DomainSignatureGenerator());
         driver = driver.RunGenerators(compilation);
@@ -268,5 +269,66 @@ public partial class NoSig : BaseObject
         var code = GeneratedSource(trees, "partial class NoSig");
         code.ShouldContain("return base.GetHashCode()");
         code.ShouldContain("return base.Equals(compareTo)");
+    }
+
+    [Fact]
+    public void GenericTypeParameterSignatureProperty_ReportsDiagnosticAndDoesNotEmit()
+    {
+        var source = @"using SharpArch.Domain.DomainModel;
+namespace TestNs;
+
+[GenerateDomainSignature]
+public partial class GenericEntity<T> : BaseObject
+{
+    [DomainSignature]
+    public T Value { get; set; }
+}";
+
+        var (diagnostics, trees) = RunGenerator(source);
+
+        HasDiagnostic(diagnostics, "SHARPARCH006").ShouldBeTrue("generic type parameter signature property must report SHARPARCH006");
+        HasDiagnostic(diagnostics, "SHARPARCH003").ShouldBeFalse("SHARPARCH003 must not be reported when SHARPARCH006 already explains the rejected property");
+        HasGeneratedSource(trees, "partial class GenericEntity").ShouldBeFalse("must not emit when a signature property has an unsupported type");
+    }
+
+    [Fact]
+    public void PointerSignatureProperty_ReportsDiagnosticAndDoesNotEmit()
+    {
+        var source = @"using SharpArch.Domain.DomainModel;
+namespace TestNs;
+
+[GenerateDomainSignature]
+public unsafe partial class PointerEntity : BaseObject
+{
+    [DomainSignature]
+    public int* Pointer { get; set; }
+}";
+
+        var (diagnostics, trees) = RunGenerator(source);
+
+        HasDiagnostic(diagnostics, "SHARPARCH006").ShouldBeTrue("pointer signature property must report SHARPARCH006");
+        HasDiagnostic(diagnostics, "SHARPARCH003").ShouldBeFalse("SHARPARCH003 must not be reported when SHARPARCH006 already explains the rejected property");
+        HasGeneratedSource(trees, "partial class PointerEntity").ShouldBeFalse("must not emit when a signature property has an unsupported type");
+    }
+
+    [Fact]
+    public void RefStructSignatureProperty_ReportsDiagnosticAndDoesNotEmit()
+    {
+        var source = @"using System;
+using SharpArch.Domain.DomainModel;
+namespace TestNs;
+
+[GenerateDomainSignature]
+public partial class SpanEntity : BaseObject
+{
+    [DomainSignature]
+    public Span<int> Data => default;
+}";
+
+        var (diagnostics, trees) = RunGenerator(source);
+
+        HasDiagnostic(diagnostics, "SHARPARCH006").ShouldBeTrue("ref struct signature property must report SHARPARCH006");
+        HasDiagnostic(diagnostics, "SHARPARCH003").ShouldBeFalse("SHARPARCH003 must not be reported when SHARPARCH006 already explains the rejected property");
+        HasGeneratedSource(trees, "partial class SpanEntity").ShouldBeFalse("must not emit when a signature property has an unsupported type");
     }
 }

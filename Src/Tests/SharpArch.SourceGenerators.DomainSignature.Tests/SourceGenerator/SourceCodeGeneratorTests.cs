@@ -7,15 +7,17 @@ using Shouldly;
 
 public class SourceCodeGeneratorTests
 {
+    static EntityInfo CreateEntity(
+        List<DomainSignaturePropertyInfo> properties,
+        string className = "TestEntity",
+        string classNamespace = "TestNamespace",
+        bool isRecord = false)
+        => new(classNamespace, className, properties, isRecord: isRecord);
+
     [Fact]
     public void Generate_IncludesCorrectUsingStatements()
     {
-        var entity = new EntityInfo(
-            "TestNamespace",
-            "TestEntity",
-            new List<DomainSignaturePropertyInfo>(),
-            true,
-            true);
+        var entity = CreateEntity([]);
 
         var result = SourceCodeGenerator.Generate(entity);
 
@@ -28,13 +30,7 @@ public class SourceCodeGeneratorTests
     [Fact]
     public void Generate_WithRecordKind_EmitsPartialRecord()
     {
-        var entity = new EntityInfo(
-            "TestNamespace",
-            "TestRecord",
-            new List<DomainSignaturePropertyInfo> { new("Id", SignatureMemberType.Value) },
-            true,
-            true,
-            isRecord: true);
+        var entity = CreateEntity([new("Id", SignatureMemberType.Value)], "TestRecord", isRecord: true);
 
         var result = SourceCodeGenerator.Generate(entity);
 
@@ -45,12 +41,7 @@ public class SourceCodeGeneratorTests
     [Fact]
     public void Generate_IncludesCorrectXmlDocumentation()
     {
-        var entity = new EntityInfo(
-            "TestNamespace",
-            "TestEntity",
-            new List<DomainSignaturePropertyInfo>(),
-            true,
-            true);
+        var entity = CreateEntity([]);
 
         var result = SourceCodeGenerator.Generate(entity);
 
@@ -63,12 +54,7 @@ public class SourceCodeGeneratorTests
     [Fact]
     public void Generate_IncludesExcludeFromCodeCoverageAttribute()
     {
-        var entity = new EntityInfo(
-            "TestNamespace",
-            "TestEntity",
-            new List<DomainSignaturePropertyInfo>(),
-            true,
-            true);
+        var entity = CreateEntity([]);
 
         var result = SourceCodeGenerator.Generate(entity);
 
@@ -79,12 +65,10 @@ public class SourceCodeGeneratorTests
     [Fact]
     public void Generate_WithComplexNamespace_HandlesCorrectly()
     {
-        var entity = new EntityInfo(
-            "MyCompany.MyApp.Domain.Entities",
+        var entity = CreateEntity(
+            [new("OrderNumber", SignatureMemberType.Reference)],
             "CustomerOrder",
-            new List<DomainSignaturePropertyInfo> { new("OrderNumber", SignatureMemberType.Reference) },
-            true,
-            true);
+            "MyCompany.MyApp.Domain.Entities");
 
         var result = SourceCodeGenerator.Generate(entity);
 
@@ -102,12 +86,7 @@ public class SourceCodeGeneratorTests
             properties.Add(new($"Property{i}", SignatureMemberType.Value));
         }
 
-        var entity = new EntityInfo(
-            "TestNamespace",
-            "TestEntity",
-            properties,
-            true,
-            true);
+        var entity = CreateEntity(properties);
 
         var result = SourceCodeGenerator.Generate(entity);
 
@@ -131,12 +110,7 @@ public class SourceCodeGeneratorTests
             new("Age", SignatureMemberType.Value)
         };
 
-        var entity = new EntityInfo(
-            "MyApp.Domain",
-            "User",
-            properties,
-            true,
-            true);
+        var entity = CreateEntity(properties, "User", "MyApp.Domain");
 
         var result = SourceCodeGenerator.Generate(entity);
 
@@ -158,12 +132,7 @@ public class SourceCodeGeneratorTests
             new("OptionalValue", SignatureMemberType.NullableValue)
         };
 
-        var entity = new EntityInfo(
-            "TestNamespace",
-            "TestEntity",
-            properties,
-            true,
-            true);
+        var entity = CreateEntity(properties);
 
         var result = SourceCodeGenerator.Generate(entity);
 
@@ -177,12 +146,7 @@ public class SourceCodeGeneratorTests
     [Fact]
     public void Generate_WithNoProperties_GeneratesBaseHashCodeAndEquals()
     {
-        var entity = new EntityInfo(
-            "TestNamespace",
-            "TestEntity",
-            new List<DomainSignaturePropertyInfo>(),
-            true,
-            true);
+        var entity = CreateEntity([]);
 
         var result = SourceCodeGenerator.Generate(entity);
 
@@ -198,12 +162,7 @@ public class SourceCodeGeneratorTests
     {
         var properties = new List<DomainSignaturePropertyInfo> { new("OptionalId", SignatureMemberType.NullableValue) };
 
-        var entity = new EntityInfo(
-            "TestNamespace",
-            "TestEntity",
-            properties,
-            true,
-            true);
+        var entity = CreateEntity(properties);
 
         var result = SourceCodeGenerator.Generate(entity);
 
@@ -215,12 +174,7 @@ public class SourceCodeGeneratorTests
     {
         var properties = new List<DomainSignaturePropertyInfo> { new("Name", SignatureMemberType.Reference) };
 
-        var entity = new EntityInfo(
-            "TestNamespace",
-            "TestEntity",
-            properties,
-            true,
-            true);
+        var entity = CreateEntity(properties);
 
         var result = SourceCodeGenerator.Generate(entity);
 
@@ -232,12 +186,7 @@ public class SourceCodeGeneratorTests
     {
         var properties = new List<DomainSignaturePropertyInfo> { new("Id", SignatureMemberType.Value) };
 
-        var entity = new EntityInfo(
-            "TestNamespace",
-            "TestEntity",
-            properties,
-            true,
-            true);
+        var entity = CreateEntity(properties);
 
         var result = SourceCodeGenerator.Generate(entity);
 
@@ -252,12 +201,7 @@ public class SourceCodeGeneratorTests
     [Fact]
     public void Generate_DoesNotEmitUnusedSystemReflectionUsing()
     {
-        var entity = new EntityInfo(
-            "TestNamespace",
-            "TestEntity",
-            new List<DomainSignaturePropertyInfo> { new("Id", SignatureMemberType.Value) },
-            true,
-            true);
+        var entity = CreateEntity([new("Id", SignatureMemberType.Value)]);
 
         var result = SourceCodeGenerator.Generate(entity);
 

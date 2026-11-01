@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\Lib\SharpArch.Domain\SharpArch.Domain.csproj" />
     <ProjectReference Include="..\..\Lib\SharpArch.Infrastructure\SharpArch.Infrastructure.csproj" />

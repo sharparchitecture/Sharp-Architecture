@@ -51,7 +51,6 @@ public class WhenGeneratingDomainSignatureSupportCode
         var hash1 = entity1.GetHashCode();
         var hash2 = entity2.GetHashCode();
 
-        // Assert
         hash1.ShouldBe(hash2);
         entity1.HasSameObjectSignatureAs(entity2).ShouldBeTrue();
     }
@@ -69,7 +68,6 @@ public class WhenGeneratingDomainSignatureSupportCode
         var hash2 = entity2.GetHashCode();
         var hash3 = entity3.GetHashCode();
 
-        // Assert
         hash1.ShouldBe(hash2);
         hash1.ShouldNotBe(hash3);
     }
@@ -87,7 +85,6 @@ public class WhenGeneratingDomainSignatureSupportCode
         var hash2 = entity2.GetHashCode();
         var hash3 = entity3.GetHashCode();
 
-        // Assert
         hash1.ShouldBe(hash2);
         hash1.ShouldNotBe(hash3);
     }

@@ -18,24 +18,9 @@ public readonly record struct EntityInfo
     public readonly EquatableArray<DomainSignaturePropertyInfo> DomainSignatureProperties;
 
     /// <summary>
-    ///     Gets a value indicating whether the entity class inherits from the correct base type.
+    ///     Gets the reasons, if any, why the entity class is not in a valid state for signature generation.
     /// </summary>
-    public readonly bool IsBaseTypeCorrect;
-
-    /// <summary>
-    ///     Gets a value indicating whether the entity class is declared as partial.
-    /// </summary>
-    public readonly bool IsPartial;
-
-    /// <summary>
-    ///     Gets a value indicating whether the entity class is declared in a (non-global) namespace.
-    /// </summary>
-    public readonly bool HasNamespace;
-
-    /// <summary>
-    ///     Gets a value indicating whether the entity class is nested inside another type.
-    /// </summary>
-    public readonly bool IsNested;
+    public readonly GenerationError Errors;
 
     /// <summary>
     ///     Gets a value indicating whether the entity class is a record.
@@ -48,31 +33,33 @@ public readonly record struct EntityInfo
     public readonly string ClassNamespace;
 
     /// <summary>
+    ///     Gets the names of properties whose types are not supported as part of the domain signature.
+    /// </summary>
+    public readonly EquatableArray<string> UnsupportedPropertyNames;
+
+    /// <summary>
     ///     Initializes a new instance of the <see cref="EntityInfo" /> struct.
     /// </summary>
-    /// <param name="classNamespace">The namespace of the entity class.</param>
+    /// <param name="classNamespace">The namespace of the entity class (empty for the global namespace).</param>
     /// <param name="className">The name of the entity class.</param>
     /// <param name="domainSignatureProperties">The properties that make up the domain signature.</param>
-    /// <param name="isPartial">Whether the entity class is declared as partial.</param>
-    /// <param name="isBaseTypeCorrect">Whether the entity class inherits from the correct base type.</param>
-    /// <param name="hasNamespace">Whether the entity class is declared in a non-global namespace.</param>
-    /// <param name="isNested">Whether the entity class is nested inside another type.</param>
+    /// <param name="errors">The reasons, if any, why the entity class is not in a valid state for signature generation.</param>
     /// <param name="isRecord">Whether the entity class is a record.</param>
+    /// <param name="unsupportedPropertyNames">The names of properties whose types are not supported as part of the domain signature.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="domainSignatureProperties" /> is null.</exception>
     public EntityInfo(
-        string classNamespace, string className, List<DomainSignaturePropertyInfo> domainSignatureProperties, bool isPartial, bool isBaseTypeCorrect,
-        bool hasNamespace = true, bool isNested = false, bool isRecord = false)
+        string classNamespace, string className, List<DomainSignaturePropertyInfo> domainSignatureProperties,
+        GenerationError errors = GenerationError.None, bool isRecord = false,
+        EquatableArray<string> unsupportedPropertyNames = default)
     {
         if (domainSignatureProperties == null)
             throw new ArgumentNullException(nameof(domainSignatureProperties));
 
         ClassNamespace = classNamespace;
         ClassName = className;
-        IsPartial = isPartial;
-        IsBaseTypeCorrect = isBaseTypeCorrect;
-        HasNamespace = hasNamespace;
-        IsNested = isNested;
+        Errors = errors;
         IsRecord = isRecord;
+        UnsupportedPropertyNames = unsupportedPropertyNames;
         DomainSignatureProperties = new EquatableArray<DomainSignaturePropertyInfo>(domainSignatureProperties.ToArray());
     }
 }

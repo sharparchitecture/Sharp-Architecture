@@ -23,53 +23,30 @@ public class DomainSignatureGeneratorSimpleTests
     {
         var properties = new List<DomainSignaturePropertyInfo> { new("Id", SignatureMemberType.Value), new("Name", SignatureMemberType.Reference) };
 
-        var entityInfo = new EntityInfo(
-            "Test",
-            "Entity",
-            properties,
-            true,
-            true);
+        var entityInfo = new EntityInfo("Test", "Entity", properties);
 
         entityInfo.DomainSignatureProperties.Count.ShouldBe(2);
-        entityInfo.IsPartial.ShouldBeTrue();
-        entityInfo.IsBaseTypeCorrect.ShouldBeTrue();
+        entityInfo.Errors.ShouldBe(GenerationError.None);
     }
 
     [Fact]
-    public void GetDomainSignatureProperties_WithMockProperties_ReturnsExpectedTypes()
+    public void EntityInfo_Defaults_HaveNoErrorsAndKindClass()
     {
-        var propertyInfo = new DomainSignaturePropertyInfo("TestProp", SignatureMemberType.Value);
+        var entity = new EntityInfo("Test", "Entity", new List<DomainSignaturePropertyInfo>());
 
-        propertyInfo.Name.ShouldBe("TestProp");
-        propertyInfo.MemberType.ShouldBe(SignatureMemberType.Value);
-    }
-
-    [Fact]
-    public void SignatureMemberType_HasExpectedValues()
-    {
-        ((int)SignatureMemberType.Value).ShouldBe(0);
-        ((int)SignatureMemberType.NullableValue).ShouldBe(1);
-        ((int)SignatureMemberType.Reference).ShouldBe(2);
-    }
-
-    [Fact]
-    public void EntityInfo_NewOptionalFields_DefaultToValidValues()
-    {
-        var entity = new EntityInfo("Test", "Entity", new List<DomainSignaturePropertyInfo>(), true, true);
-
-        entity.HasNamespace.ShouldBeTrue();
-        entity.IsNested.ShouldBeFalse();
+        entity.Errors.ShouldBe(GenerationError.None);
         entity.IsRecord.ShouldBeFalse();
+        entity.UnsupportedPropertyNames.Count.ShouldBe(0);
     }
 
     [Fact]
-    public void EntityInfo_NewOptionalFields_ExplicitValuesArePreserved()
+    public void EntityInfo_ExplicitValues_ArePreserved()
     {
-        var entity = new EntityInfo("Test", "Entity", new List<DomainSignaturePropertyInfo>(), true, false,
-            hasNamespace: false, isNested: true, isRecord: true);
+        var entity = new EntityInfo("Test", "Entity", new List<DomainSignaturePropertyInfo>(),
+            GenerationError.NotPartial | GenerationError.NoNamespace | GenerationError.Nested,
+            isRecord: true);
 
-        entity.HasNamespace.ShouldBeFalse();
-        entity.IsNested.ShouldBeTrue();
+        entity.Errors.ShouldBe(GenerationError.NotPartial | GenerationError.NoNamespace | GenerationError.Nested);
         entity.IsRecord.ShouldBeTrue();
     }
 }
