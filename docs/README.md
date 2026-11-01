@@ -15,6 +15,7 @@ with your own S#arp project.
 - [Overview](general/overview.md)
 - [Architecture](general/architecture.md)
 - [Unit of Work](general/unit-of-work.md)
+- [Domain signature source generator](general/domain-signature-generator.md)
 - [Frequently Asked Questions](general/frequently-asked-questions.md)
 - [Acknowledgments](general/acknowledgment.md)
 
