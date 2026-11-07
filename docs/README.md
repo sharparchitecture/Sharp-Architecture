@@ -33,6 +33,7 @@ with your own S#arp project.
 ## Reference
 
 - [Changelog](changelog.md)
+- [Release workflow](release-workflow.md)
 - [Additional resources](additional-resources.md)
 
 ---
