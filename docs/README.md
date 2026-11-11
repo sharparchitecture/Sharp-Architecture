@@ -15,6 +15,7 @@ with your own S#arp project.
 - [Overview](general/overview.md)
 - [Architecture](general/architecture.md)
 - [Unit of Work](general/unit-of-work.md)
+- [Domain signature source generator](general/domain-signature-generator.md)
 - [Frequently Asked Questions](general/frequently-asked-questions.md)
 - [Acknowledgments](general/acknowledgment.md)
 
@@ -22,6 +23,7 @@ with your own S#arp project.
 
 - [Installation](getting-started/installation.md)
 - [Building a simple CRUD feature](getting-started/simple-crud-application.md)
+- [Running SQL Server in Docker](getting-started/mssql-in-docker.md)
 
 ## NHibernate
 
@@ -32,6 +34,7 @@ with your own S#arp project.
 ## Reference
 
 - [Changelog](changelog.md)
+- [Release workflow](release-workflow.md)
 - [Additional resources](additional-resources.md)
 
 ---

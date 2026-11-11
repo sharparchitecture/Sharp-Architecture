@@ -12,11 +12,10 @@ using global::NHibernate.Criterion;
 /// </summary>
 /// <seealso cref="IEntityDuplicateChecker" />
 /// <seealso cref="DomainSignatureAttribute" />
-/// .
 [PublicAPI]
 public class EntityDuplicateChecker : IEntityDuplicateChecker
 {
-    static readonly DateTime _uninitializedDatetime;
+    static readonly DateTime _uninitializedDatetime = default;
     readonly ISession _session;
 
     /// <summary>
@@ -39,7 +38,7 @@ public class EntityDuplicateChecker : IEntityDuplicateChecker
     /// <exception cref="System.ArgumentNullException">entity is null. </exception>
     public bool DoesDuplicateExistWithTypedIdOf(IEntity entity)
     {
-        if (entity == null)
+        if (entity is null)
             throw new ArgumentNullException(nameof(entity));
 
         var sessionForEntity = GetSessionFor(entity);

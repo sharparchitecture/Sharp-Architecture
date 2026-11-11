@@ -16,7 +16,7 @@
     <None Include="..\..\..\Artefacts\Documentation\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
-  <ItemGroup Label="Package References (xUnit v2 - netstandard2.1/net6.0)" Condition=" '$(TargetFramework)' == 'netstandard2.1' Or '$(TargetFramework)' == 'net6.0' ">
+  <ItemGroup Label="Package References (xUnit v2 - netstandard2.1)" Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
     <PackageReference Include="xunit.core" Version="2.9.3" />
   </ItemGroup>
 

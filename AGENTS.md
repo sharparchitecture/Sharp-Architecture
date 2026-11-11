@@ -101,6 +101,13 @@ Typical consumer flow: define entities in a Domain layer → depend only on `IRe
   in `Src/Tests/Directory.Build.props`, so match the surrounding project when adding tests.
 - **Versioning/branching**: GitFlow (`develop` = pre-release, `master` = stable) with GitVersion;
   package version is derived from git, not hardcoded.
+- **Releases**: GitReleaseManager generates release notes from GitHub milestones (one
+  label per issue; never use text milestone names like `vNext`). Release flow: close the
+  milestone's issues → `release/<version>` branch from `develop` (needs at least one
+  commit/CI build) → merge to `master` → tag → rebase `develop` on `master` → review and
+  publish the GitHub release → point `PackageReleaseNotes` in `Src/Directory.Build.props`
+  at the next milestone and commit with `[skip ci]` in the message. Full details:
+  [docs/release-workflow.md](docs/release-workflow.md).
 
 ## Code exploration
 
