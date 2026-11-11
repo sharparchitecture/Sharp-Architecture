@@ -23,6 +23,7 @@ with your own S#arp project.
 
 - [Installation](getting-started/installation.md)
 - [Building a simple CRUD feature](getting-started/simple-crud-application.md)
+- [Running SQL Server in Docker](getting-started/mssql-in-docker.md)
 
 ## NHibernate
 
