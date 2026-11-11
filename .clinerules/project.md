@@ -49,8 +49,8 @@ dotnet cake --target=RunUnitTests        # build + tests + coverage only
 ## Target frameworks
 
 Defined centrally in `Src/Directory.Build.props`:
-- **Libraries** (`Src/Lib/`): `netstandard2.1;net8.0;net9.0`
-- **Apps & test projects**: `net8.0;net9.0`
+- **Libraries** (`Src/Lib/`): `netstandard2.1;net8.0;net9.0;net10.0;net11.0`
+- **Apps & test projects**: `net8.0;net9.0;net10.0;net11.0`
 
 ## Architecture
 

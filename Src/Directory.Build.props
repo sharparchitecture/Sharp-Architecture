@@ -1,7 +1,7 @@
 ﻿<Project>
   <PropertyGroup Label="Build targets">
     <!-- target frameworks for unit-tests and applications -->
-    <AppTargetFrameworks>net8.0;net9.0;net10.0</AppTargetFrameworks>
+    <AppTargetFrameworks>net8.0;net9.0;net10.0;net11.0</AppTargetFrameworks>
     <!-- target frameworks for SharpArch libraries -->
     <LibraryTargetFrameworks>netstandard2.1;$(AppTargetFrameworks)</LibraryTargetFrameworks>
   </PropertyGroup>
@@ -79,7 +79,7 @@
   </ItemGroup>
 
   <!-- xUnit v3 analyzer: suppress xunit1051 on .NET 8+ targets where xUnit v3 is used -->
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net9.0' Or '$(TargetFramework)' == 'net10.0' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net9.0' Or '$(TargetFramework)' == 'net10.0' Or '$(TargetFramework)' == 'net11.0' ">
     <NoWarn>$(NoWarn);xunit1051</NoWarn>
   </PropertyGroup>
 

@@ -1,6 +1,31 @@
 ﻿vNext
 ========================
 
+ENHANCEMENTS:
+* Add .NET 11 support (net11.0 added to AppTargetFrameworks)
+* TardisBank sample now targets net9.0, net10.0 and net11.0
+
+BUILD:
+* SDK pinned to 11.0.100 in global.json (net11.0 requires the .NET 11 SDK)
+* Upgrade Microsoft.SourceLink.GitHub 10.0.403 -> 11.0.100
+* .NET 11-specific packages are referenced only for the net11.0 target; other TFMs
+  reference the most recent version matching their framework version (e.g. 8.x for net8.0)
+* xUnit v3 (xunit.v3.extensibility.core 3.2.2) enabled for net11.0 target
+
+DEPENDENCIES:
+* NHibernate upgraded 5.7.0 -> 5.7.1
+* Microsoft.NET.Test.Sdk upgraded 18.11.0 -> 18.11.1
+* Microsoft.Extensions.Logging.Abstractions: net8.0 8.0.0 -> 8.0.3, net9.0 9.0.0 -> 9.0.23,
+  net10.0/netstandard2.1 10.0.14 -> 10.0.15, 11.0.0 added for net11.0
+* Microsoft.AspNetCore.TestHost (samples): 8.0.20/9.0.9/10.0.0/10.0.14 upgraded to
+  8.0.34/9.0.23/10.0.15, 11.0.0 added for net11.0
+* System.Security.Cryptography.Pkcs upgraded 9.0.22 -> 9.0.23
+* Microsoft.Data.Sqlite.Core upgraded 10.0.14 -> 10.0.15 (TardisBank sample)
+* NHibernate.Extensions.Sqlite 10.0.5 used for net11.0 target (no 11.x release yet)
+* Serilog.AspNetCore 10.0.0 used for net11.0 target (no 11.x release yet)
+* AutoMapper, MediatR, xUnit and Microsoft.CodeAnalysis are intentionally not upgraded:
+  AutoMapper 15+/MediatR 13+ changed to a commercial license, xUnit and Roslyn versions
+  are pinned for compatibility
 
 9.1.0
 ========================
