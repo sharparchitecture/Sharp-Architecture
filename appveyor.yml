@@ -34,6 +34,10 @@ for:
   clone_folder: ~/work/sharp-arch
 
   install:
+    # Ubuntu2404 image ships .NET SDK up to 10.x only; install the SDK pinned in global.json
+    - sh: curl -sSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh
+    - sh: chmod +x /tmp/dotnet-install.sh
+    - sh: sudo /tmp/dotnet-install.sh --jsonfile ./global.json --install-dir /usr/share/dotnet
     - sh: dotnet --info
     - sh: touch ./Src/Common/AssemblyVersion.cs
     - sh: dotnet new tool-manifest
