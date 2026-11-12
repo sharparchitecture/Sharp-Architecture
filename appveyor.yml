@@ -61,7 +61,7 @@ for:
   install:
     - ps: dotnet --info
     - ps: ./mssql-setup.ps1
-    - ps: dotnet tool install Cake.Tool --version 6.1.0 --global
+    - ps: dotnet tool install Cake.Tool --version 6.2.0 --global
     - ps: New-Item -ItemType Directory -Force -Path C:\tools | Out-Null
     - ps: Invoke-WebRequest -Uri "https://github.com/coverallsapp/coverage-reporter/releases/latest/download/coveralls-windows.exe" -OutFile "C:\tools\coveralls-windows.exe"
 
@@ -93,7 +93,7 @@ for:
     - provider: NuGet
       name: Pre-release
       api_key:
-        secure: fonSxFXVP3eX/9p8wKOSaQkUxeoqU3j2zpFbj9ZKVNgVwNPAQ4cYWR4s+ZVN0AlI
+        secure: OCp/eZYt4rkhfw+3sB0VuinbGQzDAIzVFpKvZd9EanwsLJg3pWlBNYiwBAeM223Y
       on:
         branch:
           - develop
@@ -104,6 +104,6 @@ for:
     - provider: NuGet
       name: Tagged release
       api_key:
-        secure: fonSxFXVP3eX/9p8wKOSaQkUxeoqU3j2zpFbj9ZKVNgVwNPAQ4cYWR4s+ZVN0AlI
+        secure: OCp/eZYt4rkhfw+3sB0VuinbGQzDAIzVFpKvZd9EanwsLJg3pWlBNYiwBAeM223Y
       on:
         appveyor_repo_tag: true
