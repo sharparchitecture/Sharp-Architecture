@@ -5,6 +5,12 @@
     <TargetFrameworks></TargetFrameworks>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
+    <!-- The generator ships its DLL and PDB directly in the analyzers/ folder of the main
+         nupkg (see the None items below), so there is no runtime assembly in lib/ and no
+         .pdb left for a symbol package. Suppress snupkg generation, otherwise dotnet pack
+         emits an empty .snupkg which NuGet.org rejects with
+         "The package does not contain any symbol (.pdb) files." -->
+    <IncludeSymbols>false</IncludeSymbols>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>true</ImplicitUsings>
@@ -30,6 +36,8 @@
   <!-- special settings for Source Generator Packages -->
   <ItemGroup>
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <!-- ship the portable pdb with the generator so it can be stepped into while debugging -->
+    <None Include="$(OutputPath)\$(AssemblyName).pdb" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
 </Project>
