@@ -63,6 +63,9 @@ for:
     - mssql2025
 
   install:
+    # Visual Studio 2026 image ships .NET SDK up to 10.x only; install the SDK pinned in global.json
+    - ps: $ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri 'https://dot.net/v1/dotnet-install.ps1' -OutFile "$env:TEMP\dotnet-install.ps1"
+    - ps: '& "$env:TEMP\dotnet-install.ps1" -JSonFile ./global.json -InstallDir "C:\Program Files\dotnet"'
     - ps: dotnet --info
     - ps: ./mssql-setup.ps1
     - ps: dotnet tool install Cake.Tool --version 6.2.0 --global
