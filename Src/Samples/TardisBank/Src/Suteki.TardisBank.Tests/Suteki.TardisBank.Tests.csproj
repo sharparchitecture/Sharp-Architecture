@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup Label="Package References (.NET 11)" Condition=" '$(TargetFramework)' == 'net11.0' ">
-    <!-- NHibernate.Extensions.Sqlite 11.x is not released yet; 10.0.5 supports .NET 11 -->
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="11.0.0" />
     <PackageReference Include="NHibernate.Extensions.Sqlite" Version="10.0.5" />
   </ItemGroup>

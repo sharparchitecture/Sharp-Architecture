@@ -26,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup Label="Package References (.NET 11)" Condition=" '$(TargetFramework)' == 'net11.0' ">
-    <!-- Serilog.AspNetCore 11.x is not released yet; 10.0.0 supports .NET 11 -->
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
   </ItemGroup>
 
