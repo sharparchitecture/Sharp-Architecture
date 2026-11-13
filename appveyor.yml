@@ -34,6 +34,11 @@ for:
   clone_folder: ~/work/sharp-arch
 
   install:
+    # Ubuntu2404 image ships .NET SDK up to 10.x only; install the SDK pinned in global.json
+    # retry on transient network errors (connection reset, broken pipe); the script retries its own SDK download
+    - sh: curl -fsSL --retry 5 --retry-all-errors --retry-delay 5 --connect-timeout 30 https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh
+    - sh: chmod +x /tmp/dotnet-install.sh
+    - sh: sudo /tmp/dotnet-install.sh --jsonfile ./global.json --install-dir /usr/share/dotnet
     - sh: dotnet --info
     - sh: touch ./Src/Common/AssemblyVersion.cs
     - sh: dotnet new tool-manifest
@@ -59,11 +64,31 @@ for:
     - mssql2025
 
   install:
+    # Visual Studio 2026 image ships .NET SDK up to 10.x only; install the SDK pinned in global.json
+    # Downloads retry on transient network errors (Windows PowerShell 5.1 has no -MaximumRetryCount);
+    # the dotnet-install script retries its own SDK download
+    - ps: |
+        $ProgressPreference = 'SilentlyContinue'
+        function Get-FileWithRetry([string]$Uri, [string]$OutFile, [int]$MaxAttempts = 5) {
+            for ($attempt = 1; ; $attempt++) {
+                try {
+                    Invoke-WebRequest -Uri $Uri -OutFile $OutFile -UseBasicParsing -TimeoutSec 120
+                    return
+                }
+                catch {
+                    if ($attempt -ge $MaxAttempts) { throw }
+                    Write-Warning "Download of $Uri failed (attempt $attempt of $MaxAttempts): $($_.Exception.Message). Retrying in $(5 * $attempt)s..."
+                    Start-Sleep -Seconds (5 * $attempt)
+                }
+            }
+        }
+        New-Item -ItemType Directory -Force -Path C:\tools | Out-Null
+        Get-FileWithRetry 'https://dot.net/v1/dotnet-install.ps1' "$env:TEMP\dotnet-install.ps1"
+        Get-FileWithRetry 'https://github.com/coverallsapp/coverage-reporter/releases/latest/download/coveralls-windows.exe' 'C:\tools\coveralls-windows.exe'
+    - ps: '& "$env:TEMP\dotnet-install.ps1" -JSonFile ./global.json -InstallDir "C:\Program Files\dotnet"'
     - ps: dotnet --info
     - ps: ./mssql-setup.ps1
     - ps: dotnet tool install Cake.Tool --version 6.2.0 --global
-    - ps: New-Item -ItemType Directory -Force -Path C:\tools | Out-Null
-    - ps: Invoke-WebRequest -Uri "https://github.com/coverallsapp/coverage-reporter/releases/latest/download/coveralls-windows.exe" -OutFile "C:\tools\coveralls-windows.exe"
 
   build_script:
       - ps: dotnet cake

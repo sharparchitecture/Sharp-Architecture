@@ -25,6 +25,10 @@
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
   </ItemGroup>
 
+  <ItemGroup Label="Package References (.NET 11)" Condition=" '$(TargetFramework)' == 'net11.0' ">
+    <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\Lib\SharpArch.Web.AspNetCore\SharpArch.Web.AspNetCore.csproj" />
   </ItemGroup>

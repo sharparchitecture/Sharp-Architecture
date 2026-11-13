@@ -8,7 +8,7 @@
     <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />
     <PackageReference Include="Shouldly" Version="4.3.0" />
     <PackageReference Include="Moq" Version="4.21.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.1" />
   </ItemGroup>
 
   <!-- xUnit v3 for .NET 8+ -->
@@ -22,15 +22,19 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="8.0.20" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="8.0.34" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="9.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="9.0.23" />
   </ItemGroup>
 
   <ItemGroup Label="Package References (.NET 10)" Condition=" '$(TargetFramework)' == 'net10.0' ">
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="10.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="10.0.15" />
+  </ItemGroup>
+
+  <ItemGroup Label="Package References (.NET 11)" Condition=" '$(TargetFramework)' == 'net11.0' ">
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="11.0.0" />
   </ItemGroup>
 
   <ItemGroup>

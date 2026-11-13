@@ -2,9 +2,17 @@
 
   <Import Project="../Directory.Build.props" />
 
+  <!-- SourceLink is a build-time-only dependency (PrivateAssets=all) and is not part of the
+       published package dependency graph. SourceLink 11.x pulls in System.IO.Hashing 11.x,
+       which no longer declares net8.0/net9.0 support, so suppress the irrelevant TFM support
+       warnings for those targets. -->
+  <PropertyGroup>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+  </PropertyGroup>
+
   <!-- Add Source Link to all library packages -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.403">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="11.0.100">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

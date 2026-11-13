@@ -292,3 +292,6 @@ Artefacts/Documentation/build/
 /Docker/mssql-data
 /Docker/postgres-data
 /tmp/
+
+# Cline memory bank (local AI agent context)
+/memory-bank/

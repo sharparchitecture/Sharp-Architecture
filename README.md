@@ -24,7 +24,7 @@ Downloads can always be found here: https://github.com/sharparchitecture/Sharp-A
 ## Building S#arp Architecture
 
 
-The build is driven by [Cake](https://cakebuild.net) and requires only the .NET SDK (see [global.json](global.json) for the pinned version).
+The build is driven by [Cake](https://cakebuild.net) and requires only the .NET SDK (see [global.json](global.json) for the pinned version, currently 11.0.100). AppVeyor CI installs that SDK on both Linux and Windows build images with the official `dotnet-install` script, so bumping `global.json` is all it takes to move CI to a new SDK.
 
 ```Shell
 $ git clone git@github.com:sharparchitecture/Sharp-Architecture.git
