@@ -7,6 +7,8 @@ ENHANCEMENTS:
 
 BUILD:
 * SDK pinned to 11.0.100 in global.json (net11.0 requires the .NET 11 SDK)
+* AppVeyor (Linux and Windows) installs the SDK pinned in global.json via the official
+  dotnet-install script, as the Ubuntu2404 / Visual Studio 2026 images ship only up to .NET 10
 * Upgrade Microsoft.SourceLink.GitHub 10.0.403 -> 11.0.100
 * .NET 11-specific packages are referenced only for the net11.0 target; other TFMs
   reference the most recent version matching their framework version (e.g. 8.x for net8.0)
